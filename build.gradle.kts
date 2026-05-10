@@ -34,7 +34,7 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
     implementation("xyz.xenondevs.invui:invui:2.1.0")
-    implementation("xyz.xenondevs.invui:invui-kotlin:2.0.0")
+    implementation("xyz.xenondevs.invui:invui-kotlin:2.1.0")
 }
 
 java {
