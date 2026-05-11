@@ -144,11 +144,6 @@ internal object SitMechanic : MechanicInterface {
         location: Location,
     ) {
         val world = location.world ?: return
-        val blockLocation =
-            location
-                .clone()
-                .subtract(blockCenterOffset)
-                .block.location
         val armorStand =
             world.spawn(location, ArmorStand::class.java) {
                 it.isVisible = false
@@ -162,7 +157,7 @@ internal object SitMechanic : MechanicInterface {
         val playerId = player.uniqueId.toKotlinUuid()
 
         sittingPlayers[playerId] = armorStand
-        occupiedBlocks[blockLocation] = playerId
+        occupiedBlocks[armorStand.blockLocation()] = playerId
     }
 
     /** Returns the [Location] of the block this [ArmorStand] is sitting on. */
