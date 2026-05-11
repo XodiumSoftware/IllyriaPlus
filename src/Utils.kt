@@ -264,6 +264,64 @@ internal object Utils {
 
             return Location(world, cx, cy, cz)
         }
+
+        internal val DANGEROUS =
+            setOf(
+                Material.LAVA,
+                Material.FIRE,
+                Material.SOUL_FIRE,
+                Material.CACTUS,
+                Material.SWEET_BERRY_BUSH,
+                Material.CAMPFIRE,
+                Material.SOUL_CAMPFIRE,
+                Material.MAGMA_BLOCK,
+                Material.WITHER_ROSE,
+            )
+
+        /**
+         * Finds a safe location near this location for a player to stand.
+         *
+         * Searches in a small box (±2 horizontally, ±3 vertically) for a spot
+         * with solid ground, air at feet/head, and no dangerous blocks.
+         *
+         * @param radius Horizontal search radius in blocks.
+         * @param vertical Vertical search range in blocks.
+         * @return A safe [Location] or null if none is found.
+         */
+        fun Location.findSafe(
+            radius: Int = 2,
+            vertical: Int = 3,
+        ): Location? {
+            val w = world ?: return null
+            val bx = blockX
+            val by = blockY
+            val bz = blockZ
+
+            for (dy in -vertical..vertical) {
+                for (dx in -radius..radius) {
+                    for (dz in -radius..radius) {
+                        val x = bx + dx
+                        val y = by + dy
+                        val z = bz + dz
+                        val feet = w.getBlockAt(x, y, z)
+                        val head = w.getBlockAt(x, y + 1, z)
+                        val ground = w.getBlockAt(x, y - 1, z)
+
+                        if (isSafe(ground, feet, head)) return Location(w, x + 0.5, y.toDouble(), z + 0.5, yaw, pitch)
+                    }
+                }
+            }
+            return null
+        }
+
+        private fun isSafe(
+            ground: Block,
+            feet: Block,
+            head: Block,
+        ): Boolean =
+            (ground.type.isSolid || ground.type == Material.WATER) &&
+                !feet.type.isSolid && !head.type.isSolid &&
+                feet.type !in DANGEROUS && head.type !in DANGEROUS && ground.type !in DANGEROUS
     }
 
     /** Item-related utilities. */

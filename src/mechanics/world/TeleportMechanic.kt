@@ -10,7 +10,6 @@ import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.title.Title
 import org.bukkit.*
-import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.Action
@@ -22,6 +21,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitTask
+import org.xodium.illyriaplus.Utils.BlockUtils.DANGEROUS
 import org.xodium.illyriaplus.Utils.BlockUtils.center
 import org.xodium.illyriaplus.Utils.ItemUtils.getCustomName
 import org.xodium.illyriaplus.Utils.MM
@@ -29,7 +29,6 @@ import org.xodium.illyriaplus.Utils.ScheduleUtils.schedule
 import org.xodium.illyriaplus.data.TeleportAnchorData
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.managers.ConfigManager
-import org.xodium.illyriaplus.managers.XpManager
 import xyz.xenondevs.invui.gui.Animation
 import xyz.xenondevs.invui.gui.Markers
 import xyz.xenondevs.invui.gui.PagedGui
@@ -66,6 +65,8 @@ internal object TeleportMechanic : MechanicInterface {
             "<gradient:#CB2D3E:#EF473A><b><remaining></b></gradient>"
         const val TELEPORT_CANCELLED =
             "<gradient:#CB2D3E:#EF473A><b>Teleportation cancelled — you moved!</b></gradient>"
+        const val TELEPORT_UNSAFE =
+            "<gradient:#CB2D3E:#EF473A><b>Teleportation cancelled — destination is unsafe!</b></gradient>"
     }
 
     /** Holds [Sound] instances for teleport anchor interactions. */
@@ -289,14 +290,6 @@ internal object TeleportMechanic : MechanicInterface {
 
         if (player.vehicle != null) cost = (cost * 1.5).toInt()
 
-        val leashedCount =
-            player
-                .getNearbyEntities(15.0, 15.0, 15.0)
-                .filterIsInstance<LivingEntity>()
-                .count { it.isLeashed && it.leashHolder == player }
-
-        if (leashedCount > 0) cost = (cost * (1 + leashedCount * 0.25)).toInt()
-
         return cost
     }
 
@@ -314,7 +307,6 @@ internal object TeleportMechanic : MechanicInterface {
         anchor: TeleportAnchorData,
         cost: Int,
     ) {
-        if (!XpManager.consumeXp(player, cost)) return
         if (player in TELEPORTING) return
 
         TELEPORTING.add(player)
@@ -356,33 +348,49 @@ internal object TeleportMechanic : MechanicInterface {
                     player.playSound(Sounds.COUNTDOWN_TICK)
                     remaining--
                 } else {
+                    val world = anchor.world
+                    val bx = anchor.location.blockX
+                    val by = anchor.location.blockY
+                    val bz = anchor.location.blockZ
+                    val hasMount = player.vehicle != null
+
+                    if (hasMount) {
+                        if (!isSafeForMount(world, bx, by, bz)) {
+                            player.sendActionBar(MM.deserialize(Messages.TELEPORT_UNSAFE))
+                            player.playSound(Sounds.TELEPORT_CANCEL)
+                            TELEPORTING.remove(player)
+                            task.cancel()
+                            return@schedule
+                        }
+                    } else {
+                        if (!isSafeForPlayer(world, bx, by, bz)) {
+                            player.sendActionBar(MM.deserialize(Messages.TELEPORT_UNSAFE))
+                            player.playSound(Sounds.TELEPORT_CANCEL)
+                            TELEPORTING.remove(player)
+                            task.cancel()
+                            return@schedule
+                        }
+                    }
+
+                    val destination = anchor.location.clone().add(0.5, 1.0, 0.5)
+
                     playLightningEffect(player.location)
-
-                    val leashedEntities =
-                        player
-                            .getNearbyEntities(15.0, 15.0, 15.0)
-                            .filterIsInstance<LivingEntity>()
-                            .filter { it.isLeashed && it.leashHolder == player }
-
-                    leashedEntities.forEach { it.teleport(anchor.location) }
 
                     val mount = player.vehicle
 
                     if (mount != null) {
-                        mount.teleport(anchor.location)
-                        player.teleport(anchor.location)
+                        mount.teleport(destination)
+                        player.teleport(destination)
                         mount.addPassenger(player)
                     } else {
-                        player.teleport(anchor.location)
+                        player.teleport(destination)
                     }
-
-                    leashedEntities.forEach { it.setLeashHolder(player) }
 
                     if (player.gameMode != GameMode.CREATIVE) player.giveExp(-cost)
                     player.addPotionEffect(PotionEffect(PotionEffectType.BLINDNESS, 40, 0, false, false, false))
 
-                    playTeleportEffects(player, anchor.location)
-                    playLightningEffect(anchor.location)
+                    playTeleportEffects(player, destination)
+                    playLightningEffect(destination)
                     TELEPORTING.remove(player)
                     task.cancel()
                 }
@@ -509,6 +517,41 @@ internal object TeleportMechanic : MechanicInterface {
     }
 
     /**
+     * Checks if the blocks directly above the anchor are safe for a player.
+     */
+    private fun isSafeForPlayer(
+        world: World,
+        bx: Int,
+        by: Int,
+        bz: Int,
+    ): Boolean {
+        val feet = world.getBlockAt(bx, by + 1, bz)
+        val head = world.getBlockAt(bx, by + 2, bz)
+        return !feet.type.isSolid && !head.type.isSolid && feet.type !in DANGEROUS && head.type !in DANGEROUS
+    }
+
+    /**
+     * Checks if a 3x3x3 area above the anchor is clear of solid and dangerous blocks.
+     * Mounts are wider and taller than players, so they need more clearance.
+     */
+    private fun isSafeForMount(
+        world: World,
+        bx: Int,
+        by: Int,
+        bz: Int,
+    ): Boolean {
+        for (y in (by + 1)..(by + 3)) {
+            for (dx in -1..1) {
+                for (dz in -1..1) {
+                    val block = world.getBlockAt(bx + dx, y, bz + dz)
+                    if (block.type.isSolid || block.type in DANGEROUS) return false
+                }
+            }
+        }
+        return true
+    }
+
+    /**
      * Renames a teleport anchor using the custom name from a name tag.
      *
      * @param event The [PlayerInteractEvent] triggered when a player interacts with a lodestone while holding a name tag.
@@ -522,5 +565,11 @@ internal object TeleportMechanic : MechanicInterface {
         state.anchors[index] = anchor.name(item.getCustomName() ?: return)
         save()
         event.player.sendActionBar(MM.deserialize(Messages.ANCHOR_NAME_UPDATE))
+
+        item.amount--
+
+        if (item.amount <= 0) event.player.inventory.setItemInMainHand(null)
+
+        event.isCancelled = true
     }
 }
