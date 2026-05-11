@@ -39,7 +39,7 @@ internal object OpenableMechanic : MechanicInterface {
             AdjacentBlockData(-1, 0, Door.Hinge.RIGHT, BlockFace.NORTH),
             AdjacentBlockData(1, 0, Door.Hinge.LEFT, BlockFace.NORTH),
         )
-    private val BLOCKED_KNOCKING_GAME_MODES: Set<GameMode> = setOf(GameMode.SURVIVAL, GameMode.ADVENTURE)
+    private val ALLOWED_KNOCKING_GAME_MODES: Set<GameMode> = setOf(GameMode.SURVIVAL, GameMode.ADVENTURE)
     private val KNOCK_SOUND: Sound =
         Sound.sound(
             Key.key("entity.zombie.attack_wooden_door"),
@@ -114,7 +114,7 @@ internal object OpenableMechanic : MechanicInterface {
      * @return `true` if the player can knock, `false` otherwise.
      */
     private fun canKnock(player: Player): Boolean {
-        if (player.gameMode in BLOCKED_KNOCKING_GAME_MODES) return false
+        if (player.gameMode !in ALLOWED_KNOCKING_GAME_MODES) return false
         if (!player.isSneaking) return false
         if (player.inventory.itemInMainHand.type != Material.AIR) return false
 
