@@ -14,6 +14,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
+import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriaplus.IllyriaPlus
@@ -119,7 +120,7 @@ internal object ChatMechanic : MechanicInterface {
     fun on(event: AsyncChatEvent) = asyncChat(event)
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    fun on(event: org.bukkit.event.player.PlayerJoinEvent) = joinBanner(event.player)
+    fun on(event: PlayerJoinEvent) = joinBanner(event.player)
 
     /**
      * Handles asynchronous chat events.

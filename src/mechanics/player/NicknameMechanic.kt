@@ -55,7 +55,7 @@ internal object NicknameMechanic : MechanicInterface {
             ),
         )
 
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun on(event: PlayerJoinEvent) {
         event.player.setNickname()
     }
