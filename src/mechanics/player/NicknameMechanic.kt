@@ -18,7 +18,7 @@ import org.xodium.illyriaplus.Utils.PlayerUtils.setNickname
 import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.mechanics.server.TabListMechanic.tablist
-import org.xodium.illyriaplus.pdcs.PlayerPDC.nickname
+import org.xodium.illyriaplus.tables.PlayerTable.Utils.nickname
 
 /** Represents a mechanic handling player nicknames within the system. */
 internal object NicknameMechanic : MechanicInterface {

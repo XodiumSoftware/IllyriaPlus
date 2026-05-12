@@ -10,7 +10,7 @@ import org.xodium.illyriaplus.Utils.CommandUtils.playerExecuted
 import org.xodium.illyriaplus.Utils.PlayerUtils.applyScoreboard
 import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.interfaces.MechanicInterface
-import org.xodium.illyriaplus.pdcs.PlayerPDC.scoreboardVisibility
+import org.xodium.illyriaplus.tables.PlayerTable.Utils.scoreboardVisibility
 
 /** Represents a mechanic handling scoreboard display within the system. */
 internal object ScoreBoardMechanic : MechanicInterface {

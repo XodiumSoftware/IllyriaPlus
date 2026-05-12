@@ -27,8 +27,8 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.pdcs.ItemPDC.selectedSpell
-import org.xodium.illyriaplus.pdcs.PlayerPDC.nickname
-import org.xodium.illyriaplus.pdcs.PlayerPDC.scoreboardVisibility
+import org.xodium.illyriaplus.tables.PlayerTable.Utils.nickname
+import org.xodium.illyriaplus.tables.PlayerTable.Utils.scoreboardVisibility
 import java.net.URI
 import javax.imageio.ImageIO
 import kotlin.io.encoding.Base64
