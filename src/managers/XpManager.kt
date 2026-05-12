@@ -49,13 +49,14 @@ internal object XpManager {
     }
 
     /**
-     * Consumes XP for non-interaction systems (teleports, abilities, etc.).
+     * Verifies whether the player can afford the XP cost without deducting it.
+     * Sends feedback if they cannot.
      *
-     * @param player The player to check and deduct XP from.
-     * @param xpCost The XP cost required.
-     * @return true if the player had enough XP and cost was deducted, false otherwise.
+     * @param player The player to check.
+     * @param xpCost The required XP amount.
+     * @return True if the player can afford it (or is in Creative), false otherwise.
      */
-    fun consumeXp(
+    fun canAfford(
         player: Player,
         xpCost: Int,
     ): Boolean {
@@ -71,7 +72,6 @@ internal object XpManager {
             }
 
             else -> {
-                player.giveExp(-xpCost)
                 return true
             }
         }

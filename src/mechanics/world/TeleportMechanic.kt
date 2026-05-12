@@ -29,6 +29,7 @@ import org.xodium.illyriaplus.Utils.ScheduleUtils.schedule
 import org.xodium.illyriaplus.data.TeleportAnchorData
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.managers.ConfigManager
+import org.xodium.illyriaplus.managers.XpManager
 import xyz.xenondevs.invui.gui.Animation
 import xyz.xenondevs.invui.gui.Markers
 import xyz.xenondevs.invui.gui.PagedGui
@@ -308,6 +309,7 @@ internal object TeleportMechanic : MechanicInterface {
         cost: Int,
     ) {
         if (player in TELEPORTING) return
+        if (!XpManager.canAfford(player, cost)) return
 
         TELEPORTING.add(player)
         player.closeInventory()
