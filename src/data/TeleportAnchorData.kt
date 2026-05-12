@@ -29,15 +29,10 @@ internal data class TeleportAnchorData(
     /**
      * Convenience constructor from Bukkit types.
      *
-     * @param location The specific [Location] to teleport to.
      * @param name The display name of this teleport anchor.
+     * @param location The specific [Location] to teleport to.
      */
-    constructor(location: Location, name: String) : this(
-        x = location.x,
-        y = location.y,
-        z = location.z,
-        name = name,
-    )
+    constructor(name: String, location: Location) : this(name, location.x, location.y, location.z)
 
     /**
      * Checks if the given [Location] matches this teleport anchor's position.

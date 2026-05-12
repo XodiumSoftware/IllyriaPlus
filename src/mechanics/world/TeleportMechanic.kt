@@ -162,7 +162,7 @@ internal object TeleportMechanic : MechanicInterface {
 
         if (state.anchors.any { it.matches(block.location) }) return
 
-        state.anchors.add(TeleportAnchorData(location, TeleportAnchorData.nextName(state.anchors)))
+        state.anchors.add(TeleportAnchorData(TeleportAnchorData.nextName(state.anchors), location))
         save()
         event.player.sendActionBar(MM.deserialize(Messages.ANCHOR_CREATION))
     }
