@@ -14,7 +14,7 @@ import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
  * @property z The Z coordinate of the teleport location.
  */
 @Serializable
-internal data class TeleportAnchorData(
+internal data class AnchorData(
     val name: String,
     private val x: Double,
     private val y: Double,
@@ -50,18 +50,18 @@ internal data class TeleportAnchorData(
      * Returns a copy of this anchor with the given [name].
      *
      * @param name The new display name.
-     * @return A new [TeleportAnchorData] with the updated name.
+     * @return A new [AnchorData] with the updated name.
      */
-    fun name(name: String): TeleportAnchorData = copy(name = name)
+    fun name(name: String): AnchorData = copy(name = name)
 
     companion object {
         /**
          * Generates the next available default anchor name (e.g., "Anchor 1", "Anchor 2").
          *
-         * @param existing The list of existing [TeleportAnchorData] entries.
+         * @param existing The list of existing [AnchorData] entries.
          * @return The next unused "Anchor N" name.
          */
-        fun nextName(existing: List<TeleportAnchorData>): String =
+        fun nextName(existing: List<AnchorData>): String =
             "Anchor ${
                 (1..Int.MAX_VALUE).first {
                     it !in

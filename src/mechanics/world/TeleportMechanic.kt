@@ -26,7 +26,7 @@ import org.xodium.illyriaplus.Utils.BlockUtils.center
 import org.xodium.illyriaplus.Utils.ItemUtils.getCustomName
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.Utils.ScheduleUtils.schedule
-import org.xodium.illyriaplus.data.TeleportAnchorData
+import org.xodium.illyriaplus.data.AnchorData
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.managers.ConfigManager
 import org.xodium.illyriaplus.managers.XpManager
@@ -45,11 +45,11 @@ internal object TeleportMechanic : MechanicInterface {
     /**
      * Represents the data structure for a collection of teleport anchors.
      *
-     * @property anchors The list of [TeleportAnchorData] entries available for teleportation.
+     * @property anchors The list of [AnchorData] entries available for teleportation.
      */
     @Serializable
     private data class Anchors(
-        val anchors: MutableList<TeleportAnchorData> = mutableListOf(),
+        val anchors: MutableList<AnchorData> = mutableListOf(),
     )
 
     /** Holds user-facing MiniMessage strings for teleport anchor interactions. */
@@ -162,7 +162,7 @@ internal object TeleportMechanic : MechanicInterface {
 
         if (state.anchors.any { it.matches(block.location) }) return
 
-        state.anchors.add(TeleportAnchorData(TeleportAnchorData.nextName(state.anchors), location))
+        state.anchors.add(AnchorData(AnchorData.nextName(state.anchors), location))
         save()
         event.player.sendActionBar(MM.deserialize(Messages.ANCHOR_CREATION))
     }
@@ -185,12 +185,12 @@ internal object TeleportMechanic : MechanicInterface {
     /**
      * Builds a paginated GUI showing all teleport anchors except the one at [source].
      *
-     * @param source The [TeleportAnchorData] of the anchor currently being interacted with; it is omitted from the list.
+     * @param source The [AnchorData] of the anchor currently being interacted with; it is omitted from the list.
      * @param player The [Player] opening the GUI, used to calculate per-player teleport costs.
      * @return The configured [PagedGui] for anchor selection.
      */
     private fun gui(
-        source: TeleportAnchorData,
+        source: AnchorData,
         player: Player,
     ) = PagedGui
         .itemsBuilder()
@@ -214,12 +214,12 @@ internal object TeleportMechanic : MechanicInterface {
     /**
      * Creates a window for the teleport destination selector GUI.
      *
-     * @param source The [TeleportAnchorData] of the anchor being interacted with.
+     * @param source The [AnchorData] of the anchor being interacted with.
      * @param player The [Player] opening the GUI, used to calculate per-player teleport costs.
      * @return The configured [Window] builder.
      */
     private fun window(
-        source: TeleportAnchorData,
+        source: AnchorData,
         player: Player,
     ) = Window
         .builder()
@@ -229,15 +229,15 @@ internal object TeleportMechanic : MechanicInterface {
     /**
      * Creates a GUI item representing a teleport anchor.
      *
-     * @param source The [TeleportAnchorData] the player is teleporting from.
-     * @param anchor The [TeleportAnchorData] to represent.
+     * @param source The [AnchorData] the player is teleporting from.
+     * @param anchor The [AnchorData] to represent.
      * @param player The [Player] opening the GUI, used to calculate and display teleport cost.
      * @return The constructed [Item] for the GUI.
      */
     @Suppress("UnstableApiUsage")
     private fun anchorItem(
-        source: TeleportAnchorData,
-        anchor: TeleportAnchorData,
+        source: AnchorData,
+        anchor: AnchorData,
         player: Player,
     ): Item =
         Item
@@ -276,14 +276,14 @@ internal object TeleportMechanic : MechanicInterface {
      * - Mount: +50%
      * - Each leashed entity: +25%
      *
-     * @param source The [TeleportAnchorData] of the source anchor.
-     * @param anchor The [TeleportAnchorData] destination.
+     * @param source The [AnchorData] of the source anchor.
+     * @param anchor The [AnchorData] destination.
      * @param player The [Player] to check for mount and leashed entities.
      * @return The total XP cost.
      */
     private fun calculateCost(
-        source: TeleportAnchorData,
-        anchor: TeleportAnchorData,
+        source: AnchorData,
+        anchor: AnchorData,
         player: Player,
     ): Int {
         val distance = source.location.distance(anchor.location)
@@ -298,14 +298,14 @@ internal object TeleportMechanic : MechanicInterface {
      * Handles teleporting a player to an anchor after a 3-second countdown.
      *
      * @param player The [Player] to teleport.
-     * @param source The [TeleportAnchorData] the player is teleporting from.
-     * @param anchor The [TeleportAnchorData] destination.
+     * @param source The [AnchorData] the player is teleporting from.
+     * @param anchor The [AnchorData] destination.
      * @param cost The XP cost to deduct on teleport.
      */
     private fun handleTeleport(
         player: Player,
-        source: TeleportAnchorData,
-        anchor: TeleportAnchorData,
+        source: AnchorData,
+        anchor: AnchorData,
         cost: Int,
     ) {
         if (player in TELEPORTING) return
@@ -426,11 +426,11 @@ internal object TeleportMechanic : MechanicInterface {
     /**
      * Spawns purple flame-like particles above the specified anchor.
      *
-     * @param anchor The [TeleportAnchorData] to spawn particles above.
+     * @param anchor The [AnchorData] to spawn particles above.
      * @param scale The scale multiplier for particle spread and count.
      */
     private fun playAnchorFlame(
-        anchor: TeleportAnchorData,
+        anchor: AnchorData,
         scale: Float = 1.0f,
     ) {
         anchor.world.spawnParticle(
@@ -448,12 +448,12 @@ internal object TeleportMechanic : MechanicInterface {
     /**
      * Spawns an expanding horizontal ring of purple particles from the anchor outward.
      *
-     * @param anchor The [TeleportAnchorData] center of the expansion.
+     * @param anchor The [AnchorData] center of the expansion.
      * @param maxDistance The maximum distance the ring should expand to.
      * @param progress A float from 0.0 to 1.0 representing how far the ring has expanded.
      */
     private fun playExpansionEffect(
-        anchor: TeleportAnchorData,
+        anchor: AnchorData,
         maxDistance: Double,
         progress: Float,
     ) {
