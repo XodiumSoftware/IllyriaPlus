@@ -4,6 +4,7 @@ import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.SchemaUtils
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
+import org.xodium.illyriaplus.tables.AnchorTable
 import org.xodium.illyriaplus.tables.PlayerTable
 import java.io.File
 
@@ -38,6 +39,7 @@ internal object DatabaseManager {
         transaction(db) {
             SchemaUtils.create(
                 PlayerTable,
+                AnchorTable,
             )
         }
     }
