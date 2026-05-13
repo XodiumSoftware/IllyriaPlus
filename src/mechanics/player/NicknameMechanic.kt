@@ -56,7 +56,7 @@ internal object NicknameMechanic : MechanicInterface {
             ),
         )
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun on(event: PlayerJoinEvent) {
         PlayerTable.ensurePlayer(event.player)
         event.player.setNickname()
@@ -73,7 +73,7 @@ internal object NicknameMechanic : MechanicInterface {
         name: String,
     ) {
         player.nickname = name
-        player.displayName(MM.deserialize(player.nickname))
+        player.setNickname()
         player.sendActionBar(
             MM.deserialize(
                 UPDATE_NICKNAME_MSG,
