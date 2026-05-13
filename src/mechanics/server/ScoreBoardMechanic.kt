@@ -9,8 +9,8 @@ import org.xodium.illyriaplus.IllyriaPlus
 import org.xodium.illyriaplus.Utils.CommandUtils.playerExecuted
 import org.xodium.illyriaplus.Utils.PlayerUtils.applyScoreboard
 import org.xodium.illyriaplus.data.CommandData
+import org.xodium.illyriaplus.data.PlayerData.Companion.scoreboardVisibility
 import org.xodium.illyriaplus.interfaces.MechanicInterface
-import org.xodium.illyriaplus.tables.PlayerTable.Utils.scoreboardVisibility
 
 /** Represents a mechanic handling scoreboard display within the system. */
 internal object ScoreBoardMechanic : MechanicInterface {
@@ -38,5 +38,7 @@ internal object ScoreBoardMechanic : MechanicInterface {
         )
 
     @EventHandler
-    fun on(event: PlayerJoinEvent) = event.player.applyScoreboard()
+    fun on(event: PlayerJoinEvent) {
+        event.player.applyScoreboard()
+    }
 }
