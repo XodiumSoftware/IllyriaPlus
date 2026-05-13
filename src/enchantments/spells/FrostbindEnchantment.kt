@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.enchantments
+package org.xodium.illyriaplus.enchantments.spells
 
 import io.papermc.paper.registry.data.EnchantmentRegistryEntry
 import net.kyori.adventure.key.Key
@@ -11,18 +11,16 @@ import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.persistence.PersistentDataType
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
+import org.xodium.illyriaplus.IllyriaPlus
 import org.xodium.illyriaplus.Utils
 import org.xodium.illyriaplus.Utils.EnchantmentUtils.displayName
-import org.xodium.illyriaplus.Utils.EnchantmentUtils.isSelectedSpell
-import org.xodium.illyriaplus.Utils.EnchantmentUtils.validateSpellCast
 import org.xodium.illyriaplus.interfaces.EnchantmentInterface
 import org.xodium.illyriaplus.managers.XpManager
 
 /** Represents an object handling frostbind enchantment implementation within the system. */
 @Suppress("UnstableApiUsage")
 internal object FrostbindEnchantment : EnchantmentInterface {
-    private val PROJECTILE_KEY by lazy { NamespacedKey(instance, "frostbind_projectile") }
+    private val PROJECTILE_KEY by lazy { NamespacedKey(IllyriaPlus.instance, "frostbind_projectile") }
     private val LAUNCH_SOUND: Sound =
         Sound.sound(Key.key("entity.snow_golem.shoot"), Sound.Source.NEUTRAL, 1.0f, 1.2f)
     private val HIT_SOUND: Sound =
@@ -51,8 +49,8 @@ internal object FrostbindEnchantment : EnchantmentInterface {
         val player = event.player
         val item = event.item ?: return
 
-        if (!isSelectedSpell(item, get())) return
-        if (!validateSpellCast(event.action, item, get())) return
+        if (!Utils.EnchantmentUtils.isSelectedSpell(item, get())) return
+        if (!Utils.EnchantmentUtils.validateSpellCast(event.action, item, get())) return
         if (!XpManager.consumeXp(event, XP_COST)) return
 
         val direction = player.location.direction.normalize()

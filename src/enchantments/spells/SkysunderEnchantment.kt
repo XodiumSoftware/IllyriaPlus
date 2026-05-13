@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.enchantments
+package org.xodium.illyriaplus.enchantments.spells
 
 import io.papermc.paper.registry.data.EnchantmentRegistryEntry
 import org.bukkit.Particle

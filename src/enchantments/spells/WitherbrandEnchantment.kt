@@ -1,14 +1,13 @@
-package org.xodium.illyriaplus.enchantments
+package org.xodium.illyriaplus.enchantments.spells
 
 import io.papermc.paper.registry.data.EnchantmentRegistryEntry
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
 import org.bukkit.Particle
-import org.bukkit.entity.WindCharge
+import org.bukkit.entity.WitherSkull
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlotGroup
-import org.bukkit.util.Vector
 import org.xodium.illyriaplus.Utils
 import org.xodium.illyriaplus.Utils.EnchantmentUtils.displayName
 import org.xodium.illyriaplus.Utils.EnchantmentUtils.isSelectedSpell
@@ -16,13 +15,12 @@ import org.xodium.illyriaplus.Utils.EnchantmentUtils.validateSpellCast
 import org.xodium.illyriaplus.interfaces.EnchantmentInterface
 import org.xodium.illyriaplus.managers.XpManager
 
-/** Represents an object handling tempest enchantment implementation within the system. */
+/** Represents an object handling witherbrand enchantment implementation within the system. */
 @Suppress("UnstableApiUsage")
-internal object TempestEnchantment : EnchantmentInterface {
-    private const val XP_COST = 4
-    private const val SPREAD_AMOUNT = 0.2
+internal object WitherbrandEnchantment : EnchantmentInterface {
+    private const val XP_COST = 2
 
-    private val CAST_SOUND: Sound = Sound.sound(Key.key("entity.breeze.shoot"), Sound.Source.HOSTILE, 1.0f, 1.0f)
+    private val CAST_SOUND: Sound = Sound.sound(Key.key("entity.wither.shoot"), Sound.Source.HOSTILE, 1.0f, 1.0f)
 
     override fun invoke(builder: EnchantmentRegistryEntry.Builder): EnchantmentRegistryEntry.Builder =
         builder
@@ -35,7 +33,7 @@ internal object TempestEnchantment : EnchantmentInterface {
             .activeSlots(EquipmentSlotGroup.MAINHAND)
 
     /**
-     * Handles player interaction for casting Tempest.
+     * Handles player interaction for casting Witherbrand.
      *
      * @param event The interaction event.
      */
@@ -48,46 +46,38 @@ internal object TempestEnchantment : EnchantmentInterface {
         if (!validateSpellCast(event.action, item, get())) return
         if (!XpManager.consumeXp(event, XP_COST)) return
 
-        val baseDir = player.location.direction.normalize()
-        val right = baseDir.clone().crossProduct(Vector(0, 1, 0)).normalize()
-        val spawnBase = player.eyeLocation.add(baseDir.clone().multiply(1.5))
-        val offsets = listOf(-SPREAD_AMOUNT, 0.0, SPREAD_AMOUNT)
+        val direction = player.location.direction.normalize()
+        val spawnLocation = player.eyeLocation.add(direction.clone().multiply(1.5))
+        val skull = player.world.spawn(spawnLocation, WitherSkull::class.java)
 
-        offsets.forEach {
-            val dir = baseDir.clone().add(right.clone().multiply(it)).normalize()
-            val charge =
-                player.world.spawn(
-                    spawnBase.clone().add(right.clone().multiply(it * 0.5)),
-                    WindCharge::class.java,
-                )
+        skull.shooter = player
+        skull.direction = direction.clone().multiply(1.5)
+        skull.isCharged = false
 
-            charge.shooter = player
-            charge.velocity = dir.multiply(1.5)
-
-            spawnWindChargeTrail(charge)
-        }
-
+        spawnSkullTrail(skull)
         player.playSound(CAST_SOUND)
     }
 
     /**
-     * Spawns a repeating particle trail behind [charge] every tick until the entity is no longer valid.
+     * Spawns a repeating particle trail behind [skull] every tick until the entity is no longer valid.
+     * Emits [Particle.SOUL] and [Particle.ASH] at the skull's current location.
      *
-     * @param charge The [WindCharge] to trail.
+     * @param skull The [WitherSkull] to trail.
      */
-    private fun spawnWindChargeTrail(charge: WindCharge) =
-        Utils.ScheduleUtils.spawnProjectileTrail(charge) {
-            Particle.GUST
-                .builder()
-                .location(it)
-                .count(1)
-                .spawn()
-            Particle.CLOUD
+    private fun spawnSkullTrail(skull: WitherSkull) {
+        Utils.ScheduleUtils.spawnProjectileTrail(skull) {
+            Particle.SOUL
                 .builder()
                 .location(it)
                 .count(3)
                 .offset(0.05, 0.05, 0.05)
-                .extra(0.02)
+                .spawn()
+            Particle.ASH
+                .builder()
+                .location(it)
+                .count(5)
+                .offset(0.1, 0.1, 0.1)
                 .spawn()
         }
+    }
 }

@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.enchantments
+package org.xodium.illyriaplus.enchantments.utility
 
 import io.papermc.paper.registry.data.EnchantmentRegistryEntry
 import org.bukkit.Tag

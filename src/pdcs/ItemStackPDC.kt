@@ -7,7 +7,7 @@ import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 
 /** Provides access to item-specific persistent data for spell storage on wands. */
 @Suppress("Unused")
-internal object ItemPDC {
+internal object ItemStackPDC {
     /** The key used for storing the currently selected spell ID on a wand. */
     private val SELECTED_SPELL_KEY = NamespacedKey(instance, "selected_spell")
 

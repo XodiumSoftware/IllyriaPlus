@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.enchantments
+package org.xodium.illyriaplus.enchantments.utility
 
 import io.papermc.paper.event.entity.EntityEquipmentChangedEvent
 import io.papermc.paper.registry.data.EnchantmentRegistryEntry

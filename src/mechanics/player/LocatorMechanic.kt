@@ -4,13 +4,15 @@ package org.xodium.illyriaplus.mechanics.player
 
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
+import org.bukkit.Color
+import org.bukkit.entity.Player
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.CommandUtils.playerExecuted
-import org.xodium.illyriaplus.Utils.PlayerUtils.locator
 import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 
@@ -52,4 +54,14 @@ internal object LocatorMechanic : MechanicInterface {
                 PermissionDefault.TRUE,
             ),
         )
+
+    /**
+     * Sets waypoint color.
+     *
+     * @param color Optional color.
+     */
+    private fun Player.locator(color: TextColor? = null) {
+        waypointColor = color?.let { Color.fromRGB(it.value()) }
+        sendActionBar(Component.text("Locator color changed!", color))
+    }
 }

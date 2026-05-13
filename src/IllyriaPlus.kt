@@ -3,12 +3,17 @@
 package org.xodium.illyriaplus
 
 import org.bukkit.plugin.java.JavaPlugin
-import org.xodium.illyriaplus.enchantments.*
-import org.xodium.illyriaplus.managers.DatabaseManager
+import org.xodium.illyriaplus.enchantments.spells.*
+import org.xodium.illyriaplus.enchantments.utility.*
+import org.xodium.illyriaplus.enchantments.vanilla.FeatherFallingEnchantment
+import org.xodium.illyriaplus.enchantments.vanilla.SilkTouchEnchantment
 import org.xodium.illyriaplus.mechanics.entity.*
 import org.xodium.illyriaplus.mechanics.player.*
 import org.xodium.illyriaplus.mechanics.server.*
-import org.xodium.illyriaplus.mechanics.world.*
+import org.xodium.illyriaplus.mechanics.world.ChiseledBookshelfMechanic
+import org.xodium.illyriaplus.mechanics.world.DimensionMechanic
+import org.xodium.illyriaplus.mechanics.world.InventoryMechanic
+import org.xodium.illyriaplus.mechanics.world.OpenableMechanic
 import org.xodium.illyriaplus.recipes.*
 
 /** Main class of the plugin. */
@@ -20,7 +25,6 @@ internal class IllyriaPlus : JavaPlugin() {
 
     override fun onEnable() {
         instance = this
-        DatabaseManager.init()
 
         val unsupportedVersionMsg =
             "This plugin requires a supported server version. Supported versions: ${pluginMeta.version}."
@@ -64,7 +68,6 @@ internal class IllyriaPlus : JavaPlugin() {
                 SpellMechanic,
                 TabListMechanic,
                 TameableMechanic,
-                TeleportMechanic,
                 XpMechanic,
             )
 

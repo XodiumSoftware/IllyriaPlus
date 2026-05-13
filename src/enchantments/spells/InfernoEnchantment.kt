@@ -1,10 +1,10 @@
-package org.xodium.illyriaplus.enchantments
+package org.xodium.illyriaplus.enchantments.spells
 
 import io.papermc.paper.registry.data.EnchantmentRegistryEntry
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
 import org.bukkit.Particle
-import org.bukkit.entity.WitherSkull
+import org.bukkit.entity.SmallFireball
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlotGroup
@@ -14,13 +14,15 @@ import org.xodium.illyriaplus.Utils.EnchantmentUtils.isSelectedSpell
 import org.xodium.illyriaplus.Utils.EnchantmentUtils.validateSpellCast
 import org.xodium.illyriaplus.interfaces.EnchantmentInterface
 import org.xodium.illyriaplus.managers.XpManager
+import kotlin.uuid.ExperimentalUuidApi
 
-/** Represents an object handling witherbrand enchantment implementation within the system. */
+/** Represents an object handling inferno enchantment implementation within the system. */
+@OptIn(ExperimentalUuidApi::class)
 @Suppress("UnstableApiUsage")
-internal object WitherbrandEnchantment : EnchantmentInterface {
-    private const val XP_COST = 2
+internal object InfernoEnchantment : EnchantmentInterface {
+    private const val XP_COST = 1
 
-    private val CAST_SOUND: Sound = Sound.sound(Key.key("entity.wither.shoot"), Sound.Source.HOSTILE, 1.0f, 1.0f)
+    private val CAST_SOUND: Sound = Sound.sound(Key.key("entity.blaze.shoot"), Sound.Source.HOSTILE, 1.0f, 1.0f)
 
     override fun invoke(builder: EnchantmentRegistryEntry.Builder): EnchantmentRegistryEntry.Builder =
         builder
@@ -33,7 +35,7 @@ internal object WitherbrandEnchantment : EnchantmentInterface {
             .activeSlots(EquipmentSlotGroup.MAINHAND)
 
     /**
-     * Handles player interaction for casting Witherbrand.
+     * Handles player interaction for casting Inferno.
      *
      * @param event The interaction event.
      */
@@ -48,36 +50,34 @@ internal object WitherbrandEnchantment : EnchantmentInterface {
 
         val direction = player.location.direction.normalize()
         val spawnLocation = player.eyeLocation.add(direction.clone().multiply(1.5))
-        val skull = player.world.spawn(spawnLocation, WitherSkull::class.java)
+        val fireball: SmallFireball = player.world.spawn(spawnLocation, SmallFireball::class.java)
 
-        skull.shooter = player
-        skull.direction = direction.clone().multiply(1.5)
-        skull.isCharged = false
+        fireball.shooter = player
+        fireball.direction = direction.clone().multiply(1.5)
+        fireball.yield = 0.0f
 
-        spawnSkullTrail(skull)
+        spawnFireballTrail(fireball)
         player.playSound(CAST_SOUND)
     }
 
     /**
-     * Spawns a repeating particle trail behind [skull] every tick until the entity is no longer valid.
-     * Emits [Particle.SOUL] and [Particle.ASH] at the skull's current location.
+     * Spawns a repeating particle trail behind [fireball] every tick until the entity is no longer valid.
+     * Emits [Particle.FLAME] and [Particle.LAVA] at the fireball's current location.
      *
-     * @param skull The [WitherSkull] to trail.
+     * @param fireball The [SmallFireball] to trail.
      */
-    private fun spawnSkullTrail(skull: WitherSkull) {
-        Utils.ScheduleUtils.spawnProjectileTrail(skull) {
-            Particle.SOUL
-                .builder()
-                .location(it)
-                .count(3)
-                .offset(0.05, 0.05, 0.05)
-                .spawn()
-            Particle.ASH
+    private fun spawnFireballTrail(fireball: SmallFireball) =
+        Utils.ScheduleUtils.spawnProjectileTrail(fireball) {
+            Particle.FLAME
                 .builder()
                 .location(it)
                 .count(5)
-                .offset(0.1, 0.1, 0.1)
+                .offset(0.05, 0.05, 0.05)
+                .spawn()
+            Particle.LAVA
+                .builder()
+                .location(it)
+                .count(1)
                 .spawn()
         }
-    }
 }

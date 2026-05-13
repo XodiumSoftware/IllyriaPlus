@@ -13,7 +13,8 @@ import io.papermc.paper.registry.keys.tags.ItemTypeTagKeys
 import io.papermc.paper.registry.tag.TagKey
 import io.papermc.paper.tag.TagEntry
 import net.kyori.adventure.key.Key
-import org.xodium.illyriaplus.enchantments.*
+import org.xodium.illyriaplus.enchantments.spells.*
+import org.xodium.illyriaplus.enchantments.utility.*
 
 /** Main bootstrap class of the plugin. */
 @Suppress("UnstableApiUsage", "Unused")

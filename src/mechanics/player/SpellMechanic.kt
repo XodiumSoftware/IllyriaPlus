@@ -12,9 +12,9 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
 import org.bukkit.inventory.ItemStack
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.enchantments.*
+import org.xodium.illyriaplus.enchantments.spells.*
 import org.xodium.illyriaplus.interfaces.MechanicInterface
-import org.xodium.illyriaplus.pdcs.ItemPDC.selectedSpell
+import org.xodium.illyriaplus.pdcs.ItemStackPDC.selectedSpell
 
 /** Represents a mechanic handling spell casting within the system. */
 internal object SpellMechanic : MechanicInterface {

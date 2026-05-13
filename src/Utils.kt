@@ -11,9 +11,11 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ResolvableProfile
 import io.papermc.paper.registry.TypedKey
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.minimessage.MiniMessage
-import org.bukkit.*
+import org.bukkit.Chunk
+import org.bukkit.Location
+import org.bukkit.Material
+import org.bukkit.World
 import org.bukkit.block.Block
 import org.bukkit.block.Chest
 import org.bukkit.block.Container
@@ -26,9 +28,7 @@ import org.bukkit.event.block.Action
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.data.PlayerData.Companion.nickname
-import org.xodium.illyriaplus.data.PlayerData.Companion.scoreboardVisibility
-import org.xodium.illyriaplus.pdcs.ItemPDC.selectedSpell
+import org.xodium.illyriaplus.pdcs.ItemStackPDC.selectedSpell
 import java.net.URI
 import javax.imageio.ImageIO
 import kotlin.io.encoding.Base64
@@ -324,17 +324,6 @@ internal object Utils {
                 feet.type !in DANGEROUS && head.type !in DANGEROUS && ground.type !in DANGEROUS
     }
 
-    /** Item-related utilities. */
-    object ItemUtils {
-        /**
-         * Gets the custom name of an item.
-         *
-         * @return The serialized custom name, or null.
-         */
-        @Suppress("UnstableApiUsage")
-        fun ItemStack.getCustomName(): String? = getData(DataComponentTypes.CUSTOM_NAME)?.let { MM.serialize(it) }
-    }
-
     /** Player-related utilities. */
     object PlayerUtils {
         private const val FACE_X = 8
@@ -444,33 +433,6 @@ internal object Utils {
             getNearbyEntities(radius, radius, radius)
                 .filterIsInstance<Tameable>()
                 .firstOrNull { it.isLeashed && it.leashHolder == this }
-
-        /**
-         * Applies the correct scoreboard.
-         */
-        fun Player.applyScoreboard() {
-            scoreboard =
-                if (scoreboardVisibility) {
-                    instance.server.scoreboardManager.newScoreboard
-                } else {
-                    instance.server.scoreboardManager.mainScoreboard
-                }
-        }
-
-        /**
-         * Sets waypoint color.
-         *
-         * @param color Optional color.
-         */
-        fun Player.locator(color: TextColor? = null) {
-            waypointColor = color?.let { Color.fromRGB(it.value()) }
-            sendActionBar(Component.text("Locator color changed!", color))
-        }
-
-        /**
-         * Applies nickname to display name.
-         */
-        fun Player.setNickname() = displayName(MM.deserialize(nickname))
 
         /**
          * Creates a player head item.

@@ -14,12 +14,10 @@ import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.CommandUtils.playerExecuted
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.Utils.PlayerUtils.setNickname
 import org.xodium.illyriaplus.data.CommandData
-import org.xodium.illyriaplus.data.PlayerData.Companion.nickname
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.mechanics.server.TabListMechanic.tablist
-import org.xodium.illyriaplus.tables.PlayerTable
+import org.xodium.illyriaplus.pdcs.PlayerPDC.nickname
 
 /** Represents a mechanic handling player nicknames within the system. */
 internal object NicknameMechanic : MechanicInterface {
@@ -32,12 +30,12 @@ internal object NicknameMechanic : MechanicInterface {
                 Commands
                     .literal("nickname")
                     .requires { it.sender.hasPermission(perms[0]) }
-                    .playerExecuted { player, _ -> nickname(player, "") }
+                    .playerExecuted { player, _ -> player.nickname("") }
                     .then(
                         Commands
                             .argument("name", StringArgumentType.greedyString())
                             .playerExecuted { player, ctx ->
-                                nickname(player, StringArgumentType.getString(ctx, "name"))
+                                player.nickname(StringArgumentType.getString(ctx, "name"))
                                 player.playerListName(player.displayName())
                                 tablist(player)
                             },
@@ -58,27 +56,20 @@ internal object NicknameMechanic : MechanicInterface {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun on(event: PlayerJoinEvent) {
-        PlayerTable.ensurePlayer(event.player)
-        event.player.setNickname()
+        event.player.nickname()
     }
 
+    /** Applies the player's stored nickname to their display name. */
+    private fun Player.nickname() = displayName(MM.deserialize(nickname))
+
     /**
-     * Sets the nickname of the player to the given name.
+     * Sets the player's nickname to the given name, applies it, and sends a confirmation.
      *
-     * @param player The player whose nickname is to be set.
-     * @param name The new nickname for the player.
+     * @param name The new nickname. Blank or empty clears the nickname.
      */
-    private fun nickname(
-        player: Player,
-        name: String,
-    ) {
-        player.nickname = name
-        player.setNickname()
-        player.sendActionBar(
-            MM.deserialize(
-                UPDATE_NICKNAME_MSG,
-                Placeholder.component("nickname", player.displayName()),
-            ),
-        )
+    private fun Player.nickname(name: String) {
+        nickname = name
+        nickname()
+        sendActionBar(MM.deserialize(UPDATE_NICKNAME_MSG, Placeholder.component("nickname", displayName())))
     }
 }

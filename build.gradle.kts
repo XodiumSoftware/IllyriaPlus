@@ -5,7 +5,6 @@ plugins {
     id("idea")
 
     kotlin("jvm") version "2.3.21"
-    kotlin("plugin.serialization") version "2.3.21"
 
     id("com.gradleup.shadow") version "9.4.1"
     id("xyz.jpenilla.run-paper") version "3.0.2"
@@ -28,21 +27,12 @@ description = "Minecraft plugin that enhances the base gameplay"
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://repo.xenondevs.xyz/releases")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$mcVersion.build.+")
 
     implementation(kotlin("stdlib"))
-
-    implementation("xyz.xenondevs.invui:invui:2.1.0")
-    implementation("xyz.xenondevs.invui:invui-kotlin:2.1.0")
-
-    implementation("org.jetbrains.exposed:exposed-core:1.2.0")
-    implementation("org.jetbrains.exposed:exposed-jdbc:1.2.0")
-
-    implementation("org.xerial:sqlite-jdbc:3.53.1.0")
 }
 
 java {
@@ -68,6 +58,7 @@ tasks {
         dependsOn(processResources)
         archiveClassifier.set("")
         destinationDirectory.set(layout.projectDirectory.dir("build/libs"))
+        minimize()
     }
     jar { enabled = false }
     runServer { minecraftVersion(mcVersion) }
