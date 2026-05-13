@@ -7,8 +7,6 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import io.papermc.paper.command.brigadier.CommandSourceStack
-import io.papermc.paper.datacomponent.DataComponentTypes
-import io.papermc.paper.datacomponent.item.ResolvableProfile
 import io.papermc.paper.registry.TypedKey
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
@@ -433,19 +431,5 @@ internal object Utils {
             getNearbyEntities(radius, radius, radius)
                 .filterIsInstance<Tameable>()
                 .firstOrNull { it.isLeashed && it.leashHolder == this }
-
-        /**
-         * Creates a player head item.
-         *
-         * @return The head ItemStack.
-         */
-        @Suppress("UnstableApiUsage")
-        fun Player.head(): ItemStack =
-            ItemStack.of(Material.PLAYER_HEAD).apply {
-                setData(
-                    DataComponentTypes.PROFILE,
-                    ResolvableProfile.resolvableProfile(playerProfile),
-                )
-            }
     }
 }
