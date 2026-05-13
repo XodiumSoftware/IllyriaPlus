@@ -1,7 +1,6 @@
 package org.xodium.illyriaplus.tables
 
 import org.bukkit.Location
-import org.bukkit.World
 import org.jetbrains.exposed.v1.core.ResultRow
 import org.jetbrains.exposed.v1.core.Table
 import org.jetbrains.exposed.v1.core.eq
@@ -11,6 +10,7 @@ import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.jetbrains.exposed.v1.jdbc.update
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
+import org.xodium.illyriaplus.data.AnchorData
 import org.xodium.illyriaplus.tables.AnchorTable.insert
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -22,13 +22,16 @@ import kotlin.uuid.Uuid
  * - **uuid**: Primary key (randomly generated per anchor).
  * - **name**: Human-readable anchor label. Defaults to the next free
  *   "Anchor N" string when inserted via [insert].
- * - **x**, **y**, **z**: Overworld coordinates of the anchor.
+ * - **x**, **y**, **z**: Coordinates of the anchor.
+ * - **world**: Name of the world the anchor resides in.
  */
 @OptIn(ExperimentalUuidApi::class)
 internal object AnchorTable : Table() {
     val uuid = uuid("uuid")
 
     val name = varchar("name", 255)
+
+    val world = varchar("world", 255)
 
     val x = double("x")
 
@@ -55,37 +58,14 @@ internal object AnchorTable : Table() {
             }"
         }
 
-    /**
-     * Lightweight domain object representing a single teleport anchor row.
-     */
-    data class Anchor(
-        val uuid: Uuid,
-        val name: String,
-        val location: Location,
-    ) {
-        /** The world this anchor resides in. */
-        val world: World get() = location.world
-
-        /**
-         * Checks whether this anchor occupies the same block as [other].
-         *
-         * Compares world and block coordinates (X, Y, Z).
-         */
-        fun matches(other: Location): Boolean =
-            world == other.world &&
-                location.blockX == other.blockX &&
-                location.blockY == other.blockY &&
-                location.blockZ == other.blockZ
-    }
-
-    /** Converts a [ResultRow] from this table into an [Anchor]. */
-    private fun ResultRow.toAnchor(): Anchor =
-        Anchor(
+    /** Converts a [ResultRow] from this table into an [AnchorData]. */
+    private fun ResultRow.toAnchor(): AnchorData =
+        AnchorData(
             uuid = this[uuid],
             name = this[name],
             location =
                 Location(
-                    instance.server.getWorld("world"),
+                    instance.server.getWorld(this[world]),
                     this[x],
                     this[y],
                     this[z],
@@ -93,18 +73,22 @@ internal object AnchorTable : Table() {
         )
 
     /** Returns every anchor stored in the table. */
-    fun all(): List<Anchor> = transaction { selectAll().map { it.toAnchor() } }
+    fun all(): List<AnchorData> = transaction { selectAll().map { it.toAnchor() } }
 
     /**
      * Finds the anchor whose stored coordinates exactly match [location].
      *
      * Block placement coordinates are exact doubles, so direct equality is safe.
      */
-    fun findByLocation(location: Location): Anchor? =
+    fun findByLocation(location: Location): AnchorData? =
         transaction {
             selectAll()
-                .firstOrNull { it[x] == location.x && it[y] == location.y && it[z] == location.z }
-                ?.toAnchor()
+                .firstOrNull {
+                    it[world] == location.world.name &&
+                        it[x] == location.x &&
+                        it[y] == location.y &&
+                        it[z] == location.z
+                }?.toAnchor()
         }
 
     /**
@@ -149,6 +133,7 @@ internal object AnchorTable : Table() {
             AnchorTable.insert {
                 it[uuid] = newUuid
                 it[name] = anchorName ?: nextName()
+                it[world] = location.world.name
                 it[x] = location.x
                 it[y] = location.y
                 it[z] = location.z

@@ -25,6 +25,7 @@ import org.xodium.illyriaplus.Utils.BlockUtils.center
 import org.xodium.illyriaplus.Utils.ItemUtils.getCustomName
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.Utils.ScheduleUtils.schedule
+import org.xodium.illyriaplus.data.AnchorData
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.managers.XpManager
 import org.xodium.illyriaplus.tables.AnchorTable
@@ -161,12 +162,12 @@ internal object TeleportMechanic : MechanicInterface {
     /**
      * Builds a paginated GUI showing all teleport anchors except the one at [source].
      *
-     * @param source The [AnchorTable.Anchor] of the anchor currently being interacted with; it is omitted from the list.
+     * @param source The [AnchorData] of the anchor currently being interacted with; it is omitted from the list.
      * @param player The [Player] opening the GUI, used to calculate per-player teleport costs.
      * @return The configured [PagedGui] for anchor selection.
      */
     private fun gui(
-        source: AnchorTable.Anchor,
+        source: AnchorData,
         player: Player,
     ) = PagedGui
         .itemsBuilder()
@@ -191,12 +192,12 @@ internal object TeleportMechanic : MechanicInterface {
     /**
      * Creates a window for the teleport destination selector GUI.
      *
-     * @param source The [AnchorTable.Anchor] of the anchor being interacted with.
+     * @param source The [AnchorData] of the anchor being interacted with.
      * @param player The [Player] opening the GUI, used to calculate per-player teleport costs.
      * @return The configured [Window] builder.
      */
     private fun window(
-        source: AnchorTable.Anchor,
+        source: AnchorData,
         player: Player,
     ) = Window
         .builder()
@@ -206,15 +207,15 @@ internal object TeleportMechanic : MechanicInterface {
     /**
      * Creates a GUI item representing a teleport anchor.
      *
-     * @param source The [AnchorTable.Anchor] the player is teleporting from.
-     * @param anchor The [AnchorTable.Anchor] to represent.
+     * @param source The [AnchorData] the player is teleporting from.
+     * @param anchor The [AnchorData] to represent.
      * @param player The [Player] opening the GUI, used to calculate and display teleport cost.
      * @return The constructed [Item] for the GUI.
      */
     @Suppress("UnstableApiUsage")
     private fun anchorItem(
-        source: AnchorTable.Anchor,
-        anchor: AnchorTable.Anchor,
+        source: AnchorData,
+        anchor: AnchorData,
         player: Player,
     ): Item =
         Item
