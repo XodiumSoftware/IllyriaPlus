@@ -30,7 +30,7 @@ import kotlin.uuid.toKotlinUuid
 internal object SitMechanic : MechanicInterface {
     private val sittingPlayers = mutableMapOf<Uuid, ArmorStand>()
     private val occupiedBlocks = mutableMapOf<Location, Uuid>()
-    private val blockCenterOffset = Vector(0.5, 0.5, 0.5)
+    private val blockCenterOffset = Vector(0.5, 0.1, 0.5)
     private val playerStandUpOffset = Vector(0.0, 0.5, 0.0)
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -57,7 +57,9 @@ internal object SitMechanic : MechanicInterface {
         val player = event.player
 
         if (player.gameMode != GameMode.SURVIVAL) return
-        if (event.action != Action.RIGHT_CLICK_BLOCK || player.isSneaking || player.isInsideVehicle) return
+        if (event.action != Action.RIGHT_CLICK_BLOCK) return
+        if (player.isSneaking) return
+        if (player.isInsideVehicle) return
         if (player.inventory.itemInMainHand.type != Material.AIR) return
 
         val block = event.clickedBlock ?: return
@@ -71,7 +73,7 @@ internal object SitMechanic : MechanicInterface {
         if (block.location in occupiedBlocks) return
 
         event.isCancelled = true
-        sit(player, block.location.add(blockCenterOffset))
+        sit(player, block.location.clone().add(blockCenterOffset))
     }
 
     /**
@@ -89,6 +91,7 @@ internal object SitMechanic : MechanicInterface {
                     pitch = player.location.pitch
                 },
             )
+
             instance.server.scheduler.runTask(instance, Runnable { armorStand.removeSeat() })
         }
     }
@@ -110,9 +113,9 @@ internal object SitMechanic : MechanicInterface {
     private fun entityDamage(event: EntityDamageEvent) {
         val player = event.entity as? Player ?: return
 
-        sittingPlayers.remove(player.uniqueId.toKotlinUuid())?.let {
-            it.removePassenger(player)
-            it.removeSeat()
+        sittingPlayers.remove(player.uniqueId.toKotlinUuid())?.let { armorStand ->
+            armorStand.removePassenger(player)
+            armorStand.removeSeat()
         }
     }
 
@@ -127,7 +130,10 @@ internal object SitMechanic : MechanicInterface {
         sittingPlayers.entries.removeIf { (_, armorStand) ->
             (armorStand.blockLocation() == brokenBlockLocation).also { matches ->
                 if (matches) {
-                    armorStand.passengers.filterIsInstance<Player>().forEach { armorStand.removePassenger(it) }
+                    armorStand.passengers
+                        .filterIsInstance<Player>()
+                        .forEach(armorStand::removePassenger)
+
                     armorStand.removeSeat()
                 }
             }
@@ -135,7 +141,7 @@ internal object SitMechanic : MechanicInterface {
     }
 
     /**
-     * Spawns an invisible, marker ArmorStand at the given location and makes the player sit on it.
+     * Spawns an invisible ArmorStand at the given location and makes the player sit on it.
      *
      * @param player The [Player] who will be made to sit.
      * @param location The [Location] where the player should sit.
@@ -150,7 +156,9 @@ internal object SitMechanic : MechanicInterface {
                 it.isVisible = false
                 it.setGravity(false)
                 it.isSmall = true
-                it.isMarker = true
+                it.isMarker = false
+                it.isInvulnerable = true
+                it.setAI(false)
             }
 
         armorStand.addPassenger(player)
@@ -158,11 +166,11 @@ internal object SitMechanic : MechanicInterface {
         val playerId = player.uniqueId.toKotlinUuid()
 
         sittingPlayers[playerId] = armorStand
-        occupiedBlocks[armorStand.blockLocation()] = playerId
+        occupiedBlocks[location.block.location] = playerId
     }
 
     /** Returns the [Location] of the block this [ArmorStand] is sitting on. */
-    private fun ArmorStand.blockLocation() =
+    private fun ArmorStand.blockLocation(): Location =
         location
             .clone()
             .subtract(blockCenterOffset)
