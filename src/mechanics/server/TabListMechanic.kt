@@ -2,6 +2,7 @@
 
 package org.xodium.illyriaplus.mechanics.server
 
+import io.papermc.paper.event.player.PlayerClientLoadedWorldEvent
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.World
@@ -39,6 +40,10 @@ internal object TabListMechanic : MechanicInterface {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PlayerJoinEvent) {
         tablist(event.player)
+    }
+
+    @EventHandler
+    fun on(event: PlayerClientLoadedWorldEvent) {
         event.player.playerListName(event.player.displayName())
     }
 
