@@ -18,6 +18,7 @@ import org.bukkit.event.entity.EntityDismountEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.util.Vector
+import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.mechanics.player.SitMechanic.occupiedBlocks
 import kotlin.uuid.ExperimentalUuidApi
@@ -81,14 +82,14 @@ internal object SitMechanic : MechanicInterface {
     private fun entityDismount(event: EntityDismountEvent) {
         val player = event.entity as? Player ?: return
 
-        sittingPlayers.remove(player.uniqueId.toKotlinUuid())?.let {
+        sittingPlayers.remove(player.uniqueId.toKotlinUuid())?.let { armorStand ->
             player.teleport(
-                it.location.clone().add(playerStandUpOffset).apply {
+                armorStand.location.clone().add(playerStandUpOffset).apply {
                     yaw = player.location.yaw
                     pitch = player.location.pitch
                 },
             )
-            it.removeSeat()
+            instance.server.scheduler.runTask(instance, Runnable { armorStand.removeSeat() })
         }
     }
 
