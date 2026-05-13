@@ -30,7 +30,7 @@ import kotlin.uuid.toKotlinUuid
 internal object SitMechanic : MechanicInterface {
     private val sittingPlayers = mutableMapOf<Uuid, ArmorStand>()
     private val occupiedBlocks = mutableMapOf<Location, Uuid>()
-    private val blockCenterOffset = Vector(0.5, 0.1, 0.5)
+    private val blockCenterOffset = Vector(0.5, 0.5, 0.5)
     private val playerStandUpOffset = Vector(0.0, 0.5, 0.0)
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -156,12 +156,11 @@ internal object SitMechanic : MechanicInterface {
                 it.isVisible = false
                 it.setGravity(false)
                 it.isSmall = true
-                it.isMarker = false
+                it.isMarker = true
                 it.isInvulnerable = true
-                it.setAI(false)
             }
 
-        armorStand.addPassenger(player)
+        instance.server.scheduler.runTask(instance, Runnable { armorStand.addPassenger(player) })
 
         val playerId = player.uniqueId.toKotlinUuid()
 
