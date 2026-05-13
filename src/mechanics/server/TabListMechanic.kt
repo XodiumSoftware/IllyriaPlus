@@ -4,6 +4,7 @@ package org.xodium.illyriaplus.mechanics.server
 
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
+import org.bukkit.World
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.PlayerJoinEvent
@@ -11,7 +12,6 @@ import org.bukkit.event.weather.ThunderChangeEvent
 import org.bukkit.event.weather.WeatherChangeEvent
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.Utils.WorldUtils.weather
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 
 /** Represents a mechanic handling tab list updates within the system. */
@@ -71,4 +71,23 @@ internal object TabListMechanic : MechanicInterface {
             ),
         )
     }
+
+    /**
+     * Gets a string representation of the world's weather.
+     *
+     * @param thundering Value for thunder.
+     * @param storm Value for storm.
+     * @param clear Value for clear weather.
+     * @return The matching weather string.
+     */
+    private fun World.weather(
+        thundering: String,
+        storm: String,
+        clear: String,
+    ): String =
+        when {
+            isThundering -> thundering
+            hasStorm() -> storm
+            else -> clear
+        }
 }

@@ -2,7 +2,6 @@
 
 package org.xodium.illyriaplus
 
-import com.google.gson.JsonParser
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
@@ -13,7 +12,6 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Chunk
 import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.World
 import org.bukkit.block.Block
 import org.bukkit.block.Chest
 import org.bukkit.block.Container
@@ -26,22 +24,13 @@ import org.bukkit.event.block.Action
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
+import org.xodium.illyriaplus.IllyriaPlus.Companion.prefix
 import org.xodium.illyriaplus.pdcs.ItemStackPDC.selectedSpell
-import java.net.URI
-import javax.imageio.ImageIO
-import kotlin.io.encoding.Base64
 
 /** General utilities. */
 internal object Utils {
     /** MiniMessage instance for parsing formatted strings. */
     val MM: MiniMessage = MiniMessage.miniMessage()
-
-    /** The standardized prefix for IllyriaPlus messages. */
-    val IllyriaPlus.prefix: String
-        get() =
-            "<gradient:#FFA751:#FFE259>[</gradient><gradient:#CB2D3E:#EF473A>" +
-                "${this.javaClass.simpleName}" +
-                "</gradient><gradient:#FFE259:#FFA751>]</gradient>"
 
     /**
      * Converts a snake_case string to Proper Case with spaces.
@@ -102,28 +91,6 @@ internal object Utils {
                 item.type != Material.BLAZE_ROD -> false
                 !item.containsEnchantment(enchantment) -> false
                 else -> true
-            }
-    }
-
-    /** World-related utilities. */
-    object WorldUtils {
-        /**
-         * Gets a string representation of the world's weather.
-         *
-         * @param thundering Value for thunder.
-         * @param storm Value for storm.
-         * @param clear Value for clear weather.
-         * @return The matching weather string.
-         */
-        fun World.weather(
-            thundering: String,
-            storm: String,
-            clear: String,
-        ): String =
-            when {
-                isThundering -> thundering
-                hasStorm() -> storm
-                else -> clear
             }
     }
 
@@ -262,133 +229,10 @@ internal object Utils {
 
             return Location(world, cx, cy, cz)
         }
-
-        internal val DANGEROUS =
-            setOf(
-                Material.LAVA,
-                Material.FIRE,
-                Material.SOUL_FIRE,
-                Material.CACTUS,
-                Material.SWEET_BERRY_BUSH,
-                Material.CAMPFIRE,
-                Material.SOUL_CAMPFIRE,
-                Material.MAGMA_BLOCK,
-                Material.WITHER_ROSE,
-            )
-
-        /**
-         * Finds a safe location near this location for a player to stand.
-         *
-         * Searches in a small box (±2 horizontally, ±3 vertically) for a spot
-         * with solid ground, air at feet/head, and no dangerous blocks.
-         *
-         * @param radius Horizontal search radius in blocks.
-         * @param vertical Vertical search range in blocks.
-         * @return A safe [Location] or null if none is found.
-         */
-        fun Location.findSafe(
-            radius: Int = 2,
-            vertical: Int = 3,
-        ): Location? {
-            val w = world ?: return null
-            val bx = blockX
-            val by = blockY
-            val bz = blockZ
-
-            for (dy in -vertical..vertical) {
-                for (dx in -radius..radius) {
-                    for (dz in -radius..radius) {
-                        val x = bx + dx
-                        val y = by + dy
-                        val z = bz + dz
-                        val feet = w.getBlockAt(x, y, z)
-                        val head = w.getBlockAt(x, y + 1, z)
-                        val ground = w.getBlockAt(x, y - 1, z)
-
-                        if (isSafe(ground, feet, head)) return Location(w, x + 0.5, y.toDouble(), z + 0.5, yaw, pitch)
-                    }
-                }
-            }
-            return null
-        }
-
-        private fun isSafe(
-            ground: Block,
-            feet: Block,
-            head: Block,
-        ): Boolean =
-            (ground.type.isSolid || ground.type == Material.WATER) &&
-                !feet.type.isSolid && !head.type.isSolid &&
-                feet.type !in DANGEROUS && head.type !in DANGEROUS && ground.type !in DANGEROUS
     }
 
     /** Player-related utilities. */
     object PlayerUtils {
-        private const val FACE_X = 8
-        private const val FACE_Y = 8
-        private const val FACE_WIDTH = 8
-        private const val FACE_HEIGHT = 8
-        private const val MAX_COORDINATE = 7
-        private const val COLOR_MASK = 0xFF
-        private const val BLACK_COLOR = "#000000"
-        private const val PIXEL_CHAR = "█"
-        private const val ALPHA_SHIFT = 24
-        private const val RED_SHIFT = 16
-        private const val GREEN_SHIFT = 8
-
-        /**
-         * Generates a MiniMessage string representing the player's face.
-         *
-         * @param size Output size in pixels.
-         * @return The rendered face string.
-         */
-        fun Player.face(size: Int = 8): String {
-            val texturesProp =
-                playerProfile.properties.firstOrNull { it.name == "textures" }
-                    ?: error("Player has no skin texture")
-
-            val json =
-                JsonParser
-                    .parseString(Base64.decode(texturesProp.value).decodeToString())
-                    .asJsonObject
-
-            val skinUrl =
-                json
-                    .getAsJsonObject("textures")
-                    .getAsJsonObject("SKIN")
-                    .get("url")
-                    .asString
-
-            val fullImg =
-                ImageIO.read(URI.create(skinUrl).toURL())
-                    ?: error("Failed to load skin image from URL: $skinUrl")
-
-            val face = fullImg.getSubimage(FACE_X, FACE_Y, FACE_WIDTH, FACE_HEIGHT)
-            val scale = FACE_WIDTH.toDouble() / size
-
-            return buildString {
-                for (y in 0 until size) {
-                    for (x in 0 until size) {
-                        val px = (x * scale).toInt().coerceAtMost(MAX_COORDINATE)
-                        val py = (y * scale).toInt().coerceAtMost(MAX_COORDINATE)
-                        val rgb = face.getRGB(px, py)
-
-                        val a = (rgb ushr ALPHA_SHIFT) and COLOR_MASK
-                        val r = (rgb shr RED_SHIFT) and COLOR_MASK
-                        val g = (rgb shr GREEN_SHIFT) and COLOR_MASK
-                        val b = rgb and COLOR_MASK
-
-                        if (a == 0) {
-                            append("<color:$BLACK_COLOR>$PIXEL_CHAR</color>")
-                        } else {
-                            append("<color:#%02x%02x%02x>$PIXEL_CHAR</color>".format(r, g, b))
-                        }
-                    }
-                    append("\n")
-                }
-            }
-        }
-
         /**
          * Gets nearby containers in a chunk radius.
          *

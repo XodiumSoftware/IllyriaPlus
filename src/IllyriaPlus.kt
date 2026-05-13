@@ -21,6 +21,13 @@ internal class IllyriaPlus : JavaPlugin() {
     companion object {
         lateinit var instance: IllyriaPlus
             private set
+
+        /** The standardized prefix for IllyriaPlus messages. */
+        val IllyriaPlus.prefix: String
+            get() =
+                "<gradient:#FFA751:#FFE259>[</gradient><gradient:#CB2D3E:#EF473A>" +
+                    "${this.javaClass.simpleName}" +
+                    "</gradient><gradient:#FFE259:#FFA751>]</gradient>"
     }
 
     override fun onEnable() {
