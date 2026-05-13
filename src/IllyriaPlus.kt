@@ -4,6 +4,7 @@ package org.xodium.illyriaplus
 
 import org.bukkit.plugin.java.JavaPlugin
 import org.xodium.illyriaplus.enchantments.*
+import org.xodium.illyriaplus.managers.DatabaseManager
 import org.xodium.illyriaplus.mechanics.entity.*
 import org.xodium.illyriaplus.mechanics.player.*
 import org.xodium.illyriaplus.mechanics.server.*
@@ -19,6 +20,7 @@ internal class IllyriaPlus : JavaPlugin() {
 
     override fun onEnable() {
         instance = this
+        DatabaseManager.init()
 
         val unsupportedVersionMsg =
             "This plugin requires a supported server version. Supported versions: ${pluginMeta.version}."

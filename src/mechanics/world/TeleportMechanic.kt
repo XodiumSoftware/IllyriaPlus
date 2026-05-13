@@ -4,7 +4,6 @@ package org.xodium.illyriaplus.mechanics.world
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemLore
-import kotlinx.serialization.Serializable
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
@@ -28,8 +27,8 @@ import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.Utils.ScheduleUtils.schedule
 import org.xodium.illyriaplus.data.AnchorData
 import org.xodium.illyriaplus.interfaces.MechanicInterface
-import org.xodium.illyriaplus.managers.ConfigManager
 import org.xodium.illyriaplus.managers.XpManager
+import org.xodium.illyriaplus.tables.AnchorTable
 import xyz.xenondevs.invui.gui.Animation
 import xyz.xenondevs.invui.gui.Markers
 import xyz.xenondevs.invui.gui.PagedGui
@@ -39,19 +38,11 @@ import xyz.xenondevs.invui.item.ItemBuilder
 import xyz.xenondevs.invui.window.Window
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.uuid.ExperimentalUuidApi
 
 /** Represents a mechanic handling teleportation within the system. */
+@OptIn(ExperimentalUuidApi::class)
 internal object TeleportMechanic : MechanicInterface {
-    /**
-     * Represents the data structure for a collection of teleport anchors.
-     *
-     * @property anchors The list of [AnchorData] entries available for teleportation.
-     */
-    @Serializable
-    private data class Anchors(
-        val anchors: MutableList<AnchorData> = mutableListOf(),
-    )
-
     /** Holds user-facing MiniMessage strings for teleport anchor interactions. */
     private object Messages {
         const val ANCHOR_CREATION =
@@ -78,15 +69,6 @@ internal object TeleportMechanic : MechanicInterface {
             Sound.sound(Key.key("block.beacon.deactivate"), Sound.Source.PLAYER, 1.0f, 1.0f)
         val ENDERMAN_TELEPORT: Sound =
             Sound.sound(Key.key("entity.enderman.teleport"), Sound.Source.PLAYER, 1.0f, 1.0f)
-    }
-
-    private const val CONFIG_FILE = "anchors.json"
-
-    private lateinit var state: Anchors
-
-    override fun register(): Long {
-        state = ConfigManager.load(CONFIG_FILE, Anchors())
-        return super.register()
     }
 
     private val TELEPORTING = mutableSetOf<Player>()
@@ -124,7 +106,7 @@ internal object TeleportMechanic : MechanicInterface {
 
         if (block.world.environment != World.Environment.NORMAL) return
 
-        val anchor = state.anchors.firstOrNull { it.matches(block.location) } ?: return
+        val anchor = AnchorTable.findByLocation(block.location) ?: return
 
         when {
             event.action != Action.RIGHT_CLICK_BLOCK -> {
@@ -145,7 +127,7 @@ internal object TeleportMechanic : MechanicInterface {
             }
 
             else -> {
-                playAnchorFlame(anchor, scale = 1.0f)
+                playAnchorFlame(anchor.location, scale = 1.0f)
                 window(anchor, event.player).open(event.player)
             }
         }
@@ -160,10 +142,9 @@ internal object TeleportMechanic : MechanicInterface {
 
         val location = block.location
 
-        if (state.anchors.any { it.matches(block.location) }) return
+        if (AnchorTable.findByLocation(location) != null) return
 
-        state.anchors.add(AnchorData(AnchorData.nextName(state.anchors), location))
-        save()
+        AnchorTable.insert(location)
         event.player.sendActionBar(MM.deserialize(Messages.ANCHOR_CREATION))
     }
 
@@ -173,14 +154,10 @@ internal object TeleportMechanic : MechanicInterface {
 
         if (block.world.environment != World.Environment.NORMAL) return
         if (block.type != Material.LODESTONE) return
-        if (!state.anchors.removeIf { it.matches(block.location) }) return
+        if (!AnchorTable.deleteByLocation(block.location)) return
 
-        save()
         event.player.sendActionBar(MM.deserialize(Messages.ANCHOR_REMOVAL))
     }
-
-    /** Persists the current anchor state to the plugin data folder. */
-    private fun save() = ConfigManager.save(CONFIG_FILE, state)
 
     /**
      * Builds a paginated GUI showing all teleport anchors except the one at [source].
@@ -206,7 +183,8 @@ internal object TeleportMechanic : MechanicInterface {
         .addIngredient('<', BACK_BUTTON)
         .addIngredient('>', FORWARD_BUTTON)
         .setContent(
-            state.anchors
+            AnchorTable
+                .all()
                 .filterNot { it.matches(source.location) }
                 .map { anchorItem(source, it, player) },
         ).build()
@@ -246,7 +224,7 @@ internal object TeleportMechanic : MechanicInterface {
                 ItemStack
                     .of(Material.LODESTONE)
                     .apply {
-                        val cost = calculateCost(source, anchor, player)
+                        val cost = calculateCost(source.location, anchor.location, player)
                         setData(DataComponentTypes.ITEM_NAME, MM.deserialize(anchor.name))
                         setData(
                             DataComponentTypes.LORE,
@@ -264,8 +242,9 @@ internal object TeleportMechanic : MechanicInterface {
                         )
                     },
             ).addClickHandler { _, click ->
-                val cost = calculateCost(source, anchor, click.player)
-                handleTeleport(click.player, source, anchor, cost)
+                val cost = calculateCost(source.location, anchor.location, click.player)
+
+                handleTeleport(click.player, source.location, anchor.location, cost)
             }.build()
 
     /**
@@ -276,17 +255,18 @@ internal object TeleportMechanic : MechanicInterface {
      * - Mount: +50%
      * - Each leashed entity: +25%
      *
-     * @param source The [AnchorData] of the source anchor.
-     * @param anchor The [AnchorData] destination.
+     * @param source The [Location] of the source anchor.
+     * @param anchor The [Location] of the destination anchor.
      * @param player The [Player] to check for mount and leashed entities.
      * @return The total XP cost.
      */
     private fun calculateCost(
-        source: AnchorData,
-        anchor: AnchorData,
+        source: Location,
+        anchor: Location,
         player: Player,
     ): Int {
-        val distance = source.location.distance(anchor.location)
+        val distance = source.distance(anchor)
+
         var cost = distance.toInt().coerceAtLeast(1)
 
         if (player.vehicle != null) cost = (cost * 1.5).toInt()
@@ -298,14 +278,14 @@ internal object TeleportMechanic : MechanicInterface {
      * Handles teleporting a player to an anchor after a 3-second countdown.
      *
      * @param player The [Player] to teleport.
-     * @param source The [AnchorData] the player is teleporting from.
-     * @param anchor The [AnchorData] destination.
+     * @param source The [Location] the player is teleporting from.
+     * @param anchor The [Location] destination.
      * @param cost The XP cost to deduct on teleport.
      */
     private fun handleTeleport(
         player: Player,
-        source: AnchorData,
-        anchor: AnchorData,
+        source: Location,
+        anchor: Location,
         cost: Int,
     ) {
         if (player in TELEPORTING) return
@@ -316,7 +296,7 @@ internal object TeleportMechanic : MechanicInterface {
 
         lateinit var task: BukkitTask
         var remaining = 3
-        val distance = source.location.distance(anchor.location)
+        val distance = source.distance(anchor)
         val initialLocation = player.location.clone()
 
         task =
@@ -337,8 +317,8 @@ internal object TeleportMechanic : MechanicInterface {
                     playAnchorFlame(anchor, scale)
                     playExpansionEffect(source, distance, progress)
                     playExpansionEffect(anchor, distance, progress)
-                    playCloudEffect(source.location, progress)
-                    playCloudEffect(anchor.location, progress)
+                    playCloudEffect(source, progress)
+                    playCloudEffect(anchor, progress)
                     player.showTitle(
                         Title.title(
                             MM.deserialize(Messages.TELEPORT_TITLE),
@@ -351,9 +331,9 @@ internal object TeleportMechanic : MechanicInterface {
                     remaining--
                 } else {
                     val world = anchor.world
-                    val bx = anchor.location.blockX
-                    val by = anchor.location.blockY
-                    val bz = anchor.location.blockZ
+                    val bx = anchor.blockX
+                    val by = anchor.blockY
+                    val bz = anchor.blockZ
                     val hasMount = player.vehicle != null
 
                     if (hasMount) {
@@ -374,7 +354,7 @@ internal object TeleportMechanic : MechanicInterface {
                         }
                     }
 
-                    val destination = anchor.location.clone().add(0.5, 1.0, 0.5)
+                    val destination = anchor.clone().add(0.5, 1.0, 0.5)
 
                     playLightningEffect(player.location)
 
@@ -389,6 +369,7 @@ internal object TeleportMechanic : MechanicInterface {
                     }
 
                     if (player.gameMode != GameMode.CREATIVE) player.giveExp(-cost)
+
                     player.addPotionEffect(PotionEffect(PotionEffectType.BLINDNESS, 40, 0, false, false, false))
 
                     playTeleportEffects(player, destination)
@@ -426,16 +407,16 @@ internal object TeleportMechanic : MechanicInterface {
     /**
      * Spawns purple flame-like particles above the specified anchor.
      *
-     * @param anchor The [AnchorData] to spawn particles above.
+     * @param location The [Location] to spawn particles above.
      * @param scale The scale multiplier for particle spread and count.
      */
     private fun playAnchorFlame(
-        anchor: AnchorData,
+        location: Location,
         scale: Float = 1.0f,
     ) {
-        anchor.world.spawnParticle(
+        location.world.spawnParticle(
             Particle.DUST,
-            anchor.location.clone().add(0.5, 1.2, 0.5),
+            location.clone().add(0.5, 1.2, 0.5),
             (15 * scale).toInt(),
             0.15 * scale,
             0.3 * scale,
@@ -448,16 +429,16 @@ internal object TeleportMechanic : MechanicInterface {
     /**
      * Spawns an expanding horizontal ring of purple particles from the anchor outward.
      *
-     * @param anchor The [AnchorData] center of the expansion.
+     * @param location The [Location] center of the expansion.
      * @param maxDistance The maximum distance the ring should expand to.
      * @param progress A float from 0.0 to 1.0 representing how far the ring has expanded.
      */
     private fun playExpansionEffect(
-        anchor: AnchorData,
+        location: Location,
         maxDistance: Double,
         progress: Float,
     ) {
-        val center = anchor.location.clone().add(0.5, 1.0, 0.5)
+        val center = location.clone().add(0.5, 1.0, 0.5)
         val radius = (maxDistance * progress).coerceAtLeast(0.1)
         val points = (20 + 20 * progress).toInt()
 
@@ -465,9 +446,9 @@ internal object TeleportMechanic : MechanicInterface {
             val angle = 2 * Math.PI * i / points
             val x = center.x + radius * cos(angle)
             val z = center.z + radius * sin(angle)
-            val loc = Location(anchor.world, x, center.y, z)
+            val loc = Location(location.world, x, center.y, z)
 
-            anchor.world.spawnParticle(
+            location.world.spawnParticle(
                 Particle.DUST,
                 loc,
                 1,
@@ -492,6 +473,7 @@ internal object TeleportMechanic : MechanicInterface {
     ) {
         val maxRadius = 4.0
         val radius = maxRadius * progress
+
         if (radius < 0.1) return
 
         val world = location.world
@@ -529,6 +511,7 @@ internal object TeleportMechanic : MechanicInterface {
     ): Boolean {
         val feet = world.getBlockAt(bx, by + 1, bz)
         val head = world.getBlockAt(bx, by + 2, bz)
+
         return !feet.type.isSolid && !head.type.isSolid && feet.type !in DANGEROUS && head.type !in DANGEROUS
     }
 
@@ -546,6 +529,7 @@ internal object TeleportMechanic : MechanicInterface {
             for (dx in -1..1) {
                 for (dz in -1..1) {
                     val block = world.getBlockAt(bx + dx, y, bz + dz)
+
                     if (block.type.isSolid || block.type in DANGEROUS) return false
                 }
             }
@@ -561,11 +545,10 @@ internal object TeleportMechanic : MechanicInterface {
     private fun rename(event: PlayerInteractEvent) {
         val block = event.clickedBlock ?: return
         val item = event.item ?: return
-        val anchor = state.anchors.firstOrNull { it.matches(block.location) } ?: return
-        val index = state.anchors.indexOf(anchor)
+        val anchor = AnchorTable.findByLocation(block.location) ?: return
+        val newName = item.getCustomName() ?: return
 
-        state.anchors[index] = anchor.name(item.getCustomName() ?: return)
-        save()
+        AnchorTable.updateName(anchor.uuid, newName)
         event.player.sendActionBar(MM.deserialize(Messages.ANCHOR_NAME_UPDATE))
 
         item.amount--

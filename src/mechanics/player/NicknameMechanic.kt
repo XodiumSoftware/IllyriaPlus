@@ -16,9 +16,10 @@ import org.xodium.illyriaplus.Utils.CommandUtils.playerExecuted
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.Utils.PlayerUtils.setNickname
 import org.xodium.illyriaplus.data.CommandData
+import org.xodium.illyriaplus.data.PlayerData.Companion.nickname
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.mechanics.server.TabListMechanic.tablist
-import org.xodium.illyriaplus.pdcs.PlayerPDC.nickname
+import org.xodium.illyriaplus.tables.PlayerTable
 
 /** Represents a mechanic handling player nicknames within the system. */
 internal object NicknameMechanic : MechanicInterface {
@@ -55,8 +56,9 @@ internal object NicknameMechanic : MechanicInterface {
             ),
         )
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun on(event: PlayerJoinEvent) {
+        PlayerTable.ensurePlayer(event.player)
         event.player.setNickname()
     }
 
@@ -71,7 +73,7 @@ internal object NicknameMechanic : MechanicInterface {
         name: String,
     ) {
         player.nickname = name
-        player.displayName(MM.deserialize(player.nickname))
+        player.setNickname()
         player.sendActionBar(
             MM.deserialize(
                 UPDATE_NICKNAME_MSG,
