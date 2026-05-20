@@ -24,11 +24,16 @@ import org.xodium.illyriaplus.Utils.CommandUtils.executesCatching
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.interfaces.MechanicInterface
+import java.awt.Color
 import java.net.URI
 import javax.imageio.ImageIO
 import kotlin.io.encoding.Base64
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+import kotlin.uuid.toKotlinUuid
 
 /** Represents a mechanic handling chat formatting within the system. */
+@OptIn(ExperimentalUuidApi::class)
 internal object ChatMechanic : MechanicInterface {
     private const val CHAT_FORMAT: String =
         "<player_head> <player> <reset><gradient:#FFE259:#FFA751>›</gradient> <message>"
@@ -45,14 +50,9 @@ internal object ChatMechanic : MechanicInterface {
     private const val FACE_Y = 8
     private const val FACE_WIDTH = 8
     private const val FACE_HEIGHT = 8
-    private const val MAX_COORDINATE = 7
-    private const val COLOR_MASK = 0xFF
-    private const val BLACK_COLOR = "#000000"
     private const val PIXEL_CHAR = "█"
-    private const val ALPHA_SHIFT = 24
-    private const val RED_SHIFT = 16
-    private const val GREEN_SHIFT = 8
 
+    private val faceCache = mutableMapOf<Uuid, String>()
     private val JOIN_BANNER_TEXT: List<String> =
         listOf(
             "<gradient:#FFA751:#FFE259>]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|" +
@@ -109,7 +109,7 @@ internal object ChatMechanic : MechanicInterface {
                                                 ?: return@executesCatching sender.sendMessage(
                                                     MM.deserialize(PLAYER_IS_NOT_ONLINE_MSG),
                                                 )
-                                        val message = it.getArgument("message", String().javaClass)
+                                        val message = it.getArgument("message", String::class.java)
 
                                         whisper(sender, target, message)
                                     },
@@ -151,14 +151,13 @@ internal object ChatMechanic : MechanicInterface {
                         "player",
                         displayName
                             .clickEvent(ClickEvent.suggestCommand("/w ${player.name} "))
-                            .hoverEvent(
-                                HoverEvent.showText(MM.deserialize(CLICK_TO_WHISPER_MSG)),
-                            ),
+                            .hoverEvent(HoverEvent.showText(MM.deserialize(CLICK_TO_WHISPER_MSG))),
                     ),
                     Placeholder.component("message", message),
                 )
 
             if (audience == player) base = base.appendSpace().append(createDeleteCross(event.signedMessage()))
+
             base
         }
     }
@@ -244,21 +243,17 @@ internal object ChatMechanic : MechanicInterface {
      * @return The rendered face string.
      */
     private fun Player.face(size: Int = 8): String {
-        val texturesProp =
-            playerProfile.properties.firstOrNull { it.name == "textures" }
-                ?: error("Player has no skin texture")
-
-        val json =
-            JsonParser
-                .parseString(Base64.decode(texturesProp.value).decodeToString())
-                .asJsonObject
+        faceCache[uniqueId.toKotlinUuid()]?.let { return it }
 
         val skinUrl =
-            json
-                .getAsJsonObject("textures")
-                .getAsJsonObject("SKIN")
-                .get("url")
-                .asString
+            playerProfile.properties
+                .find { it.name == "textures" }
+                ?.let { JsonParser.parseString(Base64.decode(it.value).decodeToString()).asJsonObject }
+                ?.getAsJsonObject("textures")
+                ?.getAsJsonObject("SKIN")
+                ?.get("url")
+                ?.asString
+                ?: error("Player has no skin texture")
 
         val fullImg =
             ImageIO.read(URI.create(skinUrl).toURL())
@@ -267,26 +262,19 @@ internal object ChatMechanic : MechanicInterface {
         val face = fullImg.getSubimage(FACE_X, FACE_Y, FACE_WIDTH, FACE_HEIGHT)
         val scale = FACE_WIDTH.toDouble() / size
 
-        return buildString {
-            for (y in 0 until size) {
-                for (x in 0 until size) {
-                    val px = (x * scale).toInt().coerceAtMost(MAX_COORDINATE)
-                    val py = (y * scale).toInt().coerceAtMost(MAX_COORDINATE)
-                    val rgb = face.getRGB(px, py)
+        return (0 until size)
+            .joinToString("\n") { y ->
+                (0 until size).joinToString("") { x ->
+                    val px = (x * scale).toInt()
+                    val py = (y * scale).toInt()
+                    val color = Color(face.getRGB(px, py), true)
 
-                    val a = (rgb ushr ALPHA_SHIFT) and COLOR_MASK
-                    val r = (rgb shr RED_SHIFT) and COLOR_MASK
-                    val g = (rgb shr GREEN_SHIFT) and COLOR_MASK
-                    val b = rgb and COLOR_MASK
-
-                    if (a == 0) {
-                        append("<color:$BLACK_COLOR>$PIXEL_CHAR</color>")
+                    if (color.alpha == 0) {
+                        "<color:#000000>$PIXEL_CHAR</color>"
                     } else {
-                        append("<color:#%02x%02x%02x>$PIXEL_CHAR</color>".format(r, g, b))
+                        "<color:#%02x%02x%02x>$PIXEL_CHAR</color>".format(color.red, color.green, color.blue)
                     }
                 }
-                append("\n")
-            }
-        }
+            }.also { faceCache[uniqueId.toKotlinUuid()] = it }
     }
 }
