@@ -142,7 +142,6 @@ internal object ChatMechanic : MechanicInterface {
     private fun asyncChat(event: AsyncChatEvent) {
         event.renderer(ChatRenderer.defaultRenderer())
         event.renderer { player, displayName, message, audience ->
-            val processedMessage = replaceItemPlaceholder(message, player)
             var base =
                 MM.deserialize(
                     CHAT_FORMAT,
@@ -153,7 +152,10 @@ internal object ChatMechanic : MechanicInterface {
                             .clickEvent(ClickEvent.suggestCommand("/w ${player.name} "))
                             .hoverEvent(HoverEvent.showText(MM.deserialize(CLICK_TO_WHISPER_MSG))),
                     ),
-                    Placeholder.component("message", processedMessage),
+                    Placeholder.component(
+                        "message",
+                        message.replaceItemPlaceholder(player).replacePosPlaceholder(player),
+                    ),
                 )
 
             if (audience == player) base = base.appendSpace().append(createDeleteCross(event.signedMessage()))
@@ -165,33 +167,43 @@ internal object ChatMechanic : MechanicInterface {
     /**
      * Replaces ['item'] placeholder with a hoverable component of the player's held item.
      *
-     * @param message The chat message component.
      * @param player The player whose held item to display.
      * @return The message with ['item'] replaced, or the original message if hand is empty.
      */
-    private fun replaceItemPlaceholder(
-        message: Component,
-        player: Player,
-    ): Component {
+    private fun Component.replaceItemPlaceholder(player: Player): Component {
         val heldItem = player.inventory.itemInMainHand
 
-        if (heldItem.type == Material.AIR) return message
+        if (heldItem.type == Material.AIR) return this
 
-        val itemComponent =
-            MM
-                .deserialize("<mango>[</gradient>")
-                .append(heldItem.displayName())
-                .append(MM.deserialize("<mango>]</gradient>"))
-                .hoverEvent(heldItem.asHoverEvent())
-
-        return message.replaceText(
+        return replaceText(
             TextReplacementConfig
                 .builder()
                 .match("\\[item]|\\[i]")
-                .replacement(itemComponent)
+                .replacement(heldItem.displayName().hoverEvent(heldItem.asHoverEvent()))
                 .build(),
         )
     }
+
+    /**
+     * Replaces ['pos'] with the player's current block position.
+     *
+     * @param player The player whose position to display.
+     * @return The message with ['pos'] replaced.
+     */
+    private fun Component.replacePosPlaceholder(player: Player): Component =
+        replaceText(
+            TextReplacementConfig
+                .builder()
+                .matchLiteral("[pos]")
+                .replacement(
+                    MM.deserialize(
+                        "<yellow>W:</yellow> ${player.location.world.name}, " +
+                            "<red>X:</red> ${player.location.blockX}, " +
+                            "<green>Y:</green> ${player.location.blockY}, " +
+                            "<aqua>Z:</aqua> ${player.location.blockZ}",
+                    ),
+                ).build(),
+        )
 
     /**
      * Handles the whisper command.
