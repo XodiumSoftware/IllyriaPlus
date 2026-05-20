@@ -9,9 +9,11 @@ import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSele
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.chat.SignedMessage
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextReplacementConfig
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -143,6 +145,7 @@ internal object ChatMechanic : MechanicInterface {
     private fun asyncChat(event: AsyncChatEvent) {
         event.renderer(ChatRenderer.defaultRenderer())
         event.renderer { player, displayName, message, audience ->
+            val processedMessage = replaceItemPlaceholder(message, player)
             var base =
                 MM.deserialize(
                     CHAT_FORMAT,
@@ -153,13 +156,44 @@ internal object ChatMechanic : MechanicInterface {
                             .clickEvent(ClickEvent.suggestCommand("/w ${player.name} "))
                             .hoverEvent(HoverEvent.showText(MM.deserialize(CLICK_TO_WHISPER_MSG))),
                     ),
-                    Placeholder.component("message", message),
+                    Placeholder.component("message", processedMessage),
                 )
 
             if (audience == player) base = base.appendSpace().append(createDeleteCross(event.signedMessage()))
 
             base
         }
+    }
+
+    /**
+     * Replaces ['item'] placeholder with a hoverable component of the player's held item.
+     *
+     * @param message The chat message component.
+     * @param player The player whose held item to display.
+     * @return The message with ['item'] replaced, or the original message if hand is empty.
+     */
+    private fun replaceItemPlaceholder(
+        message: Component,
+        player: Player,
+    ): Component {
+        val heldItem = player.inventory.itemInMainHand
+
+        if (heldItem.type == Material.AIR) return message
+
+        val itemComponent =
+            MM
+                .deserialize("<gradient:#FFE259:#FFA751>[</gradient>")
+                .append(heldItem.displayName())
+                .append(MM.deserialize("<gradient:#FFE259:#FFA751>]</gradient>"))
+                .hoverEvent(heldItem.asHoverEvent())
+
+        return message.replaceText(
+            TextReplacementConfig
+                .builder()
+                .match("\\[item]|\\[i]")
+                .replacement(itemComponent)
+                .build(),
+        )
     }
 
     /**
