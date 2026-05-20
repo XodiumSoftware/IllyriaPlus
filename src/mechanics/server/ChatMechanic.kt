@@ -13,6 +13,8 @@ import net.kyori.adventure.text.TextReplacementConfig
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
+import net.kyori.adventure.title.Title
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -154,7 +156,10 @@ internal object ChatMechanic : MechanicInterface {
                     ),
                     Placeholder.component(
                         "message",
-                        message.replaceItemPlaceholder(player).replacePosPlaceholder(player),
+                        message
+                            .replaceItemPlaceholder(player)
+                            .replacePosPlaceholder(player)
+                            .replaceMentions(player),
                     ),
                 )
 
@@ -204,6 +209,52 @@ internal object ChatMechanic : MechanicInterface {
                     ),
                 ).build(),
         )
+
+    /**
+     * Replaces @mentions with a highlighted component and sends a title notification.
+     *
+     * @param player The player sending the message.
+     * @return The message with @mentions replaced.
+     */
+    private fun Component.replaceMentions(player: Player): Component {
+        val plain = PlainTextComponentSerializer.plainText().serialize(this)
+        val mentions = "(?<!\\w)@\\w+(?!\\w)".toRegex().findAll(plain).map { it.value }.toSet()
+
+        if (mentions.isEmpty()) return this
+
+        var result = this
+
+        val notified = mutableSetOf<Player>()
+
+        for (mention in mentions) {
+            val name = mention.removePrefix("@")
+            val target = instance.server.onlinePlayers.find { it.name.equals(name, ignoreCase = true) }
+
+            if (target != null && target != player && target !in notified) {
+                target.showTitle(
+                    Title.title(
+                        MM.deserialize("<red>Mentioned</red>"),
+                        MM.deserialize(
+                            "<white><player> mentioned you in the chat!</white>",
+                            Placeholder.component("player", player.displayName()),
+                        ),
+                    ),
+                )
+                notified.add(target)
+            }
+
+            result =
+                result.replaceText(
+                    TextReplacementConfig
+                        .builder()
+                        .matchLiteral(mention)
+                        .replacement(MM.deserialize("<yellow>$mention</gradient>"))
+                        .build(),
+                )
+        }
+
+        return result
+    }
 
     /**
      * Handles the whisper command.
