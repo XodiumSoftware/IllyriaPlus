@@ -55,28 +55,37 @@ internal object ChatMechanic : MechanicInterface {
     private const val PIXEL_CHAR = "█"
 
     private val faceCache = mutableMapOf<Uuid, String>()
+
+    // TODO: remove mechanics: text and wrap the icons in a box.
     private val JOIN_BANNER_TEXT: List<String> =
         listOf(
             "<mango_r>]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|" +
                 "[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[</gradient>",
             "<image><mango>⯈</gradient>",
+            "<image><mango>⯈</gradient> " +
+                "<firewatch>Welcome</gradient> <player>",
+            "<image><mango>⯈</gradient>",
             "<image><mango>⯈</gradient>",
             "<image><mango>⯈</gradient> " +
-                "<firewatch>Welcome</gradient> <player> " +
+                "<firewatch>Mechanics:</gradient>",
+            "<image><mango>⯈</gradient> " +
                 "<click:suggest_command:'/nickname '>" +
-                "<hover:show_text:'<mango>Set your nickname!</gradient>'>" +
+                "<hover:show_text:'<mango>Click to change your nickname!</gradient>'>" +
                 "<white><sprite:items:item/name_tag></white></hover></click> " +
                 "<click:suggest_command:'/locator '>" +
-                "<hover:show_text:'<mango>Change your locator color!</gradient>'>" +
+                "<hover:show_text:'<mango>Click to change your locator color!</gradient>'>" +
                 "<white><sprite:items:item/compass_00></white></hover></click>",
-            "<image><mango>⯈</gradient>",
             "<image><mango>⯈</gradient> " +
-                "<firewatch>Check out</gradient><gray>:</gray>",
-            "<image><mango>⯈</gradient> <gray>✦</gray> " +
-                "<click:run_command:'/rules'><deep-ocean>/rules</gradient></click:run_command>",
-            "<image><mango>⯈</gradient> <gray>✦</gray> " +
-                "<click:open_url:'https://vanillaplus.xodium.org'>" +
-                "<deep-ocean>wiki</gradient></click:open_url>",
+                "<click:suggest_command:'/rules '>" +
+                "<hover:show_text:'<mango>Click to open the Rules Book!</gradient>'>" +
+                "<white><sprite:items:item/written_book></white>" +
+                "</hover></click:suggest_command> " +
+                "<hover:show_text:'<mango>Available Chat Placeholders:</gradient>\n" +
+                "<yellow>[item,i]</yellow> <firewatch>></gradient> " +
+                "<white>Shows your held item</white>\n" +
+                "<yellow>[pos]</yellow> <firewatch>></gradient> <white>Shows your position</white>\n" +
+                "<yellow>@player</yellow> <firewatch>></gradient> <white>Mentions a player</white>'>" +
+                "<yellow><sprite:items:item/light></yellow></hover>",
             "<image><mango>⯈</gradient>",
             "<mango_r>]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|" +
                 "[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[</gradient>",
