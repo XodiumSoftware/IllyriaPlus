@@ -14,18 +14,17 @@ import org.xodium.illyriaplus.interfaces.MechanicInterface
 internal object TabListMechanic : MechanicInterface {
     val HEADER: List<String> =
         listOf(
-            "<gradient:#FFA751:#FFE259><st>───────────────</st></gradient> " +
-                "<gradient:#CB2D3E:#EF473A>" +
+            "<mango_r><st>───────────────</st></gradient> " +
+                "<firewatch>" +
                 "𝕴𝖑𝖑𝖞𝖗𝖎𝖆" +
                 "</gradient> " +
-                "<gradient:#FFE259:#FFA751><st>───────────────</st></gradient>",
+                "<mango><st>───────────────</st></gradient>",
             "",
         )
     val FOOTER: List<String> =
         listOf(
             "",
-            "<gradient:#FFA751:#FFE259><st>─────────────────</st></gradient>" +
-                "<gradient:#FFE259:#FFA751><st>─────────────────</st></gradient>",
+            "<mango_r><st>─────────────────</st></gradient><mango><st>─────────────────</st></gradient>",
         )
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

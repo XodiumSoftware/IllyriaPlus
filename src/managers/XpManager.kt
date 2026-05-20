@@ -12,7 +12,7 @@ import org.xodium.illyriaplus.Utils.MM
  * Provides a unified way to handle spell casting costs across all wand-based spells.
  */
 internal object XpManager {
-    private const val NO_XP_MSG = "<gradient:#CB2D3E:#EF473A><b>Not enough XP!</b></gradient>"
+    private const val NO_XP_MSG = "<firewatch><b>Not enough XP!</b></gradient>"
 
     private val NO_XP_SOUND: Sound =
         Sound.sound(Key.key("block.beacon.deactivate"), Sound.Source.PLAYER, 1.0f, 1.0f)

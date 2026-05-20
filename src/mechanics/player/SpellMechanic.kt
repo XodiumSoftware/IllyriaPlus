@@ -32,8 +32,7 @@ internal object SpellMechanic : MechanicInterface {
 
     /** Spell wand interaction message strings. */
     object Messages {
-        const val SELECTED_SPELL: String =
-            "<gradient:#832466:#BF4299>Current Spell > <white><spell></white></gradient>"
+        const val SELECTED_SPELL: String = "<spellbite>Current Spell > <white><spell></white></gradient>"
     }
 
     @EventHandler

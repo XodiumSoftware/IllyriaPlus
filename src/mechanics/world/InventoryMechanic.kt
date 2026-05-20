@@ -28,16 +28,12 @@ import org.xodium.illyriaplus.interfaces.MechanicInterface
 /** Represents a mechanic handling inventory interactions within the system. */
 internal object InventoryMechanic : MechanicInterface {
     private const val NO_MATERIAL_SPECIFIED_MSG: String =
-        "<gradient:#CB2D3E:#EF473A>You must specify a valid material " +
-            "or hold something in your hand</gradient>"
+        "<firewatch>You must specify a valid material or hold something in your hand</gradient>"
     private const val NO_MATCHING_ITEMS_MSG: String =
-        "<gradient:#CB2D3E:#EF473A>No containers contain " +
-            "<gradient:#F4C4F3:#FC67FA><b><material></b></gradient></gradient>"
+        "<firewatch>No containers contain <rose><b><material></b></gradient></gradient>"
     private const val FOUND_ITEMS_IN_CHESTS_MSG: String =
-        "<gradient:#FFE259:#FFA751>Found <gradient:#F4C4F3:#FC67FA><b><material></b></gradient> " +
-            "in container(s), follow trail(s)</gradient>"
-    private const val NO_CONTAINERS_FOUND_MSG: String =
-        "<gradient:#CB2D3E:#EF473A>No containers found nearby</gradient>"
+        "<mango>Found <rose><b><material></b></gradient> in container(s), follow trail(s)</gradient>"
+    private const val NO_CONTAINERS_FOUND_MSG: String = "<firewatch>No containers found nearby</gradient>"
 
     private val SEARCH_SUCCESSFUL_SOUND: Sound =
         Sound.sound(Key.key("entity.player.levelup"), Sound.Source.PLAYER, 1.0f, 1.0f)

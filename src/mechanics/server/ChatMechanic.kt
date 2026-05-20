@@ -37,17 +37,14 @@ import kotlin.uuid.toKotlinUuid
 /** Represents a mechanic handling chat formatting within the system. */
 @OptIn(ExperimentalUuidApi::class)
 internal object ChatMechanic : MechanicInterface {
-    private const val CHAT_FORMAT: String =
-        "<player_head> <player> <reset><gradient:#FFE259:#FFA751>›</gradient> <message>"
+    private const val CHAT_FORMAT: String = "<player_head> <player> <reset><mango>›</gradient> <message>"
     private const val WHISPER_TO_FORMAT: String =
-        "<gradient:#1488CC:#2B32B2>You</gradient> <gradient:#FFE259:#FFA751>➛</gradient> " +
-            "<player> <reset><gradient:#FFE259:#FFA751>›</gradient> <message>"
+        "<skyline>You</gradient> <mango>➛</gradient> <player> <reset><mango>›</gradient> <message>"
     private const val WHISPER_FROM_FORMAT: String =
-        "<player> <reset><gradient:#FFE259:#FFA751>➛</gradient> " +
-            "<gradient:#1488CC:#2B32B2>You</gradient> <gradient:#FFE259:#FFA751>›</gradient> <message>"
+        "<player> <reset><mango>➛</gradient> <skyline>You</gradient> <mango>›</gradient> <message>"
     private const val DELETE_SYMBOL: String = "<dark_gray>[<dark_red><b>X</b></dark_red><dark_gray>]"
-    private const val CLICK_TO_WHISPER_MSG: String = "<gradient:#FFE259:#FFA751>Click to Whisper</gradient>"
-    private const val CLICK_TO_DELETE_MSG: String = "<gradient:#FFE259:#FFA751>Click to delete your message</gradient>"
+    private const val CLICK_TO_WHISPER_MSG: String = "<mango>Click to Whisper</gradient>"
+    private const val CLICK_TO_DELETE_MSG: String = "<mango>Click to delete your message</gradient>"
     private const val FACE_X = 8
     private const val FACE_Y = 8
     private const val FACE_WIDTH = 8
@@ -57,32 +54,32 @@ internal object ChatMechanic : MechanicInterface {
     private val faceCache = mutableMapOf<Uuid, String>()
     private val JOIN_BANNER_TEXT: List<String> =
         listOf(
-            "<gradient:#FFA751:#FFE259>]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|" +
+            "<mango_r>]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|" +
                 "[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[</gradient>",
-            "<image><gradient:#FFE259:#FFA751>⯈</gradient>",
-            "<image><gradient:#FFE259:#FFA751>⯈</gradient>",
-            "<image><gradient:#FFE259:#FFA751>⯈</gradient> " +
-                "<gradient:#CB2D3E:#EF473A>Welcome</gradient> <player> " +
+            "<image><mango>⯈</gradient>",
+            "<image><mango>⯈</gradient>",
+            "<image><mango>⯈</gradient> " +
+                "<firewatch>Welcome</gradient> <player> " +
                 "<click:suggest_command:'/nickname '>" +
-                "<hover:show_text:'<gradient:#FFE259:#FFA751>Set your nickname!</gradient>'>" +
+                "<hover:show_text:'<mango>Set your nickname!</gradient>'>" +
                 "<white><sprite:items:item/name_tag></white></hover></click> " +
                 "<click:suggest_command:'/locator '>" +
-                "<hover:show_text:'<gradient:#FFE259:#FFA751>Change your locator color!</gradient>'>" +
+                "<hover:show_text:'<mango>Change your locator color!</gradient>'>" +
                 "<white><sprite:items:item/compass_00></white></hover></click>",
-            "<image><gradient:#FFE259:#FFA751>⯈</gradient>",
-            "<image><gradient:#FFE259:#FFA751>⯈</gradient> " +
-                "<gradient:#CB2D3E:#EF473A>Check out</gradient><gray>:</gray>",
-            "<image><gradient:#FFE259:#FFA751>⯈</gradient> <gray>✦</gray> " +
-                "<click:run_command:'/rules'><gradient:#13547a:#80d0c7>/rules</gradient></click:run_command>",
-            "<image><gradient:#FFE259:#FFA751>⯈</gradient> <gray>✦</gray> " +
+            "<image><mango>⯈</gradient>",
+            "<image><mango>⯈</gradient> " +
+                "<firewatch>Check out</gradient><gray>:</gray>",
+            "<image><mango>⯈</gradient> <gray>✦</gray> " +
+                "<click:run_command:'/rules'><deep-ocean>/rules</gradient></click:run_command>",
+            "<image><mango>⯈</gradient> <gray>✦</gray> " +
                 "<click:open_url:'https://vanillaplus.xodium.org'>" +
-                "<gradient:#13547a:#80d0c7>wiki</gradient></click:open_url>",
-            "<image><gradient:#FFE259:#FFA751>⯈</gradient>",
-            "<gradient:#FFA751:#FFE259>]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|" +
+                "<deep-ocean>wiki</gradient></click:open_url>",
+            "<image><mango>⯈</gradient>",
+            "<mango_r>]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|" +
                 "[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[</gradient>",
         )
     private val PLAYER_IS_NOT_ONLINE_MSG: String =
-        "${instance.prefix} <gradient:#CB2D3E:#EF473A>Player is not Online!</gradient>"
+        "${instance.prefix} <firewatch>Player is not Online!</gradient>"
 
     override val cmds =
         listOf(
@@ -182,9 +179,9 @@ internal object ChatMechanic : MechanicInterface {
 
         val itemComponent =
             MM
-                .deserialize("<gradient:#FFE259:#FFA751>[</gradient>")
+                .deserialize("<mango>[</gradient>")
                 .append(heldItem.displayName())
-                .append(MM.deserialize("<gradient:#FFE259:#FFA751>]</gradient>"))
+                .append(MM.deserialize("<mango>]</gradient>"))
                 .hoverEvent(heldItem.asHoverEvent())
 
         return message.replaceText(

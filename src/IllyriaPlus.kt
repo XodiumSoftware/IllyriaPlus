@@ -24,10 +24,7 @@ internal class IllyriaPlus : JavaPlugin() {
 
         /** The standardized prefix for IllyriaPlus messages. */
         val IllyriaPlus.prefix: String
-            get() =
-                "<gradient:#FFA751:#FFE259>[</gradient><gradient:#CB2D3E:#EF473A>" +
-                    "${this.javaClass.simpleName}" +
-                    "</gradient><gradient:#FFE259:#FFA751>]</gradient>"
+            get() = "<mango_r>[</gradient><firewatch>${this.javaClass.simpleName}</gradient><mango>]</gradient>"
     }
 
     override fun onEnable() {

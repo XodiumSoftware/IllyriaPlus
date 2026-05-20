@@ -22,54 +22,39 @@ import org.xodium.illyriaplus.interfaces.MechanicInterface
 internal object MessagesMechanic : MechanicInterface {
     /** Player join, quit, death, and kick message strings. */
     object PlayerMessages {
-        const val JOIN: String = "<green>➕<reset> <gradient:#FFE259:#FFA751>›</gradient> <player>"
-        const val QUIT: String = "<red>➖<reset> <gradient:#FFE259:#FFA751>›</gradient> <player>"
-        const val DEATH_BY_PLAYER: String = "<killer> <gradient:#FFE259:#FFA751>⚔</gradient> <player>"
-        const val DEATH: String =
-            "<gradient:#FFE259:#FFA751>💀</gradient> <gradient:#FFE259:#FFA751>›</gradient> <cause>"
+        const val JOIN: String = "<green>➕<reset> <mango>›</gradient> <player>"
+        const val QUIT: String = "<red>➖<reset> <mango>›</gradient> <player>"
+        const val DEATH_BY_PLAYER: String = "<killer> <mango>⚔</gradient> <player>"
+        const val DEATH: String = "<mango>💀</gradient> <mango>›</gradient> <cause>"
         const val DEATH_SCREEN: String = "☠"
-        const val KICK: String =
-            "<red>❌<reset> <gradient:#FFE259:#FFA751>›</gradient> <player> " +
-                "<gradient:#FFE259:#FFA751>reason:</gradient> <reason>"
-        const val SET_SPAWN: String =
-            "<gradient:#CB2D3E:#EF473A>❗</gradient> <gradient:#FFE259:#FFA751>›</gradient> <notification>"
+        const val KICK: String = "<red>❌<reset> <mango>›</gradient> <player> <mango>reason:</gradient> <reason>"
+        const val SET_SPAWN: String = "<firewatch>❗</gradient> <mango>›</gradient> <notification>"
     }
 
     /** Advancement completion message strings by type (task, goal, challenge). */
     object AdvancementMessages {
         const val TASK: String =
-            "🎉 <gradient:#FFE259:#FFA751>›</gradient> <player> " +
-                "<gradient:#FFE259:#FFA751>has made the advancement:</gradient> <advancement>"
-        const val GOAL: String =
-            "🎉 <gradient:#FFE259:#FFA751>›</gradient> <player> " +
-                "<gradient:#FFE259:#FFA751>has reached the goal:</gradient> <advancement>"
+            "🎉 <mango>›</gradient> <player> <mango>has made the advancement:</gradient> <advancement>"
+        const val GOAL: String = "🎉 <mango>›</gradient> <player> <mango>has reached the goal:</gradient> <advancement>"
         const val CHALLENGE: String =
-            "🎉 <gradient:#FFE259:#FFA751>›</gradient> <player> " +
-                "<gradient:#FFE259:#FFA751>has completed the challenge:</gradient> <advancement>"
+            "🎉 <mango>›</gradient> <player> <mango>has completed the challenge:</gradient> <advancement>"
     }
 
     /** Login denial messages (server full, access denied). */
     object LoginMessages {
-        const val FULL: String =
-            "<gradient:#CB2D3E:#EF473A>❗</gradient> <gradient:#FFE259:#FFA751>›</gradient> " +
-                "The server is full."
+        const val FULL: String = "<firewatch>❗</gradient> <mango>›</gradient> The server is full."
         const val DENIED: String =
-            "<gradient:#CB2D3E:#EF473A>❗</gradient> <gradient:#FFE259:#FFA751>›</gradient> " +
-                "You are not allowed to join this server."
+            "<firewatch>❗</gradient> <mango>›</gradient> You are not allowed to join this server."
     }
 
     /** Bed enter failure messages by reason. */
     object BedEnterMessages {
         const val TOO_FAR_AWAY: String =
-            "<gradient:#CB2D3E:#EF473A>❗</gradient> <gradient:#FFE259:#FFA751>›</gradient> " +
-                "You are too far away from the bed."
-        const val OBSTRUCTED: String =
-            "<gradient:#CB2D3E:#EF473A>❗</gradient> <gradient:#FFE259:#FFA751>›</gradient> Your bed is obstructed."
+            "<firewatch>❗</gradient> <mango>›</gradient> You are too far away from the bed."
+        const val OBSTRUCTED: String = "<firewatch>❗</gradient> <mango>›</gradient> Your bed is obstructed."
         const val NOT_SAFE: String =
-            "<gradient:#CB2D3E:#EF473A>❗</gradient> <gradient:#FFE259:#FFA751>›</gradient> " +
-                "You cannot sleep while monsters are nearby."
-        const val EXPLOSION: String =
-            "<gradient:#CB2D3E:#EF473A>❗</gradient> <gradient:#FFE259:#FFA751>›</gradient> You cannot sleep here."
+            "<firewatch>❗</gradient> <mango>›</gradient> You cannot sleep while monsters are nearby."
+        const val EXPLOSION: String = "<firewatch>❗</gradient> <mango>›</gradient> You cannot sleep here."
         const val OTHER: String = ""
     }
 

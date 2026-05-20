@@ -21,7 +21,7 @@ internal object DimensionMechanic : MechanicInterface {
     private const val NETHER_TO_OVERWORLD_RATIO = 8
     private const val PORTAL_SEARCH_RADIUS: Int = 128
     private const val CREATION_DENIED_MSG: String =
-        "<gradient:#CB2D3E:#EF473A>No corresponding active portal found in the Overworld!</gradient>"
+        "<firewatch>No corresponding active portal found in the Overworld!</gradient>"
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PlayerPortalEvent) = playerPortal(event)

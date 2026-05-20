@@ -10,8 +10,8 @@ import org.xodium.illyriaplus.interfaces.MechanicInterface
 internal object MotdMechanic : MechanicInterface {
     private val MOTD: List<String> =
         listOf(
-            "<gradient:#CB2D3E:#EF473A><b>Ultimate Private SMP</b></gradient>",
-            "<gradient:#FFE259:#FFA751><b>➤ WELCOME BACK LADS!</b></gradient>",
+            "<firewatch><b>Ultimate Private SMP</b></gradient>",
+            "<mango><b>➤ WELCOME BACK LADS!</b></gradient>",
         )
 
     @EventHandler(priority = EventPriority.MONITOR)
