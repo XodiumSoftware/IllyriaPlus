@@ -49,35 +49,6 @@ internal object XpManager {
     }
 
     /**
-     * Verifies whether the player can afford the XP cost without deducting it.
-     * Sends feedback if they cannot.
-     *
-     * @param player The player to check.
-     * @param xpCost The required XP amount.
-     * @return True if the player can afford it (or is in Creative), false otherwise.
-     */
-    fun canAfford(
-        player: Player,
-        xpCost: Int,
-    ): Boolean {
-        when {
-            player.gameMode == GameMode.CREATIVE -> {
-                return true
-            }
-
-            !player.hasEnoughXp(xpCost) -> {
-                player.playSound(NO_XP_SOUND)
-                player.sendActionBar(MM.deserialize(NO_XP_MSG))
-                return false
-            }
-
-            else -> {
-                return true
-            }
-        }
-    }
-
-    /**
      * Checks if the player has enough total experience points.
      *
      * @param xpCost The required XP amount.
