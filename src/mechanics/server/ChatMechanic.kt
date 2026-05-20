@@ -20,6 +20,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
@@ -134,7 +135,25 @@ internal object ChatMechanic : MechanicInterface {
     fun on(event: AsyncChatEvent) = asyncChat(event)
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    fun on(event: PlayerJoinEvent) = joinBanner(event.player)
+    fun on(event: PlayerJoinEvent) {
+        instance.server.onlinePlayers.forEach { it.addCustomChatCompletions(listOf("@${event.player.name}")) }
+        syncMentionCompletions(event.player)
+        joinBanner(event.player)
+    }
+
+    @EventHandler
+    fun on(event: PlayerQuitEvent) {
+        instance.server.onlinePlayers.forEach { it.removeCustomChatCompletions(listOf("@${event.player.name}")) }
+    }
+
+    /**
+     * Adds @-prefixed names for all online players to the given player's chat completions.
+     *
+     * @param player The player to update completions for.
+     */
+    private fun syncMentionCompletions(player: Player) {
+        player.addCustomChatCompletions(instance.server.onlinePlayers.map { "@${it.name}" })
+    }
 
     /**
      * Handles asynchronous chat events.
@@ -248,7 +267,7 @@ internal object ChatMechanic : MechanicInterface {
                     TextReplacementConfig
                         .builder()
                         .matchLiteral(mention)
-                        .replacement(MM.deserialize("<yellow>$mention</gradient>"))
+                        .replacement(MM.deserialize("<yellow>$mention</yellow>"))
                         .build(),
                 )
         }
