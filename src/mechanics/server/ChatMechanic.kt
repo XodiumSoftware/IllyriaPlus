@@ -40,24 +40,18 @@ import kotlin.uuid.toKotlinUuid
 /** Represents a mechanic handling chat formatting within the system. */
 @OptIn(ExperimentalUuidApi::class)
 internal object ChatMechanic : MechanicInterface {
-    private const val CHAT_FORMAT: String = "<player_head> <player> <reset><mango>›</gradient> <message>"
-    private const val WHISPER_TO_FORMAT: String =
+    private const val CHAT_FORMAT = "<player_head> <player> <reset><mango>›</gradient> <message>"
+    private const val WHISPER_TO_FORMAT =
         "<skyline>You</gradient> <mango>➛</gradient> <player> <reset><mango>›</gradient> <message>"
-    private const val WHISPER_FROM_FORMAT: String =
+    private const val WHISPER_FROM_FORMAT =
         "<player> <reset><mango>➛</gradient> <skyline>You</gradient> <mango>›</gradient> <message>"
-    private const val DELETE_SYMBOL: String = "<dark_gray>[<dark_red><b>X</b></dark_red><dark_gray>]"
-    private const val CLICK_TO_WHISPER_MSG: String = "<mango>Click to Whisper</gradient>"
-    private const val CLICK_TO_DELETE_MSG: String = "<mango>Click to delete your message</gradient>"
-    private const val FACE_X = 8
-    private const val FACE_Y = 8
-    private const val FACE_WIDTH = 8
-    private const val FACE_HEIGHT = 8
-    private const val PIXEL_CHAR = "█"
+    private const val DELETE_SYMBOL = "<dark_gray>[<dark_red><b>X</b></dark_red><dark_gray>]"
+    private const val CLICK_TO_WHISPER_MSG = "<mango>Click to Whisper</gradient>"
+    private const val CLICK_TO_DELETE_MSG = "<mango>Click to delete your message</gradient>"
 
-    private val faceCache = mutableMapOf<Uuid, String>()
-
-    // TODO: remove mechanics: text and wrap the icons in a box.
-    private val JOIN_BANNER_TEXT: List<String> =
+    private val FACE_CACHE = mutableMapOf<Uuid, String>()
+    private val JOIN_BANNER_TEXT =
+        // TODO: remove 'mechanics:' text and wrap the icons in a box.
         listOf(
             "<mango_r>]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|" +
                 "[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[</gradient>",
@@ -90,8 +84,7 @@ internal object ChatMechanic : MechanicInterface {
             "<mango_r>]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|" +
                 "[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[</gradient>",
         )
-    private val PLAYER_IS_NOT_ONLINE_MSG: String =
-        "${instance.prefix} <firewatch>Player is not Online!</gradient>"
+    private val PLAYER_IS_NOT_ONLINE_MSG = "${instance.prefix} <firewatch>Player is not Online!</gradient>"
 
     override val cmds =
         listOf(
@@ -361,13 +354,12 @@ internal object ChatMechanic : MechanicInterface {
     /**
      * Generates a MiniMessage string representing the player's face.
      *
-     * @param size Output size in pixels.
      * @return The rendered face string.
      */
-    private fun Player.face(size: Int = 8): String {
-        faceCache[uniqueId.toKotlinUuid()]?.let { return it }
+    private fun Player.face(): String {
+        FACE_CACHE[uniqueId.toKotlinUuid()]?.let { return it }
 
-        val skinUrl =
+        val face =
             playerProfile.properties
                 .find { it.name == "textures" }
                 ?.let { JsonParser.parseString(Base64.decode(it.value).decodeToString()).asJsonObject }
@@ -375,28 +367,23 @@ internal object ChatMechanic : MechanicInterface {
                 ?.getAsJsonObject("SKIN")
                 ?.get("url")
                 ?.asString
+                ?.let { ImageIO.read(URI.create(it).toURL()) }
+                ?.getSubimage(8, 8, 8, 8)
                 ?: error("Player has no skin texture")
 
-        val fullImg =
-            ImageIO.read(URI.create(skinUrl).toURL())
-                ?: error("Failed to load skin image from URL: $skinUrl")
-
-        val face = fullImg.getSubimage(FACE_X, FACE_Y, FACE_WIDTH, FACE_HEIGHT)
-        val scale = FACE_WIDTH.toDouble() / size
-
-        return (0 until size)
+        return (0..7)
             .joinToString("\n") { y ->
-                (0 until size).joinToString("") { x ->
-                    val px = (x * scale).toInt()
-                    val py = (y * scale).toInt()
-                    val color = Color(face.getRGB(px, py), true)
+                (0..7).joinToString("") { x ->
+                    val color = Color(face.getRGB(x, y), true)
 
-                    if (color.alpha == 0) {
-                        "<color:#000000>$PIXEL_CHAR</color>"
-                    } else {
-                        "<color:#%02x%02x%02x>$PIXEL_CHAR</color>".format(color.red, color.green, color.blue)
-                    }
+                    "<color:#${
+                        if (color.alpha == 0) {
+                            "000000"
+                        } else {
+                            "%02x%02x%02x".format(color.red, color.green, color.blue)
+                        }
+                    }>█</color>"
                 }
-            }.also { faceCache[uniqueId.toKotlinUuid()] = it }
+            }.also { FACE_CACHE[uniqueId.toKotlinUuid()] = it }
     }
 }
