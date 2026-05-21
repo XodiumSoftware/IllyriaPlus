@@ -36,7 +36,18 @@ internal object ScoreBoardMechanic : MechanicInterface {
         )
 
     @EventHandler
-    fun on(event: PlayerJoinEvent) = event.player.configureScoreboard()
+    fun on(event: PlayerJoinEvent) {
+        handleJoin(event)
+    }
+
+    /**
+     * Configures the scoreboard for the player on join.
+     *
+     * @param event The PlayerJoinEvent triggered when a player joins.
+     */
+    private fun handleJoin(event: PlayerJoinEvent) {
+        event.player.configureScoreboard()
+    }
 
     /** Toggles scoreboard visibility and applies the correct scoreboard. */
     private fun Player.toggleScoreboard() {

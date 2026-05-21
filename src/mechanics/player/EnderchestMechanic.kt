@@ -14,6 +14,15 @@ import org.xodium.illyriaplus.interfaces.MechanicInterface
 internal object EnderchestMechanic : MechanicInterface {
     @EventHandler
     fun on(event: PlayerInteractEvent) {
+        openEnderchest(event)
+    }
+
+    /**
+     * Opens the player's ender chest when right-clicking air with an ender chest item.
+     *
+     * @param event The PlayerInteractEvent triggered by the player.
+     */
+    private fun openEnderchest(event: PlayerInteractEvent) {
         if (event.action != Action.RIGHT_CLICK_AIR) return
         if (event.item?.type != Material.ENDER_CHEST) return
         if (event.player.gameMode != GameMode.SURVIVAL) return

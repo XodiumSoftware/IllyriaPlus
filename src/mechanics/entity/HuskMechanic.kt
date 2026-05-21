@@ -21,6 +21,15 @@ internal object HuskMechanic : MechanicInterface {
 
     @EventHandler
     fun on(event: EntityDeathEvent) {
+        huskDrop(event)
+    }
+
+    /**
+     * Handles husk death drops.
+     *
+     * @param event The EntityDeathEvent triggered when an entity dies.
+     */
+    private fun huskDrop(event: EntityDeathEvent) {
         if (event.entity !is Husk) return
         if (Random.nextDouble() > HUSK_SAND_DROP_CHANCE) return
 

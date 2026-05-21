@@ -55,6 +55,15 @@ internal object NicknameMechanic : MechanicInterface {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun on(event: PlayerJoinEvent) {
+        handleJoin(event)
+    }
+
+    /**
+     * Applies the player's stored nickname on join.
+     *
+     * @param event The PlayerJoinEvent triggered when a player joins.
+     */
+    private fun handleJoin(event: PlayerJoinEvent) {
         event.player.nickname()
     }
 

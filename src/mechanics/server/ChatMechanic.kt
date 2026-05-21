@@ -138,13 +138,31 @@ internal object ChatMechanic : MechanicInterface {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PlayerJoinEvent) {
+        handleJoin(event)
+    }
+
+    @EventHandler
+    fun on(event: PlayerQuitEvent) {
+        handleQuit(event)
+    }
+
+    /**
+     * Handles player join chat mechanics.
+     *
+     * @param event The PlayerJoinEvent triggered when a player joins.
+     */
+    private fun handleJoin(event: PlayerJoinEvent) {
         instance.server.onlinePlayers.forEach { it.addCustomChatCompletions(listOf("@${event.player.name}")) }
         syncMentionCompletions(event.player)
         joinBanner(event.player)
     }
 
-    @EventHandler
-    fun on(event: PlayerQuitEvent) {
+    /**
+     * Handles player quit chat mechanics.
+     *
+     * @param event The PlayerQuitEvent triggered when a player quits.
+     */
+    private fun handleQuit(event: PlayerQuitEvent) {
         instance.server.onlinePlayers.forEach { it.removeCustomChatCompletions(listOf("@${event.player.name}")) }
     }
 

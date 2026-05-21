@@ -11,6 +11,15 @@ import org.xodium.illyriaplus.interfaces.MechanicInterface
 internal object TameableMechanic : MechanicInterface {
     @EventHandler
     fun on(event: PlayerInteractEntityEvent) {
+        handleInteract(event)
+    }
+
+    /**
+     * Handles player interactions to transfer tameable entity ownership.
+     *
+     * @param event The PlayerInteractEntityEvent triggered by the player.
+     */
+    private fun handleInteract(event: PlayerInteractEntityEvent) {
         if (transferOwnership(event.player, event.rightClicked as? Player ?: return)) event.isCancelled = true
     }
 

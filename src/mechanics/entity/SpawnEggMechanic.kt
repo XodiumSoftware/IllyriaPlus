@@ -13,6 +13,15 @@ internal object SpawnEggMechanic : MechanicInterface {
 
     @EventHandler
     fun on(event: EntityDeathEvent) {
+        spawnEggDrop(event)
+    }
+
+    /**
+     * Handles spawn egg drops on entity death.
+     *
+     * @param event The EntityDeathEvent triggered when an entity dies.
+     */
+    private fun spawnEggDrop(event: EntityDeathEvent) {
         if (Random.nextDouble() <= SPAWN_EGG_DROP_CHANCE) {
             Material.matchMaterial("${event.entityType.name}_SPAWN_EGG")?.let { event.drops.add(ItemStack.of(it)) }
         }

@@ -18,6 +18,15 @@ internal object BatMechanic : MechanicInterface {
 
     @EventHandler
     fun on(event: EntityDeathEvent) {
+        batDrop(event)
+    }
+
+    /**
+     * Handles bat death drops.
+     *
+     * @param event The EntityDeathEvent triggered when an entity dies.
+     */
+    private fun batDrop(event: EntityDeathEvent) {
         if (event.entity !is Bat) return
 
         val killer = event.entity.killer ?: return

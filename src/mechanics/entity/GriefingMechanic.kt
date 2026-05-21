@@ -21,11 +21,29 @@ internal object GriefingMechanic : MechanicInterface {
 
     @EventHandler
     fun on(event: EntityChangeBlockEvent) {
-        if (event.entityType in GRIEF_CANCELLED_ENTITIES) event.isCancelled = true
+        preventEntityChangeBlock(event)
     }
 
     @EventHandler
     fun on(event: EntityExplodeEvent) {
+        preventEntityExplode(event)
+    }
+
+    /**
+     * Prevents entity block changes for griefing entities.
+     *
+     * @param event The EntityChangeBlockEvent to handle.
+     */
+    private fun preventEntityChangeBlock(event: EntityChangeBlockEvent) {
+        if (event.entityType in GRIEF_CANCELLED_ENTITIES) event.isCancelled = true
+    }
+
+    /**
+     * Clears the block list for explosions caused by griefing entities.
+     *
+     * @param event The EntityExplodeEvent to handle.
+     */
+    private fun preventEntityExplode(event: EntityExplodeEvent) {
         if (event.entityType in GRIEF_CANCELLED_ENTITIES) event.blockList().clear()
     }
 }

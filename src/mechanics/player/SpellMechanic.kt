@@ -37,6 +37,20 @@ internal object SpellMechanic : MechanicInterface {
 
     @EventHandler
     fun on(event: PlayerInteractEvent) {
+        handleWandInteract(event)
+    }
+
+    @EventHandler
+    fun on(event: PlayerItemHeldEvent) {
+        handleWandHeld(event)
+    }
+
+    /**
+     * Handles player interactions with a spell wand.
+     *
+     * @param event The PlayerInteractEvent triggered by the player.
+     */
+    private fun handleWandInteract(event: PlayerInteractEvent) {
         val item = event.item ?: return
 
         if (item.type != Material.BLAZE_ROD) return
@@ -56,8 +70,12 @@ internal object SpellMechanic : MechanicInterface {
         }
     }
 
-    @EventHandler
-    fun on(event: PlayerItemHeldEvent) {
+    /**
+     * Handles spell wand display when the player changes held items.
+     *
+     * @param event The PlayerItemHeldEvent triggered by the player.
+     */
+    private fun handleWandHeld(event: PlayerItemHeldEvent) {
         val item = event.player.inventory.getItem(event.newSlot) ?: return
 
         if (item.type != Material.BLAZE_ROD) return

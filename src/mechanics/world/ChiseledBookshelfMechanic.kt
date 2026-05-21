@@ -24,6 +24,16 @@ import org.bukkit.block.data.type.ChiseledBookshelf as ChiseledBookshelfData
 internal object ChiseledBookshelfMechanic : MechanicInterface {
     @EventHandler
     fun on(event: PlayerInteractEvent) {
+        bookshelfInteraction(event)
+    }
+
+    /**
+     * Handles the interaction event where a player left-clicks a chiseled bookshelf
+     * to display the item held in the targeted slot as an action bar message.
+     *
+     * @param event The PlayerInteractEvent triggered when a player interacts with the world.
+     */
+    private fun bookshelfInteraction(event: PlayerInteractEvent) {
         val player = event.player
 
         if (player.gameMode !in listOf(GameMode.SURVIVAL, GameMode.ADVENTURE)) return

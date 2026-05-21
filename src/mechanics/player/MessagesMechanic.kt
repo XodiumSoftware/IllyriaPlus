@@ -60,36 +60,77 @@ internal object MessagesMechanic : MechanicInterface {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PlayerJoinEvent) {
-        event.joinMessage(handleJoin(event.player) ?: return)
+        playerJoin(event)
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PlayerQuitEvent) {
-        event.quitMessage(handleQuit(event.player) ?: return)
+        playerQuit(event)
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     fun on(event: PlayerServerFullCheckEvent) {
+        serverFullCheck(event)
+    }
+
+    @Suppress("UnstableApiUsage")
+    @EventHandler(priority = EventPriority.HIGH)
+    fun on(event: PlayerConnectionValidateLoginEvent) {
+        loginDenied(event)
+    }
+
+    @EventHandler
+    fun on(event: PlayerKickEvent) {
+        playerKick(event)
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    fun on(event: PlayerDeathEvent) {
+        playerDeath(event)
+    }
+
+    @EventHandler
+    fun on(event: PlayerAdvancementDoneEvent) {
+        advancementDone(event)
+    }
+
+    @EventHandler
+    fun on(event: PlayerSetSpawnEvent) {
+        setSpawn(event)
+    }
+
+    @Suppress("UnstableApiUsage")
+    @EventHandler
+    fun on(event: PlayerBedEnterEvent) {
+        bedEnter(event)
+    }
+
+    private fun playerJoin(event: PlayerJoinEvent) {
+        event.joinMessage(handleJoin(event.player) ?: return)
+    }
+
+    private fun playerQuit(event: PlayerQuitEvent) {
+        event.quitMessage(handleQuit(event.player) ?: return)
+    }
+
+    private fun serverFullCheck(event: PlayerServerFullCheckEvent) {
         if (event.isAllowed) return
 
         event.deny(handleServerFull() ?: return)
     }
 
     @Suppress("UnstableApiUsage")
-    @EventHandler(priority = EventPriority.HIGH)
-    fun on(event: PlayerConnectionValidateLoginEvent) {
+    private fun loginDenied(event: PlayerConnectionValidateLoginEvent) {
         if (event.isAllowed) return
 
         event.kickMessage(handleLoginDenied() ?: return)
     }
 
-    @EventHandler
-    fun on(event: PlayerKickEvent) {
+    private fun playerKick(event: PlayerKickEvent) {
         event.leaveMessage(handleKick(event.reason()) ?: return)
     }
 
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    fun on(event: PlayerDeathEvent) {
+    private fun playerDeath(event: PlayerDeathEvent) {
         val killer = event.entity.killer
         val deathMessage =
             if (killer != null) {
@@ -103,19 +144,16 @@ internal object MessagesMechanic : MechanicInterface {
         event.deathScreenMessageOverride(handleDeathScreen())
     }
 
-    @EventHandler
-    fun on(event: PlayerAdvancementDoneEvent) {
+    private fun advancementDone(event: PlayerAdvancementDoneEvent) {
         event.message(handleAdvancement(event.player, event.advancement) ?: return)
     }
 
-    @EventHandler
-    fun on(event: PlayerSetSpawnEvent) {
+    private fun setSpawn(event: PlayerSetSpawnEvent) {
         event.notification = handleSetSpawn(event.notification ?: return) ?: return
     }
 
     @Suppress("UnstableApiUsage")
-    @EventHandler
-    fun on(event: PlayerBedEnterEvent) {
+    private fun bedEnter(event: PlayerBedEnterEvent) {
         event.player.sendMessage(handleBedEnter(event.enterAction().problem() ?: return) ?: return)
     }
 

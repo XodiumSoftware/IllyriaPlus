@@ -29,11 +29,29 @@ internal object TabListMechanic : MechanicInterface {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PlayerJoinEvent) {
-        tablist(event.player)
+        updateTablist(event)
     }
 
     @EventHandler
     fun on(event: PlayerClientLoadedWorldEvent) {
+        updatePlayerListName(event)
+    }
+
+    /**
+     * Updates the tab list for the player on join.
+     *
+     * @param event The PlayerJoinEvent triggered when a player joins.
+     */
+    private fun updateTablist(event: PlayerJoinEvent) {
+        tablist(event.player)
+    }
+
+    /**
+     * Updates the player's list name when their client finishes loading the world.
+     *
+     * @param event The PlayerClientLoadedWorldEvent triggered by the player.
+     */
+    private fun updatePlayerListName(event: PlayerClientLoadedWorldEvent) {
         event.player.playerListName(event.player.displayName())
     }
 
