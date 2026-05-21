@@ -99,7 +99,6 @@ internal object MessagesMechanic : MechanicInterface {
         setSpawn(event)
     }
 
-    @Suppress("UnstableApiUsage")
     @EventHandler
     fun on(event: PlayerBedEnterEvent) {
         bedEnter(event)
