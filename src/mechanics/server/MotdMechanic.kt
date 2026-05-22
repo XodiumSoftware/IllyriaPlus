@@ -16,15 +16,6 @@ internal object MotdMechanic : MechanicInterface {
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun on(event: ServerListPingEvent) {
-        updateMotd(event)
-    }
-
-    /**
-     * Updates the server MOTD on ping.
-     *
-     * @param event The ServerListPingEvent triggered by the server.
-     */
-    private fun updateMotd(event: ServerListPingEvent) {
         event.motd(Utils.MM.deserialize(MOTD.joinToString("\n")))
     }
 }
