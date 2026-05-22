@@ -1,24 +1,25 @@
-package org.xodium.illyriaplus.mechanics.server
+package org.xodium.illyriaplus.dialogs
 
 import io.papermc.paper.command.brigadier.Commands
+import io.papermc.paper.dialog.Dialog
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.CommandUtils.playerExecuted
 import org.xodium.illyriaplus.data.CommandData
-import org.xodium.illyriaplus.interfaces.MechanicInterface
+import org.xodium.illyriaplus.interfaces.DialogInterface
 
-/** Represents a mechanic handling FAQ functionality within the system. */
-internal object FaqMechanic : MechanicInterface {
+/** Represents a dialog handling faq within the system. */
+@Suppress("UnstableApiUsage")
+internal object FaqDialog : DialogInterface {
     override val cmds =
         listOf(
             CommandData(
                 Commands
                     .literal("faq")
                     .requires { it.sender.hasPermission(perms[0]) }
-                    .playerExecuted { _, _ -> TODO() },
-                "Displays frequently asked questions",
-                listOf("info"),
+                    .playerExecuted { player, _ -> player.showDialog(dialog) },
+                "Opens the FAQ dialog",
             ),
         )
 
@@ -30,4 +31,8 @@ internal object FaqMechanic : MechanicInterface {
                 PermissionDefault.TRUE,
             ),
         )
+
+    override val dialog =
+        Dialog.create {
+        }
 }

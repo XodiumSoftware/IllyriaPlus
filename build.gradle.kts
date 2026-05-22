@@ -27,16 +27,12 @@ description = "Minecraft plugin that enhances the base gameplay"
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://repo.xenondevs.xyz/releases")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$mcVersion.build.+")
 
     implementation(kotlin("stdlib"))
-
-    implementation("xyz.xenondevs.invui:invui:2.1.0")
-    implementation("xyz.xenondevs.invui:invui-kotlin:2.1.0")
 }
 
 java {

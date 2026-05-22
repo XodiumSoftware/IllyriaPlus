@@ -3,6 +3,7 @@
 package org.xodium.illyriaplus
 
 import org.bukkit.plugin.java.JavaPlugin
+import org.xodium.illyriaplus.dialogs.FaqDialog
 import org.xodium.illyriaplus.enchantments.spells.*
 import org.xodium.illyriaplus.enchantments.utility.*
 import org.xodium.illyriaplus.enchantments.vanilla.FeatherFallingEnchantment
@@ -56,7 +57,6 @@ internal class IllyriaPlus : JavaPlugin() {
                 ChiseledBookshelfMechanic,
                 DimensionMechanic,
                 EnderchestMechanic,
-                FaqMechanic,
                 GriefingMechanic,
                 HeadMechanic,
                 HuskMechanic,
@@ -100,6 +100,15 @@ internal class IllyriaPlus : JavaPlugin() {
 
         logger.info(
             "Registered: ${enchantments.size} enchantment events | Took ${enchantments.sumOf { it.register() }}ms",
+        )
+
+        val dialogs =
+            listOf(
+                FaqDialog,
+            )
+
+        logger.info(
+            "Registered: ${dialogs.size} enchantment events | Took ${dialogs.sumOf { it.register() }}ms",
         )
     }
 
