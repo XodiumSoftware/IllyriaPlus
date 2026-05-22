@@ -10,6 +10,7 @@ import org.xodium.illyriaplus.Utils.CommandUtils.playerExecuted
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.interfaces.GuiInterface
+import xyz.xenondevs.invui.gui.Animation
 import xyz.xenondevs.invui.gui.Markers
 import xyz.xenondevs.invui.gui.PagedGui
 import xyz.xenondevs.invui.item.BoundItem
@@ -40,6 +41,12 @@ internal object FaqGui : GuiInterface {
         )
 
     override fun gui(player: Player): Window {
+        val animation =
+            Animation
+                .builder()
+                .setSlotSelector(Animation::horizontalSnakeSlotSelector)
+                .filterTaggedSlots('x')
+                .build()
         val content =
             listOf(
                 BOOK_RULES,
@@ -70,7 +77,9 @@ internal object FaqGui : GuiInterface {
                         ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true)
                     }
                 }.addClickHandler { _, gui, _ ->
+                    gui.cancelAnimation()
                     gui.page--
+                    gui.playAnimation(animation)
                 }.build()
         val next =
             BoundItem
@@ -83,7 +92,9 @@ internal object FaqGui : GuiInterface {
                         ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true)
                     }
                 }.addClickHandler { _, gui, _ ->
+                    gui.cancelAnimation()
                     gui.page++
+                    gui.playAnimation(animation)
                 }.build()
 
         return Window
@@ -103,6 +114,7 @@ internal object FaqGui : GuiInterface {
                     .addIngredient('<', previous)
                     .addIngredient('>', next)
                     .setContent(content)
+                    .addModifier { it.playAnimation(animation) }
                     .build(),
             ).setViewer(player)
             .build()
