@@ -72,7 +72,9 @@ internal object FaqGui : GuiInterface {
                 .setItemProvider { _, gui ->
                     if (gui.page > 0) {
                         ItemBuilder(Material.ARROW)
-                            .setName("<gray>Move to page <aqua>${gui.page}<gray>/<aqua>${gui.pageCount}")
+                            .setName(
+                                MM.deserialize("<gray>Move to page <aqua>${gui.page}<gray>/<aqua>${gui.pageCount}"),
+                            )
                     } else {
                         ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true)
                     }
@@ -87,7 +89,9 @@ internal object FaqGui : GuiInterface {
                 .setItemProvider { _, gui ->
                     if (gui.page < gui.pageCount - 1) {
                         ItemBuilder(Material.ARROW)
-                            .setName("<gray>Move to page <aqua>${gui.page + 2}<gray>/<aqua>${gui.pageCount}")
+                            .setName(
+                                MM.deserialize("<gray>Move to page <aqua>${gui.page + 2}<gray>/<aqua>${gui.pageCount}"),
+                            )
                     } else {
                         ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true)
                     }
@@ -99,7 +103,7 @@ internal object FaqGui : GuiInterface {
 
         return Window
             .builder()
-            .setTitle(MM.deserialize("<firewatch>FAQ</gradient>"))
+            .setTitle(MM.deserialize("<firewatch><b>FAQ</b></gradient>"))
             .setUpperGui(
                 PagedGui
                     .itemsBuilder()
@@ -122,125 +126,155 @@ internal object FaqGui : GuiInterface {
 
     private val BOOK_RULES =
         ItemBuilder(Material.WRITTEN_BOOK)
-            .setName("<mango>Rules Book</gradient>")
-            .addLoreLines("", "<gray>cmd:</gray> <yellow>/Rules</yellow>")
+            .setName(MM.deserialize("<mango>Rules Book</gradient>"))
+            .addLoreLines(MM.deserialize(""), MM.deserialize("<gray>cmd:</gray> <yellow>/rules</yellow>"))
 
     private val ITEM_NICKNAME =
         ItemBuilder(Material.NAME_TAG)
-            .setName("<mango>Nickname</gradient>")
-            .addLoreLines("", "<gray>cmd:</gray> <yellow>/nickname</yellow>")
+            .setName(MM.deserialize("<mango>Nickname</gradient>"))
+            .addLoreLines(MM.deserialize(""), MM.deserialize("<gray>cmd:</gray> <yellow>/nickname</yellow>"))
 
     private val ITEM_LOCATOR =
         ItemBuilder(Material.COMPASS)
-            .setName("<mango>Locator</gradient>")
-            .addLoreLines("", "<gray>cmd:</gray> <yellow>/locator</yellow>")
+            .setName(MM.deserialize("<mango>Locator</gradient>"))
+            .addLoreLines(MM.deserialize(""), MM.deserialize("<gray>cmd:</gray> <yellow>/locator</yellow>"))
 
     private val MECH_OPENABLE =
         ItemBuilder(Material.DARK_OAK_DOOR)
-            .setName("<mango>Openable Mechanics</gradient>")
+            .setName(MM.deserialize("<mango>Openable Mechanics</gradient>"))
             .addLoreLines(
-                "",
-                "<yellow>Double Doors</yellow> <firewatch>></gradient> <white>Sync open/close together</white>",
-                "<yellow>Knocking</yellow> <firewatch>></gradient> <white>Sneak + left-click with empty hand</white>",
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Double Doors</yellow> <firewatch>></gradient> <white>Sync open/close together</white>",
+                ),
+                MM.deserialize(
+                    "<yellow>Knocking</yellow> <firewatch>></gradient> <white>Sneak + left-click with empty hand</white>",
+                ),
             )
 
     private val MECH_TAMEABLE =
         ItemBuilder(Material.WOLF_SPAWN_EGG)
-            .setName("<mango>Tameable Mechanics</gradient>")
+            .setName(MM.deserialize("<mango>Tameable Mechanics</gradient>"))
             .addLoreLines(
-                "",
-                "<yellow>Transfer Pets</yellow> <firewatch>></gradient> <white>Hold lead + right-click player</white>",
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Transfer Pets</yellow> <firewatch>></gradient> <white>Hold lead + right-click player</white>",
+                ),
             )
 
     private val MECH_ENDERCHEST =
         ItemBuilder(Material.ENDER_CHEST)
-            .setName("<mango>Enderchest Mechanics</gradient>")
+            .setName(MM.deserialize("<mango>Enderchest Mechanics</gradient>"))
             .addLoreLines(
-                "",
-                "<yellow>Portable Access</yellow> <firewatch>></gradient> <white>Right-click air with ender chest</white>",
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Portable Access</yellow> <firewatch>></gradient> <white>Right-click air with ender chest</white>",
+                ),
             )
 
     private val MECH_XP =
         ItemBuilder(Material.EXPERIENCE_BOTTLE)
-            .setName("<mango>XP Mechanics</gradient>")
+            .setName(MM.deserialize("<mango>XP Mechanics</gradient>"))
             .addLoreLines(
-                "",
-                "<yellow>Bottle XP</yellow> <firewatch>></gradient> <white>Sneak + right-click enchanting table with bottle</white>",
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Bottle XP</yellow> <firewatch>></gradient> <white>Sneak + right-click enchanting table with bottle</white>",
+                ),
             )
 
     private val MECH_HUSK =
         ItemBuilder(Material.SAND)
-            .setName("<mango>Husk Mechanics</gradient>")
+            .setName(MM.deserialize("<mango>Husk Mechanics</gradient>"))
             .addLoreLines(
-                "",
-                "<yellow>Sand Drops</yellow> <firewatch>></gradient> <white>Drop 0-2 sand (+Looting, bonus on camel)</white>",
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Sand Drops</yellow> <firewatch>></gradient> <white>Drop 0-2 sand (+Looting, bonus on camel)</white>",
+                ),
             )
 
     private val MECH_HEAD =
         ItemBuilder(Material.PLAYER_HEAD)
-            .setName("<mango>Head Mechanics</gradient>")
+            .setName(MM.deserialize("<mango>Head Mechanics</gradient>"))
             .addLoreLines(
-                "",
-                "<yellow>Player Heads</yellow> <firewatch>></gradient> <white>1% chance to drop on death</white>",
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Player Heads</yellow> <firewatch>></gradient> <white>1% chance to drop on death</white>",
+                ),
             )
 
     private val CHAT_PLACEHOLDERS =
         ItemBuilder(Material.TORCH)
-            .setName("<mango>Chat Placeholders</gradient>")
+            .setName(MM.deserialize("<mango>Chat Placeholders</gradient>"))
             .addLoreLines(
-                "",
-                "<yellow>[item,i]</yellow> <firewatch>></gradient> <white>Shows your held item</white>",
-                "<yellow>[pos]</yellow> <firewatch>></gradient> <white>Shows your position</white>",
-                "<yellow>@player</yellow> <firewatch>></gradient> <white>Mentions a player</white>",
+                MM.deserialize(""),
+                MM.deserialize("<yellow>[item,i]</yellow> <firewatch>></gradient> <white>Shows your held item</white>"),
+                MM.deserialize("<yellow>[pos]</yellow> <firewatch>></gradient> <white>Shows your position</white>"),
+                MM.deserialize("<yellow>@player</yellow> <firewatch>></gradient> <white>Mentions a player</white>"),
             )
 
     private val MECH_INVENTORY =
         ItemBuilder(Material.CHEST)
-            .setName("<mango>Inventory Mechanics</gradient>")
+            .setName(MM.deserialize("<mango>Inventory Mechanics</gradient>"))
             .addLoreLines(
-                "",
-                "<gray>cmd:</gray> <yellow>/search</yellow> <firewatch>></gradient> <white>Find items in nearby chests</white>",
-                "<gray>cmd:</gray> <yellow>/unload</yellow> <firewatch>></gradient> <white>Dump inventory into nearby chests</white>",
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<gray>cmd:</gray> <yellow>/search</yellow> <firewatch>></gradient> <white>Find items in nearby chests</white>",
+                ),
+                MM.deserialize(
+                    "<gray>cmd:</gray> <yellow>/unload</yellow> <firewatch>></gradient> <white>Dump inventory into nearby chests</white>",
+                ),
             )
 
     private val MECH_SIT =
         ItemBuilder(Material.OAK_STAIRS)
-            .setName("<mango>Sit Mechanics</gradient>")
+            .setName(MM.deserialize("<mango>Sit Mechanics</gradient>"))
             .addLoreLines(
-                "",
-                "<yellow>Sit Anywhere</yellow> <firewatch>></gradient> <white>Right-click bottom stairs/slabs</white>",
-                "<yellow>Stand Up</yellow> <firewatch>></gradient> <white>Take damage, break block, or dismount</white>",
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Sit Anywhere</yellow> <firewatch>></gradient> <white>Right-click bottom stairs/slabs</white>",
+                ),
+                MM.deserialize(
+                    "<yellow>Stand Up</yellow> <firewatch>></gradient> <white>Take damage, break block, or dismount</white>",
+                ),
             )
 
     private val MECH_BOOKSHELF =
         ItemBuilder(Material.BOOKSHELF)
-            .setName("<mango>Bookshelf Mechanics</gradient>")
+            .setName(MM.deserialize("<mango>Bookshelf Mechanics</gradient>"))
             .addLoreLines(
-                "",
-                "<yellow>Peek Books</yellow> <firewatch>></gradient> <white>Left-click front face to inspect slot</white>",
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Peek Books</yellow> <firewatch>></gradient> <white>Left-click front face to inspect slot</white>",
+                ),
             )
 
     private val MECH_DIMENSION =
         ItemBuilder(Material.OBSIDIAN)
-            .setName("<mango>Dimension Mechanics</gradient>")
+            .setName(MM.deserialize("<mango>Dimension Mechanics</gradient>"))
             .addLoreLines(
-                "",
-                "<yellow>Portal Linking</yellow> <firewatch>></gradient> <white>Nether portals require Overworld link</white>",
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Portal Linking</yellow> <firewatch>></gradient> <white>Nether portals require Overworld link</white>",
+                ),
             )
 
     private val MECH_BAT =
         ItemBuilder(Material.PHANTOM_MEMBRANE)
-            .setName("<mango>Bat Mechanics</gradient>")
+            .setName(MM.deserialize("<mango>Bat Mechanics</gradient>"))
             .addLoreLines(
-                "",
-                "<yellow>Membrane Drops</yellow> <firewatch>></gradient> <white>Drop 0-1 phantom membrane (+Looting)</white>",
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Membrane Drops</yellow> <firewatch>></gradient> <white>Drop 0-1 phantom membrane (+Looting)</white>",
+                ),
             )
 
     private val MECH_SPAWN_EGG =
         ItemBuilder(Material.ZOMBIE_SPAWN_EGG)
-            .setName("<mango>Spawn Egg Mechanics</gradient>")
+            .setName(MM.deserialize("<mango>Spawn Egg Mechanics</gradient>"))
             .addLoreLines(
-                "",
-                "<yellow>Rare Drops</yellow> <firewatch>></gradient> <white>0.1% chance for mobs to drop their spawn egg</white>",
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Rare Drops</yellow> <firewatch>></gradient> <white>0.1% chance for mobs to drop their spawn egg</white>",
+                ),
             )
 }
