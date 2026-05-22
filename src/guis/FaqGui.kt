@@ -148,7 +148,8 @@ internal object FaqGui : GuiInterface {
                     "<yellow>Double Doors</yellow> <firewatch>></gradient> <white>Sync open/close together</white>",
                 ),
                 MM.deserialize(
-                    "<yellow>Knocking</yellow> <firewatch>></gradient> <white>Sneak + left-click with empty hand</white>",
+                    "<yellow>Knocking</yellow> <firewatch>></gradient> <white>Sneak + " +
+                        "left-click with empty hand</white>",
                 ),
             )
 
@@ -158,7 +159,8 @@ internal object FaqGui : GuiInterface {
             .addLoreLines(
                 MM.deserialize(""),
                 MM.deserialize(
-                    "<yellow>Transfer Pets</yellow> <firewatch>></gradient> <white>Hold lead + right-click player</white>",
+                    "<yellow>Transfer Pets</yellow> <firewatch>></gradient> <white>Hold lead + " +
+                        "right-click player</white>",
                 ),
             )
 
@@ -168,7 +170,8 @@ internal object FaqGui : GuiInterface {
             .addLoreLines(
                 MM.deserialize(""),
                 MM.deserialize(
-                    "<yellow>Portable Access</yellow> <firewatch>></gradient> <white>Right-click air with ender chest</white>",
+                    "<yellow>Portable Access</yellow> <firewatch>></gradient> " +
+                        "<white>Right-click air with ender chest</white>",
                 ),
             )
 
@@ -178,7 +181,8 @@ internal object FaqGui : GuiInterface {
             .addLoreLines(
                 MM.deserialize(""),
                 MM.deserialize(
-                    "<yellow>Bottle XP</yellow> <firewatch>></gradient> <white>Sneak + right-click enchanting table with bottle</white>",
+                    "<yellow>Bottle XP</yellow> <firewatch>></gradient> <white>Sneak + " +
+                        "right-click enchanting table with bottle</white>",
                 ),
             )
 
@@ -188,7 +192,8 @@ internal object FaqGui : GuiInterface {
             .addLoreLines(
                 MM.deserialize(""),
                 MM.deserialize(
-                    "<yellow>Sand Drops</yellow> <firewatch>></gradient> <white>Drop 0-2 sand (+Looting, bonus on camel)</white>",
+                    "<yellow>Sand Drops</yellow> <firewatch>></gradient> <white>Drop 0-2 sand " +
+                        "(+Looting, bonus on camel)</white>",
                 ),
             )
 
@@ -218,10 +223,12 @@ internal object FaqGui : GuiInterface {
             .addLoreLines(
                 MM.deserialize(""),
                 MM.deserialize(
-                    "<gray>cmd:</gray> <yellow>/search</yellow> <firewatch>></gradient> <white>Find items in nearby chests</white>",
+                    "<gray>cmd:</gray> <yellow>/search</yellow> <firewatch>></gradient> " +
+                        "<white>Find items in nearby chests</white>",
                 ),
                 MM.deserialize(
-                    "<gray>cmd:</gray> <yellow>/unload</yellow> <firewatch>></gradient> <white>Dump inventory into nearby chests</white>",
+                    "<gray>cmd:</gray> <yellow>/unload</yellow> <firewatch>></gradient> " +
+                        "<white>Dump inventory into nearby chests</white>",
                 ),
             )
 
@@ -231,10 +238,12 @@ internal object FaqGui : GuiInterface {
             .addLoreLines(
                 MM.deserialize(""),
                 MM.deserialize(
-                    "<yellow>Sit Anywhere</yellow> <firewatch>></gradient> <white>Right-click bottom stairs/slabs</white>",
+                    "<yellow>Sit Anywhere</yellow> <firewatch>></gradient> " +
+                        "<white>Right-click bottom stairs/slabs</white>",
                 ),
                 MM.deserialize(
-                    "<yellow>Stand Up</yellow> <firewatch>></gradient> <white>Take damage, break block, or dismount</white>",
+                    "<yellow>Stand Up</yellow> <firewatch>></gradient> " +
+                        "<white>Take damage, break block, or dismount</white>",
                 ),
             )
 
@@ -244,7 +253,8 @@ internal object FaqGui : GuiInterface {
             .addLoreLines(
                 MM.deserialize(""),
                 MM.deserialize(
-                    "<yellow>Peek Books</yellow> <firewatch>></gradient> <white>Left-click front face to inspect slot</white>",
+                    "<yellow>Peek Books</yellow> <firewatch>></gradient> " +
+                        "<white>Left-click front face to inspect slot</white>",
                 ),
             )
 
@@ -254,7 +264,8 @@ internal object FaqGui : GuiInterface {
             .addLoreLines(
                 MM.deserialize(""),
                 MM.deserialize(
-                    "<yellow>Portal Linking</yellow> <firewatch>></gradient> <white>Nether portals require Overworld link</white>",
+                    "<yellow>Portal Linking</yellow> <firewatch>></gradient> " +
+                        "<white>Nether portals require Overworld link</white>",
                 ),
             )
 
@@ -264,7 +275,8 @@ internal object FaqGui : GuiInterface {
             .addLoreLines(
                 MM.deserialize(""),
                 MM.deserialize(
-                    "<yellow>Membrane Drops</yellow> <firewatch>></gradient> <white>Drop 0-1 phantom membrane (+Looting)</white>",
+                    "<yellow>Membrane Drops</yellow> <firewatch>></gradient> " +
+                        "<white>Drop 0-1 phantom membrane (+Looting)</white>",
                 ),
             )
 
@@ -274,7 +286,8 @@ internal object FaqGui : GuiInterface {
             .addLoreLines(
                 MM.deserialize(""),
                 MM.deserialize(
-                    "<yellow>Rare Drops</yellow> <firewatch>></gradient> <white>0.1% chance for mobs to drop their spawn egg</white>",
+                    "<yellow>Rare Drops</yellow> <firewatch>></gradient> " +
+                        "<white>0.1% chance for mobs to drop their spawn egg</white>",
                 ),
             )
 }
