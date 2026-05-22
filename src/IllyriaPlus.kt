@@ -7,6 +7,7 @@ import org.xodium.illyriaplus.enchantments.spells.*
 import org.xodium.illyriaplus.enchantments.utility.*
 import org.xodium.illyriaplus.enchantments.vanilla.FeatherFallingEnchantment
 import org.xodium.illyriaplus.enchantments.vanilla.SilkTouchEnchantment
+import org.xodium.illyriaplus.guis.FaqGui
 import org.xodium.illyriaplus.mechanics.entity.*
 import org.xodium.illyriaplus.mechanics.player.*
 import org.xodium.illyriaplus.mechanics.server.*
@@ -99,6 +100,15 @@ internal class IllyriaPlus : JavaPlugin() {
 
         logger.info(
             "Registered: ${enchantments.size} enchantment events | Took ${enchantments.sumOf { it.register() }}ms",
+        )
+
+        val guis =
+            listOf(
+                FaqGui,
+            )
+
+        logger.info(
+            "Registered: ${guis.size} gui's | Took ${guis.sumOf { it.register() }}ms",
         )
     }
 

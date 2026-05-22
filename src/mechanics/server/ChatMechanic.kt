@@ -1,6 +1,5 @@
 package org.xodium.illyriaplus.mechanics.server
 
-import com.google.gson.JsonParser
 import com.mojang.brigadier.arguments.StringArgumentType
 import io.papermc.paper.chat.ChatRenderer
 import io.papermc.paper.command.brigadier.Commands
@@ -16,6 +15,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import net.kyori.adventure.title.Title
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -28,16 +28,8 @@ import org.xodium.illyriaplus.Utils.CommandUtils.executesCatching
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.interfaces.MechanicInterface
-import java.awt.Color
-import java.net.URI
-import javax.imageio.ImageIO
-import kotlin.io.encoding.Base64
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
-import kotlin.uuid.toKotlinUuid
 
 /** Represents a mechanic handling chat formatting within the system. */
-@OptIn(ExperimentalUuidApi::class)
 internal object ChatMechanic : MechanicInterface {
     private const val CHAT_FORMAT = "<player_head> <player> <reset><mango>›</gradient> <message>"
     private const val WHISPER_TO_FORMAT =
@@ -48,40 +40,8 @@ internal object ChatMechanic : MechanicInterface {
     private const val CLICK_TO_WHISPER_MSG = "<mango>Click to Whisper</gradient>"
     private const val CLICK_TO_DELETE_MSG = "<mango>Click to delete your message</gradient>"
     private const val PLAYER_IS_NOT_ONLINE_MSG = "<firewatch>Player is not Online!</gradient>"
-
-    private val FACE_CACHE = mutableMapOf<Uuid, String>()
-    private val JOIN_BANNER_TEXT =
-        listOf(
-            "<mango_r>]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|" +
-                "[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[</gradient>",
-            "<image><mango>⯈</gradient>",
-            "<image><mango>⯈</gradient> " +
-                "<firewatch>Welcome</gradient> <player>",
-            "<image><mango>⯈</gradient>",
-            "<image><mango>⯈</gradient>",
-            "<image><mango>⯈</gradient> " +
-                "<click:suggest_command:'/nickname '>" +
-                "<hover:show_text:'<mango>Click to change your nickname!</gradient>'>" +
-                "<white><sprite:items:item/name_tag></white></hover></click>   " +
-                "<click:suggest_command:'/locator '>" +
-                "<hover:show_text:'<mango>Click to change your locator color!</gradient>'>" +
-                "<white><sprite:items:item/compass_00></white></hover></click>",
-            "<image><mango>⯈</gradient> " +
-                "<click:suggest_command:'/rules '>" +
-                "<hover:show_text:'<mango>Click to open the Rules Book!</gradient>'>" +
-                "<white><sprite:items:item/written_book></white>" +
-                "</hover></click:suggest_command>   " +
-                "<hover:show_text:'<mango>Available Chat Placeholders:</gradient>\n" +
-                "<yellow>[item,i]</yellow> <firewatch>></gradient> " +
-                "<white>Shows your held item</white>\n" +
-                "<yellow>[pos]</yellow> <firewatch>></gradient> <white>Shows your position</white>\n" +
-                "<yellow>@player</yellow> <firewatch>></gradient> <white>Mentions a player</white>'>" +
-                "<yellow><sprite:items:item/light></yellow></hover>",
-            "<image><mango>⯈</gradient>",
-            "<image><mango>⯈</gradient>",
-            "<mango_r>]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|" +
-                "[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[</gradient>",
-        )
+    private const val JOIN_TITLE = "<firewatch><b>Welcome</b></gradient> <player>"
+    private const val JOIN_SUBTITLE = "<mango>Check out:</gradient> /faq"
 
     override val cmds =
         listOf(
@@ -134,14 +94,10 @@ internal object ChatMechanic : MechanicInterface {
     fun on(event: AsyncChatEvent) = asyncChat(event)
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    fun on(event: PlayerJoinEvent) {
-        handleJoin(event)
-    }
+    fun on(event: PlayerJoinEvent) = handleJoin(event)
 
     @EventHandler
-    fun on(event: PlayerQuitEvent) {
-        handleQuit(event)
-    }
+    fun on(event: PlayerQuitEvent) = handleQuit(event)
 
     /**
      * Handles player join chat mechanics.
@@ -151,7 +107,13 @@ internal object ChatMechanic : MechanicInterface {
     private fun handleJoin(event: PlayerJoinEvent) {
         instance.server.onlinePlayers.forEach { it.addCustomChatCompletions(listOf("@${event.player.name}")) }
         syncMentionCompletions(event.player)
-        joinBanner(event.player)
+        event.player.showTitle(
+            Title.title(
+                MM.deserialize(JOIN_TITLE, Placeholder.component("player", event.player.displayName())),
+                MM.deserialize(JOIN_SUBTITLE),
+            ),
+        )
+        event.player.playSound(event.player.location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f)
     }
 
     /**
@@ -334,27 +296,6 @@ internal object ChatMechanic : MechanicInterface {
     }
 
     /**
-     * Sends the welcome banner to the player on join.
-     *
-     * @param player The player who joined.
-     */
-    private fun joinBanner(player: Player) {
-        var imageIndex = 0
-
-        player.sendMessage(
-            MM.deserialize(
-                Regex("<image>").replace(JOIN_BANNER_TEXT.joinToString("\n")) { "<image${++imageIndex}>" },
-                Placeholder.component("player", player.displayName()),
-                *player
-                    .face()
-                    .lines()
-                    .mapIndexed { i, line -> Placeholder.component("image${i + 1}", MM.deserialize(line)) }
-                    .toTypedArray(),
-            ),
-        )
-    }
-
-    /**
      * Creates to delete cross-component for message deletion.
      *
      * @param signedMessage The signed message to be deleted.
@@ -365,40 +306,4 @@ internal object ChatMechanic : MechanicInterface {
             .deserialize(DELETE_SYMBOL)
             .hoverEvent(MM.deserialize(CLICK_TO_DELETE_MSG))
             .clickEvent(ClickEvent.callback { instance.server.deleteMessage(signedMessage) })
-
-    /**
-     * Generates a MiniMessage string representing the player's face.
-     *
-     * @return The rendered face string.
-     */
-    private fun Player.face(): String {
-        FACE_CACHE[uniqueId.toKotlinUuid()]?.let { return it }
-
-        val face =
-            playerProfile.properties
-                .find { it.name == "textures" }
-                ?.let { JsonParser.parseString(Base64.decode(it.value).decodeToString()).asJsonObject }
-                ?.getAsJsonObject("textures")
-                ?.getAsJsonObject("SKIN")
-                ?.get("url")
-                ?.asString
-                ?.let { ImageIO.read(URI.create(it).toURL()) }
-                ?.getSubimage(8, 8, 8, 8)
-                ?: error("Player has no skin texture")
-
-        return (0..7)
-            .joinToString("\n") { y ->
-                (0..7).joinToString("") { x ->
-                    val color = Color(face.getRGB(x, y), true)
-
-                    "<color:#${
-                        if (color.alpha == 0) {
-                            "000000"
-                        } else {
-                            "%02x%02x%02x".format(color.red, color.green, color.blue)
-                        }
-                    }>█</color>"
-                }
-            }.also { FACE_CACHE[uniqueId.toKotlinUuid()] = it }
-    }
 }
