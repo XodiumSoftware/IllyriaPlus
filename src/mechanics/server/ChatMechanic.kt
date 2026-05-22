@@ -15,6 +15,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import net.kyori.adventure.title.Title
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -112,6 +113,7 @@ internal object ChatMechanic : MechanicInterface {
                 MM.deserialize(JOIN_SUBTITLE),
             ),
         )
+        event.player.playSound(event.player.location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f)
     }
 
     /**
