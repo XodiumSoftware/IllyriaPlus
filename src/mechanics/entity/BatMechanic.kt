@@ -1,5 +1,6 @@
 package org.xodium.illyriaplus.mechanics.entity
 
+import org.bukkit.GameRules
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Bat
@@ -27,6 +28,7 @@ internal object BatMechanic : MechanicInterface {
      * @param event The EntityDeathEvent triggered when an entity dies.
      */
     private fun batDrop(event: EntityDeathEvent) {
+        if (event.entity.world.getGameRuleValue(GameRules.SPAWN_PHANTOMS)) return
         if (event.entity !is Bat) return
 
         val killer = event.entity.killer ?: return
