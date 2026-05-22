@@ -3,11 +3,11 @@
 package org.xodium.illyriaplus
 
 import org.bukkit.plugin.java.JavaPlugin
-import org.xodium.illyriaplus.dialogs.FaqDialog
 import org.xodium.illyriaplus.enchantments.spells.*
 import org.xodium.illyriaplus.enchantments.utility.*
 import org.xodium.illyriaplus.enchantments.vanilla.FeatherFallingEnchantment
 import org.xodium.illyriaplus.enchantments.vanilla.SilkTouchEnchantment
+import org.xodium.illyriaplus.guis.FaqGui
 import org.xodium.illyriaplus.mechanics.entity.*
 import org.xodium.illyriaplus.mechanics.player.*
 import org.xodium.illyriaplus.mechanics.server.*
@@ -102,13 +102,13 @@ internal class IllyriaPlus : JavaPlugin() {
             "Registered: ${enchantments.size} enchantment events | Took ${enchantments.sumOf { it.register() }}ms",
         )
 
-        val dialogs =
+        val guis =
             listOf(
-                FaqDialog,
+                FaqGui,
             )
 
         logger.info(
-            "Registered: ${dialogs.size} enchantment events | Took ${dialogs.sumOf { it.register() }}ms",
+            "Registered: ${guis.size} gui's | Took ${guis.sumOf { it.register() }}ms",
         )
     }
 

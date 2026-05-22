@@ -1,14 +1,15 @@
 package org.xodium.illyriaplus.interfaces
 
-import io.papermc.paper.dialog.Dialog
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
+import org.bukkit.entity.Player
 import org.bukkit.permissions.Permission
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.data.CommandData
+import xyz.xenondevs.invui.window.Window
 import kotlin.time.measureTime
 
-/** Represents a contract for dialogs within the system. */
-internal interface DialogInterface {
+/** Represents a contract for guis within the system. */
+internal interface GuiInterface {
     /**
      * Retrieves a list of command data associated with the mechanic.
      *
@@ -23,8 +24,13 @@ internal interface DialogInterface {
      */
     val perms: List<Permission> get() = emptyList()
 
-    /** The [Dialog] instance configured for this dialog. */
-    val dialog: Dialog
+    /**
+     * Opens the GUI for the specified player.
+     *
+     * @param player The player to show the GUI to.
+     * @return The [Window] instance that was opened.
+     */
+    fun gui(player: Player): Window
 
     /**
      * Registers this feature with the server.
