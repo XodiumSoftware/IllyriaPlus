@@ -1,6 +1,5 @@
 package org.xodium.illyriaplus.mechanics.server
 
-import com.google.gson.JsonParser
 import com.mojang.brigadier.arguments.StringArgumentType
 import io.papermc.paper.chat.ChatRenderer
 import io.papermc.paper.command.brigadier.Commands
@@ -28,16 +27,8 @@ import org.xodium.illyriaplus.Utils.CommandUtils.executesCatching
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.interfaces.MechanicInterface
-import java.awt.Color
-import java.net.URI
-import javax.imageio.ImageIO
-import kotlin.io.encoding.Base64
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
-import kotlin.uuid.toKotlinUuid
 
 /** Represents a mechanic handling chat formatting within the system. */
-@OptIn(ExperimentalUuidApi::class)
 internal object ChatMechanic : MechanicInterface {
     private const val CHAT_FORMAT = "<player_head> <player> <reset><mango>›</gradient> <message>"
     private const val WHISPER_TO_FORMAT =
@@ -48,114 +39,8 @@ internal object ChatMechanic : MechanicInterface {
     private const val CLICK_TO_WHISPER_MSG = "<mango>Click to Whisper</gradient>"
     private const val CLICK_TO_DELETE_MSG = "<mango>Click to delete your message</gradient>"
     private const val PLAYER_IS_NOT_ONLINE_MSG = "<firewatch>Player is not Online!</gradient>"
-
-    private val FACE_CACHE = mutableMapOf<Uuid, String>()
-    private val JOIN_BANNER_TEXT =
-        listOf(
-            buildString {
-                append("<mango_r>]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|")
-                append("[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[</gradient>")
-            },
-            "<image><mango>⯈</gradient>",
-            "<image><mango>⯈</gradient> <firewatch>Welcome</gradient> <player>",
-            "<image><mango>⯈</gradient>",
-            "<image><mango>⯈</gradient>",
-            buildString {
-                append("<image><mango>⯈</gradient> ")
-                append("<click:suggest_command:'/nickname '>")
-                append("<hover:show_text:'<mango>Click to change your nickname!</gradient>'>")
-                append("<white><sprite:items:item/name_tag></white></hover></click>   ")
-                append("<click:suggest_command:'/locator '>")
-                append("<hover:show_text:'<mango>Click to change your locator color!</gradient>'>")
-                append("<white><sprite:items:item/compass_00></white></hover></click>   ")
-                append("<hover:show_text:'<mango>Openable Mechanics:</gradient>\n")
-                append(
-                    "<yellow>Double Doors</yellow> <firewatch>></gradient> <white>Sync open/close together</white>\n",
-                )
-                append(
-                    "<yellow>Knocking</yellow> <firewatch>></gradient> <white>Sneak + left-click with empty hand</white>'>",
-                )
-                append("<white><sprite:items:item/dark_oak_door></white></hover>   ")
-                append("<hover:show_text:'<mango>Tameable Mechanics:</gradient>\n")
-                append(
-                    "<yellow>Transfer Pets</yellow> <firewatch>></gradient> <white>Hold lead + right-click player</white>'>",
-                )
-                append("<white><sprite:items:item/wolf_spawn_egg></white></hover>   ")
-                append("<hover:show_text:'<mango>Enderchest Mechanics:</gradient>\n")
-                append(
-                    "<yellow>Portable Access</yellow> <firewatch>></gradient> <white>Right-click air with ender chest</white>'>",
-                )
-                append("<white><head:Torias_Dax></white></hover>   ")
-                append("<hover:show_text:'<mango>XP Mechanics:</gradient>\n")
-                append(
-                    "<yellow>Bottle XP</yellow> <firewatch>></gradient> <white>Sneak + right-click enchanting table with bottle</white>'>",
-                )
-                append("<white><sprite:items:item/experience_bottle></white></hover>   ")
-                append("<hover:show_text:'<mango>Husk Mechanics:</gradient>\n")
-                append(
-                    "<yellow>Sand Drops</yellow> <firewatch>></gradient> <white>Drop 0-2 sand (+Looting, bonus on camel)</white>'>",
-                )
-                append("<white><sprite:blocks:block/sand></white></hover>   ")
-                append("<hover:show_text:'<mango>Head Mechanics:</gradient>\n")
-                append(
-                    "<yellow>Player Heads</yellow> <firewatch>></gradient> <white>1% chance to drop on death</white>'>",
-                )
-                append("<white><head:entity/player/wide/steve></white></hover>")
-            },
-            "<image><mango>⯈</gradient>",
-            buildString {
-                append("<image><mango>⯈</gradient> ")
-                append("<click:suggest_command:'/rules '>")
-                append("<hover:show_text:'<mango>Click to open the Rules Book!</gradient>'>")
-                append("<white><sprite:items:item/written_book></white>")
-                append("</hover></click:suggest_command>   ")
-                append("<hover:show_text:'<mango>Available Chat Placeholders:</gradient>\n")
-                append("<yellow>[item,i]</yellow> <firewatch>></gradient> ")
-                append("<white>Shows your held item</white>\n")
-                append("<yellow>[pos]</yellow> <firewatch>></gradient> <white>Shows your position</white>\n")
-                append("<yellow>@player</yellow> <firewatch>></gradient> <white>Mentions a player</white>'>")
-                append("<yellow><sprite:items:item/light></yellow></hover>   ")
-                append("<hover:show_text:'<mango>Inventory Mechanics:</gradient>\n")
-                append("<yellow>/search</yellow> <firewatch>></gradient> <white>Find items in nearby chests</white>\n")
-                append(
-                    "<yellow>/unload</yellow> <firewatch>></gradient> <white>Dump inventory into nearby chests</white>'>",
-                )
-                append("<white><head:LordRazen></white></hover>   ")
-                append("<hover:show_text:'<mango>Sit Mechanics:</gradient>\n")
-                append(
-                    "<yellow>Sit Anywhere</yellow> <firewatch>></gradient> <white>Right-click bottom stairs/slabs</white>\n",
-                )
-                append(
-                    "<yellow>Stand Up</yellow> <firewatch>></gradient> <white>Take damage, break block, or dismount</white>'>",
-                )
-                append("<white><sprite:blocks:block/oak_planks></white></hover>   ")
-                append("<hover:show_text:'<mango>Bookshelf Mechanics:</gradient>\n")
-                append(
-                    "<yellow>Peek Books</yellow> <firewatch>></gradient> <white>Left-click front face to inspect slot</white>'>",
-                )
-                append("<white><head:ReelGeek></white></hover>   ")
-                append("<hover:show_text:'<mango>Dimension Mechanics:</gradient>\n")
-                append(
-                    "<yellow>Portal Linking</yellow> <firewatch>></gradient> <white>Nether portals require Overworld link</white>'>",
-                )
-                append("<white><sprite:blocks:block/obsidian></white></hover>   ")
-                append("<hover:show_text:'<mango>Bat Mechanics:</gradient>\n")
-                append(
-                    "<yellow>Membrane Drops</yellow> <firewatch>></gradient> <white>Drop 0-1 phantom membrane (+Looting)</white>'>",
-                )
-                append("<white><sprite:items:item/phantom_membrane></white></hover>   ")
-                append("<hover:show_text:'<mango>Spawn Egg Mechanics:</gradient>\n")
-                append(
-                    "<yellow>Rare Drops</yellow> <firewatch>></gradient> <white>0.1% chance for mobs to drop their spawn egg</white>'>",
-                )
-                append("<white><sprite:items:item/zombie_spawn_egg></white></hover>")
-            },
-            "<image><mango>⯈</gradient>",
-            buildString {
-                append("<mango_r>]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|")
-                append("[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[</gradient>")
-            },
-        )
+    private const val JOIN_TITLE = "<firewatch><b>Welcome</b></gradient> <player>"
+    private const val JOIN_SUBTITLE = "<mango>Check out:</gradient> /faq"
 
     override val cmds =
         listOf(
@@ -208,14 +93,10 @@ internal object ChatMechanic : MechanicInterface {
     fun on(event: AsyncChatEvent) = asyncChat(event)
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    fun on(event: PlayerJoinEvent) {
-        handleJoin(event)
-    }
+    fun on(event: PlayerJoinEvent) = handleJoin(event)
 
     @EventHandler
-    fun on(event: PlayerQuitEvent) {
-        handleQuit(event)
-    }
+    fun on(event: PlayerQuitEvent) = handleQuit(event)
 
     /**
      * Handles player join chat mechanics.
@@ -225,7 +106,12 @@ internal object ChatMechanic : MechanicInterface {
     private fun handleJoin(event: PlayerJoinEvent) {
         instance.server.onlinePlayers.forEach { it.addCustomChatCompletions(listOf("@${event.player.name}")) }
         syncMentionCompletions(event.player)
-        joinBanner(event.player)
+        event.player.showTitle(
+            Title.title(
+                MM.deserialize(JOIN_TITLE, Placeholder.component("player", event.player.displayName())),
+                MM.deserialize(JOIN_SUBTITLE),
+            ),
+        )
     }
 
     /**
@@ -408,27 +294,6 @@ internal object ChatMechanic : MechanicInterface {
     }
 
     /**
-     * Sends the welcome banner to the player on join.
-     *
-     * @param player The player who joined.
-     */
-    private fun joinBanner(player: Player) {
-        var imageIndex = 0
-
-        player.sendMessage(
-            MM.deserialize(
-                Regex("<image>").replace(JOIN_BANNER_TEXT.joinToString("\n")) { "<image${++imageIndex}>" },
-                Placeholder.component("player", player.displayName()),
-                *player
-                    .face()
-                    .lines()
-                    .mapIndexed { i, line -> Placeholder.component("image${i + 1}", MM.deserialize(line)) }
-                    .toTypedArray(),
-            ),
-        )
-    }
-
-    /**
      * Creates to delete cross-component for message deletion.
      *
      * @param signedMessage The signed message to be deleted.
@@ -439,40 +304,4 @@ internal object ChatMechanic : MechanicInterface {
             .deserialize(DELETE_SYMBOL)
             .hoverEvent(MM.deserialize(CLICK_TO_DELETE_MSG))
             .clickEvent(ClickEvent.callback { instance.server.deleteMessage(signedMessage) })
-
-    /**
-     * Generates a MiniMessage string representing the player's face.
-     *
-     * @return The rendered face string.
-     */
-    private fun Player.face(): String {
-        FACE_CACHE[uniqueId.toKotlinUuid()]?.let { return it }
-
-        val face =
-            playerProfile.properties
-                .find { it.name == "textures" }
-                ?.let { JsonParser.parseString(Base64.decode(it.value).decodeToString()).asJsonObject }
-                ?.getAsJsonObject("textures")
-                ?.getAsJsonObject("SKIN")
-                ?.get("url")
-                ?.asString
-                ?.let { ImageIO.read(URI.create(it).toURL()) }
-                ?.getSubimage(8, 8, 8, 8)
-                ?: error("Player has no skin texture")
-
-        return (0..7)
-            .joinToString("\n") { y ->
-                (0..7).joinToString("") { x ->
-                    val color = Color(face.getRGB(x, y), true)
-
-                    "<color:#${
-                        if (color.alpha == 0) {
-                            "000000"
-                        } else {
-                            "%02x%02x%02x".format(color.red, color.green, color.blue)
-                        }
-                    }>█</color>"
-                }
-            }.also { FACE_CACHE[uniqueId.toKotlinUuid()] = it }
-    }
 }
