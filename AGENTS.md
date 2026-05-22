@@ -1,4 +1,4 @@
-# IllyriaPlus — Claude Code Context
+# IllyriaPlus — Agents Context
 
 ## Project at a Glance
 
@@ -10,18 +10,18 @@
 
 ## APIs & Tools
 
-| Category            | Technology                               | Purpose                            |
-|---------------------|------------------------------------------|------------------------------------|
+| Category            | Technology                              | Purpose                            |
+|---------------------|-----------------------------------------|------------------------------------|
 | **Core API**        | [Paper API](https://papermc.io/) 26.1.2 | Minecraft server plugin API        |
-| **Language**        | Kotlin 2.3.21                            | JVM language                       |
-| **Build Tool**      | Gradle (Kotlin DSL)                      | Build automation                   |
-| **Gradle Plugins**  | Shadow 9.4.1                             | Fat JAR creation                   |
-|                     | run-paper 3.0.2                          | Local test server                  |
-|                     | resource-factory 1.3.1                   | `paper-plugin.yml` generation      |
-|                     | foojay-resolver 1.0.0                    | Auto-download JVM toolchains       |
-| **Text Formatting** | MiniMessage                              | Adventure API component-based text |
-| **Docs**            | Dokka                                    | Kotlin API documentation           |
-| **Code Style**      | ktlint                                   | Kotlin linting (IDE plugin)        |
+| **Language**        | Kotlin 2.3.21                           | JVM language                       |
+| **Build Tool**      | Gradle (Kotlin DSL)                     | Build automation                   |
+| **Gradle Plugins**  | Shadow 9.4.1                            | Fat JAR creation                   |
+|                     | run-paper 3.0.2                         | Local test server                  |
+|                     | resource-factory 1.3.1                  | `paper-plugin.yml` generation      |
+|                     | foojay-resolver 1.0.0                   | Auto-download JVM toolchains       |
+| **Text Formatting** | MiniMessage                             | Adventure API component-based text |
+| **Docs**            | Dokka                                   | Kotlin API documentation           |
+| **Code Style**      | ktlint                                  | Kotlin linting (IDE plugin)        |
 
 ### Paper API Resources
 

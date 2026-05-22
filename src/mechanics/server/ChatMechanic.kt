@@ -24,7 +24,6 @@ import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.IllyriaPlus.Companion.prefix
 import org.xodium.illyriaplus.Utils.CommandUtils.executesCatching
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
@@ -48,10 +47,10 @@ internal object ChatMechanic : MechanicInterface {
     private const val DELETE_SYMBOL = "<dark_gray>[<dark_red><b>X</b></dark_red><dark_gray>]"
     private const val CLICK_TO_WHISPER_MSG = "<mango>Click to Whisper</gradient>"
     private const val CLICK_TO_DELETE_MSG = "<mango>Click to delete your message</gradient>"
+    private const val PLAYER_IS_NOT_ONLINE_MSG = "<firewatch>Player is not Online!</gradient>"
 
     private val FACE_CACHE = mutableMapOf<Uuid, String>()
     private val JOIN_BANNER_TEXT =
-        // TODO: remove 'mechanics:' text and wrap the icons in a box.
         listOf(
             "<mango_r>]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|" +
                 "[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[</gradient>",
@@ -61,11 +60,9 @@ internal object ChatMechanic : MechanicInterface {
             "<image><mango>⯈</gradient>",
             "<image><mango>⯈</gradient>",
             "<image><mango>⯈</gradient> " +
-                "<firewatch>Mechanics:</gradient>",
-            "<image><mango>⯈</gradient> " +
                 "<click:suggest_command:'/nickname '>" +
                 "<hover:show_text:'<mango>Click to change your nickname!</gradient>'>" +
-                "<white><sprite:items:item/name_tag></white></hover></click> " +
+                "<white><sprite:items:item/name_tag></white></hover></click>   " +
                 "<click:suggest_command:'/locator '>" +
                 "<hover:show_text:'<mango>Click to change your locator color!</gradient>'>" +
                 "<white><sprite:items:item/compass_00></white></hover></click>",
@@ -73,7 +70,7 @@ internal object ChatMechanic : MechanicInterface {
                 "<click:suggest_command:'/rules '>" +
                 "<hover:show_text:'<mango>Click to open the Rules Book!</gradient>'>" +
                 "<white><sprite:items:item/written_book></white>" +
-                "</hover></click:suggest_command> " +
+                "</hover></click:suggest_command>   " +
                 "<hover:show_text:'<mango>Available Chat Placeholders:</gradient>\n" +
                 "<yellow>[item,i]</yellow> <firewatch>></gradient> " +
                 "<white>Shows your held item</white>\n" +
@@ -81,10 +78,10 @@ internal object ChatMechanic : MechanicInterface {
                 "<yellow>@player</yellow> <firewatch>></gradient> <white>Mentions a player</white>'>" +
                 "<yellow><sprite:items:item/light></yellow></hover>",
             "<image><mango>⯈</gradient>",
+            "<image><mango>⯈</gradient>",
             "<mango_r>]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|" +
                 "[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[=]|[</gradient>",
         )
-    private val PLAYER_IS_NOT_ONLINE_MSG = "${instance.prefix} <firewatch>Player is not Online!</gradient>"
 
     override val cmds =
         listOf(
@@ -110,7 +107,7 @@ internal object ChatMechanic : MechanicInterface {
                                             it.getArgument("target", PlayerSelectorArgumentResolver::class.java)
                                         val target =
                                             targetResolver.resolve(it.source).singleOrNull()
-                                                ?: return@executesCatching sender.sendMessage(
+                                                ?: return@executesCatching sender.sendActionBar(
                                                     MM.deserialize(PLAYER_IS_NOT_ONLINE_MSG),
                                                 )
                                         val message = it.getArgument("message", String::class.java)
