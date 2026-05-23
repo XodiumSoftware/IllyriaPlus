@@ -27,7 +27,8 @@ internal object HeadMechanic : MechanicInterface {
                 .addLoreLines(
                     MM.deserialize(""),
                     MM.deserialize(
-                        "<yellow>Player Heads</yellow> <firewatch>></gradient> <white>1% chance to drop on death</white>",
+                        "<yellow>Player Heads</yellow> <firewatch>></gradient> " +
+                            "<white>1% chance to drop on death</white>",
                     ),
                 ),
         )

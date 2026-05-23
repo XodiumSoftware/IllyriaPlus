@@ -50,7 +50,8 @@ internal object SpellMechanic : MechanicInterface {
                         "<yellow>Cycle</yellow> <firewatch>></gradient> <white>Right-click to switch spells</white>",
                     ),
                     MM.deserialize(
-                        "<yellow>Cast</yellow> <firewatch>></gradient> <white>Left-click to cast selected spell</white>",
+                        "<yellow>Cast</yellow> <firewatch>></gradient> " +
+                            "<white>Left-click to cast selected spell</white>",
                     ),
                 ),
         )
