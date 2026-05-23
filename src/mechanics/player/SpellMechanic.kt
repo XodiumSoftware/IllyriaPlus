@@ -50,7 +50,7 @@ internal object SpellMechanic : MechanicInterface {
                 MM.deserialize(
                     "<yellow>Cast</yellow> <firewatch>></gradient> <white>Left-click to cast selected spell</white>",
                 ),
-            ).setGlint(true)
+            )
 
     override val isOpInfo: Boolean = true
 

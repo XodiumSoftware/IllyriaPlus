@@ -70,7 +70,7 @@ internal object MessagesMechanic : MechanicInterface {
                 MM.deserialize(
                     "<yellow>Advancements</yellow> <firewatch>></gradient> <white>Task/Goal/Challenge</white>",
                 ),
-            ).setGlint(true)
+            )
 
     override val isOpInfo: Boolean = true
 

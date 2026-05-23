@@ -38,7 +38,7 @@ internal object TabListMechanic : MechanicInterface {
                     "<yellow>Header</yellow> <firewatch>></gradient> <white>Custom title formatting</white>",
                 ),
                 MM.deserialize("<yellow>Footer</yellow> <firewatch>></gradient> <white>Decorative separator</white>"),
-            ).setGlint(true)
+            )
 
     override val isOpInfo: Boolean = true
 

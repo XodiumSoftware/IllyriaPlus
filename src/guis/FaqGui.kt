@@ -11,9 +11,9 @@ import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.interfaces.GuiInterface
 import org.xodium.illyriaplus.interfaces.MechanicInterface
-import xyz.xenondevs.invui.gui.Animation
+import xyz.xenondevs.invui.gui.Gui
 import xyz.xenondevs.invui.gui.Markers
-import xyz.xenondevs.invui.gui.PagedGui
+import xyz.xenondevs.invui.gui.TabGui
 import xyz.xenondevs.invui.item.BoundItem
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -44,75 +44,141 @@ internal object FaqGui : GuiInterface {
         )
 
     override fun gui(player: Player): Window {
-        val animation =
-            Animation
+        val categories =
+            mechanics.groupBy {
+                if (it.isOpInfo) {
+                    "admin"
+                } else {
+                    when {
+                        it.javaClass.`package`.name
+                            .endsWith("player") -> "player"
+
+                        it.javaClass.`package`.name
+                            .endsWith("world") -> "world"
+
+                        it.javaClass.`package`.name
+                            .endsWith("entity") -> "entity"
+
+                        it.javaClass.`package`.name
+                            .endsWith("server") -> "server"
+
+                        else -> "other"
+                    }
+                }
+            }
+        val tabs =
+            mutableListOf(
+                createTab(categories["player"] ?: emptyList()),
+                createTab(categories["world"] ?: emptyList()),
+                createTab(categories["entity"] ?: emptyList()),
+                createTab(categories["server"] ?: emptyList()),
+            )
+        val tabButtons =
+            mutableListOf(
+                createTabButton(
+                    0,
+                    ItemBuilder(Material.PLAYER_HEAD).setName(MM.deserialize("<mango>Player</gradient>")),
+                ),
+                createTabButton(
+                    1,
+                    ItemBuilder(Material.GRASS_BLOCK).setName(MM.deserialize("<mango>World</gradient>")),
+                ),
+                createTabButton(
+                    2,
+                    ItemBuilder(Material.WOLF_SPAWN_EGG).setName(MM.deserialize("<mango>Entity</gradient>")),
+                ),
+                createTabButton(3, ItemBuilder(Material.COMPASS).setName(MM.deserialize("<mango>Server</gradient>"))),
+            )
+        val structure: Array<String>
+
+        if (player.isOp) {
+            tabs.add(createTab(categories["admin"] ?: emptyList()))
+            tabButtons.add(
+                createTabButton(
+                    4,
+                    ItemBuilder(Material.COMMAND_BLOCK).setName(MM.deserialize("<mango>Admin</gradient>")),
+                ),
+            )
+            structure =
+                arrayOf(
+                    "# # P W E S A # #",
+                    "# x x x x x x x #",
+                    "# x x x x x x x #",
+                    "# x x x x x x x #",
+                    "# # # # # # # # #",
+                )
+        } else {
+            structure =
+                arrayOf(
+                    "# # P W E S # # #",
+                    "# x x x x x x x #",
+                    "# x x x x x x x #",
+                    "# x x x x x x x #",
+                    "# # # # # # # # #",
+                )
+        }
+
+        val tabGuiBuilder =
+            TabGui
                 .builder()
-                .setSlotSelector(Animation::horizontalSnakeSlotSelector)
-                .filterTaggedSlots('x')
-                .build()
-        val content =
-            mechanics
-                .filter { !it.isOpInfo || player.isOp }
-                .map { Item.simple(it.infoItem) }
-        val previous =
-            BoundItem
-                .pagedBuilder()
-                .setItemProvider { _, gui ->
-                    if (gui.page > 0) {
-                        ItemBuilder(Material.ARROW)
-                            .setName(
-                                MM.deserialize("<gray>Move to page <aqua>${gui.page}<gray>/<aqua>${gui.pageCount}"),
-                            )
-                    } else {
-                        ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true)
-                    }
-                }.addClickHandler { _, gui, _ ->
-                    if (gui.page > 0) {
-                        gui.cancelAnimation()
-                        gui.page--
-                        gui.playAnimation(animation)
-                    }
-                }.build()
-        val next =
-            BoundItem
-                .pagedBuilder()
-                .setItemProvider { _, gui ->
-                    if (gui.page < gui.pageCount - 1) {
-                        ItemBuilder(Material.ARROW)
-                            .setName(
-                                MM.deserialize("<gray>Move to page <aqua>${gui.page + 2}<gray>/<aqua>${gui.pageCount}"),
-                            )
-                    } else {
-                        ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true)
-                    }
-                }.addClickHandler { _, gui, _ ->
-                    if (gui.page < gui.pageCount - 1) {
-                        gui.cancelAnimation()
-                        gui.page++
-                        gui.playAnimation(animation)
-                    }
-                }.build()
+                .setStructure(*structure)
+                .addIngredient('#', Item.simple(ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true)))
+                .addIngredient('P', tabButtons[0])
+                .addIngredient('W', tabButtons[1])
+                .addIngredient('E', tabButtons[2])
+                .addIngredient('S', tabButtons[3])
+
+        if (player.isOp) tabGuiBuilder.addIngredient('A', tabButtons[4])
 
         return Window
             .builder()
             .setTitle(MM.deserialize("<firewatch><b>FAQ</b></gradient>"))
             .setUpperGui(
-                PagedGui
-                    .itemsBuilder()
-                    .setStructure(
-                        "# # # # # # # # #",
-                        "# x x x x x x x #",
-                        "# x x x x x x x #",
-                        "# x x x x x x x #",
-                        "# # # < # > # # #",
-                    ).addIngredient('#', Item.simple(ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true)))
+                tabGuiBuilder
                     .addIngredient('x', Markers.CONTENT_LIST_SLOT_HORIZONTAL)
-                    .addIngredient('<', previous)
-                    .addIngredient('>', next)
-                    .setContent(content)
-                    .addModifier { it.playAnimation(animation) }
+                    .setTabs(tabs)
                     .build(),
             ).setViewer(player)
             .build()
     }
+
+    /**
+     * Creates a tab button that switches the [TabGui] to the given index when clicked.
+     *
+     * @param index The tab index to switch to.
+     * @param itemBuilder The display item for the tab button.
+     * @return A [BoundItem] configured for tab navigation.
+     */
+    private fun createTabButton(
+        index: Int,
+        itemBuilder: ItemBuilder,
+    ): BoundItem =
+        BoundItem
+            .tabBuilder()
+            .setItemProvider { _, _ -> itemBuilder }
+            .addClickHandler { _, gui, _ -> gui.tab = index }
+            .build()
+
+    /**
+     * Creates a tab [Gui] populated with infoItems from the given mechanics.
+     *
+     * Items fill a 3×7 grid left-to-right, top-to-bottom.
+     *
+     * @param mechanics The list of mechanics to display in this tab.
+     * @return A [Gui] containing the mechanic info items.
+     */
+    private fun createTab(mechanics: List<MechanicInterface>): Gui =
+        Gui
+            .builder()
+            .setStructure(
+                "x x x x x x x",
+                "x x x x x x x",
+                "x x x x x x x",
+            ).build()
+            .apply {
+                mechanics
+                    .take(21)
+                    .map { Item.simple(it.infoItem) }
+                    .forEachIndexed { index, item -> setItem(index, item) }
+            }
 }

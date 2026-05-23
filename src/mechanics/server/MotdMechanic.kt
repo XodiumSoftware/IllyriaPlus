@@ -24,7 +24,7 @@ internal object MotdMechanic : MechanicInterface {
                 MM.deserialize(
                     "<yellow>Server List</yellow> <firewatch>></gradient> <white>Custom ping message</white>",
                 ),
-            ).setGlint(true)
+            )
 
     override val isOpInfo: Boolean = true
 

@@ -29,7 +29,7 @@ internal object ServerInfoMechanic : MechanicInterface {
                 MM.deserialize(
                     "<yellow>Links</yellow> <firewatch>></gradient> <white>Website, Discord, Modrinth</white>",
                 ),
-            ).setGlint(true)
+            )
 
     override val isOpInfo: Boolean = true
 
