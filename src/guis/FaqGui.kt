@@ -46,60 +46,71 @@ internal object FaqGui : GuiInterface {
     override fun gui(player: Player): Window {
         val categories =
             mechanics.groupBy {
-                if (it.isOpInfo) {
-                    "admin"
-                } else {
-                    when {
-                        it.javaClass.`package`.name
-                            .endsWith("player") -> "player"
+                if (it.isOpInfo) return@groupBy "admin"
+                when {
+                    it.javaClass.`package`.name
+                        .endsWith("player") -> "player"
 
-                        it.javaClass.`package`.name
-                            .endsWith("world") -> "world"
+                    it.javaClass.`package`.name
+                        .endsWith("world") -> "world"
 
-                        it.javaClass.`package`.name
-                            .endsWith("entity") -> "entity"
+                    it.javaClass.`package`.name
+                        .endsWith("entity") -> "entity"
 
-                        it.javaClass.`package`.name
-                            .endsWith("server") -> "server"
+                    it.javaClass.`package`.name
+                        .endsWith("server") -> "server"
 
-                        else -> "other"
-                    }
+                    else -> "other"
                 }
             }
-        val tabs =
-            mutableListOf(
-                createTab(categories["player"] ?: emptyList()),
-                createTab(categories["world"] ?: emptyList()),
-                createTab(categories["entity"] ?: emptyList()),
-                createTab(categories["server"] ?: emptyList()),
-            )
-        val tabButtons =
-            mutableListOf(
-                createTabButton(
-                    0,
-                    ItemBuilder(Material.PLAYER_HEAD).setName(MM.deserialize("<mango>Player</gradient>")),
-                ),
-                createTabButton(
-                    1,
-                    ItemBuilder(Material.GRASS_BLOCK).setName(MM.deserialize("<mango>World</gradient>")),
-                ),
-                createTabButton(
-                    2,
-                    ItemBuilder(Material.WOLF_SPAWN_EGG).setName(MM.deserialize("<mango>Entity</gradient>")),
-                ),
-                createTabButton(3, ItemBuilder(Material.COMPASS).setName(MM.deserialize("<mango>Server</gradient>"))),
-            )
-        val structure: Array<String>
 
-        if (player.isOp) {
-            tabs.add(createTab(categories["admin"] ?: emptyList()))
-            tabButtons.add(
-                createTabButton(
-                    4,
-                    ItemBuilder(Material.COMMAND_BLOCK).setName(MM.deserialize("<mango>Admin</gradient>")),
-                ),
-            )
-            structure =
+        val tabs =
+            buildList {
+                add(createTab(categories.getOrElse("player") { emptyList() }))
+                add(createTab(categories.getOrElse("world") { emptyList() }))
+                add(createTab(categories.getOrElse("entity") { emptyList() }))
+                add(createTab(categories.getOrElse("server") { emptyList() }))
+                if (player.isOp) add(createTab(categories.getOrElse("admin") { emptyList() }))
+            }
+
+        val tabButtons =
+            buildList {
+                add(
+                    createTabButton(
+                        0,
+                        ItemBuilder(Material.PLAYER_HEAD).setName(MM.deserialize("<mango>Player</gradient>")),
+                    ),
+                )
+                add(
+                    createTabButton(
+                        1,
+                        ItemBuilder(Material.GRASS_BLOCK).setName(MM.deserialize("<mango>World</gradient>")),
+                    ),
+                )
+                add(
+                    createTabButton(
+                        2,
+                        ItemBuilder(Material.WOLF_SPAWN_EGG).setName(MM.deserialize("<mango>Entity</gradient>")),
+                    ),
+                )
+                add(
+                    createTabButton(
+                        3,
+                        ItemBuilder(Material.COMPASS).setName(MM.deserialize("<mango>Server</gradient>")),
+                    ),
+                )
+                if (player.isOp) {
+                    add(
+                        createTabButton(
+                            4,
+                            ItemBuilder(Material.COMMAND_BLOCK).setName(MM.deserialize("<mango>Admin</gradient>")),
+                        ),
+                    )
+                }
+            }
+
+        val structure =
+            if (player.isOp) {
                 arrayOf(
                     "# # P W E S A # #",
                     "# x x x x x x x #",
@@ -107,8 +118,7 @@ internal object FaqGui : GuiInterface {
                     "# x x x x x x x #",
                     "# # # # # # # # #",
                 )
-        } else {
-            structure =
+            } else {
                 arrayOf(
                     "# # P W E S # # #",
                     "# x x x x x x x #",
@@ -116,25 +126,21 @@ internal object FaqGui : GuiInterface {
                     "# x x x x x x x #",
                     "# # # # # # # # #",
                 )
-        }
-
-        val tabGuiBuilder =
-            TabGui
-                .builder()
-                .setStructure(*structure)
-                .addIngredient('#', Item.simple(ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true)))
-                .addIngredient('P', tabButtons[0])
-                .addIngredient('W', tabButtons[1])
-                .addIngredient('E', tabButtons[2])
-                .addIngredient('S', tabButtons[3])
-
-        if (player.isOp) tabGuiBuilder.addIngredient('A', tabButtons[4])
+            }
 
         return Window
             .builder()
             .setTitle(MM.deserialize("<firewatch><b>FAQ</b></gradient>"))
             .setUpperGui(
-                tabGuiBuilder
+                TabGui
+                    .builder()
+                    .setStructure(*structure)
+                    .addIngredient('#', Item.simple(ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true)))
+                    .addIngredient('P', tabButtons[0])
+                    .addIngredient('W', tabButtons[1])
+                    .addIngredient('E', tabButtons[2])
+                    .addIngredient('S', tabButtons[3])
+                    .apply { if (player.isOp) addIngredient('A', tabButtons[4]) }
                     .addIngredient('x', Markers.CONTENT_LIST_SLOT_HORIZONTAL)
                     .setTabs(tabs)
                     .build(),
