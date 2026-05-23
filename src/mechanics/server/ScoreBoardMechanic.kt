@@ -13,14 +13,17 @@ import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.pdcs.PlayerPDC.scoreboardVisibility
+import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling scoreboard display within the system. */
 internal object ScoreBoardMechanic : MechanicInterface {
     override val infoItem =
-        ItemBuilder(Material.ITEM_FRAME)
-            .setName(MM.deserialize("<mango>Leaderboard</gradient>"))
-            .addLoreLines(MM.deserialize(""), MM.deserialize("<gray>cmd:</gray> <yellow>/leaderboard</yellow>"))
+        Item.simple(
+            ItemBuilder(Material.ITEM_FRAME)
+                .setName(MM.deserialize("<mango>Leaderboard</gradient>"))
+                .addLoreLines(MM.deserialize(""), MM.deserialize("<gray>cmd:</gray> <yellow>/leaderboard</yellow>")),
+        )
 
     override val cmds =
         listOf(

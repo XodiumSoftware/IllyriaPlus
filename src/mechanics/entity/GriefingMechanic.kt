@@ -7,6 +7,7 @@ import org.bukkit.event.entity.EntityChangeBlockEvent
 import org.bukkit.event.entity.EntityExplodeEvent
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.interfaces.MechanicInterface
+import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling mob griefing prevention within the system. */
@@ -23,19 +24,21 @@ internal object GriefingMechanic : MechanicInterface {
         )
 
     override val infoItem =
-        ItemBuilder(Material.TNT)
-            .setName(MM.deserialize("<mango>Griefing Prevention</gradient>"))
-            .addLoreLines(
-                MM.deserialize(""),
-                MM.deserialize(
-                    "<yellow>Mobs</yellow> <firewatch>></gradient> " +
-                        "<white>Creeper, Enderman, Wither, Blaze, Dragon</white>",
+        Item.simple(
+            ItemBuilder(Material.TNT)
+                .setName(MM.deserialize("<mango>Griefing Prevention</gradient>"))
+                .addLoreLines(
+                    MM.deserialize(""),
+                    MM.deserialize(
+                        "<yellow>Mobs</yellow> <firewatch>></gradient> " +
+                            "<white>Creeper, Enderman, Wither, Blaze, Dragon</white>",
+                    ),
+                    MM.deserialize(
+                        "<yellow>Projectiles</yellow> <firewatch>></gradient> " +
+                            "<white>Fireball, Small Fireball</white>",
+                    ),
                 ),
-                MM.deserialize(
-                    "<yellow>Projectiles</yellow> <firewatch>></gradient> " +
-                        "<white>Fireball, Small Fireball</white>",
-                ),
-            )
+        )
 
     @EventHandler
     fun on(event: EntityChangeBlockEvent) {

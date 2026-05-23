@@ -22,6 +22,7 @@ import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.mechanics.player.SitMechanic.occupiedBlocks
+import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -36,19 +37,21 @@ internal object SitMechanic : MechanicInterface {
     private val playerStandUpOffset = Vector(0.0, 0.5, 0.0)
 
     override val infoItem =
-        ItemBuilder(Material.OAK_STAIRS)
-            .setName(MM.deserialize("<mango>Sit Mechanics</gradient>"))
-            .addLoreLines(
-                MM.deserialize(""),
-                MM.deserialize(
-                    "<yellow>Sit Anywhere</yellow> <firewatch>></gradient> " +
-                        "<white>Right-click bottom stairs/slabs</white>",
+        Item.simple(
+            ItemBuilder(Material.OAK_STAIRS)
+                .setName(MM.deserialize("<mango>Sit Mechanics</gradient>"))
+                .addLoreLines(
+                    MM.deserialize(""),
+                    MM.deserialize(
+                        "<yellow>Sit Anywhere</yellow> <firewatch>></gradient> " +
+                            "<white>Right-click bottom stairs/slabs</white>",
+                    ),
+                    MM.deserialize(
+                        "<yellow>Stand Up</yellow> <firewatch>></gradient> " +
+                            "<white>Take damage, break block, or dismount</white>",
+                    ),
                 ),
-                MM.deserialize(
-                    "<yellow>Stand Up</yellow> <firewatch>></gradient> " +
-                        "<white>Take damage, break block, or dismount</white>",
-                ),
-            )
+        )
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun on(event: PlayerInteractEvent) = playerInteract(event)

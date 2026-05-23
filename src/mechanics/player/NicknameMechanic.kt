@@ -19,6 +19,7 @@ import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.mechanics.server.TabListMechanic.tablist
 import org.xodium.illyriaplus.pdcs.PlayerPDC.nickname
+import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling player nicknames within the system. */
@@ -26,9 +27,11 @@ internal object NicknameMechanic : MechanicInterface {
     private const val UPDATE_NICKNAME_MSG: String = "<firewatch>Nickname has been updated to: <nickname></gradient>"
 
     override val infoItem =
-        ItemBuilder(Material.NAME_TAG)
-            .setName(MM.deserialize("<mango>Nickname</gradient>"))
-            .addLoreLines(MM.deserialize(""), MM.deserialize("<gray>cmd:</gray> <yellow>/nickname</yellow>"))
+        Item.simple(
+            ItemBuilder(Material.NAME_TAG)
+                .setName(MM.deserialize("<mango>Nickname</gradient>"))
+                .addLoreLines(MM.deserialize(""), MM.deserialize("<gray>cmd:</gray> <yellow>/nickname</yellow>")),
+        )
 
     override val cmds =
         listOf(

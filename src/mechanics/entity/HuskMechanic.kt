@@ -9,6 +9,7 @@ import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.interfaces.MechanicInterface
+import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 import kotlin.random.Random
 
@@ -22,15 +23,17 @@ internal object HuskMechanic : MechanicInterface {
     private const val CAMEL_HUSK_SAND_LOOTING_BONUS: Int = 2
 
     override val infoItem =
-        ItemBuilder(Material.SAND)
-            .setName(MM.deserialize("<mango>Husk Mechanics</gradient>"))
-            .addLoreLines(
-                MM.deserialize(""),
-                MM.deserialize(
-                    "<yellow>Sand Drops</yellow> <firewatch>></gradient> <white>Drop 0-2 sand " +
-                        "(+Looting, bonus on camel)</white>",
+        Item.simple(
+            ItemBuilder(Material.SAND)
+                .setName(MM.deserialize("<mango>Husk Mechanics</gradient>"))
+                .addLoreLines(
+                    MM.deserialize(""),
+                    MM.deserialize(
+                        "<yellow>Sand Drops</yellow> <firewatch>></gradient> <white>Drop 0-2 sand " +
+                            "(+Looting, bonus on camel)</white>",
+                    ),
                 ),
-            )
+        )
 
     @EventHandler
     fun on(event: EntityDeathEvent) {

@@ -18,6 +18,7 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.util.Vector
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.interfaces.MechanicInterface
+import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 import org.bukkit.block.data.type.ChiseledBookshelf as ChiseledBookshelfData
 
@@ -25,15 +26,17 @@ import org.bukkit.block.data.type.ChiseledBookshelf as ChiseledBookshelfData
 @Suppress("UnstableApiUsage")
 internal object ChiseledBookshelfMechanic : MechanicInterface {
     override val infoItem =
-        ItemBuilder(Material.BOOKSHELF)
-            .setName(MM.deserialize("<mango>Bookshelf Mechanics</gradient>"))
-            .addLoreLines(
-                MM.deserialize(""),
-                MM.deserialize(
-                    "<yellow>Peek Books</yellow> <firewatch>></gradient> " +
-                        "<white>Left-click front face to inspect slot</white>",
+        Item.simple(
+            ItemBuilder(Material.BOOKSHELF)
+                .setName(MM.deserialize("<mango>Bookshelf Mechanics</gradient>"))
+                .addLoreLines(
+                    MM.deserialize(""),
+                    MM.deserialize(
+                        "<yellow>Peek Books</yellow> <firewatch>></gradient> " +
+                            "<white>Left-click front face to inspect slot</white>",
+                    ),
                 ),
-            )
+        )
 
     @EventHandler
     fun on(event: PlayerInteractEvent) {

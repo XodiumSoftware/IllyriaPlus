@@ -15,6 +15,7 @@ import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.enchantments.spells.*
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.pdcs.ItemStackPDC.selectedSpell
+import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling spell casting within the system. */
@@ -37,20 +38,22 @@ internal object SpellMechanic : MechanicInterface {
     }
 
     override val infoItem =
-        ItemBuilder(Material.BLAZE_ROD)
-            .setName(MM.deserialize("<mango>Spell System</gradient>"))
-            .addLoreLines(
-                MM.deserialize(""),
-                MM.deserialize(
-                    "<yellow>Wand</yellow> <firewatch>></gradient> <white>Blaze rod with enchantments</white>",
+        Item.simple(
+            ItemBuilder(Material.BLAZE_ROD)
+                .setName(MM.deserialize("<mango>Spell System</gradient>"))
+                .addLoreLines(
+                    MM.deserialize(""),
+                    MM.deserialize(
+                        "<yellow>Wand</yellow> <firewatch>></gradient> <white>Blaze rod with enchantments</white>",
+                    ),
+                    MM.deserialize(
+                        "<yellow>Cycle</yellow> <firewatch>></gradient> <white>Right-click to switch spells</white>",
+                    ),
+                    MM.deserialize(
+                        "<yellow>Cast</yellow> <firewatch>></gradient> <white>Left-click to cast selected spell</white>",
+                    ),
                 ),
-                MM.deserialize(
-                    "<yellow>Cycle</yellow> <firewatch>></gradient> <white>Right-click to switch spells</white>",
-                ),
-                MM.deserialize(
-                    "<yellow>Cast</yellow> <firewatch>></gradient> <white>Left-click to cast selected spell</white>",
-                ),
-            )
+        )
 
     override val isOpInfo: Boolean = true
 

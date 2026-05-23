@@ -18,6 +18,7 @@ import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.*
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.interfaces.MechanicInterface
+import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling player messages within the system. */
@@ -61,16 +62,22 @@ internal object MessagesMechanic : MechanicInterface {
     }
 
     override val infoItem =
-        ItemBuilder(Material.PAPER)
-            .setName(MM.deserialize("<mango>Messages</gradient>"))
-            .addLoreLines(
-                MM.deserialize(""),
-                MM.deserialize("<yellow>Join/Quit</yellow> <firewatch>></gradient> <white>Custom formatting</white>"),
-                MM.deserialize("<yellow>Death</yellow> <firewatch>></gradient> <white>PvP and PvE variants</white>"),
-                MM.deserialize(
-                    "<yellow>Advancements</yellow> <firewatch>></gradient> <white>Task/Goal/Challenge</white>",
+        Item.simple(
+            ItemBuilder(Material.PAPER)
+                .setName(MM.deserialize("<mango>Messages</gradient>"))
+                .addLoreLines(
+                    MM.deserialize(""),
+                    MM.deserialize(
+                        "<yellow>Join/Quit</yellow> <firewatch>></gradient> <white>Custom formatting</white>",
+                    ),
+                    MM.deserialize(
+                        "<yellow>Death</yellow> <firewatch>></gradient> <white>PvP and PvE variants</white>",
+                    ),
+                    MM.deserialize(
+                        "<yellow>Advancements</yellow> <firewatch>></gradient> <white>Task/Goal/Challenge</white>",
+                    ),
                 ),
-            )
+        )
 
     override val isOpInfo: Boolean = true
 

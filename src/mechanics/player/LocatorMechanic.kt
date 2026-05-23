@@ -17,6 +17,7 @@ import org.xodium.illyriaplus.Utils.CommandUtils.playerExecuted
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.interfaces.MechanicInterface
+import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling locator functionality within the system. */
@@ -27,14 +28,18 @@ internal object LocatorMechanic : MechanicInterface {
     private const val RESET_LOCATOR_MSG = "<gray>Locator color has been reset!</gray>"
 
     override val infoItem =
-        ItemBuilder(Material.COMPASS)
-            .setName(MM.deserialize("<mango>Locator</gradient>"))
-            .addLoreLines(
-                MM.deserialize(""),
-                MM.deserialize("<gray>cmd:</gray> <yellow>/locator <color></yellow>"),
-                MM.deserialize("<yellow>Hex Colors</yellow> <firewatch>></gradient> <white>/locator #RRGGBB</white>"),
-                MM.deserialize("<yellow>Reset</yellow> <firewatch>></gradient> <white>/locator reset</white>"),
-            )
+        Item.simple(
+            ItemBuilder(Material.COMPASS)
+                .setName(MM.deserialize("<mango>Locator</gradient>"))
+                .addLoreLines(
+                    MM.deserialize(""),
+                    MM.deserialize("<gray>cmd:</gray> <yellow>/locator <color></yellow>"),
+                    MM.deserialize(
+                        "<yellow>Hex Colors</yellow> <firewatch>></gradient> <white>/locator #RRGGBB</white>",
+                    ),
+                    MM.deserialize("<yellow>Reset</yellow> <firewatch>></gradient> <white>/locator reset</white>"),
+                ),
+        )
 
     override val cmds =
         listOf(

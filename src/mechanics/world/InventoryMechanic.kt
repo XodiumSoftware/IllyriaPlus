@@ -24,6 +24,7 @@ import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.Utils.PlayerUtils.getContainersAround
 import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.interfaces.MechanicInterface
+import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling inventory interactions within the system. */
@@ -46,19 +47,21 @@ internal object InventoryMechanic : MechanicInterface {
         Sound.sound(Key.key("block.anvil.land"), Sound.Source.PLAYER, 1.0f, 1.0f)
 
     override val infoItem =
-        ItemBuilder(Material.CHEST)
-            .setName(MM.deserialize("<mango>Inventory Mechanics</gradient>"))
-            .addLoreLines(
-                MM.deserialize(""),
-                MM.deserialize(
-                    "<gray>cmd:</gray> <yellow>/search</yellow> <firewatch>></gradient> " +
-                        "<white>Find items in nearby chests</white>",
+        Item.simple(
+            ItemBuilder(Material.CHEST)
+                .setName(MM.deserialize("<mango>Inventory Mechanics</gradient>"))
+                .addLoreLines(
+                    MM.deserialize(""),
+                    MM.deserialize(
+                        "<gray>cmd:</gray> <yellow>/search</yellow> <firewatch>></gradient> " +
+                            "<white>Find items in nearby chests</white>",
+                    ),
+                    MM.deserialize(
+                        "<gray>cmd:</gray> <yellow>/unload</yellow> <firewatch>></gradient> " +
+                            "<white>Dump inventory into nearby chests</white>",
+                    ),
                 ),
-                MM.deserialize(
-                    "<gray>cmd:</gray> <yellow>/unload</yellow> <firewatch>></gradient> " +
-                        "<white>Dump inventory into nearby chests</white>",
-                ),
-            )
+        )
 
     override val cmds =
         listOf(

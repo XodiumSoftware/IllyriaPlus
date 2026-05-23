@@ -161,7 +161,6 @@ internal object FaqGui : GuiInterface {
             .apply {
                 mechanics
                     .take(21)
-                    .map { Item.simple(it.infoItem) }
-                    .forEachIndexed { index, item -> setItem(index, item) }
+                    .forEachIndexed { index, mechanic -> setItem(index, mechanic.infoItem) }
             }
 }

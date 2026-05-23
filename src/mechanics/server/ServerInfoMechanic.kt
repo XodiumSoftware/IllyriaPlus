@@ -5,6 +5,7 @@ import org.bukkit.ServerLinks
 import org.xodium.illyriaplus.IllyriaPlus
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.interfaces.MechanicInterface
+import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 import java.net.URI
 import kotlin.time.measureTime
@@ -22,14 +23,16 @@ internal object ServerInfoMechanic : MechanicInterface {
         )
 
     override val infoItem =
-        ItemBuilder(Material.MAP)
-            .setName(MM.deserialize("<mango>Server Info</gradient>"))
-            .addLoreLines(
-                MM.deserialize(""),
-                MM.deserialize(
-                    "<yellow>Links</yellow> <firewatch>></gradient> <white>Website, Discord, Modrinth</white>",
+        Item.simple(
+            ItemBuilder(Material.MAP)
+                .setName(MM.deserialize("<mango>Server Info</gradient>"))
+                .addLoreLines(
+                    MM.deserialize(""),
+                    MM.deserialize(
+                        "<yellow>Links</yellow> <firewatch>></gradient> <white>Website, Discord, Modrinth</white>",
+                    ),
                 ),
-            )
+        )
 
     override val isOpInfo: Boolean = true
 
