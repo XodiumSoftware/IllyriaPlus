@@ -8,10 +8,23 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
+import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.interfaces.MechanicInterface
+import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling ender chest access within the system. */
 internal object EnderchestMechanic : MechanicInterface {
+    override val infoItem =
+        ItemBuilder(Material.ENDER_CHEST)
+            .setName(MM.deserialize("<mango>Enderchest Mechanics</gradient>"))
+            .addLoreLines(
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Portable Access</yellow> <firewatch>></gradient> " +
+                        "<white>Right-click air with ender chest</white>",
+                ),
+            )
+
     @EventHandler
     fun on(event: PlayerInteractEvent) {
         openEnderchest(event)

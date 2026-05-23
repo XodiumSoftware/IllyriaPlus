@@ -20,8 +20,10 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
+import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.AdjacentBlockData
 import org.xodium.illyriaplus.interfaces.MechanicInterface
+import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling openable blocks within the system. */
 internal object OpenableMechanic : MechanicInterface {
@@ -47,6 +49,20 @@ internal object OpenableMechanic : MechanicInterface {
             1.0f,
             1.0f,
         )
+
+    override val infoItem =
+        ItemBuilder(Material.DARK_OAK_DOOR)
+            .setName(MM.deserialize("<mango>Openable Mechanics</gradient>"))
+            .addLoreLines(
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Double Doors</yellow> <firewatch>></gradient> <white>Sync open/close together</white>",
+                ),
+                MM.deserialize(
+                    "<yellow>Knocking</yellow> <firewatch>></gradient> <white>Sneak + " +
+                        "left-click with empty hand</white>",
+                ),
+            )
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PlayerInteractEvent) = handlePlayerInteract(event)

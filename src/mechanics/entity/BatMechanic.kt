@@ -7,7 +7,9 @@ import org.bukkit.entity.Bat
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
+import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.interfaces.MechanicInterface
+import xyz.xenondevs.invui.item.ItemBuilder
 import kotlin.random.Random
 
 /** Represents a mechanic handling bat drops within the system. */
@@ -16,6 +18,17 @@ internal object BatMechanic : MechanicInterface {
     private const val BAT_MEMBRANE_BASE_MIN: Int = 0
     private const val BAT_MEMBRANE_BASE_MAX: Int = 1
     private const val BAT_MEMBRANE_LOOTING_BONUS: Int = 1
+
+    override val infoItem =
+        ItemBuilder(Material.PHANTOM_MEMBRANE)
+            .setName(MM.deserialize("<mango>Bat Mechanics</gradient>"))
+            .addLoreLines(
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Membrane Drops</yellow> <firewatch>></gradient> " +
+                        "<white>Drop 0-1 phantom membrane (+Looting)</white>",
+                ),
+            )
 
     @EventHandler
     fun on(event: EntityDeathEvent) {

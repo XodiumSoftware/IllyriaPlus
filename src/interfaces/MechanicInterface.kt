@@ -5,6 +5,7 @@ import org.bukkit.event.Listener
 import org.bukkit.permissions.Permission
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.data.CommandData
+import xyz.xenondevs.invui.item.ItemBuilder
 import kotlin.time.measureTime
 
 /** Represents a contract for a mechanic within the system. */
@@ -22,6 +23,12 @@ internal interface MechanicInterface : Listener {
      * @return A [List] of [Permission] objects representing the permissions for this mechanic.
      */
     val perms: List<Permission> get() = emptyList()
+
+    /** FAQ display item for this mechanic. */
+    val infoItem: ItemBuilder
+
+    /** Whether this mechanic's [infoItem] should only be shown to OP players. */
+    val isOpInfo: Boolean get() = false
 
     /**
      * Registers this feature with the server.

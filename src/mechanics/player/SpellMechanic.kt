@@ -15,6 +15,7 @@ import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.enchantments.spells.*
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.pdcs.ItemStackPDC.selectedSpell
+import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling spell casting within the system. */
 internal object SpellMechanic : MechanicInterface {
@@ -31,9 +32,27 @@ internal object SpellMechanic : MechanicInterface {
     }
 
     /** Spell wand interaction message strings. */
-    object Messages {
+    private object Messages {
         const val SELECTED_SPELL: String = "<spellbite>Current Spell > <white><spell></white></gradient>"
     }
+
+    override val infoItem =
+        ItemBuilder(Material.BLAZE_ROD)
+            .setName(MM.deserialize("<mango>Spell System</gradient>"))
+            .addLoreLines(
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Wand</yellow> <firewatch>></gradient> <white>Blaze rod with enchantments</white>",
+                ),
+                MM.deserialize(
+                    "<yellow>Cycle</yellow> <firewatch>></gradient> <white>Right-click to switch spells</white>",
+                ),
+                MM.deserialize(
+                    "<yellow>Cast</yellow> <firewatch>></gradient> <white>Left-click to cast selected spell</white>",
+                ),
+            ).setGlint(true)
+
+    override val isOpInfo: Boolean = true
 
     @EventHandler
     fun on(event: PlayerInteractEvent) {

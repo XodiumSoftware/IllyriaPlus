@@ -10,12 +10,24 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.inventory.ItemStack
+import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.interfaces.MechanicInterface
+import xyz.xenondevs.invui.item.ItemBuilder
 import kotlin.random.Random
 
 /** Represents a mechanic handling player head drops within the system. */
 internal object HeadMechanic : MechanicInterface {
-    const val SKULL_DROP_CHANCE: Double = 0.01
+    private const val SKULL_DROP_CHANCE: Double = 0.01
+
+    override val infoItem =
+        ItemBuilder(Material.PLAYER_HEAD)
+            .setName(MM.deserialize("<mango>Head Mechanics</gradient>"))
+            .addLoreLines(
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Player Heads</yellow> <firewatch>></gradient> <white>1% chance to drop on death</white>",
+                ),
+            )
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PlayerDeathEvent) = dropPlayerHead(event.player)

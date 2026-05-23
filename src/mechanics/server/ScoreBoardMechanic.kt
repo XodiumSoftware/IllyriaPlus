@@ -1,6 +1,7 @@
 package org.xodium.illyriaplus.mechanics.server
 
 import io.papermc.paper.command.brigadier.Commands
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerJoinEvent
@@ -8,12 +9,19 @@ import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.CommandUtils.playerExecuted
+import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.pdcs.PlayerPDC.scoreboardVisibility
+import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling scoreboard display within the system. */
 internal object ScoreBoardMechanic : MechanicInterface {
+    override val infoItem =
+        ItemBuilder(Material.ITEM_FRAME)
+            .setName(MM.deserialize("<mango>Leaderboard</gradient>"))
+            .addLoreLines(MM.deserialize(""), MM.deserialize("<gray>cmd:</gray> <yellow>/leaderboard</yellow>"))
+
     override val cmds =
         listOf(
             CommandData(

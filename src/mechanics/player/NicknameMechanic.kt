@@ -5,6 +5,7 @@ package org.xodium.illyriaplus.mechanics.player
 import com.mojang.brigadier.arguments.StringArgumentType
 import io.papermc.paper.command.brigadier.Commands
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -18,10 +19,16 @@ import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.mechanics.server.TabListMechanic.tablist
 import org.xodium.illyriaplus.pdcs.PlayerPDC.nickname
+import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling player nicknames within the system. */
 internal object NicknameMechanic : MechanicInterface {
-    const val UPDATE_NICKNAME_MSG: String = "<firewatch>Nickname has been updated to: <nickname></gradient>"
+    private const val UPDATE_NICKNAME_MSG: String = "<firewatch>Nickname has been updated to: <nickname></gradient>"
+
+    override val infoItem =
+        ItemBuilder(Material.NAME_TAG)
+            .setName(MM.deserialize("<mango>Nickname</gradient>"))
+            .addLoreLines(MM.deserialize(""), MM.deserialize("<gray>cmd:</gray> <yellow>/nickname</yellow>"))
 
     override val cmds =
         listOf(

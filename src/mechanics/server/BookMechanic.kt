@@ -1,12 +1,15 @@
 package org.xodium.illyriaplus.mechanics.server
 
 import io.papermc.paper.command.brigadier.Commands
+import org.bukkit.Material
 import org.bukkit.permissions.Permission
 import org.xodium.illyriaplus.IllyriaPlus
 import org.xodium.illyriaplus.Utils.CommandUtils.playerExecuted
+import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.BookData
 import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.interfaces.MechanicInterface
+import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling book functionality within the system. */
 internal object BookMechanic : MechanicInterface {
@@ -51,6 +54,11 @@ internal object BookMechanic : MechanicInterface {
                     ),
             ),
         )
+
+    override val infoItem =
+        ItemBuilder(Material.WRITTEN_BOOK)
+            .setName(MM.deserialize("<mango>Rules Book</gradient>"))
+            .addLoreLines(MM.deserialize(""), MM.deserialize("<gray>cmd:</gray> <yellow>/rules</yellow>"))
 
     override val cmds
         get() =

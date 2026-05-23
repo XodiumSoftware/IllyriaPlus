@@ -6,6 +6,7 @@ import io.papermc.paper.datacomponent.item.WrittenBookContent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 import org.bukkit.GameMode
+import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.block.ChiseledBookshelf
@@ -17,11 +18,23 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.util.Vector
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.interfaces.MechanicInterface
+import xyz.xenondevs.invui.item.ItemBuilder
 import org.bukkit.block.data.type.ChiseledBookshelf as ChiseledBookshelfData
 
 /** Represents a mechanic handling chiseled bookshelf interactions within the system. */
 @Suppress("UnstableApiUsage")
 internal object ChiseledBookshelfMechanic : MechanicInterface {
+    override val infoItem =
+        ItemBuilder(Material.BOOKSHELF)
+            .setName(MM.deserialize("<mango>Bookshelf Mechanics</gradient>"))
+            .addLoreLines(
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Peek Books</yellow> <firewatch>></gradient> " +
+                        "<white>Left-click front face to inspect slot</white>",
+                ),
+            )
+
     @EventHandler
     fun on(event: PlayerInteractEvent) {
         bookshelfInteraction(event)

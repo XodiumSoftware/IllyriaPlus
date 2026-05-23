@@ -4,12 +4,25 @@ import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
+import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.interfaces.MechanicInterface
+import xyz.xenondevs.invui.item.ItemBuilder
 import kotlin.random.Random
 
 /** Represents a mechanic handling spawn egg drops within the system. */
 internal object SpawnEggMechanic : MechanicInterface {
     private const val SPAWN_EGG_DROP_CHANCE: Double = 0.001
+
+    override val infoItem =
+        ItemBuilder(Material.ZOMBIE_SPAWN_EGG)
+            .setName(MM.deserialize("<mango>Spawn Egg Mechanics</gradient>"))
+            .addLoreLines(
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Rare Drops</yellow> <firewatch>></gradient> " +
+                        "<white>0.1% chance for mobs to drop their spawn egg</white>",
+                ),
+            )
 
     @EventHandler
     fun on(event: EntityDeathEvent) {

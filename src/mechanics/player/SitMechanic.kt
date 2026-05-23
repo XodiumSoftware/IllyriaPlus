@@ -19,8 +19,10 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.util.Vector
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
+import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.mechanics.player.SitMechanic.occupiedBlocks
+import xyz.xenondevs.invui.item.ItemBuilder
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import kotlin.uuid.toKotlinUuid
@@ -32,6 +34,21 @@ internal object SitMechanic : MechanicInterface {
     private val occupiedBlocks = mutableMapOf<Location, Uuid>()
     private val blockCenterOffset = Vector(0.5, 0.5, 0.5)
     private val playerStandUpOffset = Vector(0.0, 0.5, 0.0)
+
+    override val infoItem =
+        ItemBuilder(Material.OAK_STAIRS)
+            .setName(MM.deserialize("<mango>Sit Mechanics</gradient>"))
+            .addLoreLines(
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Sit Anywhere</yellow> <firewatch>></gradient> " +
+                        "<white>Right-click bottom stairs/slabs</white>",
+                ),
+                MM.deserialize(
+                    "<yellow>Stand Up</yellow> <firewatch>></gradient> " +
+                        "<white>Take damage, break block, or dismount</white>",
+                ),
+            )
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun on(event: PlayerInteractEvent) = playerInteract(event)

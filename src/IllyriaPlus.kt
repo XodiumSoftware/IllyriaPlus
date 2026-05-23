@@ -51,29 +51,29 @@ internal class IllyriaPlus : JavaPlugin() {
 
         val mechanics =
             listOf(
-                BatMechanic,
                 BookMechanic,
+                NicknameMechanic,
+                ScoreBoardMechanic,
+                LocatorMechanic,
+                OpenableMechanic,
+                TameableMechanic,
+                EnderchestMechanic,
+                XpMechanic,
+                HuskMechanic,
+                HeadMechanic,
                 ChatMechanic,
+                InventoryMechanic,
+                SitMechanic,
                 ChiseledBookshelfMechanic,
                 DimensionMechanic,
-                EnderchestMechanic,
+                BatMechanic,
+                SpawnEggMechanic,
                 GriefingMechanic,
-                HeadMechanic,
-                HuskMechanic,
-                InventoryMechanic,
-                LocatorMechanic,
                 MotdMechanic,
                 MessagesMechanic,
-                NicknameMechanic,
-                OpenableMechanic,
-                ScoreBoardMechanic,
                 ServerInfoMechanic,
-                SitMechanic,
-                SpawnEggMechanic,
                 SpellMechanic,
                 TabListMechanic,
-                TameableMechanic,
-                XpMechanic,
             )
 
         logger.info(
@@ -101,6 +101,8 @@ internal class IllyriaPlus : JavaPlugin() {
         logger.info(
             "Registered: ${enchantments.size} enchantment events | Took ${enchantments.sumOf { it.register() }}ms",
         )
+
+        FaqGui.mechanics = mechanics
 
         val guis =
             listOf(

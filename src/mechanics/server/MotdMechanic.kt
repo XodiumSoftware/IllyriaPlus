@@ -1,10 +1,12 @@
 package org.xodium.illyriaplus.mechanics.server
 
+import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.server.ServerListPingEvent
-import org.xodium.illyriaplus.Utils
+import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.interfaces.MechanicInterface
+import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling server MOTD within the system. */
 internal object MotdMechanic : MechanicInterface {
@@ -14,8 +16,20 @@ internal object MotdMechanic : MechanicInterface {
             "<mango><b>➤ WELCOME BACK LADS!</b></gradient>",
         )
 
+    override val infoItem =
+        ItemBuilder(Material.OAK_SIGN)
+            .setName(MM.deserialize("<mango>MOTD</gradient>"))
+            .addLoreLines(
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Server List</yellow> <firewatch>></gradient> <white>Custom ping message</white>",
+                ),
+            ).setGlint(true)
+
+    override val isOpInfo: Boolean = true
+
     @EventHandler(priority = EventPriority.MONITOR)
     fun on(event: ServerListPingEvent) {
-        event.motd(Utils.MM.deserialize(MOTD.joinToString("\n")))
+        event.motd(MM.deserialize(MOTD.joinToString("\n")))
     }
 }

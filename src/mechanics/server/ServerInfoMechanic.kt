@@ -1,8 +1,11 @@
 package org.xodium.illyriaplus.mechanics.server
 
+import org.bukkit.Material
 import org.bukkit.ServerLinks
 import org.xodium.illyriaplus.IllyriaPlus
+import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.interfaces.MechanicInterface
+import xyz.xenondevs.invui.item.ItemBuilder
 import java.net.URI
 import kotlin.time.measureTime
 
@@ -17,6 +20,18 @@ internal object ServerInfoMechanic : MechanicInterface {
             ServerLinks.Type.COMMUNITY to "https://discord.gg/jusYH9aYUh",
             ServerLinks.Type.COMMUNITY_GUIDELINES to "https://vanillaplus.xodium.org/",
         )
+
+    override val infoItem =
+        ItemBuilder(Material.MAP)
+            .setName(MM.deserialize("<mango>Server Info</gradient>"))
+            .addLoreLines(
+                MM.deserialize(""),
+                MM.deserialize(
+                    "<yellow>Links</yellow> <firewatch>></gradient> <white>Website, Discord, Modrinth</white>",
+                ),
+            ).setGlint(true)
+
+    override val isOpInfo: Boolean = true
 
     override fun register(): Long = super.register() + measureTime { serverLinks() }.inWholeMilliseconds
 
