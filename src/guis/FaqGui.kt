@@ -73,41 +73,18 @@ internal object FaqGui : GuiInterface {
                 if (player.isOp) add(createTab(categories.getOrElse("admin") { emptyList() }))
             }
 
-        val tabButtons =
+        val tabButtonItems =
             buildList {
-                add(
-                    createTabButton(
-                        0,
-                        ItemBuilder(Material.PLAYER_HEAD).setName(MM.deserialize("<mango>Player</gradient>")),
-                    ),
-                )
-                add(
-                    createTabButton(
-                        1,
-                        ItemBuilder(Material.GRASS_BLOCK).setName(MM.deserialize("<mango>World</gradient>")),
-                    ),
-                )
-                add(
-                    createTabButton(
-                        2,
-                        ItemBuilder(Material.WOLF_SPAWN_EGG).setName(MM.deserialize("<mango>Entity</gradient>")),
-                    ),
-                )
-                add(
-                    createTabButton(
-                        3,
-                        ItemBuilder(Material.COMPASS).setName(MM.deserialize("<mango>Server</gradient>")),
-                    ),
-                )
+                add(ItemBuilder(Material.PLAYER_HEAD).setName(MM.deserialize("<mango>Player</gradient>")))
+                add(ItemBuilder(Material.GRASS_BLOCK).setName(MM.deserialize("<mango>World</gradient>")))
+                add(ItemBuilder(Material.WOLF_SPAWN_EGG).setName(MM.deserialize("<mango>Entity</gradient>")))
+                add(ItemBuilder(Material.COMPASS).setName(MM.deserialize("<mango>Server</gradient>")))
                 if (player.isOp) {
-                    add(
-                        createTabButton(
-                            4,
-                            ItemBuilder(Material.COMMAND_BLOCK).setName(MM.deserialize("<mango>Admin</gradient>")),
-                        ),
-                    )
+                    add(ItemBuilder(Material.COMMAND_BLOCK).setName(MM.deserialize("<mango>Admin</gradient>")))
                 }
             }
+
+        val tabButtons = tabButtonItems.mapIndexed { index, item -> createTabButton(index, item) }
 
         val structure =
             if (player.isOp) {
@@ -120,7 +97,7 @@ internal object FaqGui : GuiInterface {
                 )
             } else {
                 arrayOf(
-                    "# # P W E S # # #",
+                    "# # P W # E S # #",
                     "# x x x x x x x #",
                     "# x x x x x x x #",
                     "# x x x x x x x #",
