@@ -22,7 +22,8 @@ internal object ZombieMechanic : MechanicInterface {
                 .addLoreLines(
                     MM.deserialize(""),
                     MM.deserialize(
-                        "<yellow>Horde Alert</yellow> <firewatch>></gradient> <white>When a zombie spots a player, it alerts nearby zombies within $HORDE_RADIUS blocks to join the chase.</white>",
+                        "<yellow>Horde Alert</yellow> <firewatch>></gradient> <white>When a zombie spots a player, " +
+                            "it alerts nearby zombies within $HORDE_RADIUS blocks to join the chase.</white>",
                     ),
                 ),
         )
