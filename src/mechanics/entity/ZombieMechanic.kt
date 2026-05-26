@@ -4,9 +4,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.entity.Zombie
 import org.bukkit.event.EventHandler
-import org.bukkit.event.entity.CreatureSpawnEvent
-import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.event.entity.EntityTargetLivingEntityEvent
+import org.bukkit.event.entity.*
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.xodium.illyriaplus.Utils.MM
@@ -44,6 +42,9 @@ internal object ZombieMechanic : MechanicInterface {
                     MM.deserialize(
                         "<yellow>Infectious Touch</yellow> <firewatch>></gradient> <white>Zombie hits inflict slowness, hunger, and weakness.</white>",
                     ),
+                    MM.deserialize(
+                        "<yellow>Daylight Immunity</yellow> <firewatch>></gradient> <white>Zombies do not burn in sunlight.</white>",
+                    ),
                 ),
         )
 
@@ -54,6 +55,14 @@ internal object ZombieMechanic : MechanicInterface {
 
     @EventHandler
     fun on(event: EntityDamageByEntityEvent) = infectiousTouch(event)
+
+    @EventHandler
+    fun on(event: EntityCombustEvent) {
+        if (event.entity !is Zombie) return
+        if (event is EntityCombustByBlockEvent || event is EntityCombustByEntityEvent) return
+
+        event.isCancelled = true
+    }
 
     @EventHandler
     fun on(event: CreatureSpawnEvent) {
