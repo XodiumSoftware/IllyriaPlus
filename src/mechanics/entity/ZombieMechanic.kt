@@ -34,16 +34,21 @@ internal object ZombieMechanic : MechanicInterface {
                             "it alerts nearby zombies within $HORDE_RADIUS blocks to join the chase.</white>",
                     ),
                     MM.deserialize(
-                        "<yellow>Door Breaking</yellow> <firewatch>></gradient> <white>Zombies can break wooden doors.</white>",
+                        "<yellow>Door Breaking</yellow> <firewatch>></gradient> " +
+                            "<white>Zombies can break wooden doors.</white>",
                     ),
                     MM.deserialize(
-                        "<yellow>Amplified Spawns</yellow> <firewatch>></gradient> <white>Natural spawns have a ${(SPAWN_AMPLIFY_CHANCE * 100).toInt()}% chance to bring up to $SPAWN_AMPLIFY_EXTRA extra zombies.</white>",
+                        "<yellow>Amplified Spawns</yellow> <firewatch>></gradient> <white>Natural spawns have a " +
+                            "${(SPAWN_AMPLIFY_CHANCE * 100).toInt()}% chance to bring up to " +
+                            "$SPAWN_AMPLIFY_EXTRA extra zombies.</white>",
                     ),
                     MM.deserialize(
-                        "<yellow>Infectious Touch</yellow> <firewatch>></gradient> <white>Zombie hits inflict slowness, hunger, and weakness.</white>",
+                        "<yellow>Infectious Touch</yellow> <firewatch>></gradient> " +
+                            "<white>Zombie hits inflict slowness, hunger, and weakness.</white>",
                     ),
                     MM.deserialize(
-                        "<yellow>Daylight Immunity</yellow> <firewatch>></gradient> <white>Zombies do not burn in sunlight.</white>",
+                        "<yellow>Daylight Immunity</yellow> <firewatch>></gradient> " +
+                            "<white>Zombies do not burn in sunlight.</white>",
                     ),
                 ),
         )
