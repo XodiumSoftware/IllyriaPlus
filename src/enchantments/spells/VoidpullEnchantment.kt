@@ -1,4 +1,3 @@
-@file:Suppress("ktlint:standard:no-wildcard-imports")
 
 package org.xodium.illyriaplus.enchantments.spells
 

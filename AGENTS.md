@@ -120,7 +120,7 @@ Custom enchantments implement `EnchantmentInterface` with:
 - All mechanics are `object` singletons
 - Use MiniMessage (`Utils.MM`) for all text formatting
 - Add `@Suppress("UnstableApiUsage")` when using Paper's experimental APIs
-- ktlint is enforced; suppress wildcard imports per-file with `@file:Suppress("ktlint:standard:no-wildcard-imports")` if needed
+- ktlint is enforced; wildcard imports are disabled globally via `.editorconfig`
 - Recipe `NamespacedKey` naming: `{descriptive_name}_{recipe_type}`
 - **Import types instead of using fully qualified paths** — e.g., `import org.bukkit.inventory.meta.PotionMeta` instead of `org.bukkit.inventory.meta.PotionMeta`
 - **Use `it` for single-parameter lambdas** — e.g., `list.forEach { it.doSomething() }` instead of `list.forEach { item -> item.doSomething() }`
