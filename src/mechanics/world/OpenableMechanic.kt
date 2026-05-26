@@ -22,6 +22,7 @@ import org.bukkit.inventory.EquipmentSlot
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.AdjacentBlockData
+import org.xodium.illyriaplus.data.FaqCategory
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -51,7 +52,7 @@ internal object OpenableMechanic : MechanicInterface {
             1.0f,
         )
 
-    override val infoItem =
+    override val faqItem =
         Item.simple(
             ItemBuilder(Material.DARK_OAK_DOOR)
                 .setName(MM.deserialize("<mango>Openable Mechanics</gradient>"))
@@ -66,6 +67,8 @@ internal object OpenableMechanic : MechanicInterface {
                     ),
                 ),
         )
+
+    override val faqCategory = FaqCategory.WORLD
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PlayerInteractEvent) = handlePlayerInteract(event)

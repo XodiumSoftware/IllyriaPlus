@@ -4,6 +4,7 @@ import org.bukkit.Material
 import org.bukkit.ServerLinks
 import org.xodium.illyriaplus.IllyriaPlus
 import org.xodium.illyriaplus.Utils.MM
+import org.xodium.illyriaplus.data.FaqCategory
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -22,7 +23,7 @@ internal object ServerInfoMechanic : MechanicInterface {
             ServerLinks.Type.COMMUNITY_GUIDELINES to "https://vanillaplus.xodium.org/",
         )
 
-    override val infoItem =
+    override val faqItem =
         Item.simple(
             ItemBuilder(Material.MAP)
                 .setName(MM.deserialize("<mango>Server Info</gradient>"))
@@ -34,7 +35,7 @@ internal object ServerInfoMechanic : MechanicInterface {
                 ),
         )
 
-    override val isOpInfo: Boolean = true
+    override val faqCategory = FaqCategory.ADMIN
 
     override fun register(): Long = super.register() + measureTime { serverLinks() }.inWholeMilliseconds
 

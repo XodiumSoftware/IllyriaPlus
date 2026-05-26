@@ -17,6 +17,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.util.Vector
 import org.xodium.illyriaplus.Utils.MM
+import org.xodium.illyriaplus.data.FaqCategory
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -25,7 +26,7 @@ import org.bukkit.block.data.type.ChiseledBookshelf as ChiseledBookshelfData
 /** Represents a mechanic handling chiseled bookshelf interactions within the system. */
 @Suppress("UnstableApiUsage")
 internal object ChiseledBookshelfMechanic : MechanicInterface {
-    override val infoItem =
+    override val faqItem =
         Item.simple(
             ItemBuilder(Material.BOOKSHELF)
                 .setName(MM.deserialize("<mango>Bookshelf Mechanics</gradient>"))
@@ -37,6 +38,8 @@ internal object ChiseledBookshelfMechanic : MechanicInterface {
                     ),
                 ),
         )
+
+    override val faqCategory = FaqCategory.WORLD
 
     @EventHandler
     fun on(event: PlayerInteractEvent) {

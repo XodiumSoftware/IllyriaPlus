@@ -17,6 +17,7 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.*
 import org.xodium.illyriaplus.Utils.MM
+import org.xodium.illyriaplus.data.FaqCategory
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -61,7 +62,7 @@ internal object MessagesMechanic : MechanicInterface {
         const val OTHER: String = ""
     }
 
-    override val infoItem =
+    override val faqItem =
         Item.simple(
             ItemBuilder(Material.PAPER)
                 .setName(MM.deserialize("<mango>Messages</gradient>"))
@@ -79,7 +80,7 @@ internal object MessagesMechanic : MechanicInterface {
                 ),
         )
 
-    override val isOpInfo: Boolean = true
+    override val faqCategory = FaqCategory.ADMIN
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PlayerJoinEvent) {

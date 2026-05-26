@@ -27,6 +27,7 @@ import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.CommandUtils.executesCatching
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
+import org.xodium.illyriaplus.data.FaqCategory
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -45,7 +46,7 @@ internal object ChatMechanic : MechanicInterface {
     private const val JOIN_TITLE = "<firewatch><b>Welcome</b></gradient> <player>"
     private const val JOIN_SUBTITLE = "<mango>Check out:</gradient> /faq"
 
-    override val infoItem =
+    override val faqItem =
         Item.simple(
             ItemBuilder(Material.TORCH)
                 .setName(MM.deserialize("<mango>Chat Placeholders</gradient>"))
@@ -58,6 +59,8 @@ internal object ChatMechanic : MechanicInterface {
                     MM.deserialize("<yellow>@player</yellow> <firewatch>></gradient> <white>Mentions a player</white>"),
                 ),
         )
+
+    override val faqCategory = FaqCategory.SERVER
 
     override val cmds =
         listOf(

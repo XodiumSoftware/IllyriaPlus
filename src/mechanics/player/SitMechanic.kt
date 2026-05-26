@@ -20,6 +20,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.util.Vector
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
+import org.xodium.illyriaplus.data.FaqCategory
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.mechanics.player.SitMechanic.occupiedBlocks
 import xyz.xenondevs.invui.item.Item
@@ -36,7 +37,7 @@ internal object SitMechanic : MechanicInterface {
     private val blockCenterOffset = Vector(0.5, 0.5, 0.5)
     private val playerStandUpOffset = Vector(0.0, 0.5, 0.0)
 
-    override val infoItem =
+    override val faqItem =
         Item.simple(
             ItemBuilder(Material.OAK_STAIRS)
                 .setName(MM.deserialize("<mango>Sit Mechanics</gradient>"))
@@ -52,6 +53,8 @@ internal object SitMechanic : MechanicInterface {
                     ),
                 ),
         )
+
+    override val faqCategory = FaqCategory.PLAYER
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun on(event: PlayerInteractEvent) = playerInteract(event)

@@ -16,6 +16,7 @@ import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.CommandUtils.playerExecuted
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
+import org.xodium.illyriaplus.data.FaqCategory
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -27,7 +28,7 @@ internal object LocatorMechanic : MechanicInterface {
     private const val DEFAULT_LOCATOR_MSG = "<gray>Locator color: default/not custom set</gray>"
     private const val RESET_LOCATOR_MSG = "<gray>Locator color has been reset!</gray>"
 
-    override val infoItem =
+    override val faqItem =
         Item.simple(
             ItemBuilder(Material.COMPASS)
                 .setName(MM.deserialize("<mango>Locator</gradient>"))
@@ -40,6 +41,8 @@ internal object LocatorMechanic : MechanicInterface {
                     MM.deserialize("<yellow>Reset</yellow> <firewatch>></gradient> <white>/locator reset</white>"),
                 ),
         )
+
+    override val faqCategory = FaqCategory.PLAYER
 
     override val cmds =
         listOf(

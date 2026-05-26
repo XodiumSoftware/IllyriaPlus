@@ -9,6 +9,7 @@ import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.CommandUtils.playerExecuted
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
+import org.xodium.illyriaplus.data.FaqCategory
 import org.xodium.illyriaplus.interfaces.GuiInterface
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.gui.Gui
@@ -44,33 +45,15 @@ internal object FaqGui : GuiInterface {
         )
 
     override fun gui(player: Player): Window {
-        val categories =
-            mechanics.groupBy {
-                if (it.isOpInfo) return@groupBy "admin"
-                when {
-                    it.javaClass.`package`.name
-                        .endsWith("player") -> "player"
-
-                    it.javaClass.`package`.name
-                        .endsWith("world") -> "world"
-
-                    it.javaClass.`package`.name
-                        .endsWith("entity") -> "entity"
-
-                    it.javaClass.`package`.name
-                        .endsWith("server") -> "server"
-
-                    else -> "other"
-                }
-            }
+        val categories = mechanics.groupBy { it.faqCategory }
 
         val tabs =
             buildList {
-                add(createTab(categories.getOrElse("player") { emptyList() }))
-                add(createTab(categories.getOrElse("world") { emptyList() }))
-                add(createTab(categories.getOrElse("entity") { emptyList() }))
-                add(createTab(categories.getOrElse("server") { emptyList() }))
-                if (player.isOp) add(createTab(categories.getOrElse("admin") { emptyList() }))
+                add(createTab(categories.getOrElse(FaqCategory.PLAYER) { emptyList() }))
+                add(createTab(categories.getOrElse(FaqCategory.WORLD) { emptyList() }))
+                add(createTab(categories.getOrElse(FaqCategory.ENTITY) { emptyList() }))
+                add(createTab(categories.getOrElse(FaqCategory.SERVER) { emptyList() }))
+                if (player.isOp) add(createTab(categories.getOrElse(FaqCategory.ADMIN) { emptyList() }))
             }
 
         val tabButtonItems =
@@ -161,6 +144,6 @@ internal object FaqGui : GuiInterface {
             .apply {
                 mechanics
                     .take(21)
-                    .forEachIndexed { index, mechanic -> setItem(index, mechanic.infoItem) }
+                    .forEachIndexed { index, mechanic -> setItem(index, mechanic.faqItem) }
             }
 }

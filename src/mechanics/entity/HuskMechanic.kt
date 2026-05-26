@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
 import org.xodium.illyriaplus.Utils.MM
+import org.xodium.illyriaplus.data.FaqCategory
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -22,7 +23,7 @@ internal object HuskMechanic : MechanicInterface {
     private const val CAMEL_HUSK_SAND_BASE_MAX: Int = 3
     private const val CAMEL_HUSK_SAND_LOOTING_BONUS: Int = 2
 
-    override val infoItem =
+    override val faqItem =
         Item.simple(
             ItemBuilder(Material.SAND)
                 .setName(MM.deserialize("<mango>Husk Mechanics</gradient>"))
@@ -34,6 +35,8 @@ internal object HuskMechanic : MechanicInterface {
                     ),
                 ),
         )
+
+    override val faqCategory = FaqCategory.ENTITY
 
     @EventHandler
     fun on(event: EntityDeathEvent) {

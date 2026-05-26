@@ -11,6 +11,7 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.inventory.ItemStack
 import org.xodium.illyriaplus.Utils.MM
+import org.xodium.illyriaplus.data.FaqCategory
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -20,7 +21,7 @@ import kotlin.random.Random
 internal object HeadMechanic : MechanicInterface {
     private const val SKULL_DROP_CHANCE: Double = 0.01
 
-    override val infoItem =
+    override val faqItem =
         Item.simple(
             ItemBuilder(Material.PLAYER_HEAD)
                 .setName(MM.deserialize("<mango>Head Mechanics</gradient>"))
@@ -32,6 +33,8 @@ internal object HeadMechanic : MechanicInterface {
                     ),
                 ),
         )
+
+    override val faqCategory = FaqCategory.PLAYER
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PlayerDeathEvent) = dropPlayerHead(event.player)

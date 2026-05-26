@@ -23,6 +23,7 @@ import org.xodium.illyriaplus.Utils.CommandUtils.playerExecuted
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.Utils.PlayerUtils.getContainersAround
 import org.xodium.illyriaplus.data.CommandData
+import org.xodium.illyriaplus.data.FaqCategory
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -46,7 +47,7 @@ internal object InventoryMechanic : MechanicInterface {
     private val UNLOAD_FAILED_SOUND: Sound =
         Sound.sound(Key.key("block.anvil.land"), Sound.Source.PLAYER, 1.0f, 1.0f)
 
-    override val infoItem =
+    override val faqItem =
         Item.simple(
             ItemBuilder(Material.CHEST)
                 .setName(MM.deserialize("<mango>Inventory Mechanics</gradient>"))
@@ -62,6 +63,8 @@ internal object InventoryMechanic : MechanicInterface {
                     ),
                 ),
         )
+
+    override val faqCategory = FaqCategory.WORLD
 
     override val cmds =
         listOf(

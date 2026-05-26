@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.server.ServerListPingEvent
 import org.xodium.illyriaplus.Utils.MM
+import org.xodium.illyriaplus.data.FaqCategory
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -17,7 +18,7 @@ internal object MotdMechanic : MechanicInterface {
             "<mango><b>➤ WELCOME BACK LADS!</b></gradient>",
         )
 
-    override val infoItem =
+    override val faqItem =
         Item.simple(
             ItemBuilder(Material.OAK_SIGN)
                 .setName(MM.deserialize("<mango>MOTD</gradient>"))
@@ -29,7 +30,7 @@ internal object MotdMechanic : MechanicInterface {
                 ),
         )
 
-    override val isOpInfo: Boolean = true
+    override val faqCategory = FaqCategory.ADMIN
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun on(event: ServerListPingEvent) {

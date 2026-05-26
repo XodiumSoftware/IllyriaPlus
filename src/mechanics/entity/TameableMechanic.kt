@@ -6,13 +6,14 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.Utils.PlayerUtils.getLeashedEntity
+import org.xodium.illyriaplus.data.FaqCategory
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling tameable entities within the system. */
 internal object TameableMechanic : MechanicInterface {
-    override val infoItem =
+    override val faqItem =
         Item.simple(
             ItemBuilder(Material.WOLF_SPAWN_EGG)
                 .setName(MM.deserialize("<mango>Tameable Mechanics</gradient>"))
@@ -24,6 +25,8 @@ internal object TameableMechanic : MechanicInterface {
                     ),
                 ),
         )
+
+    override val faqCategory = FaqCategory.ENTITY
 
     @EventHandler
     fun on(event: PlayerInteractEntityEvent) {

@@ -8,6 +8,7 @@ import org.xodium.illyriaplus.Utils.CommandUtils.playerExecuted
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.BookData
 import org.xodium.illyriaplus.data.CommandData
+import org.xodium.illyriaplus.data.FaqCategory
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -56,12 +57,14 @@ internal object BookMechanic : MechanicInterface {
             ),
         )
 
-    override val infoItem =
+    override val faqItem =
         Item.simple(
             ItemBuilder(Material.WRITTEN_BOOK)
                 .setName(MM.deserialize("<mango>Rules Book</gradient>"))
                 .addLoreLines(MM.deserialize(""), MM.deserialize("<gray>cmd:</gray> <yellow>/rules</yellow>")),
         )
+
+    override val faqCategory = FaqCategory.SERVER
 
     override val cmds
         get() =

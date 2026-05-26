@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.PlayerJoinEvent
 import org.xodium.illyriaplus.Utils.MM
+import org.xodium.illyriaplus.data.FaqCategory
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -30,7 +31,7 @@ internal object TabListMechanic : MechanicInterface {
             "<mango_r><st>─────────────────</st></gradient><mango><st>─────────────────</st></gradient>",
         )
 
-    override val infoItem =
+    override val faqItem =
         Item.simple(
             ItemBuilder(Material.PAINTING)
                 .setName(MM.deserialize("<mango>Tab List</gradient>"))
@@ -45,7 +46,7 @@ internal object TabListMechanic : MechanicInterface {
                 ),
         )
 
-    override val isOpInfo: Boolean = true
+    override val faqCategory = FaqCategory.ADMIN
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PlayerJoinEvent) {

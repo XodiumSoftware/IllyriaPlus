@@ -5,6 +5,7 @@ import org.bukkit.event.Listener
 import org.bukkit.permissions.Permission
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.data.CommandData
+import org.xodium.illyriaplus.data.FaqCategory
 import xyz.xenondevs.invui.item.Item
 import kotlin.time.measureTime
 
@@ -25,10 +26,10 @@ internal interface MechanicInterface : Listener {
     val perms: List<Permission> get() = emptyList()
 
     /** FAQ display item for this mechanic. */
-    val infoItem: Item
+    val faqItem: Item
 
-    /** Whether this mechanic's [infoItem] should only be shown to OP players. */
-    val isOpInfo: Boolean get() = false
+    /** The FAQ category this mechanic belongs to. */
+    val faqCategory: FaqCategory
 
     /**
      * Registers this feature with the server.

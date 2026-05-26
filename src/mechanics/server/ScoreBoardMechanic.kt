@@ -11,6 +11,7 @@ import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.CommandUtils.playerExecuted
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
+import org.xodium.illyriaplus.data.FaqCategory
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.pdcs.PlayerPDC.scoreboardVisibility
 import xyz.xenondevs.invui.item.Item
@@ -18,12 +19,14 @@ import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling scoreboard display within the system. */
 internal object ScoreBoardMechanic : MechanicInterface {
-    override val infoItem =
+    override val faqItem =
         Item.simple(
             ItemBuilder(Material.ITEM_FRAME)
                 .setName(MM.deserialize("<mango>Leaderboard</gradient>"))
                 .addLoreLines(MM.deserialize(""), MM.deserialize("<gray>cmd:</gray> <yellow>/leaderboard</yellow>")),
         )
+
+    override val faqCategory = FaqCategory.SERVER
 
     override val cmds =
         listOf(

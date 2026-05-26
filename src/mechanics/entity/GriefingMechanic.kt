@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityChangeBlockEvent
 import org.bukkit.event.entity.EntityExplodeEvent
 import org.xodium.illyriaplus.Utils.MM
+import org.xodium.illyriaplus.data.FaqCategory
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -23,7 +24,7 @@ internal object GriefingMechanic : MechanicInterface {
             EntityType.WITHER,
         )
 
-    override val infoItem =
+    override val faqItem =
         Item.simple(
             ItemBuilder(Material.TNT)
                 .setName(MM.deserialize("<mango>Griefing Prevention</gradient>"))
@@ -39,6 +40,8 @@ internal object GriefingMechanic : MechanicInterface {
                     ),
                 ),
         )
+
+    override val faqCategory = FaqCategory.ENTITY
 
     @EventHandler
     fun on(event: EntityChangeBlockEvent) {
