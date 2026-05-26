@@ -5,7 +5,10 @@ import org.bukkit.entity.Player
 import org.bukkit.entity.Zombie
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.CreatureSpawnEvent
+import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.FaqCategory
 import org.xodium.illyriaplus.interfaces.MechanicInterface
@@ -19,6 +22,8 @@ internal object ZombieMechanic : MechanicInterface {
     private const val SPAWN_AMPLIFY_CHANCE: Double = 0.25
     private const val SPAWN_AMPLIFY_EXTRA: Int = 2
     private const val SPAWN_AMPLIFY_RADIUS: Double = 4.0
+    private const val INFECT_DURATION_TICKS: Int = 100
+    private const val INFECT_AMPLIFIER: Int = 0
 
     override val faqItem =
         Item.simple(
@@ -36,6 +41,9 @@ internal object ZombieMechanic : MechanicInterface {
                     MM.deserialize(
                         "<yellow>Amplified Spawns</yellow> <firewatch>></gradient> <white>Natural spawns have a ${(SPAWN_AMPLIFY_CHANCE * 100).toInt()}% chance to bring up to $SPAWN_AMPLIFY_EXTRA extra zombies.</white>",
                     ),
+                    MM.deserialize(
+                        "<yellow>Infectious Touch</yellow> <firewatch>></gradient> <white>Zombie hits inflict slowness, hunger, and weakness.</white>",
+                    ),
                 ),
         )
 
@@ -43,6 +51,9 @@ internal object ZombieMechanic : MechanicInterface {
 
     @EventHandler
     fun on(event: EntityTargetLivingEntityEvent) = alertHorde(event)
+
+    @EventHandler
+    fun on(event: EntityDamageByEntityEvent) = infectiousTouch(event)
 
     @EventHandler
     fun on(event: CreatureSpawnEvent) {
@@ -69,6 +80,25 @@ internal object ZombieMechanic : MechanicInterface {
                     (Random.nextDouble() - 0.5) * 2 * SPAWN_AMPLIFY_RADIUS,
                 )
             event.entity.world.spawn(loc, Zombie::class.java) { it.setCanBreakDoors(true) }
+        }
+    }
+
+    /**
+     * Inflicts slowness, hunger, and weakness on a player hit by a zombie.
+     *
+     * @param event The EntityDamageByEntityEvent triggered when an entity damages another.
+     */
+    private fun infectiousTouch(event: EntityDamageByEntityEvent) {
+        if (event.damager !is Zombie) return
+
+        val player = event.entity as? Player ?: return
+
+        listOf(
+            PotionEffectType.SLOWNESS,
+            PotionEffectType.HUNGER,
+            PotionEffectType.WEAKNESS,
+        ).forEach {
+            player.addPotionEffect(PotionEffect(it, INFECT_DURATION_TICKS, INFECT_AMPLIFIER, false, true, true))
         }
     }
 
