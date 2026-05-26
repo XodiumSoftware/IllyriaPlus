@@ -44,30 +44,42 @@ internal object FaqGui : GuiInterface {
             ),
         )
 
+    /**
+     * Configuration for a single FAQ tab.
+     *
+     * @property category The [FaqCategory] whose mechanics populate this tab.
+     * @property material The [Material] used for the tab button icon.
+     * @property label The display name of the tab button.
+     * @property char The character in the [TabGui] structure grid mapped to this tab button.
+     */
+    private data class TabConfig(
+        val category: FaqCategory,
+        val material: Material,
+        val label: String,
+        val char: Char,
+    )
+
     override fun gui(player: Player): Window {
         val categories = mechanics.groupBy { it.faqCategory }
+        val tabConfigs =
+            listOf(
+                TabConfig(FaqCategory.PLAYER, Material.PLAYER_HEAD, "Player", 'P'),
+                TabConfig(FaqCategory.WORLD, Material.GRASS_BLOCK, "World", 'W'),
+                TabConfig(FaqCategory.ENTITY, Material.WOLF_SPAWN_EGG, "Entity", 'E'),
+                TabConfig(FaqCategory.SERVER, Material.COMPASS, "Server", 'S'),
+            ) +
+                listOfNotNull(
+                    TabConfig(FaqCategory.ADMIN, Material.COMMAND_BLOCK, "Admin", 'A').takeIf { player.isOp },
+                )
 
-        val tabs =
-            buildList {
-                add(createTab(categories.getOrElse(FaqCategory.PLAYER) { emptyList() }))
-                add(createTab(categories.getOrElse(FaqCategory.WORLD) { emptyList() }))
-                add(createTab(categories.getOrElse(FaqCategory.ENTITY) { emptyList() }))
-                add(createTab(categories.getOrElse(FaqCategory.SERVER) { emptyList() }))
-                if (player.isOp) add(createTab(categories.getOrElse(FaqCategory.ADMIN) { emptyList() }))
+        val tabs = tabConfigs.map { createTab(categories[it.category] ?: emptyList()) }
+        val tabButtons =
+            tabConfigs.mapIndexed { index, config ->
+                createTabButton(
+                    index,
+                    ItemBuilder(config.material).setName(MM.deserialize("<mango>${config.label}</gradient>")),
+                )
             }
-
-        val tabButtonItems =
-            buildList {
-                add(ItemBuilder(Material.PLAYER_HEAD).setName(MM.deserialize("<mango>Player</gradient>")))
-                add(ItemBuilder(Material.GRASS_BLOCK).setName(MM.deserialize("<mango>World</gradient>")))
-                add(ItemBuilder(Material.WOLF_SPAWN_EGG).setName(MM.deserialize("<mango>Entity</gradient>")))
-                add(ItemBuilder(Material.COMPASS).setName(MM.deserialize("<mango>Server</gradient>")))
-                if (player.isOp) {
-                    add(ItemBuilder(Material.COMMAND_BLOCK).setName(MM.deserialize("<mango>Admin</gradient>")))
-                }
-            }
-
-        val tabButtons = tabButtonItems.mapIndexed { index, item -> createTabButton(index, item) }
 
         val structure =
             if (player.isOp) {
@@ -90,22 +102,26 @@ internal object FaqGui : GuiInterface {
 
         return Window
             .builder()
-            .setTitle(MM.deserialize("<firewatch><b>FAQ</b></gradient>"))
-            .setUpperGui(
-                TabGui
-                    .builder()
-                    .setStructure(*structure)
-                    .addIngredient('#', Item.simple(ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true)))
-                    .addIngredient('P', tabButtons[0])
-                    .addIngredient('W', tabButtons[1])
-                    .addIngredient('E', tabButtons[2])
-                    .addIngredient('S', tabButtons[3])
-                    .apply { if (player.isOp) addIngredient('A', tabButtons[4]) }
-                    .addIngredient('x', Markers.CONTENT_LIST_SLOT_HORIZONTAL)
-                    .setTabs(tabs)
-                    .build(),
-            ).setViewer(player)
-            .build()
+            .apply {
+                setTitle(MM.deserialize("<firewatch><b>FAQ</b></gradient>"))
+                setUpperGui(
+                    TabGui
+                        .builder()
+                        .apply {
+                            setStructure(*structure)
+                            addIngredient(
+                                '#',
+                                Item.simple(ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true)),
+                            )
+                            addIngredient('x', Markers.CONTENT_LIST_SLOT_HORIZONTAL)
+                            setTabs(tabs)
+                            tabConfigs.zip(tabButtons).forEach { (config, button) ->
+                                addIngredient(config.char, button)
+                            }
+                        }.build(),
+                )
+                setViewer(player)
+            }.build()
     }
 
     /**
