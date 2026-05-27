@@ -122,5 +122,5 @@ Recipe objects implement **`RecipeInterface`** and are listed in `IllyriaPlus.on
 - Each module defines a nested `object Config` (with nested `object` blocks for logical groupings) containing hardcoded default values. There is no file-based config system.
 - MiniMessage (`Utils.MM`) is used throughout for all text formatting.
 - The `@Suppress("UnstableApiUsage")` annotation is needed whenever using Paper's experimental APIs (registry events, dialogs, enchantment builders, menu types, etc.).
-- ktlint is enforced (configured in `.idea/ktlint-plugin.xml`); wildcard imports are suppressed per-file with `@file:Suppress("ktlint:standard:no-wildcard-imports")` only when needed.
+- ktlint is enforced (configured in `.idea/ktlint-plugin.xml`); wildcard imports are disabled globally via `.editorconfig`.
 - Recipe `NamespacedKey` naming: `{descriptive_name}_{recipe_type}` (e.g. `diamond_recycle_blasting_recipe`, `chainmail_helmet_shaped_recipe`).

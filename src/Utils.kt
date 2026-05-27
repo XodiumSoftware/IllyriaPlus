@@ -1,4 +1,4 @@
-@file:Suppress("ktlint:standard:no-wildcard-imports", "Unused")
+@file:Suppress("Unused")
 
 package org.xodium.illyriaplus
 

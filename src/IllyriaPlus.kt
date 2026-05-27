@@ -1,4 +1,3 @@
-@file:Suppress("ktlint:standard:no-wildcard-imports")
 
 package org.xodium.illyriaplus
 
@@ -60,6 +59,7 @@ internal class IllyriaPlus : JavaPlugin() {
                 EnderchestMechanic,
                 XpMechanic,
                 HuskMechanic,
+                ZombieMechanic,
                 HeadMechanic,
                 ChatMechanic,
                 InventoryMechanic,
