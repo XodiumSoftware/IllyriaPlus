@@ -44,40 +44,17 @@ internal object FaqGui : GuiInterface {
             ),
         )
 
-    /**
-     * Configuration for a single FAQ tab.
-     *
-     * @property category The [FaqCategory] whose mechanics populate this tab.
-     * @property material The [Material] used for the tab button icon.
-     * @property label The display name of the tab button.
-     * @property char The character in the [TabGui] structure grid mapped to this tab button.
-     */
-    private data class TabConfig(
-        val category: FaqCategory,
-        val material: Material,
-        val label: String,
-        val char: Char,
-    )
-
     override fun gui(player: Player): Window {
         val categories = mechanics.groupBy { it.faqCategory }
         val tabConfigs =
-            listOf(
-                TabConfig(FaqCategory.PLAYER, Material.PLAYER_HEAD, "Player", 'P'),
-                TabConfig(FaqCategory.WORLD, Material.GRASS_BLOCK, "World", 'W'),
-                TabConfig(FaqCategory.ENTITY, Material.WOLF_SPAWN_EGG, "Entity", 'E'),
-                TabConfig(FaqCategory.SERVER, Material.COMPASS, "Server", 'S'),
-            ) +
-                listOfNotNull(
-                    TabConfig(FaqCategory.ADMIN, Material.COMMAND_BLOCK, "Admin", 'A').takeIf { player.isOp },
-                )
+            FaqCategory.entries.filter { it != FaqCategory.ADMIN || player.isOp }
 
-        val tabs = tabConfigs.map { createTab(categories[it.category] ?: emptyList()) }
+        val tabs = tabConfigs.map { createTab(categories[it] ?: emptyList()) }
         val tabButtons =
             tabConfigs.mapIndexed { index, config ->
                 createTabButton(
                     index,
-                    ItemBuilder(config.material).setName(MM.deserialize("<mango>${config.label}</gradient>")),
+                    ItemBuilder(config.material).setName(MM.deserialize(config.label)),
                 )
             }
 
