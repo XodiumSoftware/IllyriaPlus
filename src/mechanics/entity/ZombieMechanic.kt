@@ -22,6 +22,14 @@ internal object ZombieMechanic : MechanicInterface {
     private const val SPAWN_AMPLIFY_RADIUS: Double = 4.0
     private const val INFECT_DURATION_TICKS: Int = 100
     private const val INFECT_AMPLIFIER: Int = 0
+    private const val CAN_BREAK_DOOR: Boolean = true
+
+    private val INFECTIOUS_EFFECTS: List<PotionEffectType> =
+        listOf(
+            PotionEffectType.SLOWNESS,
+            PotionEffectType.HUNGER,
+            PotionEffectType.WEAKNESS,
+        )
 
     override val faqItem =
         Item.simple(
@@ -73,7 +81,7 @@ internal object ZombieMechanic : MechanicInterface {
     fun on(event: CreatureSpawnEvent) {
         val zombie = event.entity as? Zombie ?: return
 
-        zombie.setCanBreakDoors(true)
+        zombie.setCanBreakDoors(CAN_BREAK_DOOR)
         amplifySpawn(event)
     }
 
@@ -93,7 +101,7 @@ internal object ZombieMechanic : MechanicInterface {
                     0.0,
                     (Random.nextDouble() - 0.5) * 2 * SPAWN_AMPLIFY_RADIUS,
                 )
-            event.entity.world.spawn(loc, Zombie::class.java) { it.setCanBreakDoors(true) }
+            event.entity.world.spawn(loc, Zombie::class.java) { it.setCanBreakDoors(CAN_BREAK_DOOR) }
         }
     }
 
@@ -107,11 +115,7 @@ internal object ZombieMechanic : MechanicInterface {
 
         val player = event.entity as? Player ?: return
 
-        listOf(
-            PotionEffectType.SLOWNESS,
-            PotionEffectType.HUNGER,
-            PotionEffectType.WEAKNESS,
-        ).forEach {
+        INFECTIOUS_EFFECTS.forEach {
             player.addPotionEffect(PotionEffect(it, INFECT_DURATION_TICKS, INFECT_AMPLIFIER, false, true, true))
         }
     }
