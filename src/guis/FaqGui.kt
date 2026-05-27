@@ -48,7 +48,6 @@ internal object FaqGui : GuiInterface {
         val categories = mechanics.groupBy { it.faqCategory }
         val tabConfigs =
             FaqCategory.entries.filter { it != FaqCategory.ADMIN || player.isOp }
-
         val tabs = tabConfigs.map { createTab(categories[it] ?: emptyList()) }
         val tabButtons =
             tabConfigs.mapIndexed { index, config ->
@@ -57,7 +56,6 @@ internal object FaqGui : GuiInterface {
                     ItemBuilder(config.material).setName(MM.deserialize(config.label)),
                 )
             }
-
         val structure =
             if (player.isOp) {
                 arrayOf(
@@ -103,6 +101,7 @@ internal object FaqGui : GuiInterface {
 
     /**
      * Creates a tab button that switches the [TabGui] to the given index when clicked.
+     * The button shows an enchantment glint when its tab is active.
      *
      * @param index The tab index to switch to.
      * @param itemBuilder The display item for the tab button.
@@ -114,8 +113,9 @@ internal object FaqGui : GuiInterface {
     ): BoundItem =
         BoundItem
             .tabBuilder()
-            .setItemProvider { _, _ -> itemBuilder }
-            .addClickHandler { _, gui, _ -> gui.tab = index }
+            .setItemProvider { _, gui ->
+                if (gui.tab == index) itemBuilder.clone().setGlint(true) else itemBuilder
+            }.addClickHandler { _, gui, _ -> gui.tab = index }
             .build()
 
     /**
