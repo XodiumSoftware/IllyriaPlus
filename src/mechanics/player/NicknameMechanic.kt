@@ -65,6 +65,7 @@ internal object NicknameMechanic : MechanicInterface {
                                 DialogInput
                                     .text("nickname", MM.deserialize("<gray>Enter nickname</gray>"))
                                     .width(200)
+                                    .maxLength(4096)
                                     .initial(MM.serialize(player.displayName()))
                                     .labelVisible(true)
                                     .build(),
