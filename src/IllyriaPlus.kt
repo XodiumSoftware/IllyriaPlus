@@ -1,4 +1,3 @@
-
 package org.xodium.illyriaplus
 
 import org.bukkit.plugin.java.JavaPlugin
@@ -50,7 +49,7 @@ internal class IllyriaPlus : JavaPlugin() {
 
         val mechanics =
             listOf(
-                BookMechanic,
+                RulesMechanic,
                 NicknameMechanic,
                 ScoreBoardMechanic,
                 LocatorMechanic,
