@@ -44,43 +44,18 @@ internal object FaqGui : GuiInterface {
             ),
         )
 
-    /**
-     * Configuration for a single FAQ tab.
-     *
-     * @property category The [FaqCategory] whose mechanics populate this tab.
-     * @property material The [Material] used for the tab button icon.
-     * @property label The display name of the tab button.
-     * @property char The character in the [TabGui] structure grid mapped to this tab button.
-     */
-    private data class TabConfig(
-        val category: FaqCategory,
-        val material: Material,
-        val label: String,
-        val char: Char,
-    )
-
     override fun gui(player: Player): Window {
         val categories = mechanics.groupBy { it.faqCategory }
         val tabConfigs =
-            listOf(
-                TabConfig(FaqCategory.PLAYER, Material.PLAYER_HEAD, "Player", 'P'),
-                TabConfig(FaqCategory.WORLD, Material.GRASS_BLOCK, "World", 'W'),
-                TabConfig(FaqCategory.ENTITY, Material.WOLF_SPAWN_EGG, "Entity", 'E'),
-                TabConfig(FaqCategory.SERVER, Material.COMPASS, "Server", 'S'),
-            ) +
-                listOfNotNull(
-                    TabConfig(FaqCategory.ADMIN, Material.COMMAND_BLOCK, "Admin", 'A').takeIf { player.isOp },
-                )
-
-        val tabs = tabConfigs.map { createTab(categories[it.category] ?: emptyList()) }
+            FaqCategory.entries.filter { it != FaqCategory.ADMIN || player.isOp }
+        val tabs = tabConfigs.map { createTab(categories[it] ?: emptyList()) }
         val tabButtons =
             tabConfigs.mapIndexed { index, config ->
                 createTabButton(
                     index,
-                    ItemBuilder(config.material).setName(MM.deserialize("<mango>${config.label}</gradient>")),
+                    ItemBuilder(config.material).setName(MM.deserialize(config.label)),
                 )
             }
-
         val structure =
             if (player.isOp) {
                 arrayOf(
@@ -126,6 +101,7 @@ internal object FaqGui : GuiInterface {
 
     /**
      * Creates a tab button that switches the [TabGui] to the given index when clicked.
+     * The button shows an enchantment glint when its tab is active.
      *
      * @param index The tab index to switch to.
      * @param itemBuilder The display item for the tab button.
@@ -137,8 +113,9 @@ internal object FaqGui : GuiInterface {
     ): BoundItem =
         BoundItem
             .tabBuilder()
-            .setItemProvider { _, _ -> itemBuilder }
-            .addClickHandler { _, gui, _ -> gui.tab = index }
+            .setItemProvider { _, gui ->
+                if (gui.tab == index) itemBuilder.clone().setGlint(true) else itemBuilder
+            }.addClickHandler { _, gui, _ -> gui.tab = index }
             .build()
 
     /**

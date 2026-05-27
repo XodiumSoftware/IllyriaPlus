@@ -1,4 +1,3 @@
-
 package org.xodium.illyriaplus.mechanics.player
 
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -56,7 +55,7 @@ internal object SpellMechanic : MechanicInterface {
                 ),
         )
 
-    override val faqCategory = FaqCategory.ADMIN
+    override val faqCategory = FaqCategory.PLAYER
 
     @EventHandler
     fun on(event: PlayerInteractEvent) {
