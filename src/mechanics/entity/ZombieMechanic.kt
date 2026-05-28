@@ -3,6 +3,7 @@ package org.xodium.illyriaplus.mechanics.entity
 import org.bukkit.Difficulty
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
+import org.bukkit.attribute.AttributeInstance
 import org.bukkit.entity.Player
 import org.bukkit.entity.Zombie
 import org.bukkit.event.EventHandler
@@ -16,26 +17,35 @@ import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 import java.util.*
-import kotlin.random.Random
 
 /** Represents a mechanic handling zombie behavior and drops within the system. */
 internal object ZombieMechanic : MechanicInterface {
     private const val HORDE_RADIUS: Double = 96.0
     private const val HORDE_COOLDOWN_TICKS: Long = 100
-    private const val SPAWN_AMPLIFY_CHANCE: Double = 0.25
-    private const val MAX_EXTRA_ZOMBIES: Int = 2
-    private const val SPAWN_AMPLIFY_RADIUS: Double = 4.0
-    private const val INFECT_DURATION_TICKS: Int = 100
-    private const val INFECT_AMPLIFIER: Int = 0
     private const val CAN_BREAK_DOOR: Boolean = true
 
-    private val INFECTIOUS_EFFECTS: List<PotionEffectType> =
-        listOf(
-            PotionEffectType.SLOWNESS,
-            PotionEffectType.HUNGER,
-            PotionEffectType.WEAKNESS,
+    private val attributes: Map<Attribute, (Zombie, AttributeInstance) -> Unit> =
+        mapOf(
+            Attribute.MOVEMENT_SPEED to { _, attr -> attr.baseValue *= (13..17).random() / 10.0 },
+            Attribute.MAX_HEALTH to { zombie, attr ->
+                attr.baseValue *= (15..20).random() / 10.0
+                zombie.health = attr.value
+            },
+            Attribute.ATTACK_DAMAGE to { _, attr -> attr.baseValue *= (13..17).random() / 10.0 },
+            Attribute.FOLLOW_RANGE to { _, attr -> attr.baseValue *= (13..17).random() / 10.0 },
+            Attribute.ATTACK_KNOCKBACK to { _, attr -> attr.baseValue = (5..10).random() / 10.0 },
+            Attribute.KNOCKBACK_RESISTANCE to { _, attr -> attr.baseValue = (3..7).random() / 10.0 },
+            Attribute.ARMOR to { _, attr -> attr.baseValue = (2..6).random().toDouble() },
+            Attribute.ARMOR_TOUGHNESS to { _, attr -> attr.baseValue = (1..3).random().toDouble() },
+            Attribute.SPAWN_REINFORCEMENTS to { _, attr -> attr.baseValue = 5.0 },
+            Attribute.SCALE to { _, attr -> attr.baseValue *= (10..13).random() / 10.0 },
         )
-
+    private val infectiousEffects: List<() -> PotionEffect> =
+        listOf(
+            { PotionEffect(PotionEffectType.SLOWNESS, (80..120).random(), 0, false, true, true) },
+            { PotionEffect(PotionEffectType.HUNGER, (80..120).random(), 0, false, true, true) },
+            { PotionEffect(PotionEffectType.WEAKNESS, (80..120).random(), 0, false, true, true) },
+        )
     private val hordeCooldowns: MutableSet<UUID> = mutableSetOf()
 
     override val faqItem =
@@ -53,9 +63,9 @@ internal object ZombieMechanic : MechanicInterface {
                             "<white>Zombies can break wooden doors on Hard difficulty.</white>",
                     ),
                     MM.deserialize(
-                        "<yellow>Amplified Spawns</yellow> <firewatch>></gradient> <white>Natural spawns have a " +
-                            "${(SPAWN_AMPLIFY_CHANCE * 100).toInt()}% chance to bring up to " +
-                            "$MAX_EXTRA_ZOMBIES extra zombies on Hard difficulty.</white>",
+                        "<yellow>Attribute Modifiers</yellow> <firewatch>></gradient> " +
+                            "<white>+30-70% speed/health/dmg/range, +0.5-1.0 KB, +30-70% KB resist, " +
+                            "+2-6 armor, +1-3 toughness, +500% reinforcements, +0-30% size.</white>",
                     ),
                     MM.deserialize(
                         "<yellow>Infectious Touch</yellow> <firewatch>></gradient> " +
@@ -77,65 +87,38 @@ internal object ZombieMechanic : MechanicInterface {
     fun on(event: EntityDamageByEntityEvent) = infectiousTouch(event)
 
     @EventHandler
-    fun on(event: EntityCombustEvent) {
-        if (event.entity !is Zombie) return
-        if (event is EntityCombustByBlockEvent || event is EntityCombustByEntityEvent) return
-
-        event.isCancelled = true
-    }
+    fun on(event: EntityCombustEvent) = daylightImmunity(event)
 
     @EventHandler(ignoreCancelled = true)
-    fun on(event: CreatureSpawnEvent) {
-        val zombie = event.entity as? Zombie ?: return
+    fun on(event: CreatureSpawnEvent) = modifyZombieSpawn(event)
 
-        if (event.entity.world.difficulty == Difficulty.HARD) zombie.setCanBreakDoors(CAN_BREAK_DOOR)
-
-        amplifySpawn(event)
+    /**
+     * Prevents zombies from burning in sunlight on Hard difficulty.
+     *
+     * @param event The EntityCombustEvent triggered when an entity combusts.
+     */
+    private fun daylightImmunity(event: EntityCombustEvent) {
+        when {
+            event.entity !is Zombie -> return
+            event.entity.world.difficulty != Difficulty.HARD -> return
+            event is EntityCombustByBlockEvent || event is EntityCombustByEntityEvent -> return
+            else -> event.isCancelled = true
+        }
     }
 
     /**
-     * Chance to spawn extra zombies around a naturally spawned zombie.
+     * Modifies a zombie's base speed and enables door-breaking on Hard difficulty.
      *
      * @param event The CreatureSpawnEvent triggered when an entity spawns.
      */
-    private fun amplifySpawn(event: CreatureSpawnEvent) {
-        if (event.spawnReason != CreatureSpawnEvent.SpawnReason.NATURAL) return
+    private fun modifyZombieSpawn(event: CreatureSpawnEvent) {
+        val zombie = event.entity as? Zombie ?: return
+
         if (event.entity.world.difficulty != Difficulty.HARD) return
-        if (Random.nextDouble() > SPAWN_AMPLIFY_CHANCE) return
 
-        val parent = event.entity as? Zombie ?: return
-
-        repeat(Random.nextInt(1, MAX_EXTRA_ZOMBIES + 1)) {
-            val loc =
-                event.entity.location.add(
-                    (Random.nextDouble() - 0.5) * 2 * SPAWN_AMPLIFY_RADIUS,
-                    0.0,
-                    (Random.nextDouble() - 0.5) * 2 * SPAWN_AMPLIFY_RADIUS,
-                )
-
-            event.entity.world.spawn(loc, Zombie::class.java) { child ->
-                child.setCanBreakDoors(CAN_BREAK_DOOR)
-                parent.getAttribute(Attribute.MAX_HEALTH)?.value?.let { maxHealth ->
-                    child.getAttribute(Attribute.MAX_HEALTH)?.baseValue = maxHealth
-                    child.health = maxHealth
-                }
-
-                if (parent.customName() != null) {
-                    child.customName(parent.customName())
-                    child.isCustomNameVisible = parent.isCustomNameVisible
-                }
-
-                parent.equipment.let { parentEquip ->
-                    child.equipment.let { childEquip ->
-                        childEquip.setHelmet(parentEquip.helmet.clone())
-                        childEquip.setChestplate(parentEquip.chestplate.clone())
-                        childEquip.setLeggings(parentEquip.leggings.clone())
-                        childEquip.setBoots(parentEquip.boots.clone())
-                        childEquip.setItemInMainHand(parentEquip.itemInMainHand.clone())
-                        childEquip.setItemInOffHand(parentEquip.itemInOffHand.clone())
-                    }
-                }
-            }
+        zombie.setCanBreakDoors(CAN_BREAK_DOOR)
+        attributes.forEach { (attribute, apply) ->
+            zombie.getAttribute(attribute)?.let { apply(zombie, it) }
         }
     }
 
@@ -146,13 +129,12 @@ internal object ZombieMechanic : MechanicInterface {
      */
     private fun infectiousTouch(event: EntityDamageByEntityEvent) {
         if (event.damager !is Zombie) return
+        if (event.entity.world.difficulty != Difficulty.HARD) return
         if (event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return
 
         val player = event.entity as? Player ?: return
 
-        INFECTIOUS_EFFECTS.forEach {
-            player.addPotionEffect(PotionEffect(it, INFECT_DURATION_TICKS, INFECT_AMPLIFIER, false, true, true))
-        }
+        infectiousEffects.forEach { player.addPotionEffect(it()) }
     }
 
     /**
@@ -164,6 +146,7 @@ internal object ZombieMechanic : MechanicInterface {
         val zombie = event.entity as? Zombie ?: return
         val target = event.target as? Player ?: return
 
+        if (event.entity.world.difficulty != Difficulty.HARD) return
         if (zombie.uniqueId in hordeCooldowns) return
 
         hordeCooldowns.add(zombie.uniqueId)
