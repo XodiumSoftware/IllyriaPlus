@@ -6,7 +6,7 @@ plugins {
 
     kotlin("jvm") version "2.3.21"
 
-    id("com.gradleup.shadow") version "9.4.1"
+    id("com.gradleup.shadow") version "9.4.2"
     id("xyz.jpenilla.run-paper") version "3.0.2"
     id("xyz.jpenilla.resource-factory-paper-convention") version "1.3.1"
     id("org.jetbrains.dokka") version "2.2.0"
