@@ -42,9 +42,9 @@ internal object ZombieMechanic : MechanicInterface {
         )
     private val infectiousEffects: List<() -> PotionEffect> =
         listOf(
-            { PotionEffect(PotionEffectType.SLOWNESS, (80..120).random(), 0, false, true, true) },
-            { PotionEffect(PotionEffectType.HUNGER, (80..120).random(), 0, false, true, true) },
-            { PotionEffect(PotionEffectType.WEAKNESS, (80..120).random(), 0, false, true, true) },
+            { PotionEffect(PotionEffectType.SLOWNESS, (60..100).random(), 0, false, true, true) },
+            { PotionEffect(PotionEffectType.HUNGER, (80..140).random(), 0, false, true, true) },
+            { PotionEffect(PotionEffectType.WEAKNESS, (100..180).random(), 0, false, true, true) },
         )
     private val hordeCooldowns: MutableSet<UUID> = mutableSetOf()
 
