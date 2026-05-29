@@ -14,6 +14,8 @@ import xyz.xenondevs.invui.item.ItemBuilder
 internal object MushroomMechanic : MechanicInterface {
     private val MATERIALS: Set<Material> = setOf(Material.RED_MUSHROOM, Material.BROWN_MUSHROOM)
 
+    override val faqCategory: FaqCategory = FaqCategory.WORLD
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.RED_MUSHROOM)
@@ -26,8 +28,6 @@ internal object MushroomMechanic : MechanicInterface {
                     ),
                 ),
         )
-
-    override val faqCategory: FaqCategory = FaqCategory.WORLD
 
     @EventHandler
     fun on(event: BlockCanBuildEvent) {

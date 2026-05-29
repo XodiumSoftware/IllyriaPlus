@@ -2,7 +2,7 @@ package org.xodium.illyriaplus.mechanics.server
 
 import org.bukkit.Material
 import org.bukkit.ServerLinks
-import org.xodium.illyriaplus.IllyriaPlus
+import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.FaqCategory
 import org.xodium.illyriaplus.interfaces.MechanicInterface
@@ -23,6 +23,8 @@ internal object ServerInfoMechanic : MechanicInterface {
             ServerLinks.Type.COMMUNITY_GUIDELINES to "https://vanillaplus.xodium.org/",
         )
 
+    override val faqCategory = FaqCategory.ADMIN
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.MAP)
@@ -35,14 +37,11 @@ internal object ServerInfoMechanic : MechanicInterface {
                 ),
         )
 
-    override val faqCategory = FaqCategory.ADMIN
-
     override fun register(): Long = super.register() + measureTime { serverLinks() }.inWholeMilliseconds
 
     /** Configures server links based on the module's configuration. */
     private fun serverLinks() =
         SERVER_LINKS.forEach { (type, url) ->
-            IllyriaPlus.instance.server.serverLinks
-                .setLink(type, URI.create(url))
+            instance.server.serverLinks.setLink(type, URI.create(url))
         }
 }

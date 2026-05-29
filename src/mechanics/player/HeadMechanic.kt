@@ -1,4 +1,3 @@
-
 package org.xodium.illyriaplus.mechanics.player
 
 import io.papermc.paper.datacomponent.DataComponentTypes
@@ -20,6 +19,8 @@ import kotlin.random.Random
 internal object HeadMechanic : MechanicInterface {
     private const val SKULL_DROP_CHANCE: Double = 0.01
 
+    override val faqCategory = FaqCategory.PLAYER
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.PLAYER_HEAD)
@@ -32,8 +33,6 @@ internal object HeadMechanic : MechanicInterface {
                     ),
                 ),
         )
-
-    override val faqCategory = FaqCategory.PLAYER
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PlayerDeathEvent) = dropPlayerHead(event.player)

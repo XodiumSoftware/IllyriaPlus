@@ -56,6 +56,8 @@ internal object ZombieMechanic : MechanicInterface {
         )
     private val hordeCooldowns: MutableSet<UUID> = mutableSetOf()
 
+    override val faqCategory = FaqCategory.ENTITY
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.ZOMBIE_HEAD)
@@ -89,8 +91,6 @@ internal object ZombieMechanic : MechanicInterface {
                     ),
                 ),
         )
-
-    override val faqCategory = FaqCategory.ENTITY
 
     @EventHandler(ignoreCancelled = true)
     fun on(event: EntityTargetLivingEntityEvent) = alertHorde(event)

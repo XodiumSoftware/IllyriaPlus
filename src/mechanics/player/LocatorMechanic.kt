@@ -1,4 +1,3 @@
-
 package org.xodium.illyriaplus.mechanics.player
 
 import io.papermc.paper.command.brigadier.Commands
@@ -27,6 +26,8 @@ internal object LocatorMechanic : MechanicInterface {
     private const val DEFAULT_LOCATOR_MSG = "<gray>Locator color: default/not custom set</gray>"
     private const val RESET_LOCATOR_MSG = "<gray>Locator color has been reset!</gray>"
 
+    override val faqCategory = FaqCategory.PLAYER
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.COMPASS)
@@ -40,8 +41,6 @@ internal object LocatorMechanic : MechanicInterface {
                     MM.deserialize("<yellow>Reset</yellow> <firewatch>></gradient> <white>/locator reset</white>"),
                 ),
         )
-
-    override val faqCategory = FaqCategory.PLAYER
 
     override val cmds =
         listOf(

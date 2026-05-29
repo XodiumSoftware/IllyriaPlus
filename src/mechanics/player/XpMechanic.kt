@@ -1,4 +1,3 @@
-
 package org.xodium.illyriaplus.mechanics.player
 
 import org.bukkit.Material
@@ -15,6 +14,8 @@ import xyz.xenondevs.invui.item.ItemBuilder
 internal object XpMechanic : MechanicInterface {
     private const val XP_COST_TO_BOTTLE: Int = 11
 
+    override val faqCategory = FaqCategory.PLAYER
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.EXPERIENCE_BOTTLE)
@@ -28,12 +29,8 @@ internal object XpMechanic : MechanicInterface {
                 ),
         )
 
-    override val faqCategory = FaqCategory.PLAYER
-
     @EventHandler
-    fun on(event: PlayerInteractEvent) {
-        xpToBottle(event)
-    }
+    fun on(event: PlayerInteractEvent) = xpToBottle(event)
 
     /**
      * Handles the interaction event where a player can convert their experience points into an experience bottle

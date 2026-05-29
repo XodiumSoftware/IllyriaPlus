@@ -37,6 +37,8 @@ internal object SitMechanic : MechanicInterface {
     private val blockCenterOffset = Vector(0.5, 0.5, 0.5)
     private val playerStandUpOffset = Vector(0.0, 0.5, 0.0)
 
+    override val faqCategory = FaqCategory.PLAYER
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.OAK_STAIRS)
@@ -53,8 +55,6 @@ internal object SitMechanic : MechanicInterface {
                     ),
                 ),
         )
-
-    override val faqCategory = FaqCategory.PLAYER
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun on(event: PlayerInteractEvent) = playerInteract(event)

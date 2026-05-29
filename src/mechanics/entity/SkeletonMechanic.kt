@@ -26,6 +26,8 @@ internal object SkeletonMechanic : MechanicInterface {
             Attribute.SAFE_FALL_DISTANCE to { _, attr -> attr.baseValue *= (11..14).random() / 10.0 },
         )
 
+    override val faqCategory = FaqCategory.ENTITY
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.SKELETON_SKULL)
@@ -39,8 +41,6 @@ internal object SkeletonMechanic : MechanicInterface {
                     ),
                 ),
         )
-
-    override val faqCategory = FaqCategory.ENTITY
 
     @EventHandler(ignoreCancelled = true)
     fun on(event: CreatureSpawnEvent) = modifySpawn(event)

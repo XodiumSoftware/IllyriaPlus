@@ -1,4 +1,3 @@
-
 package org.xodium.illyriaplus.mechanics.player
 
 import com.destroystokyo.paper.event.player.PlayerSetSpawnEvent
@@ -61,6 +60,8 @@ internal object MessagesMechanic : MechanicInterface {
         const val OTHER: String = ""
     }
 
+    override val faqCategory = FaqCategory.ADMIN
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.PAPER)
@@ -79,68 +80,52 @@ internal object MessagesMechanic : MechanicInterface {
                 ),
         )
 
-    override val faqCategory = FaqCategory.ADMIN
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    fun on(event: PlayerJoinEvent) = playerJoin(event)
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    fun on(event: PlayerJoinEvent) {
-        playerJoin(event)
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    fun on(event: PlayerQuitEvent) {
-        playerQuit(event)
-    }
+    fun on(event: PlayerQuitEvent) = playerQuit(event)
 
     @EventHandler(priority = EventPriority.HIGH)
-    fun on(event: PlayerServerFullCheckEvent) {
-        serverFullCheck(event)
-    }
+    fun on(event: PlayerServerFullCheckEvent) = serverFullCheck(event)
 
     @Suppress("UnstableApiUsage")
     @EventHandler(priority = EventPriority.HIGH)
-    fun on(event: PlayerConnectionValidateLoginEvent) {
-        loginDenied(event)
-    }
+    fun on(event: PlayerConnectionValidateLoginEvent) = loginDenied(event)
 
     @EventHandler
-    fun on(event: PlayerKickEvent) {
-        playerKick(event)
-    }
+    fun on(event: PlayerKickEvent) = playerKick(event)
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    fun on(event: PlayerDeathEvent) {
-        playerDeath(event)
-    }
+    fun on(event: PlayerDeathEvent) = playerDeath(event)
 
     @EventHandler
-    fun on(event: PlayerAdvancementDoneEvent) {
-        advancementDone(event)
-    }
+    fun on(event: PlayerAdvancementDoneEvent) = advancementDone(event)
 
     @EventHandler
-    fun on(event: PlayerSetSpawnEvent) {
-        setSpawn(event)
-    }
+    fun on(event: PlayerSetSpawnEvent) = setSpawn(event)
 
     @EventHandler
-    fun on(event: PlayerBedEnterEvent) {
-        bedEnter(event)
-    }
+    fun on(event: PlayerBedEnterEvent) = bedEnter(event)
 
+    /** Handles the player join event by setting a custom join message. */
     private fun playerJoin(event: PlayerJoinEvent) {
         event.joinMessage(handleJoin(event.player) ?: return)
     }
 
+    /** Handles the player quit event by setting a custom quit message. */
     private fun playerQuit(event: PlayerQuitEvent) {
         event.quitMessage(handleQuit(event.player) ?: return)
     }
 
+    /** Handles the server full check event by denying entry with a custom message if not allowed. */
     private fun serverFullCheck(event: PlayerServerFullCheckEvent) {
         if (event.isAllowed) return
 
         event.deny(handleServerFull() ?: return)
     }
 
+    /** Handles the login denied event by setting a custom kick message if not allowed. */
     @Suppress("UnstableApiUsage")
     private fun loginDenied(event: PlayerConnectionValidateLoginEvent) {
         if (event.isAllowed) return
@@ -148,10 +133,12 @@ internal object MessagesMechanic : MechanicInterface {
         event.kickMessage(handleLoginDenied() ?: return)
     }
 
+    /** Handles the player kick event by setting a custom leave message. */
     private fun playerKick(event: PlayerKickEvent) {
         event.leaveMessage(handleKick(event.reason()) ?: return)
     }
 
+    /** Handles the player death event by setting custom death and death screen messages. */
     private fun playerDeath(event: PlayerDeathEvent) {
         val killer = event.entity.killer
         val deathMessage =
@@ -166,14 +153,17 @@ internal object MessagesMechanic : MechanicInterface {
         event.deathScreenMessageOverride(handleDeathScreen())
     }
 
+    /** Handles the player advancement done event by setting a custom advancement message. */
     private fun advancementDone(event: PlayerAdvancementDoneEvent) {
         event.message(handleAdvancement(event.player, event.advancement) ?: return)
     }
 
+    /** Handles the player set spawn event by overriding the notification with a custom message. */
     private fun setSpawn(event: PlayerSetSpawnEvent) {
         event.notification = handleSetSpawn(event.notification ?: return) ?: return
     }
 
+    /** Handles the player bed enter event by sending a custom message based on the enter problem. */
     @Suppress("UnstableApiUsage")
     private fun bedEnter(event: PlayerBedEnterEvent) {
         event.player.sendMessage(handleBedEnter(event.enterAction().problem() ?: return) ?: return)

@@ -25,6 +25,8 @@ import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling player nicknames within the system. */
 internal object NicknameMechanic : MechanicInterface {
+    override val faqCategory = FaqCategory.PLAYER
+
     override val faqItem =
         Item
             .builder()
@@ -37,8 +39,6 @@ internal object NicknameMechanic : MechanicInterface {
 
                 if (player.hasPermission(perms[0])) player.showDialog(dialog(player))
             }.build()
-
-    override val faqCategory = FaqCategory.PLAYER
 
     override val perms =
         listOf(

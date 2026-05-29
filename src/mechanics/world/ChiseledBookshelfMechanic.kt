@@ -26,6 +26,8 @@ import org.bukkit.block.data.type.ChiseledBookshelf as ChiseledBookshelfData
 /** Represents a mechanic handling chiseled bookshelf interactions within the system. */
 @Suppress("UnstableApiUsage")
 internal object ChiseledBookshelfMechanic : MechanicInterface {
+    override val faqCategory = FaqCategory.WORLD
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.BOOKSHELF)
@@ -39,12 +41,8 @@ internal object ChiseledBookshelfMechanic : MechanicInterface {
                 ),
         )
 
-    override val faqCategory = FaqCategory.WORLD
-
     @EventHandler
-    fun on(event: PlayerInteractEvent) {
-        bookshelfInteraction(event)
-    }
+    fun on(event: PlayerInteractEvent) = bookshelfInteraction(event)
 
     /**
      * Handles the interaction event where a player left-clicks a chiseled bookshelf

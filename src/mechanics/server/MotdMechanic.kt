@@ -18,6 +18,8 @@ internal object MotdMechanic : MechanicInterface {
             "<mango><b>➤ WELCOME BACK LADS!</b></gradient>",
         )
 
+    override val faqCategory = FaqCategory.ADMIN
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.OAK_SIGN)
@@ -29,8 +31,6 @@ internal object MotdMechanic : MechanicInterface {
                     ),
                 ),
         )
-
-    override val faqCategory = FaqCategory.ADMIN
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun on(event: ServerListPingEvent) {

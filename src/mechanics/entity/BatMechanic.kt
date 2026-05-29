@@ -21,6 +21,8 @@ internal object BatMechanic : MechanicInterface {
     private const val BAT_MEMBRANE_BASE_MAX: Int = 1
     private const val BAT_MEMBRANE_LOOTING_BONUS: Int = 1
 
+    override val faqCategory = FaqCategory.ENTITY
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.PHANTOM_MEMBRANE)
@@ -34,12 +36,8 @@ internal object BatMechanic : MechanicInterface {
                 ),
         )
 
-    override val faqCategory = FaqCategory.ENTITY
-
     @EventHandler
-    fun on(event: EntityDeathEvent) {
-        batDrop(event)
-    }
+    fun on(event: EntityDeathEvent) = batDrop(event)
 
     /**
      * Handles bat death drops.

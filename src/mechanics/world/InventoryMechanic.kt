@@ -1,4 +1,3 @@
-
 package org.xodium.illyriaplus.mechanics.world
 
 import io.papermc.paper.command.brigadier.Commands
@@ -46,25 +45,6 @@ internal object InventoryMechanic : MechanicInterface {
     private val UNLOAD_FAILED_SOUND: Sound =
         Sound.sound(Key.key("block.anvil.land"), Sound.Source.PLAYER, 1.0f, 1.0f)
 
-    override val faqItem =
-        Item.simple(
-            ItemBuilder(Material.CHEST)
-                .setName(MM.deserialize("<mango>Inventory Mechanics</gradient>"))
-                .addLoreLines(
-                    MM.deserialize(""),
-                    MM.deserialize(
-                        "<gray>cmd:</gray> <yellow>/search</yellow> <firewatch>></gradient> " +
-                            "<white>Find items in nearby chests</white>",
-                    ),
-                    MM.deserialize(
-                        "<gray>cmd:</gray> <yellow>/unload</yellow> <firewatch>></gradient> " +
-                            "<white>Dump inventory into nearby chests</white>",
-                    ),
-                ),
-        )
-
-    override val faqCategory = FaqCategory.WORLD
-
     override val cmds =
         listOf(
             CommandData(
@@ -103,6 +83,25 @@ internal object InventoryMechanic : MechanicInterface {
                 "Allows use of the invunload command",
                 PermissionDefault.TRUE,
             ),
+        )
+
+    override val faqCategory = FaqCategory.WORLD
+
+    override val faqItem =
+        Item.simple(
+            ItemBuilder(Material.CHEST)
+                .setName(MM.deserialize("<mango>Inventory Mechanics</gradient>"))
+                .addLoreLines(
+                    MM.deserialize(""),
+                    MM.deserialize(
+                        "<gray>cmd:</gray> <yellow>/search</yellow> <firewatch>></gradient> " +
+                            "<white>Find items in nearby chests</white>",
+                    ),
+                    MM.deserialize(
+                        "<gray>cmd:</gray> <yellow>/unload</yellow> <firewatch>></gradient> " +
+                            "<white>Dump inventory into nearby chests</white>",
+                    ),
+                ),
         )
 
     /**

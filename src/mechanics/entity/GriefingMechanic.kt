@@ -24,6 +24,8 @@ internal object GriefingMechanic : MechanicInterface {
             EntityType.WITHER,
         )
 
+    override val faqCategory = FaqCategory.ENTITY
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.TNT)
@@ -41,17 +43,11 @@ internal object GriefingMechanic : MechanicInterface {
                 ),
         )
 
-    override val faqCategory = FaqCategory.ENTITY
+    @EventHandler
+    fun on(event: EntityChangeBlockEvent) = preventEntityChangeBlock(event)
 
     @EventHandler
-    fun on(event: EntityChangeBlockEvent) {
-        preventEntityChangeBlock(event)
-    }
-
-    @EventHandler
-    fun on(event: EntityExplodeEvent) {
-        preventEntityExplode(event)
-    }
+    fun on(event: EntityExplodeEvent) = preventEntityExplode(event)
 
     /**
      * Prevents entity block changes for griefing entities.

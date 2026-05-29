@@ -13,6 +13,8 @@ import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling tameable entities within the system. */
 internal object TameableMechanic : MechanicInterface {
+    override val faqCategory = FaqCategory.ENTITY
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.WOLF_SPAWN_EGG)
@@ -26,12 +28,8 @@ internal object TameableMechanic : MechanicInterface {
                 ),
         )
 
-    override val faqCategory = FaqCategory.ENTITY
-
     @EventHandler
-    fun on(event: PlayerInteractEntityEvent) {
-        handleInteract(event)
-    }
+    fun on(event: PlayerInteractEntityEvent) = handleInteract(event)
 
     /**
      * Handles player interactions to transfer tameable entity ownership.

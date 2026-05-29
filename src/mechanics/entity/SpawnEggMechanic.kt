@@ -15,6 +15,8 @@ import kotlin.random.Random
 internal object SpawnEggMechanic : MechanicInterface {
     private const val SPAWN_EGG_DROP_CHANCE: Double = 0.001
 
+    override val faqCategory = FaqCategory.ENTITY
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.ZOMBIE_SPAWN_EGG)
@@ -28,12 +30,8 @@ internal object SpawnEggMechanic : MechanicInterface {
                 ),
         )
 
-    override val faqCategory = FaqCategory.ENTITY
-
     @EventHandler
-    fun on(event: EntityDeathEvent) {
-        spawnEggDrop(event)
-    }
+    fun on(event: EntityDeathEvent) = spawnEggDrop(event)
 
     /**
      * Handles spawn egg drops on entity death.

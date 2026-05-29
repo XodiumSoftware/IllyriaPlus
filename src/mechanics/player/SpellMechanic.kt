@@ -36,6 +36,8 @@ internal object SpellMechanic : MechanicInterface {
         const val SELECTED_SPELL: String = "<spellbite>Current Spell > <white><spell></white></gradient>"
     }
 
+    override val faqCategory = FaqCategory.PLAYER
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.BLAZE_ROD)
@@ -55,17 +57,11 @@ internal object SpellMechanic : MechanicInterface {
                 ),
         )
 
-    override val faqCategory = FaqCategory.PLAYER
+    @EventHandler
+    fun on(event: PlayerInteractEvent) = handleWandInteract(event)
 
     @EventHandler
-    fun on(event: PlayerInteractEvent) {
-        handleWandInteract(event)
-    }
-
-    @EventHandler
-    fun on(event: PlayerItemHeldEvent) {
-        handleWandHeld(event)
-    }
+    fun on(event: PlayerItemHeldEvent) = handleWandHeld(event)
 
     /**
      * Handles player interactions with a spell wand.

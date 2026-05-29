@@ -48,6 +48,17 @@ internal object RulesMechanic : MechanicInterface {
             ),
         )
 
+    override val perms =
+        listOf(
+            Permission(
+                "${instance.javaClass.simpleName}.rules".lowercase(),
+                "Allows to access rules",
+                PermissionDefault.TRUE,
+            ),
+        )
+
+    override val faqCategory = FaqCategory.SERVER
+
     override val faqItem =
         Item
             .builder()
@@ -67,16 +78,4 @@ internal object RulesMechanic : MechanicInterface {
                     )
                 }
             }.build()
-
-    override val faqCategory = FaqCategory.SERVER
-
-    override val perms
-        get() =
-            listOf(
-                Permission(
-                    "${instance.javaClass.simpleName}.rules".lowercase(),
-                    "Allows to access rules",
-                    PermissionDefault.TRUE,
-                ),
-            )
 }

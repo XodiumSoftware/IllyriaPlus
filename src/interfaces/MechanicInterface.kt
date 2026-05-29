@@ -25,11 +25,11 @@ internal interface MechanicInterface : Listener {
      */
     val perms: List<Permission> get() = emptyList()
 
-    /** FAQ display item for this mechanic. */
-    val faqItem: Item
-
     /** The FAQ category this mechanic belongs to. */
     val faqCategory: FaqCategory
+
+    /** FAQ display item for this mechanic. */
+    val faqItem: Item
 
     /**
      * Registers this feature with the server.

@@ -19,15 +19,6 @@ import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling scoreboard display within the system. */
 internal object ScoreBoardMechanic : MechanicInterface {
-    override val faqItem =
-        Item.simple(
-            ItemBuilder(Material.ITEM_FRAME)
-                .setName(MM.deserialize("<mango>Leaderboard</gradient>"))
-                .addLoreLines(MM.deserialize(""), MM.deserialize("<gray>cmd:</gray> <yellow>/leaderboard</yellow>")),
-        )
-
-    override val faqCategory = FaqCategory.SERVER
-
     override val cmds =
         listOf(
             CommandData(
@@ -49,10 +40,17 @@ internal object ScoreBoardMechanic : MechanicInterface {
             ),
         )
 
+    override val faqCategory = FaqCategory.SERVER
+
+    override val faqItem =
+        Item.simple(
+            ItemBuilder(Material.ITEM_FRAME)
+                .setName(MM.deserialize("<mango>Leaderboard</gradient>"))
+                .addLoreLines(MM.deserialize(""), MM.deserialize("<gray>cmd:</gray> <yellow>/leaderboard</yellow>")),
+        )
+
     @EventHandler
-    fun on(event: PlayerJoinEvent) {
-        handleJoin(event)
-    }
+    fun on(event: PlayerJoinEvent) = handleJoin(event)
 
     /**
      * Configures the scoreboard for the player on join.

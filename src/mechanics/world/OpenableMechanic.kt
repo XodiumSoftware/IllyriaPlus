@@ -1,4 +1,3 @@
-
 package org.xodium.illyriaplus.mechanics.world
 
 import net.kyori.adventure.key.Key
@@ -51,6 +50,8 @@ internal object OpenableMechanic : MechanicInterface {
             1.0f,
         )
 
+    override val faqCategory = FaqCategory.WORLD
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.DARK_OAK_DOOR)
@@ -66,8 +67,6 @@ internal object OpenableMechanic : MechanicInterface {
                     ),
                 ),
         )
-
-    override val faqCategory = FaqCategory.WORLD
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PlayerInteractEvent) = handlePlayerInteract(event)

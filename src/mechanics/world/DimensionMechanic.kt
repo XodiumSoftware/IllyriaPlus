@@ -26,6 +26,8 @@ internal object DimensionMechanic : MechanicInterface {
     private const val CREATION_DENIED_MSG: String =
         "<firewatch>No corresponding active portal found in the Overworld!</gradient>"
 
+    override val faqCategory = FaqCategory.WORLD
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.OBSIDIAN)
@@ -38,8 +40,6 @@ internal object DimensionMechanic : MechanicInterface {
                     ),
                 ),
         )
-
-    override val faqCategory = FaqCategory.WORLD
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PlayerPortalEvent) = playerPortal(event)

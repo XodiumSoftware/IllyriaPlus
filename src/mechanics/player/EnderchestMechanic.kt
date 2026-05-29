@@ -1,4 +1,3 @@
-
 package org.xodium.illyriaplus.mechanics.player
 
 import org.bukkit.GameMode
@@ -15,6 +14,8 @@ import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling ender chest access within the system. */
 internal object EnderchestMechanic : MechanicInterface {
+    override val faqCategory = FaqCategory.PLAYER
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.ENDER_CHEST)
@@ -28,12 +29,8 @@ internal object EnderchestMechanic : MechanicInterface {
                 ),
         )
 
-    override val faqCategory = FaqCategory.PLAYER
-
     @EventHandler
-    fun on(event: PlayerInteractEvent) {
-        openEnderchest(event)
-    }
+    fun on(event: PlayerInteractEvent) = openEnderchest(event)
 
     /**
      * Opens the player's ender chest when right-clicking air with an ender chest item.

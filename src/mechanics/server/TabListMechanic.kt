@@ -1,4 +1,3 @@
-
 package org.xodium.illyriaplus.mechanics.server
 
 import io.papermc.paper.event.player.PlayerClientLoadedWorldEvent
@@ -30,6 +29,8 @@ internal object TabListMechanic : MechanicInterface {
             "<mango_r><st>─────────────────</st></gradient><mango><st>─────────────────</st></gradient>",
         )
 
+    override val faqCategory = FaqCategory.ADMIN
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.PAINTING)
@@ -45,26 +46,11 @@ internal object TabListMechanic : MechanicInterface {
                 ),
         )
 
-    override val faqCategory = FaqCategory.ADMIN
-
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    fun on(event: PlayerJoinEvent) {
-        updateTablist(event)
-    }
+    fun on(event: PlayerJoinEvent) = tablist(event.player)
 
     @EventHandler
-    fun on(event: PlayerClientLoadedWorldEvent) {
-        updatePlayerListName(event)
-    }
-
-    /**
-     * Updates the tab list for the player on join.
-     *
-     * @param event The PlayerJoinEvent triggered when a player joins.
-     */
-    private fun updateTablist(event: PlayerJoinEvent) {
-        tablist(event.player)
-    }
+    fun on(event: PlayerClientLoadedWorldEvent) = updatePlayerListName(event)
 
     /**
      * Updates the player's list name when their client finishes loading the world.

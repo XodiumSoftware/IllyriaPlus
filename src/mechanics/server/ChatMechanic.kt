@@ -46,6 +46,8 @@ internal object ChatMechanic : MechanicInterface {
     private const val JOIN_TITLE = "<firewatch><b>Welcome</b></gradient> <player>"
     private const val JOIN_SUBTITLE = "<mango>Check out:</gradient> /faq"
 
+    override val faqCategory = FaqCategory.SERVER
+
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.TORCH)
@@ -59,8 +61,6 @@ internal object ChatMechanic : MechanicInterface {
                     MM.deserialize("<yellow>@player</yellow> <firewatch>></gradient> <white>Mentions a player</white>"),
                 ),
         )
-
-    override val faqCategory = FaqCategory.SERVER
 
     override val cmds =
         listOf(
