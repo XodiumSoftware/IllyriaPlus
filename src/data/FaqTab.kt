@@ -18,7 +18,6 @@ internal enum class FaqTab(
     WORLD("<mango>World Mechanics</gradient>", Material.GRASS_BLOCK, 'W'),
     ENTITY("<mango>Entity Mechanics</gradient>", Material.WOLF_SPAWN_EGG, 'E'),
     SERVER("<mango>Server Mechanics</gradient>", Material.COMPASS, 'S'),
-    ADMIN("<mango>Admin Mechanics</gradient>", Material.COMMAND_BLOCK, 'A'),
     RECIPES("<mango>Recipes</gradient>", Material.PAPER, 'R'),
 }
 

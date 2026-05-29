@@ -12,6 +12,7 @@ import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.GuiInterface
 import org.xodium.illyriaplus.interfaces.MechanicInterface
+import org.xodium.illyriaplus.interfaces.RecipeInterface
 import xyz.xenondevs.invui.gui.Gui
 import xyz.xenondevs.invui.gui.Markers
 import xyz.xenondevs.invui.gui.TabGui
@@ -23,6 +24,7 @@ import xyz.xenondevs.invui.window.Window
 /** Represents a gui handling faq within the system. */
 internal object FaqGui : GuiInterface {
     lateinit var mechanics: List<MechanicInterface>
+    lateinit var recipes: List<RecipeInterface>
 
     override val cmds =
         listOf(
@@ -46,33 +48,19 @@ internal object FaqGui : GuiInterface {
 
     override fun gui(player: Player): Window {
         val categories = mechanics.groupBy { it.faqTab }
-        val tabConfigs =
-            FaqTab.entries.filter { it != FaqTab.ADMIN || player.isOp }
-        val tabs = tabConfigs.map { createTab(categories[it] ?: emptyList()) }
-        val tabButtons =
-            tabConfigs.mapIndexed { index, config ->
-                createTabButton(
-                    index,
-                    ItemBuilder(config.material).setName(MM.deserialize(config.label)),
+        val tabConfigs = FaqTab.entries
+        val tabs =
+            tabConfigs.map { config ->
+                createTab(
+                    when (config) {
+                        FaqTab.RECIPES -> recipes.map { it.faqItem }
+                        else -> categories[config]?.map { it.faqItem } ?: emptyList()
+                    },
                 )
             }
-        val structure =
-            if (player.isOp) {
-                arrayOf(
-                    "# # P W E S A # #",
-                    "# x x x x x x x #",
-                    "# x x x x x x x #",
-                    "# x x x x x x x #",
-                    "# # # # # # # # #",
-                )
-            } else {
-                arrayOf(
-                    "# # P W # E S # #",
-                    "# x x x x x x x #",
-                    "# x x x x x x x #",
-                    "# x x x x x x x #",
-                    "# # # # # # # # #",
-                )
+        val tabButtons =
+            tabConfigs.mapIndexed { index, config ->
+                createTabButton(index, ItemBuilder(config.material).setName(MM.deserialize(config.label)))
             }
 
         return Window
@@ -83,16 +71,22 @@ internal object FaqGui : GuiInterface {
                     TabGui
                         .builder()
                         .apply {
-                            setStructure(*structure)
+                            setStructure(
+                                "# # P W E S R # #",
+                                "# x x x x x x x #",
+                                "# x x x x x x x #",
+                                "# x x x x x x x #",
+                                "# # # # # # # # #",
+                            )
                             addIngredient(
                                 '#',
                                 Item.simple(ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true)),
                             )
                             addIngredient('x', Markers.CONTENT_LIST_SLOT_HORIZONTAL)
                             setTabs(tabs)
-                            tabConfigs.zip(tabButtons).forEach { (config, button) ->
-                                addIngredient(config.char, button)
-                            }
+                            tabConfigs
+                                .zip(tabButtons)
+                                .forEach { (config, button) -> addIngredient(config.char, button) }
                         }.build(),
                 )
                 setViewer(player)
@@ -113,20 +107,19 @@ internal object FaqGui : GuiInterface {
     ): BoundItem =
         BoundItem
             .tabBuilder()
-            .setItemProvider { _, gui ->
-                if (gui.tab == index) itemBuilder.clone().setGlint(true) else itemBuilder
-            }.addClickHandler { _, gui, _ -> gui.tab = index }
+            .setItemProvider { _, gui -> if (gui.tab == index) itemBuilder.clone().setGlint(true) else itemBuilder }
+            .addClickHandler { _, gui, _ -> gui.tab = index }
             .build()
 
     /**
-     * Creates a tab [Gui] populated with infoItems from the given mechanics.
+     * Creates a tab [Gui] populated with the given items.
      *
      * Items fill a 3×7 grid left-to-right, top-to-bottom.
      *
-     * @param mechanics The list of mechanics to display in this tab.
-     * @return A [Gui] containing the mechanic info items.
+     * @param items The list of items to display in this tab.
+     * @return A [Gui] containing the items.
      */
-    private fun createTab(mechanics: List<MechanicInterface>): Gui =
+    private fun createTab(items: List<Item>): Gui =
         Gui
             .builder()
             .setStructure(
@@ -135,8 +128,8 @@ internal object FaqGui : GuiInterface {
                 "x x x x x x x",
             ).build()
             .apply {
-                mechanics
+                items
                     .take(21)
-                    .forEachIndexed { index, mechanic -> setItem(index, mechanic.faqItem) }
+                    .forEachIndexed { index, item -> setItem(index, item) }
             }
 }

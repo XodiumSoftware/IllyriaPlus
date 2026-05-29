@@ -101,6 +101,7 @@ internal class IllyriaPlus : JavaPlugin() {
             "Registered: ${enchantments.size} enchantment events | Took ${enchantments.sumOf { it.register() }}ms",
         )
 
+        FaqGui.recipes = recipes
         FaqGui.mechanics = mechanics
 
         val guis =

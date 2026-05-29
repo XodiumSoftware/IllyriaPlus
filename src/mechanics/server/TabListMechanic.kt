@@ -29,7 +29,7 @@ internal object TabListMechanic : MechanicInterface {
             "<mango_r><st>─────────────────</st></gradient><mango><st>─────────────────</st></gradient>",
         )
 
-    override val faqTab = FaqTab.ADMIN
+    override val faqTab = FaqTab.SERVER
 
     override val faqItem =
         Item.simple(
