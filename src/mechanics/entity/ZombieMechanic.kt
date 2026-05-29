@@ -6,6 +6,7 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeInstance
 import org.bukkit.entity.Player
 import org.bukkit.entity.Zombie
+import org.bukkit.entity.ZombieHorse
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.*
 import org.bukkit.potion.PotionEffect
@@ -23,8 +24,9 @@ internal object ZombieMechanic : MechanicInterface {
     private const val HORDE_RADIUS: Double = 96.0
     private const val HORDE_COOLDOWN_TICKS: Long = 100
     private const val CAN_BREAK_DOOR: Boolean = true
+    private const val ZOMBIE_HORSE_CHANCE: Int = 5
 
-    private val attributes: Map<Attribute, (Zombie, AttributeInstance) -> Unit> =
+    private val zombieAttributes: Map<Attribute, (Zombie, AttributeInstance) -> Unit> =
         mapOf(
             Attribute.MOVEMENT_SPEED to { _, attr -> attr.baseValue *= (13..17).random() / 10.0 },
             Attribute.MAX_HEALTH to { zombie, attr ->
@@ -39,6 +41,12 @@ internal object ZombieMechanic : MechanicInterface {
             Attribute.ARMOR_TOUGHNESS to { _, attr -> attr.baseValue = (1..3).random().toDouble() },
             Attribute.SPAWN_REINFORCEMENTS to { _, attr -> attr.baseValue = 5.0 },
             Attribute.SCALE to { _, attr -> attr.baseValue *= (10..13).random() / 10.0 },
+        )
+    private val zombieHorseAttributes: Map<Attribute, (ZombieHorse, AttributeInstance) -> Unit> =
+        mapOf(
+            Attribute.MOVEMENT_SPEED to { _, attr -> attr.baseValue *= (12..16).random() / 10.0 },
+            Attribute.JUMP_STRENGTH to { _, attr -> attr.baseValue *= (11..14).random() / 10.0 },
+            Attribute.ARMOR to { _, attr -> attr.baseValue = (2..5).random().toDouble() },
         )
     private val infectiousEffects: List<() -> PotionEffect> =
         listOf(
@@ -61,6 +69,10 @@ internal object ZombieMechanic : MechanicInterface {
                     MM.deserialize(
                         "<yellow>Door Breaking</yellow> <firewatch>></gradient> " +
                             "<white>Zombies can break wooden doors on Hard difficulty.</white>",
+                    ),
+                    MM.deserialize(
+                        "<yellow>Undead Cavalry</yellow> <firewatch>></gradient> " +
+                            "<white>Zombies have a $ZOMBIE_HORSE_CHANCE% chance to spawn riding zombie horses.</white>",
                     ),
                     MM.deserialize(
                         "<yellow>Attribute Modifiers</yellow> <firewatch>></gradient> " +
@@ -90,7 +102,7 @@ internal object ZombieMechanic : MechanicInterface {
     fun on(event: EntityCombustEvent) = daylightImmunity(event)
 
     @EventHandler(ignoreCancelled = true)
-    fun on(event: CreatureSpawnEvent) = modifyZombieSpawn(event)
+    fun on(event: CreatureSpawnEvent) = modifySpawn(event)
 
     /**
      * Prevents zombies from burning in sunlight on Hard difficulty.
@@ -111,13 +123,14 @@ internal object ZombieMechanic : MechanicInterface {
      *
      * @param event The CreatureSpawnEvent triggered when an entity spawns.
      */
-    private fun modifyZombieSpawn(event: CreatureSpawnEvent) {
+    private fun modifySpawn(event: CreatureSpawnEvent) {
         val zombie = event.entity as? Zombie ?: return
 
         if (event.entity.world.difficulty != Difficulty.HARD) return
 
         zombie.setCanBreakDoors(CAN_BREAK_DOOR)
-        attributes.forEach { (attribute, apply) ->
+        zombie.spawnWithZombieHorse(ZOMBIE_HORSE_CHANCE)
+        zombieAttributes.forEach { (attribute, apply) ->
             zombie.getAttribute(attribute)?.let { apply(zombie, it) }
         }
     }
@@ -161,5 +174,22 @@ internal object ZombieMechanic : MechanicInterface {
             .filterIsInstance<Zombie>()
             .filter { it.uniqueId != zombie.uniqueId && it.target != target }
             .forEach { it.target = target }
+    }
+
+    /**
+     * Spawns a zombie horse mount for the zombie with a configurable chance.
+     *
+     * @param chance The percentage chance for the zombie to spawn riding a zombie horse.
+     */
+    private fun Zombie.spawnWithZombieHorse(chance: Int) {
+        if ((1..100).random() > chance) return
+
+        world
+            .spawn(location, ZombieHorse::class.java) { horse ->
+                horse.isTamed = true
+                zombieHorseAttributes.forEach { (attribute, apply) ->
+                    horse.getAttribute(attribute)?.let { apply(horse, it) }
+                }
+            }.addPassenger(this)
     }
 }
