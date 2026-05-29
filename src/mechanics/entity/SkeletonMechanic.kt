@@ -34,7 +34,8 @@ internal object SkeletonMechanic : MechanicInterface {
                     MM.deserialize(""),
                     MM.deserialize(
                         "<yellow>Undead Cavalry</yellow> <firewatch>></gradient> " +
-                            "<white>Skeletons have a $SKELETON_HORSE_CHANCE% chance to spawn riding skeleton horses.</white>",
+                            "<white>Skeletons have a $SKELETON_HORSE_CHANCE% " +
+                            "chance to spawn riding skeleton horses.</white>",
                     ),
                 ),
         )
