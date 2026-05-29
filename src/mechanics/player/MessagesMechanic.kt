@@ -60,7 +60,7 @@ internal object MessagesMechanic : MechanicInterface {
         const val OTHER: String = ""
     }
 
-    override val faqTab = FaqTab.SERVER
+    override val faqTab = FaqTab.SERVER_MECHANIC
 
     override val faqItem =
         Item.simple(

@@ -14,7 +14,7 @@ import xyz.xenondevs.invui.item.ItemBuilder
 internal object MushroomMechanic : MechanicInterface {
     private val MATERIALS: Set<Material> = setOf(Material.RED_MUSHROOM, Material.BROWN_MUSHROOM)
 
-    override val faqTab: FaqTab = FaqTab.WORLD
+    override val faqTab: FaqTab = FaqTab.WORLD_MECHANIC
 
     override val faqItem =
         Item.simple(

@@ -46,7 +46,7 @@ internal object ChatMechanic : MechanicInterface {
     private const val JOIN_TITLE = "<firewatch><b>Welcome</b></gradient> <player>"
     private const val JOIN_SUBTITLE = "<mango>Check out:</gradient> /faq"
 
-    override val faqTab = FaqTab.SERVER
+    override val faqTab = FaqTab.SERVER_MECHANIC
 
     override val faqItem =
         Item.simple(

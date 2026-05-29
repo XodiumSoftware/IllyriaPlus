@@ -19,7 +19,7 @@ import kotlin.random.Random
 internal object HeadMechanic : MechanicInterface {
     private const val SKULL_DROP_CHANCE: Double = 0.01
 
-    override val faqTab = FaqTab.PLAYER
+    override val faqTab = FaqTab.PLAYER_MECHANIC
 
     override val faqItem =
         Item.simple(

@@ -14,12 +14,9 @@ internal enum class FaqTab(
     val material: Material,
     val char: Char,
 ) {
-    PLAYER("<mango>Player Mechanics</gradient>", Material.CARVED_PUMPKIN, 'P'),
-    WORLD("<mango>World Mechanics</gradient>", Material.GRASS_BLOCK, 'W'),
-    ENTITY("<mango>Entity Mechanics</gradient>", Material.WOLF_SPAWN_EGG, 'E'),
-    SERVER("<mango>Server Mechanics</gradient>", Material.COMPASS, 'S'),
+    PLAYER_MECHANIC("<mango>Player Mechanics</gradient>", Material.CARVED_PUMPKIN, 'P'),
+    WORLD_MECHANIC("<mango>World Mechanics</gradient>", Material.GRASS_BLOCK, 'W'),
+    ENTITY_MECHANIC("<mango>Entity Mechanics</gradient>", Material.WOLF_SPAWN_EGG, 'E'),
+    SERVER_MECHANIC("<mango>Server Mechanics</gradient>", Material.COMPASS, 'S'),
     RECIPES("<mango>Recipes</gradient>", Material.PAPER, 'R'),
 }
-
-// TODO: Move player-admin into Mechanics for better organization.
-// TODO: Create Enchantments and add into it SPELLS, UTILITY, VANILLA.

@@ -24,7 +24,7 @@ internal object GriefingMechanic : MechanicInterface {
             EntityType.WITHER,
         )
 
-    override val faqTab = FaqTab.ENTITY
+    override val faqTab = FaqTab.ENTITY_MECHANIC
 
     override val faqItem =
         Item.simple(

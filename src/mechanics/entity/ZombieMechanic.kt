@@ -56,7 +56,7 @@ internal object ZombieMechanic : MechanicInterface {
         )
     private val hordeCooldowns: MutableSet<UUID> = mutableSetOf()
 
-    override val faqTab = FaqTab.ENTITY
+    override val faqTab = FaqTab.ENTITY_MECHANIC
 
     override val faqItem =
         Item.simple(

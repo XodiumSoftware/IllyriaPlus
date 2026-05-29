@@ -13,7 +13,7 @@ import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling tameable entities within the system. */
 internal object TameableMechanic : MechanicInterface {
-    override val faqTab = FaqTab.ENTITY
+    override val faqTab = FaqTab.ENTITY_MECHANIC
 
     override val faqItem =
         Item.simple(

@@ -23,7 +23,7 @@ internal object ServerInfoMechanic : MechanicInterface {
             ServerLinks.Type.COMMUNITY_GUIDELINES to "https://vanillaplus.xodium.org/",
         )
 
-    override val faqTab = FaqTab.SERVER
+    override val faqTab = FaqTab.SERVER_MECHANIC
 
     override val faqItem =
         Item.simple(

@@ -85,7 +85,7 @@ internal object InventoryMechanic : MechanicInterface {
             ),
         )
 
-    override val faqTab = FaqTab.WORLD
+    override val faqTab = FaqTab.WORLD_MECHANIC
 
     override val faqItem =
         Item.simple(

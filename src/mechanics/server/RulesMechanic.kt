@@ -57,7 +57,7 @@ internal object RulesMechanic : MechanicInterface {
             ),
         )
 
-    override val faqTab = FaqTab.SERVER
+    override val faqTab = FaqTab.SERVER_MECHANIC
 
     override val faqItem =
         Item

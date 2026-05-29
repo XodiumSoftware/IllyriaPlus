@@ -18,7 +18,7 @@ internal object MotdMechanic : MechanicInterface {
             "<mango><b>➤ WELCOME BACK LADS!</b></gradient>",
         )
 
-    override val faqTab = FaqTab.SERVER
+    override val faqTab = FaqTab.SERVER_MECHANIC
 
     override val faqItem =
         Item.simple(

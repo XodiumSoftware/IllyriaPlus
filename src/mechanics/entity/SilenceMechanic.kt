@@ -17,7 +17,7 @@ import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic that allows silencing mobs using an amethyst shard. */
 internal object SilenceMechanic : MechanicInterface {
-    override val faqTab = FaqTab.ENTITY
+    override val faqTab = FaqTab.ENTITY_MECHANIC
 
     override val faqItem =
         Item.simple(

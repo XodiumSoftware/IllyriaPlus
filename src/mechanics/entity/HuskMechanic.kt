@@ -23,7 +23,7 @@ internal object HuskMechanic : MechanicInterface {
     private const val CAMEL_HUSK_SAND_BASE_MAX: Int = 3
     private const val CAMEL_HUSK_SAND_LOOTING_BONUS: Int = 2
 
-    override val faqTab = FaqTab.ENTITY
+    override val faqTab = FaqTab.ENTITY_MECHANIC
 
     override val faqItem =
         Item.simple(

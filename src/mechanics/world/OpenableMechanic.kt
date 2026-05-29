@@ -50,7 +50,7 @@ internal object OpenableMechanic : MechanicInterface {
             1.0f,
         )
 
-    override val faqTab = FaqTab.WORLD
+    override val faqTab = FaqTab.WORLD_MECHANIC
 
     override val faqItem =
         Item.simple(

@@ -37,7 +37,7 @@ internal object SitMechanic : MechanicInterface {
     private val blockCenterOffset = Vector(0.5, 0.5, 0.5)
     private val playerStandUpOffset = Vector(0.0, 0.5, 0.0)
 
-    override val faqTab = FaqTab.PLAYER
+    override val faqTab = FaqTab.PLAYER_MECHANIC
 
     override val faqItem =
         Item.simple(

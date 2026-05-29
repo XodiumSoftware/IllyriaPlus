@@ -26,7 +26,7 @@ import org.bukkit.block.data.type.ChiseledBookshelf as ChiseledBookshelfData
 /** Represents a mechanic handling chiseled bookshelf interactions within the system. */
 @Suppress("UnstableApiUsage")
 internal object ChiseledBookshelfMechanic : MechanicInterface {
-    override val faqTab = FaqTab.WORLD
+    override val faqTab = FaqTab.WORLD_MECHANIC
 
     override val faqItem =
         Item.simple(

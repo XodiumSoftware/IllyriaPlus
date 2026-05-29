@@ -15,7 +15,7 @@ import kotlin.random.Random
 internal object SpawnEggMechanic : MechanicInterface {
     private const val SPAWN_EGG_DROP_CHANCE: Double = 0.001
 
-    override val faqTab = FaqTab.ENTITY
+    override val faqTab = FaqTab.ENTITY_MECHANIC
 
     override val faqItem =
         Item.simple(

@@ -14,7 +14,7 @@ import xyz.xenondevs.invui.item.ItemBuilder
 internal object XpMechanic : MechanicInterface {
     private const val XP_COST_TO_BOTTLE: Int = 11
 
-    override val faqTab = FaqTab.PLAYER
+    override val faqTab = FaqTab.PLAYER_MECHANIC
 
     override val faqItem =
         Item.simple(

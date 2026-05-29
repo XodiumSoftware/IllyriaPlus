@@ -36,7 +36,7 @@ internal object SpellMechanic : MechanicInterface {
         const val SELECTED_SPELL: String = "<spellbite>Current Spell > <white><spell></white></gradient>"
     }
 
-    override val faqTab = FaqTab.PLAYER
+    override val faqTab = FaqTab.PLAYER_MECHANIC
 
     override val faqItem =
         Item.simple(

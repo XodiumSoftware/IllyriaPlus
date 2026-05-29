@@ -26,7 +26,7 @@ internal object DimensionMechanic : MechanicInterface {
     private const val CREATION_DENIED_MSG: String =
         "<firewatch>No corresponding active portal found in the Overworld!</gradient>"
 
-    override val faqTab = FaqTab.WORLD
+    override val faqTab = FaqTab.WORLD_MECHANIC
 
     override val faqItem =
         Item.simple(

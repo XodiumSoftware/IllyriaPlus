@@ -25,7 +25,7 @@ import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling player nicknames within the system. */
 internal object NicknameMechanic : MechanicInterface {
-    override val faqTab = FaqTab.PLAYER
+    override val faqTab = FaqTab.PLAYER_MECHANIC
 
     override val faqItem =
         Item

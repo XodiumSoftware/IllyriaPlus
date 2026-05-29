@@ -26,7 +26,7 @@ internal object LocatorMechanic : MechanicInterface {
     private const val DEFAULT_LOCATOR_MSG = "<gray>Locator color: default/not custom set</gray>"
     private const val RESET_LOCATOR_MSG = "<gray>Locator color has been reset!</gray>"
 
-    override val faqTab = FaqTab.PLAYER
+    override val faqTab = FaqTab.PLAYER_MECHANIC
 
     override val faqItem =
         Item.simple(

@@ -21,7 +21,7 @@ internal object BatMechanic : MechanicInterface {
     private const val BAT_MEMBRANE_BASE_MAX: Int = 1
     private const val BAT_MEMBRANE_LOOTING_BONUS: Int = 1
 
-    override val faqTab = FaqTab.ENTITY
+    override val faqTab = FaqTab.ENTITY_MECHANIC
 
     override val faqItem =
         Item.simple(
