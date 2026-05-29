@@ -56,6 +56,7 @@ internal class IllyriaPlus : JavaPlugin() {
                 XpMechanic,
                 HuskMechanic,
                 ZombieMechanic,
+                SkeletonMechanic,
                 HeadMechanic,
                 ChatMechanic,
                 InventoryMechanic,
