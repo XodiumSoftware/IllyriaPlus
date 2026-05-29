@@ -1,3 +1,5 @@
+@file:Suppress("Unused")
+
 package org.xodium.illyriaplus
 
 import com.mojang.brigadier.Command
