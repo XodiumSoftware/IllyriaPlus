@@ -16,7 +16,7 @@ import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqCategory
+import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.mechanics.server.TabListMechanic.tablist
 import org.xodium.illyriaplus.pdcs.PlayerPDC.nickname
@@ -25,7 +25,7 @@ import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling player nicknames within the system. */
 internal object NicknameMechanic : MechanicInterface {
-    override val faqCategory = FaqCategory.PLAYER
+    override val faqTab = FaqTab.PLAYER
 
     override val faqItem =
         Item

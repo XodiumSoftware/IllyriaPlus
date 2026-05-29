@@ -5,7 +5,10 @@ import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.ShapedRecipe
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
+import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.interfaces.RecipeInterface
+import xyz.xenondevs.invui.item.Item
+import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents an object handling chainmail recipe implementation within the system. */
 internal object ChainmailRecipe : RecipeInterface {
@@ -39,5 +42,18 @@ internal object ChainmailRecipe : RecipeInterface {
                 shape("A A", "A A")
                 setIngredient('A', Material.IRON_BARS)
             },
+        )
+
+    override val faqItem =
+        Item.simple(
+            ItemBuilder(Material.IRON_BARS)
+                .setName(MM.deserialize("<mango>Chainmail Recipes</gradient>"))
+                .addLoreLines(
+                    MM.deserialize(""),
+                    MM.deserialize(
+                        "<yellow>Craft Chainmail</yellow> <firewatch>></gradient> " +
+                            "<white>Chainmail armor can be crafted using iron bars</white>",
+                    ),
+                ),
         )
 }

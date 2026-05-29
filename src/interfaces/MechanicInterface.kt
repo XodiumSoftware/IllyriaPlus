@@ -5,7 +5,7 @@ import org.bukkit.event.Listener
 import org.bukkit.permissions.Permission
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.data.CommandData
-import org.xodium.illyriaplus.data.FaqCategory
+import org.xodium.illyriaplus.data.FaqTab
 import xyz.xenondevs.invui.item.Item
 import kotlin.time.measureTime
 
@@ -25,10 +25,18 @@ internal interface MechanicInterface : Listener {
      */
     val perms: List<Permission> get() = emptyList()
 
-    /** The FAQ category this mechanic belongs to. */
-    val faqCategory: FaqCategory
+    /**
+     * Retrieves the FAQ tab.
+     *
+     * @return A [FaqTab] instance.
+     */
+    val faqTab: FaqTab
 
-    /** FAQ display item for this mechanic. */
+    /**
+     * Retrieves the FAQ display item.
+     *
+     * @return An [Item] instance.
+     */
     val faqItem: Item
 
     /**

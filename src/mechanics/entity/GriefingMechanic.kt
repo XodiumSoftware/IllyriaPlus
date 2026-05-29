@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityChangeBlockEvent
 import org.bukkit.event.entity.EntityExplodeEvent
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqCategory
+import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -24,7 +24,7 @@ internal object GriefingMechanic : MechanicInterface {
             EntityType.WITHER,
         )
 
-    override val faqCategory = FaqCategory.ENTITY
+    override val faqTab = FaqTab.ENTITY
 
     override val faqItem =
         Item.simple(

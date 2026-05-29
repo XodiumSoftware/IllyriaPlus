@@ -9,7 +9,7 @@ import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.CommandUtils.playerExecuted
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
-import org.xodium.illyriaplus.data.FaqCategory
+import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.GuiInterface
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.gui.Gui
@@ -45,9 +45,9 @@ internal object FaqGui : GuiInterface {
         )
 
     override fun gui(player: Player): Window {
-        val categories = mechanics.groupBy { it.faqCategory }
+        val categories = mechanics.groupBy { it.faqTab }
         val tabConfigs =
-            FaqCategory.entries.filter { it != FaqCategory.ADMIN || player.isOp }
+            FaqTab.entries.filter { it != FaqTab.ADMIN || player.isOp }
         val tabs = tabConfigs.map { createTab(categories[it] ?: emptyList()) }
         val tabButtons =
             tabConfigs.mapIndexed { index, config ->

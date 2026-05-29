@@ -5,7 +5,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.server.ServerListPingEvent
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqCategory
+import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -18,7 +18,7 @@ internal object MotdMechanic : MechanicInterface {
             "<mango><b>➤ WELCOME BACK LADS!</b></gradient>",
         )
 
-    override val faqCategory = FaqCategory.ADMIN
+    override val faqTab = FaqTab.ADMIN
 
     override val faqItem =
         Item.simple(

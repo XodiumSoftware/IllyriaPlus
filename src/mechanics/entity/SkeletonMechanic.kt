@@ -9,7 +9,7 @@ import org.bukkit.entity.SkeletonHorse
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqCategory
+import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -26,7 +26,7 @@ internal object SkeletonMechanic : MechanicInterface {
             Attribute.SAFE_FALL_DISTANCE to { _, attr -> attr.baseValue *= (11..14).random() / 10.0 },
         )
 
-    override val faqCategory = FaqCategory.ENTITY
+    override val faqTab = FaqTab.ENTITY
 
     override val faqItem =
         Item.simple(

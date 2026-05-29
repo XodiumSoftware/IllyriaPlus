@@ -5,7 +5,7 @@ import org.bukkit.Tag
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockCanBuildEvent
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqCategory
+import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -14,7 +14,7 @@ import xyz.xenondevs.invui.item.ItemBuilder
 internal object MushroomMechanic : MechanicInterface {
     private val MATERIALS: Set<Material> = setOf(Material.RED_MUSHROOM, Material.BROWN_MUSHROOM)
 
-    override val faqCategory: FaqCategory = FaqCategory.WORLD
+    override val faqTab: FaqTab = FaqTab.WORLD
 
     override val faqItem =
         Item.simple(

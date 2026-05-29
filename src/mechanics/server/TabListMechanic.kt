@@ -7,7 +7,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.PlayerJoinEvent
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqCategory
+import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -29,7 +29,7 @@ internal object TabListMechanic : MechanicInterface {
             "<mango_r><st>─────────────────</st></gradient><mango><st>─────────────────</st></gradient>",
         )
 
-    override val faqCategory = FaqCategory.ADMIN
+    override val faqTab = FaqTab.ADMIN
 
     override val faqItem =
         Item.simple(

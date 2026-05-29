@@ -7,7 +7,10 @@ import org.bukkit.inventory.FurnaceRecipe
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.SmokingRecipe
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
+import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.interfaces.RecipeInterface
+import xyz.xenondevs.invui.item.Item
+import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents an object handling rotten-flesh recipe implementation within the system. */
 internal object RottenFleshRecipe : RecipeInterface {
@@ -34,5 +37,18 @@ internal object RottenFleshRecipe : RecipeInterface {
                 0.05f,
                 600,
             ),
+        )
+
+    override val faqItem =
+        Item.simple(
+            ItemBuilder(Material.LEATHER)
+                .setName(MM.deserialize("<mango>Rotten Flesh Recipes</gradient>"))
+                .addLoreLines(
+                    MM.deserialize(""),
+                    MM.deserialize(
+                        "<yellow>Smelt</yellow> <firewatch>></gradient> " +
+                            "<white>Rotten flesh can be smelted into leather</white>",
+                    ),
+                ),
         )
 }

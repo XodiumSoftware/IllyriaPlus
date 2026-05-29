@@ -11,7 +11,7 @@ import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.CommandUtils.playerExecuted
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
-import org.xodium.illyriaplus.data.FaqCategory
+import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.pdcs.PlayerPDC.scoreboardVisibility
 import xyz.xenondevs.invui.item.Item
@@ -40,7 +40,7 @@ internal object ScoreBoardMechanic : MechanicInterface {
             ),
         )
 
-    override val faqCategory = FaqCategory.SERVER
+    override val faqTab = FaqTab.SERVER
 
     override val faqItem =
         Item.simple(

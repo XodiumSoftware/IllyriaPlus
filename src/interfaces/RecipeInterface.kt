@@ -3,6 +3,8 @@ package org.xodium.illyriaplus.interfaces
 import io.papermc.paper.potion.PotionMix
 import org.bukkit.inventory.Recipe
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
+import org.xodium.illyriaplus.data.FaqTab
+import xyz.xenondevs.invui.item.Item
 import kotlin.time.measureTime
 
 /** Represents a contract for recipes within the system. */
@@ -20,6 +22,20 @@ internal interface RecipeInterface {
      * @return A [Collection] of [PotionMix] instances.
      */
     val potions: Collection<PotionMix> get() = emptySet()
+
+    /**
+     * Retrieves the FAQ tab.
+     *
+     * @return A [FaqTab] instance.
+     */
+    val faqTab: FaqTab get() = FaqTab.RECIPES
+
+    /**
+     * Retrieves the FAQ display item.
+     *
+     * @return An [Item] instance.
+     */
+    val faqItem: Item
 
     /**
      * Registers all recipes returned by [recipes] with the server.

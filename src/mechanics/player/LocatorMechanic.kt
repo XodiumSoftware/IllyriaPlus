@@ -14,7 +14,7 @@ import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.CommandUtils.playerExecuted
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
-import org.xodium.illyriaplus.data.FaqCategory
+import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -26,7 +26,7 @@ internal object LocatorMechanic : MechanicInterface {
     private const val DEFAULT_LOCATOR_MSG = "<gray>Locator color: default/not custom set</gray>"
     private const val RESET_LOCATOR_MSG = "<gray>Locator color has been reset!</gray>"
 
-    override val faqCategory = FaqCategory.PLAYER
+    override val faqTab = FaqTab.PLAYER
 
     override val faqItem =
         Item.simple(

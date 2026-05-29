@@ -20,7 +20,7 @@ import org.bukkit.inventory.EquipmentSlot
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.AdjacentBlockData
-import org.xodium.illyriaplus.data.FaqCategory
+import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -50,7 +50,7 @@ internal object OpenableMechanic : MechanicInterface {
             1.0f,
         )
 
-    override val faqCategory = FaqCategory.WORLD
+    override val faqTab = FaqTab.WORLD
 
     override val faqItem =
         Item.simple(

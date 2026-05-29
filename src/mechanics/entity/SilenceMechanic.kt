@@ -10,14 +10,14 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqCategory
+import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic that allows silencing mobs using an amethyst shard. */
 internal object SilenceMechanic : MechanicInterface {
-    override val faqCategory = FaqCategory.ENTITY
+    override val faqTab = FaqTab.ENTITY
 
     override val faqItem =
         Item.simple(

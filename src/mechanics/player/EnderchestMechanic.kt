@@ -7,14 +7,14 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqCategory
+import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling ender chest access within the system. */
 internal object EnderchestMechanic : MechanicInterface {
-    override val faqCategory = FaqCategory.PLAYER
+    override val faqTab = FaqTab.PLAYER
 
     override val faqItem =
         Item.simple(

@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
 import org.bukkit.inventory.ItemStack
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqCategory
+import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.enchantments.spells.*
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import org.xodium.illyriaplus.pdcs.ItemStackPDC.selectedSpell
@@ -36,7 +36,7 @@ internal object SpellMechanic : MechanicInterface {
         const val SELECTED_SPELL: String = "<spellbite>Current Spell > <white><spell></white></gradient>"
     }
 
-    override val faqCategory = FaqCategory.PLAYER
+    override val faqTab = FaqTab.PLAYER
 
     override val faqItem =
         Item.simple(

@@ -5,7 +5,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqCategory
+import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -14,7 +14,7 @@ import xyz.xenondevs.invui.item.ItemBuilder
 internal object XpMechanic : MechanicInterface {
     private const val XP_COST_TO_BOTTLE: Int = 11
 
-    override val faqCategory = FaqCategory.PLAYER
+    override val faqTab = FaqTab.PLAYER
 
     override val faqItem =
         Item.simple(

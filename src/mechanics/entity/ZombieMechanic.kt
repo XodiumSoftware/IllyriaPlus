@@ -13,7 +13,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqCategory
+import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -56,7 +56,7 @@ internal object ZombieMechanic : MechanicInterface {
         )
     private val hordeCooldowns: MutableSet<UUID> = mutableSetOf()
 
-    override val faqCategory = FaqCategory.ENTITY
+    override val faqTab = FaqTab.ENTITY
 
     override val faqItem =
         Item.simple(

@@ -8,7 +8,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqCategory
+import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -21,7 +21,7 @@ internal object BatMechanic : MechanicInterface {
     private const val BAT_MEMBRANE_BASE_MAX: Int = 1
     private const val BAT_MEMBRANE_LOOTING_BONUS: Int = 1
 
-    override val faqCategory = FaqCategory.ENTITY
+    override val faqTab = FaqTab.ENTITY
 
     override val faqItem =
         Item.simple(

@@ -15,7 +15,7 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.*
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqCategory
+import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -60,7 +60,7 @@ internal object MessagesMechanic : MechanicInterface {
         const val OTHER: String = ""
     }
 
-    override val faqCategory = FaqCategory.ADMIN
+    override val faqTab = FaqTab.ADMIN
 
     override val faqItem =
         Item.simple(

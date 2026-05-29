@@ -4,7 +4,7 @@ import org.bukkit.Material
 import org.bukkit.ServerLinks
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqCategory
+import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -23,7 +23,7 @@ internal object ServerInfoMechanic : MechanicInterface {
             ServerLinks.Type.COMMUNITY_GUIDELINES to "https://vanillaplus.xodium.org/",
         )
 
-    override val faqCategory = FaqCategory.ADMIN
+    override val faqTab = FaqTab.ADMIN
 
     override val faqItem =
         Item.simple(
