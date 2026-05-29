@@ -35,9 +35,12 @@ internal class IllyriaPlus : JavaPlugin() {
             listOf(
                 ChainmailRecipe,
                 DiamondRecycleRecipe,
+                IceBreakdownRecipe,
+                NetherWartBlockRecipe,
                 PaintingRecipe,
                 RottenFleshRecipe,
                 WoodLogRecipe,
+                WoolToStringRecipe,
             )
 
         logger.info(
