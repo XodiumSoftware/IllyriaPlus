@@ -17,7 +17,9 @@ import xyz.xenondevs.invui.item.ItemBuilder
 /** Represents a mechanic handling skeleton behavior and spawns within the system. */
 internal object SkeletonMechanic : MechanicInterface {
     private const val SKELETON_HORSE_CHANCE: Int = 5
+    private const val SHOULD_BURN_IN_DAY: Boolean = false
 
+    private val difficulty: Difficulty = Difficulty.HARD
     private val skeletonHorseAttributes: Map<Attribute, (SkeletonHorse, AttributeInstance) -> Unit> =
         mapOf(
             Attribute.MOVEMENT_SPEED to { _, attr -> attr.baseValue *= (11..14).random() / 10.0 },
@@ -43,18 +45,20 @@ internal object SkeletonMechanic : MechanicInterface {
         )
 
     @EventHandler(ignoreCancelled = true)
-    fun on(event: CreatureSpawnEvent) = modifySpawn(event)
+    fun on(event: CreatureSpawnEvent) {
+        when {
+            event.entity.world.difficulty != difficulty -> return
+            else -> modifySpawn(event.entity as? Skeleton ?: return)
+        }
+    }
 
     /**
      * Modifies a skeleton's attributes and enables skeleton horse mounts on Hard difficulty.
      *
-     * @param event The CreatureSpawnEvent triggered when an entity spawns.
+     * @param skeleton The skeleton to modify.
      */
-    private fun modifySpawn(event: CreatureSpawnEvent) {
-        val skeleton = event.entity as? Skeleton ?: return
-
-        if (event.entity.world.difficulty != Difficulty.HARD) return
-
+    private fun modifySpawn(skeleton: Skeleton) {
+        skeleton.setShouldBurnInDay(SHOULD_BURN_IN_DAY)
         skeleton.spawnWithSkeletonHorse(SKELETON_HORSE_CHANCE)
     }
 

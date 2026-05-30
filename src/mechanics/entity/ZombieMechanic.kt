@@ -8,7 +8,10 @@ import org.bukkit.entity.Player
 import org.bukkit.entity.Zombie
 import org.bukkit.entity.ZombieHorse
 import org.bukkit.event.EventHandler
-import org.bukkit.event.entity.*
+import org.bukkit.event.entity.CreatureSpawnEvent
+import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
@@ -24,8 +27,10 @@ internal object ZombieMechanic : MechanicInterface {
     private const val HORDE_RADIUS: Double = 96.0
     private const val HORDE_COOLDOWN_TICKS: Long = 100
     private const val CAN_BREAK_DOOR: Boolean = true
+    private const val SHOULD_BURN_IN_DAY: Boolean = false
     private const val ZOMBIE_HORSE_CHANCE: Int = 5
 
+    private val difficulty: Difficulty = Difficulty.HARD
     private val zombieAttributes: Map<Attribute, (Zombie, AttributeInstance) -> Unit> =
         mapOf(
             Attribute.MOVEMENT_SPEED to { _, attr -> attr.baseValue *= (13..17).random() / 10.0 },
@@ -93,42 +98,39 @@ internal object ZombieMechanic : MechanicInterface {
         )
 
     @EventHandler(ignoreCancelled = true)
-    fun on(event: EntityTargetLivingEntityEvent) = alertHorde(event)
-
-    @EventHandler(ignoreCancelled = true)
-    fun on(event: EntityDamageByEntityEvent) = infectiousTouch(event)
-
-    @EventHandler
-    fun on(event: EntityCombustEvent) = daylightImmunity(event)
-
-    @EventHandler(ignoreCancelled = true)
-    fun on(event: CreatureSpawnEvent) = modifySpawn(event)
-
-    /**
-     * Prevents zombies from burning in sunlight on Hard difficulty.
-     *
-     * @param event The EntityCombustEvent triggered when an entity combusts.
-     */
-    private fun daylightImmunity(event: EntityCombustEvent) {
+    fun on(event: EntityTargetLivingEntityEvent) {
         when {
-            event.entity !is Zombie -> return
-            event.entity.world.difficulty != Difficulty.HARD -> return
-            event is EntityCombustByBlockEvent || event is EntityCombustByEntityEvent -> return
-            else -> event.isCancelled = true
+            event.entity.world.difficulty != difficulty -> return
+            else -> alertHorde(event.entity as? Zombie ?: return, event.target as? Player ?: return)
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    fun on(event: EntityDamageByEntityEvent) {
+        when {
+            event.damager !is Zombie -> return
+            event.entity.world.difficulty != difficulty -> return
+            event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK -> return
+            else -> infectiousTouch(event.entity as? Player ?: return)
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    fun on(event: CreatureSpawnEvent) {
+        when {
+            event.entity.world.difficulty != difficulty -> return
+            else -> modifySpawn(event.entity as? Zombie ?: return)
         }
     }
 
     /**
      * Modifies a zombie's base speed and enables door-breaking on Hard difficulty.
      *
-     * @param event The CreatureSpawnEvent triggered when an entity spawns.
+     * @param zombie The zombie to modify.
      */
-    private fun modifySpawn(event: CreatureSpawnEvent) {
-        val zombie = event.entity as? Zombie ?: return
-
-        if (event.entity.world.difficulty != Difficulty.HARD) return
-
+    private fun modifySpawn(zombie: Zombie) {
         zombie.setCanBreakDoors(CAN_BREAK_DOOR)
+        zombie.setShouldBurnInDay(SHOULD_BURN_IN_DAY)
         zombie.spawnWithZombieHorse(ZOMBIE_HORSE_CHANCE)
         zombieAttributes.forEach { (attribute, apply) ->
             zombie.getAttribute(attribute)?.let { apply(zombie, it) }
@@ -138,28 +140,22 @@ internal object ZombieMechanic : MechanicInterface {
     /**
      * Inflicts slowness, hunger, and weakness on a player hit by a zombie.
      *
-     * @param event The EntityDamageByEntityEvent triggered when an entity damages another.
+     * @param player The player to affect.
      */
-    private fun infectiousTouch(event: EntityDamageByEntityEvent) {
-        if (event.damager !is Zombie) return
-        if (event.entity.world.difficulty != Difficulty.HARD) return
-        if (event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return
-
-        val player = event.entity as? Player ?: return
-
+    private fun infectiousTouch(player: Player) {
         infectiousEffects.forEach { player.addPotionEffect(it()) }
     }
 
     /**
      * Alerts nearby zombies to join the chase when a zombie targets a player.
      *
-     * @param event The EntityTargetLivingEntityEvent triggered when an entity targets another.
+     * @param zombie The zombie that targeted the player.
+     * @param target The player being targeted.
      */
-    private fun alertHorde(event: EntityTargetLivingEntityEvent) {
-        val zombie = event.entity as? Zombie ?: return
-        val target = event.target as? Player ?: return
-
-        if (event.entity.world.difficulty != Difficulty.HARD) return
+    private fun alertHorde(
+        zombie: Zombie,
+        target: Player,
+    ) {
         if (zombie.uniqueId in hordeCooldowns) return
 
         hordeCooldowns.add(zombie.uniqueId)
