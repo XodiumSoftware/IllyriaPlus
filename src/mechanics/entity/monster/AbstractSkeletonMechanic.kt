@@ -1,21 +1,21 @@
-package org.xodium.illyriaplus.mechanics.entity
+package org.xodium.illyriaplus.mechanics.entity.monster
 
 import org.bukkit.Difficulty
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeInstance
-import org.bukkit.entity.Skeleton
+import org.bukkit.entity.AbstractSkeleton
 import org.bukkit.entity.SkeletonHorse
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.CreatureSpawnEvent
-import org.xodium.illyriaplus.Utils.MM
+import org.xodium.illyriaplus.Utils
 import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 
-/** Represents a mechanic handling skeleton behavior and spawns within the system. */
-internal object SkeletonMechanic : MechanicInterface {
+/** Represents a mechanic handling all skeleton variants behavior and spawns within the system. */
+internal object AbstractSkeletonMechanic : MechanicInterface {
     private const val SKELETON_HORSE_CHANCE: Int = 5
     private const val SHOULD_BURN_IN_DAY: Boolean = false
 
@@ -33,12 +33,12 @@ internal object SkeletonMechanic : MechanicInterface {
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.SKELETON_SKULL)
-                .setName(MM.deserialize("<mango>Skeleton Mechanics</gradient>"))
+                .setName(Utils.MM.deserialize("<mango>Skeleton Mechanics</gradient>"))
                 .addLoreLines(
-                    MM.deserialize(""),
-                    MM.deserialize(
+                    Utils.MM.deserialize(""),
+                    Utils.MM.deserialize(
                         "<yellow>Undead Cavalry</yellow> <firewatch>></gradient> " +
-                            "<white>Skeletons have a $SKELETON_HORSE_CHANCE% " +
+                            "<white>All Skeletons types have a $SKELETON_HORSE_CHANCE% " +
                             "chance to spawn riding skeleton horses.</white>",
                     ),
                 ),
@@ -48,26 +48,26 @@ internal object SkeletonMechanic : MechanicInterface {
     fun on(event: CreatureSpawnEvent) {
         when {
             event.entity.world.difficulty != difficulty -> return
-            else -> modifySpawn(event.entity as? Skeleton ?: return)
+            else -> modifySpawn(event.entity as? AbstractSkeleton ?: return)
         }
     }
 
     /**
-     * Modifies a skeleton's attributes and enables skeleton horse mounts on Hard difficulty.
+     * Modifies a skeleton variant's attributes and enables skeleton horse mounts on Hard difficulty.
      *
-     * @param skeleton The skeleton to modify.
+     * @param skeleton The skeleton variant to modify.
      */
-    private fun modifySpawn(skeleton: Skeleton) {
+    private fun modifySpawn(skeleton: AbstractSkeleton) {
         skeleton.setShouldBurnInDay(SHOULD_BURN_IN_DAY)
         skeleton.spawnWithSkeletonHorse(SKELETON_HORSE_CHANCE)
     }
 
     /**
-     * Spawns a skeleton horse mount for the skeleton with a configurable chance.
+     * Spawns a skeleton horse mount for the skeleton variant with a configurable chance.
      *
-     * @param chance The percentage chance for the skeleton to spawn riding a skeleton horse.
+     * @param chance The percentage chance for the skeleton variant to spawn riding a skeleton horse.
      */
-    private fun Skeleton.spawnWithSkeletonHorse(chance: Int) {
+    private fun AbstractSkeleton.spawnWithSkeletonHorse(chance: Int) {
         if ((1..100).random() > chance) return
 
         world

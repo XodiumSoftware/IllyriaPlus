@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.mechanics.entity
+package org.xodium.illyriaplus.mechanics.entity.monster
 
 import org.bukkit.Difficulty
 import org.bukkit.Material
@@ -14,8 +14,8 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils.MM
+import org.xodium.illyriaplus.IllyriaPlus
+import org.xodium.illyriaplus.Utils
 import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
@@ -66,31 +66,31 @@ internal object ZombieMechanic : MechanicInterface {
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.ZOMBIE_HEAD)
-                .setName(MM.deserialize("<mango>Zombie Mechanics</gradient>"))
+                .setName(Utils.MM.deserialize("<mango>Zombie Mechanics</gradient>"))
                 .addLoreLines(
-                    MM.deserialize(""),
-                    MM.deserialize(
+                    Utils.MM.deserialize(""),
+                    Utils.MM.deserialize(
                         "<yellow>Horde Alert</yellow> <firewatch>></gradient> <white>When a zombie spots a player, " +
                             "it alerts nearby zombies within $HORDE_RADIUS blocks to join the chase.</white>",
                     ),
-                    MM.deserialize(
+                    Utils.MM.deserialize(
                         "<yellow>Door Breaking</yellow> <firewatch>></gradient> " +
                             "<white>Zombies can break wooden doors on Hard difficulty.</white>",
                     ),
-                    MM.deserialize(
+                    Utils.MM.deserialize(
                         "<yellow>Undead Cavalry</yellow> <firewatch>></gradient> " +
                             "<white>Zombies have a $ZOMBIE_HORSE_CHANCE% chance to spawn riding zombie horses.</white>",
                     ),
-                    MM.deserialize(
+                    Utils.MM.deserialize(
                         "<yellow>Attribute Modifiers</yellow> <firewatch>></gradient> " +
                             "<white>+30-70% speed/health/dmg/range, +0.5-1.0 KB, +30-70% KB resist, " +
                             "+2-6 armor, +1-3 toughness, +500% reinforcements, +0-30% size.</white>",
                     ),
-                    MM.deserialize(
+                    Utils.MM.deserialize(
                         "<yellow>Infectious Touch</yellow> <firewatch>></gradient> " +
                             "<white>Zombie melee hits inflict slowness, hunger, and weakness.</white>",
                     ),
-                    MM.deserialize(
+                    Utils.MM.deserialize(
                         "<yellow>Daylight Immunity</yellow> <firewatch>></gradient> " +
                             "<white>Zombies do not burn in sunlight.</white>",
                     ),
@@ -159,8 +159,8 @@ internal object ZombieMechanic : MechanicInterface {
         if (zombie.uniqueId in hordeCooldowns) return
 
         hordeCooldowns.add(zombie.uniqueId)
-        instance.server.scheduler.runTaskLater(
-            instance,
+        IllyriaPlus.instance.server.scheduler.runTaskLater(
+            IllyriaPlus.instance,
             Runnable { hordeCooldowns.remove(zombie.uniqueId) },
             HORDE_COOLDOWN_TICKS,
         )

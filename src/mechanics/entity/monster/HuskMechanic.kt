@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.mechanics.entity
+package org.xodium.illyriaplus.mechanics.entity.monster
 
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -7,7 +7,7 @@ import org.bukkit.entity.Husk
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
-import org.xodium.illyriaplus.Utils.MM
+import org.xodium.illyriaplus.Utils
 import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.interfaces.MechanicInterface
 import xyz.xenondevs.invui.item.Item
@@ -28,10 +28,10 @@ internal object HuskMechanic : MechanicInterface {
     override val faqItem =
         Item.simple(
             ItemBuilder(Material.SAND)
-                .setName(MM.deserialize("<mango>Husk Mechanics</gradient>"))
+                .setName(Utils.MM.deserialize("<mango>Husk Mechanics</gradient>"))
                 .addLoreLines(
-                    MM.deserialize(""),
-                    MM.deserialize(
+                    Utils.MM.deserialize(""),
+                    Utils.MM.deserialize(
                         "<yellow>Sand Drops</yellow> <firewatch>></gradient> <white>Drop 0-2 sand " +
                             "(+Looting, bonus on camel)</white>",
                     ),
