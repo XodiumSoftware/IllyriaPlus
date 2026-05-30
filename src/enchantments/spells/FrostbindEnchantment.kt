@@ -14,7 +14,7 @@ import org.bukkit.persistence.PersistentDataType
 import org.xodium.illyriaplus.IllyriaPlus
 import org.xodium.illyriaplus.Utils
 import org.xodium.illyriaplus.Utils.EnchantmentUtils.displayName
-import org.xodium.illyriaplus.interfaces.EnchantmentInterface
+import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 import org.xodium.illyriaplus.managers.XpManager
 
 /** Represents an object handling frostbind enchantment implementation within the system. */

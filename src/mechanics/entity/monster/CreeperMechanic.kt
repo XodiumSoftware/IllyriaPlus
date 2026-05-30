@@ -1,22 +1,20 @@
 package org.xodium.illyriaplus.mechanics.entity.monster
 
-import org.bukkit.Difficulty
 import org.bukkit.Material
 import org.bukkit.entity.Creeper
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.xodium.illyriaplus.Utils
 import org.xodium.illyriaplus.data.FaqTab
-import org.xodium.illyriaplus.interfaces.MechanicInterface
+import org.xodium.illyriaplus.mechanics.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling creeper behavior and spawns within the system. */
-internal object CreeperMechanic : MechanicInterface {
+internal object CreeperMechanic : MechanicInterface, MonsterInterface {
     private const val IS_POWERED: Boolean = true
 
     private val explosionRadiusRange: IntRange = 4..7
-    private val difficulty: Difficulty = Difficulty.HARD
 
     override val faqTab = FaqTab.ENTITY_MECHANIC
 

@@ -8,7 +8,7 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 import org.xodium.illyriaplus.Utils.EnchantmentUtils.displayName
-import org.xodium.illyriaplus.interfaces.EnchantmentInterface
+import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 
 /** Represents an object handling embertread enchantment implementation within the system. */
 @Suppress("UnstableApiUsage")

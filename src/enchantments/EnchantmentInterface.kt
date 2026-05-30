@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.interfaces
+package org.xodium.illyriaplus.enchantments
 
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
@@ -7,8 +7,8 @@ import io.papermc.paper.registry.data.EnchantmentRegistryEntry
 import net.kyori.adventure.key.Key
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.Listener
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.IllyriaPlusBootstrap.Companion.INSTANCE
+import org.xodium.illyriaplus.IllyriaPlus
+import org.xodium.illyriaplus.IllyriaPlusBootstrap
 import org.xodium.illyriaplus.Utils.toRegistryKeyFragment
 import kotlin.time.measureTime
 
@@ -18,12 +18,15 @@ internal interface EnchantmentInterface : Listener {
     /**
      * The unique typed key identifies this enchantment in the registry.
      *
-     * @see TypedKey
-     * @see RegistryKey.ENCHANTMENT
+     * @see io.papermc.paper.registry.TypedKey
+     * @see io.papermc.paper.registry.RegistryKey.ENCHANTMENT
      */
     val key: TypedKey<Enchantment>
         get() =
-            TypedKey.create(RegistryKey.ENCHANTMENT, Key.key(INSTANCE, javaClass.toRegistryKeyFragment<Enchantment>()))
+            TypedKey.create(
+                RegistryKey.ENCHANTMENT,
+                Key.key(IllyriaPlusBootstrap.INSTANCE, javaClass.toRegistryKeyFragment<Enchantment>()),
+            )
 
     /**
      * Configures the properties of the enchantment using the provided builder.
@@ -48,5 +51,8 @@ internal interface EnchantmentInterface : Listener {
      * @return Time taken to register in milliseconds.
      */
     fun register(): Long =
-        measureTime { instance.server.pluginManager.registerEvents(this, instance) }.inWholeMilliseconds
+        measureTime {
+            IllyriaPlus.instance.server.pluginManager
+                .registerEvents(this, IllyriaPlus.instance)
+        }.inWholeMilliseconds
 }

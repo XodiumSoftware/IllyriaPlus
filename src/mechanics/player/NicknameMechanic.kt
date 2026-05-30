@@ -17,7 +17,7 @@ import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.FaqTab
-import org.xodium.illyriaplus.interfaces.MechanicInterface
+import org.xodium.illyriaplus.mechanics.MechanicInterface
 import org.xodium.illyriaplus.mechanics.server.TabListMechanic.tablist
 import org.xodium.illyriaplus.pdcs.PlayerPDC.nickname
 import xyz.xenondevs.invui.item.Item

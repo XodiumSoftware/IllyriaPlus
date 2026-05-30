@@ -6,7 +6,7 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.server.ServerListPingEvent
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.FaqTab
-import org.xodium.illyriaplus.interfaces.MechanicInterface
+import org.xodium.illyriaplus.mechanics.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 

@@ -8,7 +8,6 @@ import org.bukkit.inventory.RecipeChoice
 import org.bukkit.inventory.ShapelessRecipe
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.interfaces.RecipeInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 

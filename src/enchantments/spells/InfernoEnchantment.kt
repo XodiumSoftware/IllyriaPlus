@@ -12,7 +12,7 @@ import org.xodium.illyriaplus.Utils
 import org.xodium.illyriaplus.Utils.EnchantmentUtils.displayName
 import org.xodium.illyriaplus.Utils.EnchantmentUtils.isSelectedSpell
 import org.xodium.illyriaplus.Utils.EnchantmentUtils.validateSpellCast
-import org.xodium.illyriaplus.interfaces.EnchantmentInterface
+import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 import org.xodium.illyriaplus.managers.XpManager
 import kotlin.uuid.ExperimentalUuidApi
 

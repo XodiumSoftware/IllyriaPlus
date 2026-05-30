@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.enchantments.spells.*
-import org.xodium.illyriaplus.interfaces.MechanicInterface
+import org.xodium.illyriaplus.mechanics.MechanicInterface
 import org.xodium.illyriaplus.pdcs.ItemStackPDC.selectedSpell
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder

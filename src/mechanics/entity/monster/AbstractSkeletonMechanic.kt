@@ -1,6 +1,5 @@
 package org.xodium.illyriaplus.mechanics.entity.monster
 
-import org.bukkit.Difficulty
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeInstance
@@ -10,16 +9,15 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.xodium.illyriaplus.Utils
 import org.xodium.illyriaplus.data.FaqTab
-import org.xodium.illyriaplus.interfaces.MechanicInterface
+import org.xodium.illyriaplus.mechanics.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling all skeleton variants behavior and spawns within the system. */
-internal object AbstractSkeletonMechanic : MechanicInterface {
+internal object AbstractSkeletonMechanic : MechanicInterface, MonsterInterface {
     private const val SKELETON_HORSE_CHANCE: Int = 5
     private const val SHOULD_BURN_IN_DAY: Boolean = false
 
-    private val difficulty: Difficulty = Difficulty.HARD
     private val skeletonHorseAttributes: Map<Attribute, (SkeletonHorse, AttributeInstance) -> Unit> =
         mapOf(
             Attribute.MOVEMENT_SPEED to { _, attr -> attr.baseValue *= (11..14).random() / 10.0 },

@@ -1,6 +1,5 @@
 package org.xodium.illyriaplus.mechanics.entity.monster
 
-import org.bukkit.Difficulty
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeInstance
@@ -17,35 +16,26 @@ import org.bukkit.potion.PotionEffectType
 import org.xodium.illyriaplus.IllyriaPlus
 import org.xodium.illyriaplus.Utils
 import org.xodium.illyriaplus.data.FaqTab
-import org.xodium.illyriaplus.interfaces.MechanicInterface
+import org.xodium.illyriaplus.mechanics.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 import java.util.*
 
 /** Represents a mechanic handling zombie behavior and drops within the system. */
-internal object ZombieMechanic : MechanicInterface {
+internal object ZombieMechanic : MechanicInterface, MonsterInterface {
     private const val HORDE_RADIUS: Double = 96.0
     private const val HORDE_COOLDOWN_TICKS: Long = 100
     private const val CAN_BREAK_DOOR: Boolean = true
     private const val SHOULD_BURN_IN_DAY: Boolean = false
     private const val ZOMBIE_HORSE_CHANCE: Int = 5
 
-    private val difficulty: Difficulty = Difficulty.HARD
     private val zombieAttributes: Map<Attribute, (Zombie, AttributeInstance) -> Unit> =
         mapOf(
-            Attribute.MOVEMENT_SPEED to { _, attr -> attr.baseValue *= (13..17).random() / 10.0 },
-            Attribute.MAX_HEALTH to { zombie, attr ->
-                attr.baseValue *= (15..20).random() / 10.0
-                zombie.health = attr.value
-            },
-            Attribute.ATTACK_DAMAGE to { _, attr -> attr.baseValue *= (13..17).random() / 10.0 },
-            Attribute.FOLLOW_RANGE to { _, attr -> attr.baseValue *= (13..17).random() / 10.0 },
             Attribute.ATTACK_KNOCKBACK to { _, attr -> attr.baseValue = (5..10).random() / 10.0 },
             Attribute.KNOCKBACK_RESISTANCE to { _, attr -> attr.baseValue = (3..7).random() / 10.0 },
             Attribute.ARMOR to { _, attr -> attr.baseValue = (2..6).random().toDouble() },
             Attribute.ARMOR_TOUGHNESS to { _, attr -> attr.baseValue = (1..3).random().toDouble() },
             Attribute.SPAWN_REINFORCEMENTS to { _, attr -> attr.baseValue = 5.0 },
-            Attribute.SCALE to { _, attr -> attr.baseValue *= (10..13).random() / 10.0 },
         )
     private val zombieHorseAttributes: Map<Attribute, (ZombieHorse, AttributeInstance) -> Unit> =
         mapOf(
@@ -83,8 +73,8 @@ internal object ZombieMechanic : MechanicInterface {
                     ),
                     Utils.MM.deserialize(
                         "<yellow>Attribute Modifiers</yellow> <firewatch>></gradient> " +
-                            "<white>+30-70% speed/health/dmg/range, +0.5-1.0 KB, +30-70% KB resist, " +
-                            "+2-6 armor, +1-3 toughness, +500% reinforcements, +0-30% size.</white>",
+                            "<white>+0.5-1.0 KB, +30-70% KB resist, " +
+                            "+2-6 armor, +1-3 toughness, +500% reinforcements.</white>",
                     ),
                     Utils.MM.deserialize(
                         "<yellow>Infectious Touch</yellow> <firewatch>></gradient> " +

@@ -7,7 +7,7 @@ import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.inventory.ItemStack
-import org.xodium.illyriaplus.interfaces.EnchantmentInterface
+import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 
 /** Represents an object handling silk touch enchantment implementation within the system. */
 internal object SilkTouchEnchantment : EnchantmentInterface {

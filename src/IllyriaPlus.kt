@@ -7,10 +7,7 @@ import org.xodium.illyriaplus.enchantments.vanilla.FeatherFallingEnchantment
 import org.xodium.illyriaplus.enchantments.vanilla.SilkTouchEnchantment
 import org.xodium.illyriaplus.guis.FaqGui
 import org.xodium.illyriaplus.mechanics.entity.*
-import org.xodium.illyriaplus.mechanics.entity.monster.AbstractSkeletonMechanic
-import org.xodium.illyriaplus.mechanics.entity.monster.CreeperMechanic
-import org.xodium.illyriaplus.mechanics.entity.monster.HuskMechanic
-import org.xodium.illyriaplus.mechanics.entity.monster.ZombieMechanic
+import org.xodium.illyriaplus.mechanics.entity.monster.*
 import org.xodium.illyriaplus.mechanics.player.*
 import org.xodium.illyriaplus.mechanics.server.*
 import org.xodium.illyriaplus.mechanics.world.*
@@ -61,6 +58,7 @@ internal class IllyriaPlus : JavaPlugin() {
                 TameableMechanic,
                 EnderchestMechanic,
                 XpMechanic,
+                MonsterMechanic,
                 HuskMechanic,
                 ZombieMechanic,
                 AbstractSkeletonMechanic,

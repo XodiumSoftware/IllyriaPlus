@@ -18,7 +18,7 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.util.Vector
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.FaqTab
-import org.xodium.illyriaplus.interfaces.MechanicInterface
+import org.xodium.illyriaplus.mechanics.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 import org.bukkit.block.data.type.ChiseledBookshelf as ChiseledBookshelfData
