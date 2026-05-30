@@ -1,10 +1,13 @@
 package org.xodium.illyriaplus.mechanics.entity.monster
 
 import org.bukkit.Material
+import org.bukkit.attribute.Attribute
+import org.bukkit.attribute.AttributeInstance
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Camel
 import org.bukkit.entity.Husk
 import org.bukkit.event.EventHandler
+import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
 import org.xodium.illyriaplus.Utils
@@ -15,13 +18,19 @@ import xyz.xenondevs.invui.item.ItemBuilder
 import kotlin.random.Random
 
 /** Represents a mechanic handling husk drops within the system. */
-internal object HuskMechanic : MechanicInterface {
+internal object HuskMechanic : MechanicInterface, MonsterInterface {
     private const val HUSK_SAND_DROP_CHANCE: Double = 1.0
     private const val HUSK_SAND_BASE_MIN: Int = 0
     private const val HUSK_SAND_BASE_MAX: Int = 2
     private const val HUSK_SAND_LOOTING_BONUS: Int = 1
     private const val CAMEL_HUSK_SAND_BASE_MAX: Int = 3
     private const val CAMEL_HUSK_SAND_LOOTING_BONUS: Int = 2
+
+    private val huskAttributes: Map<Attribute, (Husk, AttributeInstance) -> Unit> =
+        mapOf(
+            Attribute.ARMOR to { _, attr -> attr.baseValue = (2..4).random().toDouble() },
+            Attribute.KNOCKBACK_RESISTANCE to { _, attr -> attr.baseValue = (3..6).random() / 10.0 },
+        )
 
     override val faqTab = FaqTab.ENTITY_MECHANIC
 
@@ -35,11 +44,34 @@ internal object HuskMechanic : MechanicInterface {
                         "<yellow>Sand Drops</yellow> <firewatch>></gradient> <white>Drop 0-2 sand " +
                             "(+Looting, bonus on camel)</white>",
                     ),
+                    Utils.MM.deserialize(
+                        "<yellow>Attribute Modifiers</yellow> <firewatch>></gradient> " +
+                            "<white>+2-4 armor, +30-60% KB resist.</white>",
+                    ),
                 ),
         )
 
+    @EventHandler(ignoreCancelled = true)
+    fun on(event: CreatureSpawnEvent) {
+        when {
+            event.entity.world.difficulty != difficulty -> return
+            else -> modifySpawn(event.entity as? Husk ?: return)
+        }
+    }
+
     @EventHandler
     fun on(event: EntityDeathEvent) = huskDrop(event)
+
+    /**
+     * Modifies a husk's attributes on Hard difficulty.
+     *
+     * @param husk The husk to modify.
+     */
+    private fun modifySpawn(husk: Husk) {
+        huskAttributes.forEach { (attribute, apply) ->
+            husk.getAttribute(attribute)?.let { apply(husk, it) }
+        }
+    }
 
     /**
      * Handles husk death drops.

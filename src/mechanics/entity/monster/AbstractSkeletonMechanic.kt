@@ -18,6 +18,11 @@ internal object AbstractSkeletonMechanic : MechanicInterface, MonsterInterface {
     private const val SKELETON_HORSE_CHANCE: Int = 5
     private const val SHOULD_BURN_IN_DAY: Boolean = false
 
+    private val skeletonAttributes: Map<Attribute, (AbstractSkeleton, AttributeInstance) -> Unit> =
+        mapOf(
+            Attribute.ARMOR to { _, attr -> attr.baseValue = (1..3).random().toDouble() },
+            Attribute.ARMOR_TOUGHNESS to { _, attr -> attr.baseValue = (1..2).random().toDouble() },
+        )
     private val skeletonHorseAttributes: Map<Attribute, (SkeletonHorse, AttributeInstance) -> Unit> =
         mapOf(
             Attribute.MOVEMENT_SPEED to { _, attr -> attr.baseValue *= (11..14).random() / 10.0 },
@@ -39,6 +44,10 @@ internal object AbstractSkeletonMechanic : MechanicInterface, MonsterInterface {
                             "<white>All Skeletons types have a $SKELETON_HORSE_CHANCE% " +
                             "chance to spawn riding skeleton horses.</white>",
                     ),
+                    Utils.MM.deserialize(
+                        "<yellow>Attribute Modifiers</yellow> <firewatch>></gradient> " +
+                            "<white>+1-3 armor, +1-2 toughness.</white>",
+                    ),
                 ),
         )
 
@@ -58,6 +67,9 @@ internal object AbstractSkeletonMechanic : MechanicInterface, MonsterInterface {
     private fun modifySpawn(skeleton: AbstractSkeleton) {
         skeleton.setShouldBurnInDay(SHOULD_BURN_IN_DAY)
         skeleton.spawnWithSkeletonHorse(SKELETON_HORSE_CHANCE)
+        skeletonAttributes.forEach { (attribute, apply) ->
+            skeleton.getAttribute(attribute)?.let { apply(skeleton, it) }
+        }
     }
 
     /**

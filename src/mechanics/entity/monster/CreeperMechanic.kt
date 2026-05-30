@@ -1,6 +1,8 @@
 package org.xodium.illyriaplus.mechanics.entity.monster
 
 import org.bukkit.Material
+import org.bukkit.attribute.Attribute
+import org.bukkit.attribute.AttributeInstance
 import org.bukkit.entity.Creeper
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.CreatureSpawnEvent
@@ -14,6 +16,10 @@ import xyz.xenondevs.invui.item.ItemBuilder
 internal object CreeperMechanic : MechanicInterface, MonsterInterface {
     private const val IS_POWERED: Boolean = true
 
+    private val creeperAttributes: Map<Attribute, (Creeper, AttributeInstance) -> Unit> =
+        mapOf(
+            Attribute.KNOCKBACK_RESISTANCE to { _, attr -> attr.baseValue = (2..5).random() / 10.0 },
+        )
     private val explosionRadiusRange: IntRange = 4..7
 
     override val faqTab = FaqTab.ENTITY_MECHANIC
@@ -31,6 +37,10 @@ internal object CreeperMechanic : MechanicInterface, MonsterInterface {
                     Utils.MM.deserialize(
                         "<yellow>Volatile Payload</yellow> <firewatch>></gradient> " +
                             "<white>Creeper explosion radius is increased to ${explosionRadiusRange.first}-${explosionRadiusRange.last} blocks.</white>",
+                    ),
+                    Utils.MM.deserialize(
+                        "<yellow>Attribute Modifiers</yellow> <firewatch>></gradient> " +
+                            "<white>+20-50% KB resist.</white>",
                     ),
                 ),
         )
@@ -51,5 +61,8 @@ internal object CreeperMechanic : MechanicInterface, MonsterInterface {
     private fun modifySpawn(creeper: Creeper) {
         creeper.isPowered = IS_POWERED
         creeper.explosionRadius = explosionRadiusRange.random()
+        creeperAttributes.forEach { (attribute, apply) ->
+            creeper.getAttribute(attribute)?.let { apply(creeper, it) }
+        }
     }
 }
