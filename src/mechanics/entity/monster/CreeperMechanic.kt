@@ -8,13 +8,11 @@ import org.bukkit.entity.Monster
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.xodium.illyriaplus.Utils
-import org.xodium.illyriaplus.data.FaqTab
-import org.xodium.illyriaplus.mechanics.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling creeper behavior and spawns within the system. */
-internal object CreeperMechanic : MechanicInterface, MonsterInterface {
+internal object CreeperMechanic : MonsterInterface {
     private const val IS_POWERED: Boolean = true
 
     private val explosionRadiusRange: IntRange = 4..7
@@ -23,8 +21,6 @@ internal object CreeperMechanic : MechanicInterface, MonsterInterface {
         mapOf(
             Attribute.KNOCKBACK_RESISTANCE to { _, attr -> attr.baseValue = (2..5).random() / 10.0 },
         )
-
-    override val faqTab = FaqTab.ENTITY_MECHANIC
 
     override val faqItem =
         Item.simple(

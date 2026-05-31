@@ -13,14 +13,13 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.xodium.illyriaplus.IllyriaPlus
 import org.xodium.illyriaplus.Utils
-import org.xodium.illyriaplus.data.FaqTab
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriaplus.Utils.MonsterUtils.trySpawnMount
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 import java.util.*
 
 /** Represents a mechanic handling zombie behavior and drops within the system. */
-internal object ZombieMechanic : MechanicInterface, MonsterInterface {
+internal object ZombieMechanic : MonsterInterface {
     private const val HORDE_RADIUS: Double = 96.0
     private const val HORDE_COOLDOWN_TICKS: Long = 100
     private const val CAN_BREAK_DOOR: Boolean = true
@@ -49,8 +48,6 @@ internal object ZombieMechanic : MechanicInterface, MonsterInterface {
             Attribute.JUMP_STRENGTH to { _, attr -> attr.baseValue *= (11..14).random() / 10.0 },
             Attribute.ARMOR to { _, attr -> attr.baseValue = (2..5).random().toDouble() },
         )
-
-    override val faqTab = FaqTab.ENTITY_MECHANIC
 
     override val faqItem =
         Item.simple(
@@ -117,7 +114,7 @@ internal object ZombieMechanic : MechanicInterface, MonsterInterface {
         (monster as Zombie).apply {
             setCanBreakDoors(CAN_BREAK_DOOR)
             setShouldBurnInDay(SHOULD_BURN_IN_DAY)
-            spawnWithZombieHorse(ZOMBIE_HORSE_CHANCE)
+            trySpawnMount<ZombieHorse>(ZOMBIE_HORSE_CHANCE, horseAttributes)
         }
     }
 
@@ -154,22 +151,5 @@ internal object ZombieMechanic : MechanicInterface, MonsterInterface {
             .filterIsInstance<Zombie>()
             .filter { it.uniqueId != zombie.uniqueId && it.target != target }
             .forEach { it.target = target }
-    }
-
-    /**
-     * Spawns a zombie horse mount for the zombie with a configurable chance.
-     *
-     * @param chance The percentage chance for the zombie to spawn riding a zombie horse.
-     */
-    private fun Zombie.spawnWithZombieHorse(chance: Int) {
-        if ((1..100).random() > chance) return
-
-        world
-            .spawn(location, ZombieHorse::class.java) { horse ->
-                horse.isTamed = true
-                horseAttributes.forEach { (attribute, apply) ->
-                    horse.getAttribute(attribute)?.let { apply(horse, it) }
-                }
-            }.addPassenger(this)
     }
 }

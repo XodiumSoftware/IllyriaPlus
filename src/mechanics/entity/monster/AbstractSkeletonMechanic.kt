@@ -10,13 +10,12 @@ import org.bukkit.entity.SkeletonHorse
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.xodium.illyriaplus.Utils
-import org.xodium.illyriaplus.data.FaqTab
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriaplus.Utils.MonsterUtils.trySpawnMount
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling all skeleton variants behavior and spawns within the system. */
-internal object AbstractSkeletonMechanic : MechanicInterface, MonsterInterface {
+internal object AbstractSkeletonMechanic : MonsterInterface {
     private const val SKELETON_HORSE_CHANCE: Int = 5
     private const val SHOULD_BURN_IN_DAY: Boolean = false
 
@@ -33,8 +32,6 @@ internal object AbstractSkeletonMechanic : MechanicInterface, MonsterInterface {
             Attribute.ARMOR to { _, attr -> attr.baseValue = (1..4).random().toDouble() },
             Attribute.SAFE_FALL_DISTANCE to { _, attr -> attr.baseValue *= (11..14).random() / 10.0 },
         )
-
-    override val faqTab = FaqTab.ENTITY_MECHANIC
 
     override val faqItem =
         Item.simple(
@@ -66,24 +63,7 @@ internal object AbstractSkeletonMechanic : MechanicInterface, MonsterInterface {
         super.modifySpawn(monster)
         (monster as AbstractSkeleton).apply {
             setShouldBurnInDay(SHOULD_BURN_IN_DAY)
-            spawnWithSkeletonHorse(SKELETON_HORSE_CHANCE)
+            trySpawnMount<SkeletonHorse>(SKELETON_HORSE_CHANCE, horseAttributes)
         }
-    }
-
-    /**
-     * Spawns a skeleton horse mount for the skeleton variant with a configurable chance.
-     *
-     * @param chance The percentage chance for the skeleton variant to spawn riding a skeleton horse.
-     */
-    private fun AbstractSkeleton.spawnWithSkeletonHorse(chance: Int) {
-        if ((1..100).random() > chance) return
-
-        world
-            .spawn(location, SkeletonHorse::class.java) { horse ->
-                horse.isTamed = true
-                horseAttributes.forEach { (attribute, apply) ->
-                    horse.getAttribute(attribute)?.let { apply(horse, it) }
-                }
-            }.addPassenger(this)
     }
 }

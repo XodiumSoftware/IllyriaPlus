@@ -12,14 +12,12 @@ import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
 import org.xodium.illyriaplus.Utils
-import org.xodium.illyriaplus.data.FaqTab
-import org.xodium.illyriaplus.mechanics.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 import kotlin.random.Random
 
 /** Represents a mechanic handling husk drops within the system. */
-internal object HuskMechanic : MechanicInterface, MonsterInterface {
+internal object HuskMechanic : MonsterInterface {
     private const val HUSK_SAND_DROP_CHANCE: Double = 1.0
     private const val HUSK_SAND_BASE_MIN: Int = 0
     private const val HUSK_SAND_BASE_MAX: Int = 2
@@ -32,8 +30,6 @@ internal object HuskMechanic : MechanicInterface, MonsterInterface {
             Attribute.ARMOR to { _, attr -> attr.baseValue = (2..4).random().toDouble() },
             Attribute.KNOCKBACK_RESISTANCE to { _, attr -> attr.baseValue = (3..6).random() / 10.0 },
         )
-
-    override val faqTab = FaqTab.ENTITY_MECHANIC
 
     override val faqItem =
         Item.simple(

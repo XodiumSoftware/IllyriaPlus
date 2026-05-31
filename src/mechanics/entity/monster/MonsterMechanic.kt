@@ -7,13 +7,11 @@ import org.bukkit.entity.Monster
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.xodium.illyriaplus.Utils
-import org.xodium.illyriaplus.data.FaqTab
-import org.xodium.illyriaplus.mechanics.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling global attribute multipliers for all monsters on Hard difficulty. */
-internal object MonsterMechanic : MechanicInterface, MonsterInterface {
+internal object MonsterMechanic : MonsterInterface {
     override val attributes: Map<Attribute, (Monster, AttributeInstance) -> Unit> =
         mapOf(
             Attribute.MOVEMENT_SPEED to { _, attr -> attr.baseValue *= (13..17).random() / 10.0 },
@@ -25,8 +23,6 @@ internal object MonsterMechanic : MechanicInterface, MonsterInterface {
             Attribute.FOLLOW_RANGE to { _, attr -> attr.baseValue *= (13..17).random() / 10.0 },
             Attribute.SCALE to { _, attr -> attr.baseValue *= (10..13).random() / 10.0 },
         )
-
-    override val faqTab = FaqTab.ENTITY_MECHANIC
 
     override val faqItem =
         Item.simple(

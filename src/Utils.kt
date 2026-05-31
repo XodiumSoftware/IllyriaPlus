@@ -13,14 +13,14 @@ import net.kyori.adventure.text.minimessage.tag.Tag
 import org.bukkit.Chunk
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.attribute.Attribute
+import org.bukkit.attribute.AttributeInstance
 import org.bukkit.block.Block
 import org.bukkit.block.Chest
 import org.bukkit.block.Container
 import org.bukkit.block.DoubleChest
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.Entity
-import org.bukkit.entity.Player
-import org.bukkit.entity.Tameable
+import org.bukkit.entity.*
 import org.bukkit.event.block.Action
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitTask
@@ -289,5 +289,30 @@ internal object Utils {
             getNearbyEntities(radius, radius, radius)
                 .filterIsInstance<Tameable>()
                 .firstOrNull { it.isLeashed && it.leashHolder == this }
+    }
+
+    /** Monster-related utilities. */
+    object MonsterUtils {
+        /**
+         * Spawns an [AbstractHorse] mount for this [Monster] with a configurable chance,
+         * then applies [attributes] to the horse and makes this monster its passenger.
+         *
+         * @param H The concrete horse type to spawn.
+         * @param chance The percentage chance for the mount to spawn.
+         * @param attributes A map of attribute mutations to apply to the spawned horse.
+         */
+        inline fun <reified H : AbstractHorse> Monster.trySpawnMount(
+            chance: Int,
+            attributes: Map<Attribute, (AbstractHorse, AttributeInstance) -> Unit>,
+        ) {
+            if ((1..100).random() > chance) return
+            world
+                .spawn(location, H::class.java) { horse ->
+                    horse.isTamed = true
+                    attributes.forEach { (attribute, apply) ->
+                        horse.getAttribute(attribute)?.let { apply(horse, it) }
+                    }
+                }.addPassenger(this)
+        }
     }
 }
