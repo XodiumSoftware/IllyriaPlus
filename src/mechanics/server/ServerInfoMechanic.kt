@@ -2,7 +2,7 @@ package org.xodium.illyriaplus.mechanics.server
 
 import org.bukkit.Material
 import org.bukkit.ServerLinks
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
+import org.xodium.illyriaplus.IllyriaPlus
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.mechanics.MechanicInterface
@@ -37,11 +37,12 @@ internal object ServerInfoMechanic : MechanicInterface {
                 ),
         )
 
-    override fun register(): Long = super.register() + measureTime { serverLinks() }.inWholeMilliseconds
-
-    /** Configures server links based on the module's configuration. */
-    private fun serverLinks() =
-        SERVER_LINKS.forEach { (type, url) ->
-            instance.server.serverLinks.setLink(type, URI.create(url))
-        }
+    override fun register(): Long =
+        super.register() +
+            measureTime {
+                SERVER_LINKS.forEach { (type, url) ->
+                    IllyriaPlus.instance.server.serverLinks
+                        .setLink(type, URI.create(url))
+                }
+            }.inWholeMilliseconds
 }

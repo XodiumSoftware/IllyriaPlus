@@ -1,14 +1,13 @@
 package org.xodium.illyriaplus.mechanics.server
 
 import org.bukkit.Material
-import org.bukkit.event.EventHandler
-import org.bukkit.event.EventPriority
-import org.bukkit.event.server.ServerListPingEvent
+import org.xodium.illyriaplus.IllyriaPlus
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
+import kotlin.time.measureTime
 
 /** Represents a mechanic handling server MOTD within the system. */
 internal object MotdMechanic : MechanicInterface {
@@ -32,8 +31,9 @@ internal object MotdMechanic : MechanicInterface {
                 ),
         )
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    fun on(event: ServerListPingEvent) {
-        event.motd(MM.deserialize(MOTD.joinToString("\n")))
-    }
+    override fun register(): Long =
+        super.register() +
+            measureTime {
+                IllyriaPlus.instance.server.motd((MM.deserialize(MOTD.joinToString("\n"))))
+            }.inWholeMilliseconds
 }
