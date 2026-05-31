@@ -6,6 +6,7 @@ import org.bukkit.attribute.AttributeInstance
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Camel
 import org.bukkit.entity.Husk
+import org.bukkit.entity.Monster
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityDeathEvent
@@ -26,7 +27,7 @@ internal object HuskMechanic : MechanicInterface, MonsterInterface {
     private const val CAMEL_HUSK_SAND_BASE_MAX: Int = 3
     private const val CAMEL_HUSK_SAND_LOOTING_BONUS: Int = 2
 
-    private val huskAttributes: Map<Attribute, (Husk, AttributeInstance) -> Unit> =
+    override val attributes: Map<Attribute, (Monster, AttributeInstance) -> Unit> =
         mapOf(
             Attribute.ARMOR to { _, attr -> attr.baseValue = (2..4).random().toDouble() },
             Attribute.KNOCKBACK_RESISTANCE to { _, attr -> attr.baseValue = (3..6).random() / 10.0 },
@@ -61,17 +62,6 @@ internal object HuskMechanic : MechanicInterface, MonsterInterface {
 
     @EventHandler
     fun on(event: EntityDeathEvent) = huskDrop(event)
-
-    /**
-     * Modifies a husk's attributes on Hard difficulty.
-     *
-     * @param husk The husk to modify.
-     */
-    private fun modifySpawn(husk: Husk) {
-        huskAttributes.forEach { (attribute, apply) ->
-            husk.getAttribute(attribute)?.let { apply(husk, it) }
-        }
-    }
 
     /**
      * Handles husk death drops.

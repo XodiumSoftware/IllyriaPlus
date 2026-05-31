@@ -3,9 +3,7 @@ package org.xodium.illyriaplus.mechanics.entity.monster
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeInstance
-import org.bukkit.entity.Player
-import org.bukkit.entity.Zombie
-import org.bukkit.entity.ZombieHorse
+import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -29,20 +27,6 @@ internal object ZombieMechanic : MechanicInterface, MonsterInterface {
     private const val SHOULD_BURN_IN_DAY: Boolean = false
     private const val ZOMBIE_HORSE_CHANCE: Int = 5
 
-    private val zombieAttributes: Map<Attribute, (Zombie, AttributeInstance) -> Unit> =
-        mapOf(
-            Attribute.ATTACK_KNOCKBACK to { _, attr -> attr.baseValue = (5..10).random() / 10.0 },
-            Attribute.KNOCKBACK_RESISTANCE to { _, attr -> attr.baseValue = (3..7).random() / 10.0 },
-            Attribute.ARMOR to { _, attr -> attr.baseValue = (2..6).random().toDouble() },
-            Attribute.ARMOR_TOUGHNESS to { _, attr -> attr.baseValue = (1..3).random().toDouble() },
-            Attribute.SPAWN_REINFORCEMENTS to { _, attr -> attr.baseValue = 5.0 },
-        )
-    private val zombieHorseAttributes: Map<Attribute, (ZombieHorse, AttributeInstance) -> Unit> =
-        mapOf(
-            Attribute.MOVEMENT_SPEED to { _, attr -> attr.baseValue *= (12..16).random() / 10.0 },
-            Attribute.JUMP_STRENGTH to { _, attr -> attr.baseValue *= (11..14).random() / 10.0 },
-            Attribute.ARMOR to { _, attr -> attr.baseValue = (2..5).random().toDouble() },
-        )
     private val infectiousEffects: List<() -> PotionEffect> =
         listOf(
             { PotionEffect(PotionEffectType.SLOWNESS, (60..100).random(), 0, false, true, true) },
@@ -50,6 +34,21 @@ internal object ZombieMechanic : MechanicInterface, MonsterInterface {
             { PotionEffect(PotionEffectType.WEAKNESS, (100..180).random(), 0, false, true, true) },
         )
     private val hordeCooldowns: MutableSet<UUID> = mutableSetOf()
+
+    override val attributes: Map<Attribute, (Monster, AttributeInstance) -> Unit> =
+        mapOf(
+            Attribute.ATTACK_KNOCKBACK to { _, attr -> attr.baseValue = (5..10).random() / 10.0 },
+            Attribute.KNOCKBACK_RESISTANCE to { _, attr -> attr.baseValue = (3..7).random() / 10.0 },
+            Attribute.ARMOR to { _, attr -> attr.baseValue = (2..6).random().toDouble() },
+            Attribute.ARMOR_TOUGHNESS to { _, attr -> attr.baseValue = (1..3).random().toDouble() },
+            Attribute.SPAWN_REINFORCEMENTS to { _, attr -> attr.baseValue = 5.0 },
+        )
+    override val horseAttributes: Map<Attribute, (AbstractHorse, AttributeInstance) -> Unit> =
+        mapOf(
+            Attribute.MOVEMENT_SPEED to { _, attr -> attr.baseValue *= (12..16).random() / 10.0 },
+            Attribute.JUMP_STRENGTH to { _, attr -> attr.baseValue *= (11..14).random() / 10.0 },
+            Attribute.ARMOR to { _, attr -> attr.baseValue = (2..5).random().toDouble() },
+        )
 
     override val faqTab = FaqTab.ENTITY_MECHANIC
 
@@ -113,17 +112,12 @@ internal object ZombieMechanic : MechanicInterface, MonsterInterface {
         }
     }
 
-    /**
-     * Modifies a zombie's base speed and enables door-breaking on Hard difficulty.
-     *
-     * @param zombie The zombie to modify.
-     */
-    private fun modifySpawn(zombie: Zombie) {
-        zombie.setCanBreakDoors(CAN_BREAK_DOOR)
-        zombie.setShouldBurnInDay(SHOULD_BURN_IN_DAY)
-        zombie.spawnWithZombieHorse(ZOMBIE_HORSE_CHANCE)
-        zombieAttributes.forEach { (attribute, apply) ->
-            zombie.getAttribute(attribute)?.let { apply(zombie, it) }
+    override fun modifySpawn(monster: Monster) {
+        super.modifySpawn(monster)
+        (monster as Zombie).apply {
+            setCanBreakDoors(CAN_BREAK_DOOR)
+            setShouldBurnInDay(SHOULD_BURN_IN_DAY)
+            spawnWithZombieHorse(ZOMBIE_HORSE_CHANCE)
         }
     }
 
@@ -173,7 +167,7 @@ internal object ZombieMechanic : MechanicInterface, MonsterInterface {
         world
             .spawn(location, ZombieHorse::class.java) { horse ->
                 horse.isTamed = true
-                zombieHorseAttributes.forEach { (attribute, apply) ->
+                horseAttributes.forEach { (attribute, apply) ->
                     horse.getAttribute(attribute)?.let { apply(horse, it) }
                 }
             }.addPassenger(this)

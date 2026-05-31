@@ -14,7 +14,7 @@ import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling global attribute multipliers for all monsters on Hard difficulty. */
 internal object MonsterMechanic : MechanicInterface, MonsterInterface {
-    private val monsterAttributes: Map<Attribute, (Monster, AttributeInstance) -> Unit> =
+    override val attributes: Map<Attribute, (Monster, AttributeInstance) -> Unit> =
         mapOf(
             Attribute.MOVEMENT_SPEED to { _, attr -> attr.baseValue *= (13..17).random() / 10.0 },
             Attribute.MAX_HEALTH to { monster, attr ->
@@ -47,17 +47,6 @@ internal object MonsterMechanic : MechanicInterface, MonsterInterface {
         when {
             event.entity.world.difficulty != difficulty -> return
             else -> modifySpawn(event.entity as? Monster ?: return)
-        }
-    }
-
-    /**
-     * Applies global multiplier attributes to a monster on Hard difficulty.
-     *
-     * @param monster The monster to modify.
-     */
-    private fun modifySpawn(monster: Monster) {
-        monsterAttributes.forEach { (attribute, apply) ->
-            monster.getAttribute(attribute)?.let { apply(monster, it) }
         }
     }
 }

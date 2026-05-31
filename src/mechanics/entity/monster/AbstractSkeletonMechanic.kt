@@ -3,7 +3,9 @@ package org.xodium.illyriaplus.mechanics.entity.monster
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeInstance
+import org.bukkit.entity.AbstractHorse
 import org.bukkit.entity.AbstractSkeleton
+import org.bukkit.entity.Monster
 import org.bukkit.entity.SkeletonHorse
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.CreatureSpawnEvent
@@ -18,12 +20,13 @@ internal object AbstractSkeletonMechanic : MechanicInterface, MonsterInterface {
     private const val SKELETON_HORSE_CHANCE: Int = 5
     private const val SHOULD_BURN_IN_DAY: Boolean = false
 
-    private val skeletonAttributes: Map<Attribute, (AbstractSkeleton, AttributeInstance) -> Unit> =
+    override val attributes: Map<Attribute, (Monster, AttributeInstance) -> Unit> =
         mapOf(
             Attribute.ARMOR to { _, attr -> attr.baseValue = (1..3).random().toDouble() },
             Attribute.ARMOR_TOUGHNESS to { _, attr -> attr.baseValue = (1..2).random().toDouble() },
         )
-    private val skeletonHorseAttributes: Map<Attribute, (SkeletonHorse, AttributeInstance) -> Unit> =
+
+    override val horseAttributes: Map<Attribute, (AbstractHorse, AttributeInstance) -> Unit> =
         mapOf(
             Attribute.MOVEMENT_SPEED to { _, attr -> attr.baseValue *= (11..14).random() / 10.0 },
             Attribute.JUMP_STRENGTH to { _, attr -> attr.baseValue *= (10..13).random() / 10.0 },
@@ -59,16 +62,11 @@ internal object AbstractSkeletonMechanic : MechanicInterface, MonsterInterface {
         }
     }
 
-    /**
-     * Modifies a skeleton variant's attributes and enables skeleton horse mounts on Hard difficulty.
-     *
-     * @param skeleton The skeleton variant to modify.
-     */
-    private fun modifySpawn(skeleton: AbstractSkeleton) {
-        skeleton.setShouldBurnInDay(SHOULD_BURN_IN_DAY)
-        skeleton.spawnWithSkeletonHorse(SKELETON_HORSE_CHANCE)
-        skeletonAttributes.forEach { (attribute, apply) ->
-            skeleton.getAttribute(attribute)?.let { apply(skeleton, it) }
+    override fun modifySpawn(monster: Monster) {
+        super.modifySpawn(monster)
+        (monster as AbstractSkeleton).apply {
+            setShouldBurnInDay(SHOULD_BURN_IN_DAY)
+            spawnWithSkeletonHorse(SKELETON_HORSE_CHANCE)
         }
     }
 
@@ -83,7 +81,7 @@ internal object AbstractSkeletonMechanic : MechanicInterface, MonsterInterface {
         world
             .spawn(location, SkeletonHorse::class.java) { horse ->
                 horse.isTamed = true
-                skeletonHorseAttributes.forEach { (attribute, apply) ->
+                horseAttributes.forEach { (attribute, apply) ->
                     horse.getAttribute(attribute)?.let { apply(horse, it) }
                 }
             }.addPassenger(this)

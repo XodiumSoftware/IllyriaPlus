@@ -4,6 +4,7 @@ import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeInstance
 import org.bukkit.entity.Creeper
+import org.bukkit.entity.Monster
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.xodium.illyriaplus.Utils
@@ -16,11 +17,12 @@ import xyz.xenondevs.invui.item.ItemBuilder
 internal object CreeperMechanic : MechanicInterface, MonsterInterface {
     private const val IS_POWERED: Boolean = true
 
-    private val creeperAttributes: Map<Attribute, (Creeper, AttributeInstance) -> Unit> =
+    private val explosionRadiusRange: IntRange = 4..7
+
+    override val attributes: Map<Attribute, (Monster, AttributeInstance) -> Unit> =
         mapOf(
             Attribute.KNOCKBACK_RESISTANCE to { _, attr -> attr.baseValue = (2..5).random() / 10.0 },
         )
-    private val explosionRadiusRange: IntRange = 4..7
 
     override val faqTab = FaqTab.ENTITY_MECHANIC
 
@@ -36,7 +38,8 @@ internal object CreeperMechanic : MechanicInterface, MonsterInterface {
                     ),
                     Utils.MM.deserialize(
                         "<yellow>Volatile Payload</yellow> <firewatch>></gradient> " +
-                            "<white>Creeper explosion radius is increased to ${explosionRadiusRange.first}-${explosionRadiusRange.last} blocks.</white>",
+                            "<white>Creeper explosion radius is increased to " +
+                            "${explosionRadiusRange.first}-${explosionRadiusRange.last} blocks.</white>",
                     ),
                     Utils.MM.deserialize(
                         "<yellow>Attribute Modifiers</yellow> <firewatch>></gradient> " +
@@ -53,16 +56,11 @@ internal object CreeperMechanic : MechanicInterface, MonsterInterface {
         }
     }
 
-    /**
-     * Modifies a creeper's attributes on Hard difficulty.
-     *
-     * @param creeper The creeper to modify.
-     */
-    private fun modifySpawn(creeper: Creeper) {
-        creeper.isPowered = IS_POWERED
-        creeper.explosionRadius = explosionRadiusRange.random()
-        creeperAttributes.forEach { (attribute, apply) ->
-            creeper.getAttribute(attribute)?.let { apply(creeper, it) }
+    override fun modifySpawn(monster: Monster) {
+        super.modifySpawn(monster)
+        (monster as Creeper).apply {
+            isPowered = IS_POWERED
+            explosionRadius = explosionRadiusRange.random()
         }
     }
 }
