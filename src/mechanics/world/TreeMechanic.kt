@@ -18,6 +18,7 @@ import java.util.*
 
 /** Represents a mechanic handling trees within the system. */
 internal object TreeMechanic : MechanicInterface {
+    // TODO: change to take all the nbt randomly in its specific folder.
     private val TREES: Map<TreeType, Structure?> = TreeType.entries.associateWith { loadStructure(it) }
 
     override val faqTab: FaqTab = FaqTab.WORLD_MECHANIC
