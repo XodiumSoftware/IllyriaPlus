@@ -56,15 +56,15 @@ internal object TreeMechanic : MechanicInterface {
     }
 
     /**
-     * Loads every `.nbt` [Structure] found in the type's folder inside the plugin jar.
+     * Loads every `.nbt` [Structure] found in the mapped folder inside the plugin jar.
      *
      * @param type The [TreeType] to load structures for.
-     * @return A list of loaded [Structure]s; empty if the folder does not exist.
+     * @return A list of loaded [Structure]s; empty if the folder does not exist or is unmapped.
      */
-    private fun loadStructures(type: TreeType): List<Structure> =
-        // TODO: we have to create our own mapping since the folder name does not match treetype.
-        runCatching {
-            val dir = "structures/trees/${type.name.lowercase()}/"
+    private fun loadStructures(type: TreeType): List<Structure> {
+        val dir = type.folderName()?.let { "structures/trees/$it/" } ?: return emptyList()
+
+        return runCatching {
             val jar =
                 File(
                     IllyriaPlus::class.java.protectionDomain.codeSource.location
@@ -84,6 +84,7 @@ internal object TreeMechanic : MechanicInterface {
                     }.toList()
             }
         }.getOrNull() ?: emptyList()
+    }
 
     /**
      * Places a [Structure] at the given [Location].
@@ -105,4 +106,28 @@ internal object TreeMechanic : MechanicInterface {
             Random(),
         )
     }
+
+    /**
+     * Maps a Bukkit [TreeType] to the folder name used in `resources/structures/trees/`.
+     *
+     * Returns `null` if there is no custom structure pack for that type.
+     */
+    private fun TreeType.folderName(): String? =
+        when (this) {
+            TreeType.TREE, TreeType.BIG_TREE -> "oak"
+            TreeType.REDWOOD, TreeType.TALL_REDWOOD -> "spruce"
+            TreeType.BIRCH -> "birch"
+            TreeType.JUNGLE, TreeType.SMALL_JUNGLE -> "jungle"
+            TreeType.ACACIA -> "acacia"
+            TreeType.DARK_OAK -> "dark_oak"
+            TreeType.CHERRY -> "cherry"
+            TreeType.MANGROVE -> "mangrove"
+            TreeType.AZALEA -> "azalea"
+            TreeType.CRIMSON_FUNGUS -> "crimson"
+            TreeType.WARPED_FUNGUS -> "warped"
+            TreeType.RED_MUSHROOM -> "red_mushroom"
+            TreeType.BROWN_MUSHROOM -> "brown_mushroom"
+            TreeType.PALE_OAK -> "pale_oak"
+            else -> null
+        }
 }
