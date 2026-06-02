@@ -47,12 +47,9 @@ internal object TreeMechanic : MechanicInterface {
         val syncTime = super.register()
 
         IllyriaPlus.instance.server.scheduler.runTaskAsynchronously(IllyriaPlus.instance) { _ ->
-            val time = measureTime { trees.set(loadAllStructures()) }.inWholeMilliseconds
-
-            IllyriaPlus.instance.logger.info(
-                "TreeMechanic loaded ${trees.get().values.sumOf { it.size }} structures async in ${time}ms",
-            )
+            measureTime { trees.set(loadAllStructures()) }.inWholeMilliseconds
         }
+
         return syncTime
     }
 
@@ -65,11 +62,15 @@ internal object TreeMechanic : MechanicInterface {
      * @param event The [StructureGrowEvent] to handle.
      */
     private fun handleStructureGrowth(event: StructureGrowEvent) {
-        trees.get()[event.species]?.randomOrNull()?.let {
-            event.isCancelled = true
-            event.location.block.type = Material.AIR
-            placeStructure(it, event.location)
-        }
+        val structure =
+            trees
+                .get()[event.species]
+                ?.takeIf { it.isNotEmpty() }
+                ?.randomOrNull()
+                ?: return
+
+        event.isCancelled = true
+        placeStructure(structure, event.location.clone().apply { block.type = Material.AIR })
     }
 
     /**
@@ -80,19 +81,33 @@ internal object TreeMechanic : MechanicInterface {
     private fun TreeType.folderName(): String? =
         when (this) {
             TreeType.TREE, TreeType.BIG_TREE -> "oak"
+
             TreeType.REDWOOD, TreeType.TALL_REDWOOD -> "spruce"
+
             TreeType.BIRCH -> "birch"
+
             TreeType.JUNGLE, TreeType.SMALL_JUNGLE -> "jungle"
+
             TreeType.ACACIA -> "acacia"
+
             TreeType.DARK_OAK -> "dark_oak"
+
             TreeType.CHERRY -> "cherry"
+
             TreeType.MANGROVE -> "mangrove"
+
             TreeType.AZALEA -> "azalea"
+
             TreeType.CRIMSON_FUNGUS -> "crimson"
+
             TreeType.WARPED_FUNGUS -> "warped"
+
             TreeType.RED_MUSHROOM -> "red_mushroom"
+
             TreeType.BROWN_MUSHROOM -> "brown_mushroom"
-            TreeType.PALE_OAK -> "pale_oak"
+
+            // TODO: Re-enable Pale Oak once the upstream Paper `StructureGrowEvent` bug is fixed.
+            //        TreeType.PALE_OAK -> "pale_oak"
             else -> null
         }
 
