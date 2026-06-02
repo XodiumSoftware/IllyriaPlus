@@ -49,11 +49,8 @@ java {
 
 sourceSets {
     main {
-        kotlin {
-            srcDirs("src")
-            exclude("resources/**")
-        }
-        resources.srcDirs("src/resources")
+        kotlin.srcDirs("src")
+        resources.srcDirs("resources")
     }
 }
 
