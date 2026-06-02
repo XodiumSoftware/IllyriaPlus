@@ -20,11 +20,13 @@ import java.nio.file.FileSystemAlreadyExistsException
 import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.util.*
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.streams.asSequence
+import kotlin.time.measureTime
 
 /** Represents a mechanic handling trees within the system. */
 internal object TreeMechanic : MechanicInterface {
-    private val TREES: Map<TreeType, List<Structure>> by lazy(::loadAllStructures)
+    private val trees = AtomicReference<Map<TreeType, List<Structure>>>(emptyMap())
 
     override val faqTab: FaqTab = FaqTab.WORLD_MECHANIC
 
@@ -41,6 +43,19 @@ internal object TreeMechanic : MechanicInterface {
                 ),
         )
 
+    override fun register(): Long {
+        val syncTime = super.register()
+
+        IllyriaPlus.instance.server.scheduler.runTaskAsynchronously(IllyriaPlus.instance) { _ ->
+            val time = measureTime { trees.set(loadAllStructures()) }.inWholeMilliseconds
+
+            IllyriaPlus.instance.logger.info(
+                "TreeMechanic loaded ${trees.get().values.sumOf { it.size }} structures async in ${time}ms",
+            )
+        }
+        return syncTime
+    }
+
     @EventHandler
     fun on(event: StructureGrowEvent) = handleStructureGrowth(event)
 
@@ -50,7 +65,7 @@ internal object TreeMechanic : MechanicInterface {
      * @param event The [StructureGrowEvent] to handle.
      */
     private fun handleStructureGrowth(event: StructureGrowEvent) {
-        TREES[event.species]?.randomOrNull()?.let {
+        trees.get()[event.species]?.randomOrNull()?.let {
             event.isCancelled = true
             event.location.block.type = Material.AIR
             placeStructure(it, event.location)
