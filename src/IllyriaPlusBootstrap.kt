@@ -1,4 +1,3 @@
-
 package org.xodium.illyriaplus
 
 import io.papermc.paper.plugin.bootstrap.BootstrapContext
@@ -19,12 +18,10 @@ import org.xodium.illyriaplus.enchantments.utility.*
 @Suppress("UnstableApiUsage", "Unused")
 internal class IllyriaPlusBootstrap : PluginBootstrap {
     companion object {
-        const val INSTANCE = "illyriaplus"
-
-        val TOOLS = TagKey.create(RegistryKey.ITEM, Key.key(INSTANCE, "tools"))
-        val WEAPONS = TagKey.create(RegistryKey.ITEM, Key.key(INSTANCE, "weapons"))
-        val BLAZE_RODS = TagKey.create(RegistryKey.ITEM, Key.key(INSTANCE, "blaze_rods"))
-        val TETHER_ITEMS = TagKey.create(RegistryKey.ITEM, Key.key(INSTANCE, "tether_items"))
+        val TOOLS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaPlus.ID, "tools"))
+        val WEAPONS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaPlus.ID, "weapons"))
+        val BLAZE_RODS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaPlus.ID, "blaze_rods"))
+        val TETHER_ITEMS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaPlus.ID, "tether_items"))
     }
 
     override fun bootstrap(ctx: BootstrapContext) {

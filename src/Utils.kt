@@ -24,7 +24,6 @@ import org.bukkit.event.block.Action
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.IllyriaPlus.Companion.prefix
 import org.xodium.illyriaplus.pdcs.ItemStackPDC.selectedSpell
 
 /** General utilities. */
@@ -184,10 +183,8 @@ internal object Utils {
                             ${it.stackTraceToString()}
                             """.trimIndent(),
                         )
-                        (ctx.source.sender as? org.bukkit.entity.Player)?.sendMessage(
-                            MM.deserialize(
-                                "${instance.prefix} <red>An error has occurred. Check server logs for details.",
-                            ),
+                        (ctx.source.sender as? org.bukkit.entity.Player)?.sendActionBar(
+                            MM.deserialize("<red>An error has occurred. Check server logs for details."),
                         )
                     }
                 com.mojang.brigadier.Command.SINGLE_SUCCESS

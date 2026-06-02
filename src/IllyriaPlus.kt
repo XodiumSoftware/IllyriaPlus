@@ -19,9 +19,8 @@ internal class IllyriaPlus : JavaPlugin() {
         lateinit var instance: IllyriaPlus
             private set
 
-        /** The standardized prefix for IllyriaPlus messages. */
-        val IllyriaPlus.prefix: String
-            get() = "<mango_r>[</gradient><firewatch>${this.javaClass.simpleName}</gradient><mango>]</gradient>"
+        /** The ID of the main class */
+        val ID = this.javaClass.simpleName.lowercase()
     }
 
     override fun onEnable() {

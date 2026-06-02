@@ -8,7 +8,6 @@ import net.kyori.adventure.key.Key
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.Listener
 import org.xodium.illyriaplus.IllyriaPlus
-import org.xodium.illyriaplus.IllyriaPlusBootstrap
 import org.xodium.illyriaplus.Utils.toRegistryKeyFragment
 import kotlin.time.measureTime
 
@@ -25,7 +24,7 @@ internal interface EnchantmentInterface : Listener {
         get() =
             TypedKey.create(
                 RegistryKey.ENCHANTMENT,
-                Key.key(IllyriaPlusBootstrap.INSTANCE, javaClass.toRegistryKeyFragment<Enchantment>()),
+                Key.key(IllyriaPlus.ID, javaClass.toRegistryKeyFragment<Enchantment>()),
             )
 
     /**
