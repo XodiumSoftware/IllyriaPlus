@@ -10,9 +10,9 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.util.Vector
 import org.xodium.illyriaplus.Utils
-import org.xodium.illyriaplus.Utils.EnchantmentUtils.displayName
-import org.xodium.illyriaplus.Utils.EnchantmentUtils.isSelectedSpell
-import org.xodium.illyriaplus.Utils.EnchantmentUtils.validateSpellCast
+import org.xodium.illyriaplus.Utils.Enchantment.displayName
+import org.xodium.illyriaplus.Utils.Enchantment.isSelectedSpell
+import org.xodium.illyriaplus.Utils.Enchantment.validateSpellCast
 import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 import org.xodium.illyriaplus.managers.XpManager
 
@@ -76,7 +76,7 @@ internal object TempestEnchantment : EnchantmentInterface {
      * @param charge The [WindCharge] to trail.
      */
     private fun spawnWindChargeTrail(charge: WindCharge) =
-        Utils.ScheduleUtils.spawnProjectileTrail(charge) {
+        Utils.Schedule.spawnProjectileTrail(charge) {
             Particle.GUST
                 .builder()
                 .location(it)

@@ -10,7 +10,7 @@ import org.bukkit.entity.SkeletonHorse
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.xodium.illyriaplus.Utils
-import org.xodium.illyriaplus.Utils.MonsterUtils.trySpawnMount
+import org.xodium.illyriaplus.Utils.Monster.trySpawnMount
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 

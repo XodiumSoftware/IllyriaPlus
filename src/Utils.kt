@@ -2,7 +2,6 @@
 
 package org.xodium.illyriaplus
 
-import com.mojang.brigadier.Command
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import io.papermc.paper.command.brigadier.CommandSourceStack
@@ -15,12 +14,12 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeInstance
-import org.bukkit.block.Block
 import org.bukkit.block.Chest
 import org.bukkit.block.Container
 import org.bukkit.block.DoubleChest
-import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.*
+import org.bukkit.entity.AbstractHorse
+import org.bukkit.entity.Entity
+import org.bukkit.entity.Tameable
 import org.bukkit.event.block.Action
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitTask
@@ -67,13 +66,14 @@ internal object Utils {
             .joinToString("_") { it.lowercase() }
 
     /** Enchantment-related utilities. */
-    object EnchantmentUtils {
+    object Enchantment {
         /**
          * Gets the display name of an enchantment key.
          *
          * @return The formatted display name as a Component.
          */
-        fun TypedKey<Enchantment>.displayName(): Component = MM.deserialize(value().snakeToProperCase())
+        fun TypedKey<org.bukkit.enchantments.Enchantment>.displayName(): Component =
+            MM.deserialize(value().snakeToProperCase())
 
         /**
          * Checks if the given item has the specified spell selected.
@@ -84,7 +84,7 @@ internal object Utils {
          */
         fun isSelectedSpell(
             item: ItemStack?,
-            spell: Enchantment,
+            spell: org.bukkit.enchantments.Enchantment,
         ): Boolean = item?.selectedSpell == spell.key.toString()
 
         /**
@@ -98,7 +98,7 @@ internal object Utils {
         fun validateSpellCast(
             action: Action,
             item: ItemStack,
-            enchantment: Enchantment,
+            enchantment: org.bukkit.enchantments.Enchantment,
         ): Boolean =
             when {
                 action != Action.LEFT_CLICK_AIR && action != Action.LEFT_CLICK_BLOCK -> false
@@ -109,7 +109,7 @@ internal object Utils {
     }
 
     /** Schedule-related utilities. */
-    object ScheduleUtils {
+    object Schedule {
         /**
          * Schedules a repeating task.
          *
@@ -165,7 +165,7 @@ internal object Utils {
     }
 
     /** Command-related utilities. */
-    object CommandUtils {
+    object Command {
         /**
          * Adds a safe execution handler with error logging.
          *
@@ -184,13 +184,13 @@ internal object Utils {
                             ${it.stackTraceToString()}
                             """.trimIndent(),
                         )
-                        (ctx.source.sender as? Player)?.sendMessage(
+                        (ctx.source.sender as? org.bukkit.entity.Player)?.sendMessage(
                             MM.deserialize(
                                 "${instance.prefix} <red>An error has occurred. Check server logs for details.",
                             ),
                         )
                     }
-                Command.SINGLE_SUCCESS
+                com.mojang.brigadier.Command.SINGLE_SUCCESS
             }
             return this
         }
@@ -202,11 +202,11 @@ internal object Utils {
          * @return The modified ArgumentBuilder.
          */
         fun <T : ArgumentBuilder<CommandSourceStack, T>> T.playerExecuted(
-            action: (Player, CommandContext<CommandSourceStack>) -> Unit,
+            action: (org.bukkit.entity.Player, CommandContext<CommandSourceStack>) -> Unit,
         ): T {
             executesCatching {
                 action(
-                    it.source.sender as? Player ?: run {
+                    it.source.sender as? org.bukkit.entity.Player ?: run {
                         instance.logger.warning("Command can only be executed by a Player!")
                         return@executesCatching
                     },
@@ -218,13 +218,13 @@ internal object Utils {
     }
 
     /** Block-related utilities. */
-    object BlockUtils {
+    object Block {
         /**
          * Gets the center location of a block, handling double chests.
          *
          * @return The center Location.
          */
-        fun Block.center(): Location {
+        fun org.bukkit.block.Block.center(): Location {
             val baseAddition =
                 Location(location.world, location.x + 0.5, location.y + 0.5, location.z + 0.5)
             val chestState = state as? Chest ?: return baseAddition
@@ -246,13 +246,13 @@ internal object Utils {
     }
 
     /** Player-related utilities. */
-    object PlayerUtils {
+    object Player {
         /**
          * Gets nearby containers in a chunk radius.
          *
          * @return Set of containers.
          */
-        fun Player.getContainersAround(): Set<Container> =
+        fun org.bukkit.entity.Player.getContainersAround(): Set<Container> =
             buildSet {
                 for (chunk in getChunksAround()) {
                     for (state in chunk.tileEntities) {
@@ -267,7 +267,7 @@ internal object Utils {
          * @param range Radius in chunks.
          * @return Set of chunks.
          */
-        fun Player.getChunksAround(range: Int = 1): Set<Chunk> {
+        fun org.bukkit.entity.Player.getChunksAround(range: Int = 1): Set<Chunk> {
             val (baseX, baseZ) = location.chunk.run { x to z }
 
             return buildSet {
@@ -285,14 +285,14 @@ internal object Utils {
          * @param radius Search radius.
          * @return The entity or null.
          */
-        fun Player.getLeashedEntity(radius: Double = 10.0): Tameable? =
+        fun org.bukkit.entity.Player.getLeashedEntity(radius: Double = 10.0): Tameable? =
             getNearbyEntities(radius, radius, radius)
                 .filterIsInstance<Tameable>()
                 .firstOrNull { it.isLeashed && it.leashHolder == this }
     }
 
     /** Monster-related utilities. */
-    object MonsterUtils {
+    object Monster {
         /**
          * Spawns an [AbstractHorse] mount for this [Monster] with a configurable chance,
          * then applies [attributes] to the horse and makes this monster its passenger.
@@ -301,7 +301,7 @@ internal object Utils {
          * @param chance The percentage chance for the mount to spawn.
          * @param attributes A map of attribute mutations to apply to the spawned horse.
          */
-        inline fun <reified H : AbstractHorse> Monster.trySpawnMount(
+        inline fun <reified H : AbstractHorse> org.bukkit.entity.Monster.trySpawnMount(
             chance: Int,
             attributes: Map<Attribute, (AbstractHorse, AttributeInstance) -> Unit>,
         ) {

@@ -24,7 +24,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils.CommandUtils.executesCatching
+import org.xodium.illyriaplus.Utils.Command.executesCatching
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.data.FaqTab

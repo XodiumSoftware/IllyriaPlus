@@ -13,7 +13,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.xodium.illyriaplus.IllyriaPlus
 import org.xodium.illyriaplus.Utils
-import org.xodium.illyriaplus.Utils.MonsterUtils.trySpawnMount
+import org.xodium.illyriaplus.Utils.Monster.trySpawnMount
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 import java.util.*

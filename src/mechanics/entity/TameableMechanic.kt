@@ -5,7 +5,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.Utils.PlayerUtils.getLeashedEntity
+import org.xodium.illyriaplus.Utils.Player.getLeashedEntity
 import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import xyz.xenondevs.invui.item.Item

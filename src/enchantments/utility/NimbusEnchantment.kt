@@ -7,7 +7,7 @@ import org.bukkit.entity.HappyGhast
 import org.bukkit.event.EventHandler
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.EquipmentSlotGroup
-import org.xodium.illyriaplus.Utils.EnchantmentUtils.displayName
+import org.xodium.illyriaplus.Utils.Enchantment.displayName
 import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 
 /** Represents an object handling nimbus enchantment implementation within the system. */

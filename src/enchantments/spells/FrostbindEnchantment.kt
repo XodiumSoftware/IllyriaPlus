@@ -13,7 +13,7 @@ import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.persistence.PersistentDataType
 import org.xodium.illyriaplus.IllyriaPlus
 import org.xodium.illyriaplus.Utils
-import org.xodium.illyriaplus.Utils.EnchantmentUtils.displayName
+import org.xodium.illyriaplus.Utils.Enchantment.displayName
 import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 import org.xodium.illyriaplus.managers.XpManager
 
@@ -49,8 +49,8 @@ internal object FrostbindEnchantment : EnchantmentInterface {
         val player = event.player
         val item = event.item ?: return
 
-        if (!Utils.EnchantmentUtils.isSelectedSpell(item, get())) return
-        if (!Utils.EnchantmentUtils.validateSpellCast(event.action, item, get())) return
+        if (!Utils.Enchantment.isSelectedSpell(item, get())) return
+        if (!Utils.Enchantment.validateSpellCast(event.action, item, get())) return
         if (!XpManager.consumeXp(event, XP_COST)) return
 
         val direction = player.location.direction.normalize()
@@ -98,7 +98,7 @@ internal object FrostbindEnchantment : EnchantmentInterface {
      * @param snowball The projectile to trail.
      */
     private fun spawnSnowballTrail(snowball: Snowball) =
-        Utils.ScheduleUtils.spawnProjectileTrail(snowball) {
+        Utils.Schedule.spawnProjectileTrail(snowball) {
             Particle.SNOWFLAKE
                 .builder()
                 .location(it)

@@ -9,9 +9,9 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.xodium.illyriaplus.Utils
-import org.xodium.illyriaplus.Utils.EnchantmentUtils.displayName
-import org.xodium.illyriaplus.Utils.EnchantmentUtils.isSelectedSpell
-import org.xodium.illyriaplus.Utils.EnchantmentUtils.validateSpellCast
+import org.xodium.illyriaplus.Utils.Enchantment.displayName
+import org.xodium.illyriaplus.Utils.Enchantment.isSelectedSpell
+import org.xodium.illyriaplus.Utils.Enchantment.validateSpellCast
 import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 import org.xodium.illyriaplus.managers.XpManager
 import kotlin.uuid.ExperimentalUuidApi
@@ -67,7 +67,7 @@ internal object InfernoEnchantment : EnchantmentInterface {
      * @param fireball The [SmallFireball] to trail.
      */
     private fun spawnFireballTrail(fireball: SmallFireball) =
-        Utils.ScheduleUtils.spawnProjectileTrail(fireball) {
+        Utils.Schedule.spawnProjectileTrail(fireball) {
             Particle.FLAME
                 .builder()
                 .location(it)

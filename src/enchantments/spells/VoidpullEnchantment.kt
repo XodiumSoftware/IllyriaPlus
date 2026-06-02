@@ -13,9 +13,9 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriaplus.Utils
-import org.xodium.illyriaplus.Utils.EnchantmentUtils.displayName
-import org.xodium.illyriaplus.Utils.EnchantmentUtils.isSelectedSpell
-import org.xodium.illyriaplus.Utils.EnchantmentUtils.validateSpellCast
+import org.xodium.illyriaplus.Utils.Enchantment.displayName
+import org.xodium.illyriaplus.Utils.Enchantment.isSelectedSpell
+import org.xodium.illyriaplus.Utils.Enchantment.validateSpellCast
 import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 import org.xodium.illyriaplus.managers.XpManager
 import java.util.*
@@ -124,7 +124,7 @@ internal object VoidpullEnchantment : EnchantmentInterface {
      * @return The [BukkitTask] running the trail, so it can be cancelled early on hit.
      */
     private fun spawnPearlTrail(pearl: EnderPearl) =
-        Utils.ScheduleUtils.spawnProjectileTrail(pearl) {
+        Utils.Schedule.spawnProjectileTrail(pearl) {
             val origin = ORIGINS[pearl.uniqueId] ?: return@spawnProjectileTrail
 
             if (it.distanceSquared(origin) > MAX_DISTANCE * MAX_DISTANCE) {

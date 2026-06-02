@@ -9,9 +9,9 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.xodium.illyriaplus.Utils
-import org.xodium.illyriaplus.Utils.EnchantmentUtils.displayName
-import org.xodium.illyriaplus.Utils.EnchantmentUtils.isSelectedSpell
-import org.xodium.illyriaplus.Utils.EnchantmentUtils.validateSpellCast
+import org.xodium.illyriaplus.Utils.Enchantment.displayName
+import org.xodium.illyriaplus.Utils.Enchantment.isSelectedSpell
+import org.xodium.illyriaplus.Utils.Enchantment.validateSpellCast
 import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 import org.xodium.illyriaplus.managers.XpManager
 
@@ -65,7 +65,7 @@ internal object WitherbrandEnchantment : EnchantmentInterface {
      * @param skull The [WitherSkull] to trail.
      */
     private fun spawnSkullTrail(skull: WitherSkull) {
-        Utils.ScheduleUtils.spawnProjectileTrail(skull) {
+        Utils.Schedule.spawnProjectileTrail(skull) {
             Particle.SOUL
                 .builder()
                 .location(it)
