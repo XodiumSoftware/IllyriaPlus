@@ -47,6 +47,7 @@ internal object TreeMechanic : MechanicInterface {
      */
     private fun handleStructureGrowth(event: StructureGrowEvent) {
         val structures = TREES[event.species] ?: return
+
         if (structures.isEmpty()) return
 
         event.isCancelled = true
@@ -61,6 +62,7 @@ internal object TreeMechanic : MechanicInterface {
      * @return A list of loaded [Structure]s; empty if the folder does not exist.
      */
     private fun loadStructures(type: TreeType): List<Structure> =
+        // TODO: we have to create our own mapping since the folder name does not match treetype.
         runCatching {
             val dir = "structures/trees/${type.name.lowercase()}/"
             val jar =
