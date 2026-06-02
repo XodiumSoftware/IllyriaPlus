@@ -47,7 +47,15 @@ java {
     }
 }
 
-sourceSets { main { kotlin { srcDirs("src") } } }
+sourceSets {
+    main {
+        kotlin {
+            srcDirs("src")
+            exclude("resources/**")
+        }
+        resources.srcDirs("src/resources")
+    }
+}
 
 dokka {
     moduleName.set("IllyriaPlus")
