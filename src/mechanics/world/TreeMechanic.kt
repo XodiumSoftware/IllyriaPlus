@@ -14,12 +14,13 @@ import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
+import java.io.File
 import java.util.*
+import java.util.jar.JarFile
 
 /** Represents a mechanic handling trees within the system. */
 internal object TreeMechanic : MechanicInterface {
-    // TODO: change to take all the nbt randomly in its specific folder.
-    private val TREES: Map<TreeType, Structure?> = TreeType.entries.associateWith { loadStructure(it) }
+    private val TREES: Map<TreeType, List<Structure>> = TreeType.entries.associateWith { loadStructures(it) }
 
     override val faqTab: FaqTab = FaqTab.WORLD_MECHANIC
 
@@ -45,26 +46,42 @@ internal object TreeMechanic : MechanicInterface {
      * @param event The [StructureGrowEvent] to handle.
      */
     private fun handleStructureGrowth(event: StructureGrowEvent) {
-        val structure = TREES[event.species] ?: return
+        val structures = TREES[event.species] ?: return
+        if (structures.isEmpty()) return
 
         event.isCancelled = true
         event.location.block.type = Material.AIR
-        placeStructure(structure, event.location)
+        placeStructure(structures.random(), event.location)
     }
 
     /**
-     * Loads a [Structure] from the plugin's jar resources.
+     * Loads every `.nbt` [Structure] found in the type's folder inside the plugin jar.
      *
-     * @param type The [TreeType] to load a structure for.
-     * @return The loaded [Structure], or null if the resource does not exist.
+     * @param type The [TreeType] to load structures for.
+     * @return A list of loaded [Structure]s; empty if the folder does not exist.
      */
-    private fun loadStructure(type: TreeType): Structure? =
+    private fun loadStructures(type: TreeType): List<Structure> =
         runCatching {
-            IllyriaPlus.instance.getResource("structures/${type.name.lowercase()}.nbt")?.use {
-                IllyriaPlus.instance.server.structureManager
-                    .loadStructure(it)
+            val dir = "structures/trees/${type.name.lowercase()}/"
+            val jar =
+                File(
+                    IllyriaPlus::class.java.protectionDomain.codeSource.location
+                        .toURI(),
+                )
+
+            JarFile(jar).use { jarFile ->
+                jarFile
+                    .entries()
+                    .asSequence()
+                    .filter { !it.isDirectory && it.name.startsWith(dir) && it.name.endsWith(".nbt") }
+                    .mapNotNull { entry ->
+                        IllyriaPlus.instance.getResource(entry.name)?.use {
+                            IllyriaPlus.instance.server.structureManager
+                                .loadStructure(it)
+                        }
+                    }.toList()
             }
-        }.getOrNull()
+        }.getOrNull() ?: emptyList()
 
     /**
      * Places a [Structure] at the given [Location].
