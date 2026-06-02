@@ -70,6 +70,7 @@ internal class IllyriaPlus : JavaPlugin() {
                 ChiseledBookshelfMechanic,
                 DimensionMechanic,
                 MushroomMechanic,
+                TreeMechanic,
                 BatMechanic,
                 SpawnEggMechanic,
                 GriefingMechanic,
