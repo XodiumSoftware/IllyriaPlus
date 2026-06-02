@@ -14,13 +14,17 @@ import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
-import java.io.File
+import java.net.URI
+import java.nio.file.FileSystem
+import java.nio.file.FileSystemAlreadyExistsException
+import java.nio.file.FileSystems
+import java.nio.file.Files
 import java.util.*
-import java.util.jar.JarFile
+import kotlin.streams.asSequence
 
 /** Represents a mechanic handling trees within the system. */
 internal object TreeMechanic : MechanicInterface {
-    private val TREES: Map<TreeType, List<Structure>> = TreeType.entries.associateWith { loadStructures(it) }
+    private val TREES: Map<TreeType, List<Structure>> by lazy(::loadAllStructures)
 
     override val faqTab: FaqTab = FaqTab.WORLD_MECHANIC
 
@@ -46,65 +50,11 @@ internal object TreeMechanic : MechanicInterface {
      * @param event The [StructureGrowEvent] to handle.
      */
     private fun handleStructureGrowth(event: StructureGrowEvent) {
-        val structures = TREES[event.species] ?: return
-
-        if (structures.isEmpty()) return
-
-        event.isCancelled = true
-        event.location.block.type = Material.AIR
-        placeStructure(structures.random(), event.location)
-    }
-
-    /**
-     * Loads every `.nbt` [Structure] found in the mapped folder inside the plugin jar.
-     *
-     * @param type The [TreeType] to load structures for.
-     * @return A list of loaded [Structure]s; empty if the folder does not exist or is unmapped.
-     */
-    private fun loadStructures(type: TreeType): List<Structure> {
-        val dir = type.folderName()?.let { "structures/trees/$it/" } ?: return emptyList()
-
-        return runCatching {
-            val jar =
-                File(
-                    IllyriaPlus::class.java.protectionDomain.codeSource.location
-                        .toURI(),
-                )
-
-            JarFile(jar).use { jarFile ->
-                jarFile
-                    .entries()
-                    .asSequence()
-                    .filter { !it.isDirectory && it.name.startsWith(dir) && it.name.endsWith(".nbt") }
-                    .mapNotNull { entry ->
-                        IllyriaPlus.instance.getResource(entry.name)?.use {
-                            IllyriaPlus.instance.server.structureManager
-                                .loadStructure(it)
-                        }
-                    }.toList()
-            }
-        }.getOrNull() ?: emptyList()
-    }
-
-    /**
-     * Places a [Structure] at the given [Location].
-     *
-     * @param structure The [Structure] to place.
-     * @param location The [Location] to place the structure at.
-     */
-    private fun placeStructure(
-        structure: Structure,
-        location: Location,
-    ) {
-        structure.place(
-            location,
-            false,
-            StructureRotation.entries.random(),
-            Mirror.entries.random(),
-            0,
-            1.0f,
-            Random(),
-        )
+        TREES[event.species]?.randomOrNull()?.let {
+            event.isCancelled = true
+            event.location.block.type = Material.AIR
+            placeStructure(it, event.location)
+        }
     }
 
     /**
@@ -130,4 +80,81 @@ internal object TreeMechanic : MechanicInterface {
             TreeType.PALE_OAK -> "pale_oak"
             else -> null
         }
+
+    /**
+     * Loads every `.nbt` [Structure] found in the mapped folder inside the plugin jar.
+     *
+     * @param type The [TreeType] to load structures for.
+     * @param fs The jar [FileSystem] containing the plugin resources.
+     * @return A list of loaded [Structure]s; empty if the folder does not exist or is unmapped.
+     */
+    private fun loadStructures(
+        type: TreeType,
+        fs: FileSystem,
+    ): List<Structure> {
+        val folderName = type.folderName() ?: return emptyList()
+        val plugin = IllyriaPlus.instance
+        val structureManager = plugin.server.structureManager
+        val rootPath = fs.getPath("structures/trees/$folderName")
+
+        if (!Files.exists(rootPath)) return emptyList()
+
+        return Files.walk(rootPath).use { paths ->
+            paths
+                .asSequence()
+                .filter { Files.isRegularFile(it) }
+                .filter { it.toString().endsWith(".nbt") }
+                .mapNotNull { path ->
+                    val resourcePath = path.toString().removePrefix("/")
+
+                    plugin.getResource(resourcePath)?.use { structureManager.loadStructure(it) }
+                }.toList()
+        }
+    }
+
+    /**
+     * Loads all tree structures from the plugin jar.
+     *
+     * @return A map containing every [TreeType] and its associated structures.
+     */
+    private fun loadAllStructures(): Map<TreeType, List<Structure>> =
+        runCatching {
+            val jarFileUri =
+                IllyriaPlus::class.java.protectionDomain.codeSource.location
+                    .toURI()
+            val jarUri = URI.create("jar:$jarFileUri")
+            val (fs, shouldClose) =
+                try {
+                    FileSystems.newFileSystem(jarUri, emptyMap<String, Any>()) to true
+                } catch (_: FileSystemAlreadyExistsException) {
+                    FileSystems.getFileSystem(jarUri) to false
+                }
+
+            try {
+                TreeType.entries.associateWith { loadStructures(it, fs) }
+            } finally {
+                if (shouldClose) runCatching { fs.close() }
+            }
+        }.getOrDefault(emptyMap())
+
+    /**
+     * Places a [Structure] at the given [Location].
+     *
+     * @param structure The [Structure] to place.
+     * @param location The [Location] to place the structure at.
+     */
+    private fun placeStructure(
+        structure: Structure,
+        location: Location,
+    ) {
+        structure.place(
+            location,
+            false,
+            StructureRotation.entries.random(),
+            Mirror.entries.random(),
+            0,
+            1.0f,
+            Random(),
+        )
+    }
 }
