@@ -24,6 +24,23 @@ import java.util.concurrent.atomic.AtomicReference
 import kotlin.streams.asSequence
 import kotlin.time.measureTime
 
+/* TODO: adjust nbt to fix their origin point.
+* acacia
+* azalea
+* birch
+* brown_mushroom
+* cherry
+* crimson
+* dark_oak
+* jungle
+* mangrove
+* oak
+* pale_oak
+* red_mushroom
+* spruce
+* warped
+*/
+
 /** Represents a mechanic handling trees within the system. */
 internal object TreeMechanic : MechanicInterface {
     private val trees = AtomicReference<Map<TreeType, List<Structure>>>(emptyMap())
