@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.world.StructureGrowEvent
 import org.bukkit.structure.Structure
 import org.xodium.illyriaplus.IllyriaPlus
+import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.mechanics.MechanicInterface
@@ -18,28 +19,12 @@ import java.net.URI
 import java.nio.file.FileSystem
 import java.nio.file.FileSystemAlreadyExistsException
 import java.nio.file.FileSystems
-import java.nio.file.Files
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
-import kotlin.streams.asSequence
+import kotlin.io.path.exists
+import kotlin.io.path.isRegularFile
+import kotlin.io.path.walk
 import kotlin.time.measureTime
-
-/* TODO: adjust nbt to fix their origin point.
-* acacia
-* azalea
-* birch
-* brown_mushroom
-* cherry
-* crimson
-* dark_oak
-* jungle
-* mangrove
-* oak
-* pale_oak
-* red_mushroom
-* spruce
-* warped
-*/
 
 /** Represents a mechanic handling trees within the system. */
 internal object TreeMechanic : MechanicInterface {
@@ -60,15 +45,11 @@ internal object TreeMechanic : MechanicInterface {
                 ),
         )
 
-    override fun register(): Long {
-        val syncTime = super.register()
-
-        IllyriaPlus.instance.server.scheduler.runTaskAsynchronously(IllyriaPlus.instance) { _ ->
-            measureTime { trees.set(loadAllStructures()) }.inWholeMilliseconds
-        }
-
-        return syncTime
-    }
+    override fun register(): Long =
+        super.register() +
+            measureTime {
+                instance.server.scheduler.runTaskAsynchronously(instance) { _ -> trees.set(loadAllStructures()) }
+            }.inWholeMilliseconds
 
     @EventHandler
     fun on(event: StructureGrowEvent) = handleStructureGrowth(event)
@@ -140,23 +121,19 @@ internal object TreeMechanic : MechanicInterface {
         fs: FileSystem,
     ): List<Structure> {
         val folderName = type.folderName() ?: return emptyList()
-        val plugin = IllyriaPlus.instance
+        val plugin = instance
         val structureManager = plugin.server.structureManager
         val rootPath = fs.getPath("structures/trees/$folderName")
 
-        if (!Files.exists(rootPath)) return emptyList()
+        if (!rootPath.exists()) return emptyList()
 
-        return Files.walk(rootPath).use { paths ->
-            paths
-                .asSequence()
-                .filter { Files.isRegularFile(it) }
-                .filter { it.toString().endsWith(".nbt") }
-                .mapNotNull { path ->
-                    val resourcePath = path.toString().removePrefix("/")
-
-                    plugin.getResource(resourcePath)?.use { structureManager.loadStructure(it) }
-                }.toList()
-        }
+        return rootPath
+            .walk()
+            .filter { it.isRegularFile() }
+            .filter { it.toString().endsWith(".nbt") }
+            .mapNotNull { path ->
+                plugin.getResource(path.toString().removePrefix("/"))?.use { structureManager.loadStructure(it) }
+            }.toList()
     }
 
     /**

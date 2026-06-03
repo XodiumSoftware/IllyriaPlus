@@ -82,7 +82,7 @@ internal class IllyriaPlus : JavaPlugin() {
             )
 
         logger.info(
-            "Registered: ${mechanics.size} module(s) | Took ${mechanics.sumOf { it.register() }}ms",
+            "Registered: ${mechanics.size} mechanic(s) | Took ${mechanics.sumOf { it.register() }}ms",
         )
 
         val enchantments =
