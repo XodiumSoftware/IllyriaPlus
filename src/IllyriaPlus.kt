@@ -26,10 +26,10 @@ internal class IllyriaPlus : JavaPlugin() {
     override fun onEnable() {
         instance = this
 
-        val unsupportedVersionMsg =
-            "This plugin requires a supported server version. Supported versions: ${pluginMeta.version}."
-
-        if (!server.version.contains(pluginMeta.version.substringBefore("+"))) disablePlugin(unsupportedVersionMsg)
+        if (!server.version.contains(pluginMeta.version.substringBefore("+"))) {
+            logger.severe("This plugin requires the following supported version: ${pluginMeta.version}.")
+            server.pluginManager.disablePlugin(this)
+        }
 
         val recipes =
             listOf(
@@ -117,16 +117,5 @@ internal class IllyriaPlus : JavaPlugin() {
         logger.info(
             "Registered: ${guis.size} gui's | Took ${guis.sumOf { it.register() }}ms",
         )
-    }
-
-    /**
-     * Disable the plugin and log the message.
-     *
-     * @param msg The message to log.
-     */
-    private fun disablePlugin(msg: String): Nothing {
-        logger.severe(msg)
-        server.pluginManager.disablePlugin(instance)
-        throw IllegalStateException(msg)
     }
 }
