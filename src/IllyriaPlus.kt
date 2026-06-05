@@ -1,11 +1,12 @@
 package org.xodium.illyriaplus
 
 import org.bukkit.plugin.java.JavaPlugin
+import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 import org.xodium.illyriaplus.enchantments.spells.*
 import org.xodium.illyriaplus.enchantments.utility.*
 import org.xodium.illyriaplus.enchantments.vanilla.FeatherFallingEnchantment
 import org.xodium.illyriaplus.enchantments.vanilla.SilkTouchEnchantment
-import org.xodium.illyriaplus.guis.FaqGui
+import org.xodium.illyriaplus.mechanics.MechanicInterface
 import org.xodium.illyriaplus.mechanics.entity.*
 import org.xodium.illyriaplus.mechanics.entity.monster.*
 import org.xodium.illyriaplus.mechanics.player.*
@@ -23,6 +24,13 @@ internal class IllyriaPlus : JavaPlugin() {
         val ID = this.javaClass.simpleName.lowercase()
     }
 
+    lateinit var recipes: List<RecipeInterface>
+        private set
+    lateinit var mechanics: List<MechanicInterface>
+        private set
+    lateinit var enchantments: List<EnchantmentInterface>
+        private set
+
     override fun onEnable() {
         instance = this
 
@@ -31,7 +39,7 @@ internal class IllyriaPlus : JavaPlugin() {
             server.pluginManager.disablePlugin(this)
         }
 
-        val recipes =
+        recipes =
             listOf(
                 ChainmailRecipe,
                 DiamondRecycleRecipe,
@@ -47,8 +55,9 @@ internal class IllyriaPlus : JavaPlugin() {
             "Registered: ${recipes.sumOf { it.recipes.size }} recipes(s) | Took ${recipes.sumOf { it.register() }}ms",
         )
 
-        val mechanics =
+        mechanics =
             listOf(
+                FaqMechanic,
                 RulesMechanic,
                 NicknameMechanic,
                 ScoreBoardMechanic,
@@ -84,7 +93,7 @@ internal class IllyriaPlus : JavaPlugin() {
             "Registered: ${mechanics.size} module(s) | Took ${mechanics.sumOf { it.register() }}ms",
         )
 
-        val enchantments =
+        enchantments =
             listOf(
                 EarthrendEnchantment,
                 EmbertreadEnchantment,
@@ -104,18 +113,6 @@ internal class IllyriaPlus : JavaPlugin() {
 
         logger.info(
             "Registered: ${enchantments.size} enchantment events | Took ${enchantments.sumOf { it.register() }}ms",
-        )
-
-        FaqGui.recipes = recipes
-        FaqGui.mechanics = mechanics
-
-        val guis =
-            listOf(
-                FaqGui,
-            )
-
-        logger.info(
-            "Registered: ${guis.size} gui's | Took ${guis.sumOf { it.register() }}ms",
         )
     }
 }
