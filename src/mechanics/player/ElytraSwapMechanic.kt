@@ -29,7 +29,7 @@ internal object ElytraSwapMechanic : MechanicInterface {
         listOf(
             CommandData(
                 Commands
-                    .literal("locator")
+                    .literal("elytraswap")
                     .requires { it.sender.hasPermission(perms[0]) }
                     .playerExecuted { player, _ -> player.toggleElytraSwap() },
                 "Allows players to toggle elytra swap",
@@ -61,6 +61,10 @@ internal object ElytraSwapMechanic : MechanicInterface {
                     MM.deserialize(
                         "<yellow>Auto Restore</yellow> <firewatch>></gradient> " +
                             "<white>Restores chestplate when you land</white>",
+                    ),
+                    MM.deserialize(
+                        "<gray>cmd:</gray> <yellow>/elytraswap</yellow> <firewatch>></gradient> " +
+                            "<white>Toggle this mechanic on/off</white>",
                     ),
                 ),
         )
