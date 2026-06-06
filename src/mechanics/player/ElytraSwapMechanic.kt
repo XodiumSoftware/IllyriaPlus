@@ -5,7 +5,7 @@ import org.bukkit.Material
 import org.bukkit.Tag
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.player.PlayerToggleFlightEvent
+import org.bukkit.event.entity.EntityToggleGlideEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
@@ -62,12 +62,14 @@ internal object ElytraSwapMechanic : MechanicInterface {
         )
 
     @EventHandler
-    fun on(event: PlayerToggleFlightEvent) {
-        if (!event.player.elytraSwap) return
+    fun on(event: EntityToggleGlideEvent) {
+        val player = event.entity as? Player ?: return
+
+        if (!player.elytraSwap) return
 
         when {
-            event.player.isGliding -> startGliding(event.player)
-            else -> stopGliding(event.player)
+            event.isGliding -> startGliding(player)
+            else -> stopGliding(player)
         }
     }
 
