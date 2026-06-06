@@ -1,11 +1,14 @@
 package org.xodium.illyriaplus.mechanics.player
 
 import io.papermc.paper.command.brigadier.Commands
+import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.Tag
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.block.Action
 import org.bukkit.event.entity.EntityToggleGlideEvent
+import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
@@ -52,7 +55,7 @@ internal object ElytraSwapMechanic : MechanicInterface {
                     MM.deserialize(""),
                     MM.deserialize(
                         "<yellow>Auto Equip</yellow> <firewatch>></gradient> " +
-                            "<white>Equips elytra when you start gliding</white>",
+                            "<white>Equips elytra when using firework while falling</white>",
                     ),
                     MM.deserialize(
                         "<yellow>Auto Restore</yellow> <firewatch>></gradient> " +
@@ -62,21 +65,36 @@ internal object ElytraSwapMechanic : MechanicInterface {
         )
 
     @EventHandler
+    fun on(event: PlayerInteractEvent) {
+        val player = event.player
+
+        when {
+            !player.elytraSwap -> return
+            event.action != Action.RIGHT_CLICK_AIR && event.action != Action.RIGHT_CLICK_BLOCK -> return
+            event.item?.type != Material.FIREWORK_ROCKET -> return
+            player.isGliding -> return
+            player.velocity.y >= 0 -> return
+            player.isInWater || player.isInLava -> return
+            player.isFlying -> return
+            player.gameMode != GameMode.SURVIVAL && player.gameMode != GameMode.ADVENTURE -> return
+            else -> startGliding(player)
+        }
+    }
+
+    @EventHandler
     fun on(event: EntityToggleGlideEvent) {
         val player = event.entity as? Player ?: return
 
         if (!player.elytraSwap) return
+        if (event.isGliding) return
 
-        when {
-            event.isGliding -> startGliding(player)
-            else -> stopGliding(player)
-        }
+        stopGliding(player)
     }
 
     /**
-     * Equips an elytra from the player's inventory when they start gliding.
+     * Equips an elytra from the player's inventory when they use a firework while falling.
      *
-     * @param player The [Player] who started gliding.
+     * @param player The [Player] who used a firework while falling.
      */
     private fun startGliding(player: Player) =
         trySwap(
