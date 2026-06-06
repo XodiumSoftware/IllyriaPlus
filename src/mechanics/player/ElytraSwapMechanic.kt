@@ -3,6 +3,7 @@ package org.xodium.illyriaplus.mechanics.player
 import io.papermc.paper.command.brigadier.Commands
 import org.bukkit.GameMode
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.Tag
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -96,24 +97,49 @@ internal object ElytraSwapMechanic : MechanicInterface {
      *
      * @param player The [Player] who used a firework while falling.
      */
-    private fun startGliding(player: Player) =
-        trySwap(
-            player,
-            guard = { it?.type != Material.ELYTRA },
-            find = { it?.type == Material.ELYTRA },
-        )
+    private fun startGliding(player: Player) {
+        if (
+            !trySwap(
+                player,
+                guard = { it?.type != Material.ELYTRA },
+                find = { it?.type == Material.ELYTRA },
+            )
+        ) {
+            return
+        }
+
+        player.playSound(player.location, Sound.ITEM_ARMOR_EQUIP_ELYTRA, 1.0f, 1.0f)
+    }
 
     /**
      * Restores the previously equipped chestplate after the player stops gliding.
      *
      * @param player The [Player] who stopped gliding.
      */
-    private fun stopGliding(player: Player) =
-        trySwap(
-            player,
-            guard = { it?.type == Material.ELYTRA },
-            find = { it != null && Tag.ITEMS_CHEST_ARMOR.isTagged(it.type) },
-        )
+    private fun stopGliding(player: Player) {
+        if (
+            !trySwap(
+                player,
+                guard = { it?.type == Material.ELYTRA },
+                find = { it != null && Tag.ITEMS_CHEST_ARMOR.isTagged(it.type) },
+            )
+        ) {
+            return
+        }
+
+        val sound =
+            when (player.inventory.chestplate.type) {
+                Material.LEATHER_CHESTPLATE -> Sound.ITEM_ARMOR_EQUIP_LEATHER
+                Material.CHAINMAIL_CHESTPLATE -> Sound.ITEM_ARMOR_EQUIP_CHAIN
+                Material.IRON_CHESTPLATE -> Sound.ITEM_ARMOR_EQUIP_IRON
+                Material.GOLDEN_CHESTPLATE -> Sound.ITEM_ARMOR_EQUIP_GOLD
+                Material.DIAMOND_CHESTPLATE -> Sound.ITEM_ARMOR_EQUIP_DIAMOND
+                Material.NETHERITE_CHESTPLATE -> Sound.ITEM_ARMOR_EQUIP_NETHERITE
+                else -> Sound.ITEM_ARMOR_EQUIP_GENERIC
+            }
+
+        player.playSound(player.location, sound, 1.0f, 1.0f)
+    }
 
     /**
      * Swaps the player's chestplate with an item from their inventory that matches the given predicate.
@@ -121,24 +147,27 @@ internal object ElytraSwapMechanic : MechanicInterface {
      * @param player The [Player] whose chestplate will be swapped.
      * @param guard A predicate that must pass for the currently equipped chestplate.
      * @param find A predicate used to locate the replacement item in the player's inventory.
+     * @return `true` if a swap occurred, `false` otherwise.
      */
     private inline fun trySwap(
         player: Player,
         crossinline guard: (ItemStack?) -> Boolean,
         crossinline find: (ItemStack?) -> Boolean,
-    ) {
-        if (!guard(player.inventory.chestplate)) return
+    ): Boolean {
+        if (!guard(player.inventory.chestplate)) return false
 
         val slot = player.inventory.contents.indexOfFirst(find)
 
-        if (slot == -1) return
+        if (slot == -1) return false
 
         val equipped = player.inventory.chestplate
-        val target = player.inventory.getItem(slot) ?: return
+        val target = player.inventory.getItem(slot) ?: return false
 
         player.inventory.setItem(slot, equipped)
         player.inventory.setChestplate(target)
         player.updateInventory()
+
+        return true
     }
 
     /** Toggles elytra swap preference and sends feedback to the player. */
