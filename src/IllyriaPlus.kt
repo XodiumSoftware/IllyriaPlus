@@ -21,7 +21,7 @@ internal class IllyriaPlus : JavaPlugin() {
             private set
 
         /** The ID of the main class */
-        val ID = this.javaClass.simpleName.lowercase()
+        val ID = IllyriaPlus::class.java.simpleName.lowercase()
     }
 
     lateinit var recipes: List<RecipeInterface>
@@ -87,7 +87,6 @@ internal class IllyriaPlus : JavaPlugin() {
                 ServerInfoMechanic,
                 SpellMechanic,
                 TabListMechanic,
-                ElytraSwapMechanic,
             )
 
         logger.info(

@@ -14,9 +14,6 @@ internal object PlayerPDC {
     /** The [NamespacedKey] used for storing scoreboard visibility preferences. */
     private val SCOREBOARD_VISIBILITY_KEY = NamespacedKey(instance, "scoreboard_visibility")
 
-    /** The [NamespacedKey] used for storing elytra swap preference data. */
-    private val ELYTRA_SWAP_KEY = NamespacedKey(instance, "elytra_swap")
-
     /**
      * Gets or sets a [Player]'s nickname in their persistent data container.
      *
@@ -40,13 +37,4 @@ internal object PlayerPDC {
     var Player.scoreboardVisibility: Boolean
         get() = persistentDataContainer.getOrDefault(SCOREBOARD_VISIBILITY_KEY, PersistentDataType.BOOLEAN, false)
         set(value) = persistentDataContainer.set(SCOREBOARD_VISIBILITY_KEY, PersistentDataType.BOOLEAN, value)
-
-    /**
-     * Gets or sets a [Player]'s elytra swap preference in their persistent data container.
-     *
-     * @return `true` if elytra swapping is enabled, `false` otherwise.
-     */
-    var Player.elytraSwap: Boolean
-        get() = persistentDataContainer.getOrDefault(ELYTRA_SWAP_KEY, PersistentDataType.BOOLEAN, false)
-        set(value) = persistentDataContainer.set(ELYTRA_SWAP_KEY, PersistentDataType.BOOLEAN, value)
 }
