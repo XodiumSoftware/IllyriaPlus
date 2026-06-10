@@ -55,7 +55,7 @@ internal object FrostbindEnchantment : EnchantmentInterface {
 
         val direction = player.location.direction.normalize()
         val spawnLocation = player.eyeLocation.add(direction.clone().multiply(1.5))
-        val snowball: Snowball = player.world.spawn(spawnLocation, Snowball::class.java)
+        val snowball = player.world.spawn(spawnLocation, Snowball::class.java)
 
         snowball.shooter = player
         snowball.setGravity(false)
@@ -78,6 +78,7 @@ internal object FrostbindEnchantment : EnchantmentInterface {
         if (!projectile.persistentDataContainer.has(PROJECTILE_KEY)) return
 
         val entity = event.hitEntity ?: return
+
         entity.freezeTicks = FREEZE_TICKS
 
         Particle.SNOWFLAKE
