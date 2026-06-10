@@ -21,8 +21,7 @@ internal interface SpellEnchantmentInterface : EnchantmentInterface {
     val category: SpellCategory
 
     /** The unique key string for this spell, used for storage and lookup. */
-    val spellKey: String
-        get() = key.key().asString()
+    val spellKey: String get() = key.key().asString()
 
     /**
      * Executes the spell effect.
