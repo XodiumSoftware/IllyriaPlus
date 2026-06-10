@@ -51,7 +51,6 @@ sourceSets { main { kotlin { srcDirs("src") } } }
 
 dokka {
     moduleName.set("IllyriaPlus")
-
     dokkaPublications.html {
         outputDirectory.set(layout.projectDirectory.dir("docs"))
     }
