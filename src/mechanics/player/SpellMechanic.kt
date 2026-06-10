@@ -12,9 +12,10 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
 import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.bukkit.inventory.ItemStack
+import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.FaqTab
-import org.xodium.illyriaplus.enchantments.spells.*
+import org.xodium.illyriaplus.enchantments.spells.SpellEnchantmentInterface
 import org.xodium.illyriaplus.managers.CooldownManager
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import org.xodium.illyriaplus.pdcs.ItemStackPDC.selectedSpell
@@ -23,19 +24,8 @@ import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling spell casting within the system. */
 internal object SpellMechanic : MechanicInterface {
-    private val SPELLS: List<SpellEnchantmentInterface> =
-        listOf(
-            FrostbindEnchantment,
-            InfernoEnchantment,
-            QuakeEnchantment,
-            SkysunderEnchantment,
-            TempestEnchantment,
-            VoidpullEnchantment,
-            WitherbrandEnchantment,
-        )
-
     private val SPELL_MAP: Map<Enchantment, SpellEnchantmentInterface> by lazy {
-        SPELLS.associateBy { it.get() }
+        instance.enchantments.spells.associateBy { it.get() }
     }
 
     /** Spell wand interaction message strings. */
