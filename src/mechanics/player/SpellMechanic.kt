@@ -73,17 +73,15 @@ internal object SpellMechanic : MechanicInterface {
     @EventHandler
     fun on(event: PlayerSwapHandItemsEvent) {
         val player = event.player
-        if (CooldownManager.isCasting(player)) {
-            CooldownManager.interruptCast(player)
-        }
+
+        if (CooldownManager.isCasting(player)) CooldownManager.interruptCast(player)
     }
 
     @EventHandler
     fun on(event: EntityDamageEvent) {
         val player = event.entity as? Player ?: return
-        if (CooldownManager.isCasting(player)) {
-            CooldownManager.interruptCast(player)
-        }
+
+        if (CooldownManager.isCasting(player)) CooldownManager.interruptCast(player)
     }
 
     /**
@@ -106,6 +104,7 @@ internal object SpellMechanic : MechanicInterface {
 
             Action.LEFT_CLICK_AIR, Action.LEFT_CLICK_BLOCK -> {
                 val spell = getSelectedSpell(item) ?: return
+
                 if (player.gameMode != GameMode.CREATIVE && CooldownManager.isOnCooldown(player, spell)) {
                     event.isCancelled = true
                     CooldownManager.notifyCooldown(player, spell)
@@ -120,22 +119,24 @@ internal object SpellMechanic : MechanicInterface {
                     event.isCancelled = true
                     CooldownManager.startCast(player, spell.castDelay) {
                         if (!player.isOnline) return@startCast
+
                         val currentItem = player.inventory.itemInMainHand
+
                         if (currentItem.type != Material.BLAZE_ROD) return@startCast
+
                         val currentSpell = getSelectedSpell(currentItem) ?: return@startCast
+
                         if (currentSpell != spell) return@startCast
 
                         spell.cast(event)
-                        if (player.gameMode != GameMode.CREATIVE) {
-                            CooldownManager.startCooldowns(player, spell)
-                        }
+
+                        if (player.gameMode != GameMode.CREATIVE) CooldownManager.startCooldowns(player, spell)
                     }
                 } else {
                     event.isCancelled = true
                     spell.cast(event)
-                    if (player.gameMode != GameMode.CREATIVE) {
-                        CooldownManager.startCooldowns(player, spell)
-                    }
+
+                    if (player.gameMode != GameMode.CREATIVE) CooldownManager.startCooldowns(player, spell)
                 }
             }
 
@@ -151,6 +152,7 @@ internal object SpellMechanic : MechanicInterface {
      */
     private fun handleWandHeld(event: PlayerItemHeldEvent) {
         val player = event.player
+
         if (CooldownManager.isCasting(player)) {
             CooldownManager.interruptCast(player)
             return
@@ -177,9 +179,6 @@ internal object SpellMechanic : MechanicInterface {
             .removeSuffix("_enchantment")
             .replaceFirstChar { it.uppercase() }
 
-    /** Gets the spell key string for storage. */
-    private fun getSpellKey(spell: Enchantment): String = spell.key.toString()
-
     /** Shows the selected spell name in the player's action bar. */
     private fun showSelectedSpell(
         player: Player,
@@ -204,6 +203,7 @@ internal object SpellMechanic : MechanicInterface {
     private fun getSelectedSpell(item: ItemStack): SpellEnchantmentInterface? =
         getSpellsOnWand(item).takeIf { it.isNotEmpty() }?.let { spells ->
             val found = spells.find { SPELL_MAP[it]?.spellKey == item.selectedSpell }
+
             (found ?: spells.first()).let { SPELL_MAP[it] }
         }
 }
