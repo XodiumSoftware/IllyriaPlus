@@ -5,24 +5,23 @@ import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
 import org.bukkit.Particle
 import org.bukkit.entity.WindCharge
-import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.util.Vector
 import org.xodium.illyriaplus.Utils
 import org.xodium.illyriaplus.Utils.Enchantment.displayName
-import org.xodium.illyriaplus.Utils.Enchantment.isSelectedSpell
-import org.xodium.illyriaplus.Utils.Enchantment.validateSpellCast
-import org.xodium.illyriaplus.enchantments.EnchantmentInterface
-import org.xodium.illyriaplus.managers.XpManager
 
 /** Represents an object handling tempest enchantment implementation within the system. */
 @Suppress("UnstableApiUsage")
-internal object TempestEnchantment : EnchantmentInterface {
-    private const val XP_COST = 4
+internal object TempestEnchantment : SpellEnchantmentInterface {
     private const val SPREAD_AMOUNT = 0.2
 
     private val CAST_SOUND: Sound = Sound.sound(Key.key("entity.breeze.shoot"), Sound.Source.HOSTILE, 1.0f, 1.0f)
+
+    override val cooldown: Long = 200L
+    override val categoryCooldown: Long = 120L
+    override val castDelay: Long = 8L
+    override val category: SpellCategory = SpellCategory.AREA
 
     override fun invoke(builder: EnchantmentRegistryEntry.Builder): EnchantmentRegistryEntry.Builder =
         builder
@@ -34,20 +33,8 @@ internal object TempestEnchantment : EnchantmentInterface {
             .maximumCost(EnchantmentRegistryEntry.EnchantmentCost.of(65, 5))
             .activeSlots(EquipmentSlotGroup.MAINHAND)
 
-    /**
-     * Handles player interaction for casting Tempest.
-     *
-     * @param event The interaction event.
-     */
-    @EventHandler
-    fun on(event: PlayerInteractEvent) {
+    override fun cast(event: PlayerInteractEvent) {
         val player = event.player
-        val item = event.item ?: return
-
-        if (!isSelectedSpell(item, get())) return
-        if (!validateSpellCast(event.action, item, get())) return
-        if (!XpManager.consumeXp(event, XP_COST)) return
-
         val baseDir = player.location.direction.normalize()
         val right = baseDir.clone().crossProduct(Vector(0, 1, 0)).normalize()
         val spawnBase = player.eyeLocation.add(baseDir.clone().multiply(1.5))

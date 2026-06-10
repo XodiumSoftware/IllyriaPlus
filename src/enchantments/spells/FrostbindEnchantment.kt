@@ -14,19 +14,20 @@ import org.bukkit.persistence.PersistentDataType
 import org.xodium.illyriaplus.IllyriaPlus
 import org.xodium.illyriaplus.Utils
 import org.xodium.illyriaplus.Utils.Enchantment.displayName
-import org.xodium.illyriaplus.enchantments.EnchantmentInterface
-import org.xodium.illyriaplus.managers.XpManager
 
 /** Represents an object handling frostbind enchantment implementation within the system. */
 @Suppress("UnstableApiUsage")
-internal object FrostbindEnchantment : EnchantmentInterface {
+internal object FrostbindEnchantment : SpellEnchantmentInterface {
     private val PROJECTILE_KEY by lazy { NamespacedKey(IllyriaPlus.instance, "frostbind_projectile") }
     private val LAUNCH_SOUND: Sound =
         Sound.sound(Key.key("entity.snow_golem.shoot"), Sound.Source.NEUTRAL, 1.0f, 1.2f)
     private val HIT_SOUND: Sound =
         Sound.sound(Key.key("block.powder_snow.place"), Sound.Source.BLOCK, 1.0f, 0.8f)
 
-    private const val XP_COST: Int = 2
+    override val cooldown: Long = 160L
+    override val categoryCooldown: Long = 60L
+    override val castDelay: Long = 6L
+    override val category: SpellCategory = SpellCategory.PROJECTILE
     private const val FREEZE_TICKS: Int = 500
 
     override fun invoke(builder: EnchantmentRegistryEntry.Builder): EnchantmentRegistryEntry.Builder =
@@ -39,20 +40,8 @@ internal object FrostbindEnchantment : EnchantmentInterface {
             .maximumCost(EnchantmentRegistryEntry.EnchantmentCost.of(65, 5))
             .activeSlots(EquipmentSlotGroup.MAINHAND)
 
-    /**
-     * Handles player interaction for casting Frostbind.
-     *
-     * @param event The interaction event.
-     */
-    @EventHandler
-    fun on(event: PlayerInteractEvent) {
+    override fun cast(event: PlayerInteractEvent) {
         val player = event.player
-        val item = event.item ?: return
-
-        if (!Utils.Enchantment.isSelectedSpell(item, get())) return
-        if (!Utils.Enchantment.validateSpellCast(event.action, item, get())) return
-        if (!XpManager.consumeXp(event, XP_COST)) return
-
         val direction = player.location.direction.normalize()
         val spawnLocation = player.eyeLocation.add(direction.clone().multiply(1.5))
         val snowball = player.world.spawn(spawnLocation, Snowball::class.java)
