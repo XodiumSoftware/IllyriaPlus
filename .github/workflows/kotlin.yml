@@ -37,7 +37,7 @@ jobs:
 
       - id: setup_gradle
         name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6.1.0
+        uses: gradle/actions/setup-gradle@v6.1.1
 
       - id: run_lint
         name: Run Lint
@@ -67,7 +67,7 @@ jobs:
 
       - id: setup_gradle
         name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6.1.0
+        uses: gradle/actions/setup-gradle@v6.1.1
 
       - id: clean_gradle
         name: Clean Build Directory
@@ -228,7 +228,7 @@ jobs:
 
       - id: setup_gradle
         name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6.1.0
+        uses: gradle/actions/setup-gradle@v6.1.1
 
       - id: generate_docs
         name: Generate Documentation
