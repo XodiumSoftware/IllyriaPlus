@@ -2,7 +2,6 @@ import xyz.jpenilla.runtask.task.AbstractRun
 
 plugins {
     id("java")
-    id("idea")
 
     kotlin("jvm") version "2.4.0"
 
