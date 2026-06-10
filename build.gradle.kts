@@ -34,7 +34,7 @@ dependencies {
 
     implementation(kotlin("stdlib"))
 
-    implementation("xyz.xenondevs.invui:invui:2.1.0")
+    implementation("xyz.xenondevs.invui:invui:2.1.1")
     implementation("xyz.xenondevs.invui:invui-kotlin:2.1.0")
 }
 
