@@ -44,7 +44,7 @@ internal object ChatMechanic : MechanicInterface {
     private const val CLICK_TO_DELETE_MSG = "<mango>Click to delete your message</gradient>"
     private const val PLAYER_IS_NOT_ONLINE_MSG = "<firewatch>Player is not Online!</gradient>"
     private const val JOIN_TITLE = "<firewatch><b>Welcome</b></gradient> <player>"
-    private const val JOIN_SUBTITLE = "<mango>Check out:</gradient> /faq"
+    private const val JOIN_SUBTITLE = "<mango>Press: <key:key.quickActions> for Quick Actions!</gradient>"
 
     override val faqTab = FaqTab.SERVER_MECHANIC
 
