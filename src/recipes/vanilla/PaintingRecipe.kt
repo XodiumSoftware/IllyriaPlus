@@ -1,5 +1,6 @@
-package org.xodium.illyriaplus.recipes
+package org.xodium.illyriaplus.recipes.vanilla
 
+import org.xodium.illyriaplus.recipes.RecipeInterface
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey

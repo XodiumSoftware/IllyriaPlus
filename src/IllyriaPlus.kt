@@ -12,7 +12,8 @@ import org.xodium.illyriaplus.mechanics.entity.monster.*
 import org.xodium.illyriaplus.mechanics.player.*
 import org.xodium.illyriaplus.mechanics.server.*
 import org.xodium.illyriaplus.mechanics.world.*
-import org.xodium.illyriaplus.recipes.*
+import org.xodium.illyriaplus.recipes.RecipeInterface
+import org.xodium.illyriaplus.recipes.vanilla.*
 
 /** Main class of the plugin. */
 internal class IllyriaPlus : JavaPlugin() {

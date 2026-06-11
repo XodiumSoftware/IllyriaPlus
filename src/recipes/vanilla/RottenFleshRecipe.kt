@@ -1,5 +1,6 @@
-package org.xodium.illyriaplus.recipes
+package org.xodium.illyriaplus.recipes.vanilla
 
+import org.xodium.illyriaplus.recipes.RecipeInterface
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.CampfireRecipe
