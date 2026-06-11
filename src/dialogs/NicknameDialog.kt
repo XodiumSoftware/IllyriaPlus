@@ -19,6 +19,7 @@ internal object NicknameDialog : DialogInterface {
             .base(
                 DialogBase
                     .builder(MM.deserialize("<firewatch><b>Nickname</b></gradient>"))
+                    .externalTitle(MM.deserialize("Nickname"))
                     .inputs(
                         listOf(
                             DialogInput
@@ -33,17 +34,7 @@ internal object NicknameDialog : DialogInterface {
                     .build(),
             ).type(
                 DialogType.confirmation(
-                    ActionButton
-                        .builder(MM.deserialize("<red>Discard</red>"))
-                        .action(
-                            DialogAction.customClick(
-                                { _, _ -> },
-                                ClickCallback.Options
-                                    .builder()
-                                    .uses(ClickCallback.UNLIMITED_USES)
-                                    .build(),
-                            ),
-                        ).build(),
+                    ActionButton.builder(MM.deserialize("<red>Discard</red>")).build(),
                     ActionButton
                         .builder(MM.deserialize("<green>Save</green>"))
                         .action(
