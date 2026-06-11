@@ -25,8 +25,6 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.pdcs.ItemStackPDC.selectedSpell
-import xyz.xenondevs.invui.item.BoundItem
-import xyz.xenondevs.invui.item.ItemBuilder
 
 /** General utilities. */
 internal object Utils {
@@ -65,39 +63,6 @@ internal object Utils {
             .split(Regex("(?=[A-Z])"))
             .filter { it.isNotEmpty() }
             .joinToString("_") { it.lowercase() }
-
-    /** GUI-related utilities. */
-    object Gui {
-        /**
-         * Creates a filler item using a black stained-glass pane with no tooltip.
-         *
-         * @param material The [Material] to use for the filler item. Defaults to [Material.BLACK_STAINED_GLASS_PANE].
-         * @param tooltip Whether the item should display a tooltip. Defaults to `false`.
-         * @return An [ItemBuilder] suitable for empty GUI slots.
-         */
-        fun filler(
-            material: Material = Material.BLACK_STAINED_GLASS_PANE,
-            tooltip: Boolean = false,
-        ): ItemBuilder = ItemBuilder(material).hideTooltip(tooltip)
-
-        /**
-         * Creates a tab button that switches a [xyz.xenondevs.invui.gui.TabGui] to the given index when clicked.
-         * The button shows an enchantment glint when its tab is active.
-         *
-         * @param index The tab index to switch to.
-         * @param itemBuilder The display item for the tab button.
-         * @return A [BoundItem] configured for tab navigation.
-         */
-        fun createTabButton(
-            index: Int,
-            itemBuilder: ItemBuilder,
-        ): BoundItem =
-            BoundItem
-                .tabBuilder()
-                .setItemProvider { _, gui -> if (gui.tab == index) itemBuilder.clone().setGlint(true) else itemBuilder }
-                .addClickHandler { _, gui, _ -> gui.tab = index }
-                .build()
-    }
 
     /** Enchantment-related utilities. */
     object Enchantment {

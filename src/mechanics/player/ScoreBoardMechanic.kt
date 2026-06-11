@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.mechanics.server
+package org.xodium.illyriaplus.mechanics.player
 
 import io.papermc.paper.command.brigadier.Commands
 import org.bukkit.entity.Player

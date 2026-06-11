@@ -7,10 +7,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.RecipeChoice
 import org.bukkit.inventory.ShapelessRecipe
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.recipes.RecipeInterface
-import xyz.xenondevs.invui.item.Item
-import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents an object handling wool-to-string recipe implementation within the system. */
 internal object WoolToStringRecipe : RecipeInterface {
@@ -22,18 +19,5 @@ internal object WoolToStringRecipe : RecipeInterface {
             ).apply {
                 addIngredient(RecipeChoice.MaterialChoice(Tag.WOOL))
             },
-        )
-
-    override val faqItem =
-        Item.simple(
-            ItemBuilder(Material.STRING)
-                .setName(MM.deserialize("<mango>Wool to String</gradient>"))
-                .addLoreLines(
-                    MM.deserialize(""),
-                    MM.deserialize(
-                        "<yellow>Craft</yellow> <firewatch>></gradient> " +
-                            "<white>Any wool can be crafted into 4 strings</white>",
-                    ),
-                ),
         )
 }

@@ -5,10 +5,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.ShapelessRecipe
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.recipes.RecipeInterface
-import xyz.xenondevs.invui.item.Item
-import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents an object handling nether-wart-block-to-nether-wart recipe implementation within the system. */
 internal object NetherWartBlockRecipe : RecipeInterface {
@@ -20,18 +17,5 @@ internal object NetherWartBlockRecipe : RecipeInterface {
             ).apply {
                 addIngredient(Material.NETHER_WART_BLOCK)
             },
-        )
-
-    override val faqItem =
-        Item.simple(
-            ItemBuilder(Material.NETHER_WART)
-                .setName(MM.deserialize("<mango>Nether Wart Block</gradient>"))
-                .addLoreLines(
-                    MM.deserialize(""),
-                    MM.deserialize(
-                        "<yellow>Craft</yellow> <firewatch>></gradient> " +
-                            "<white>Nether wart blocks can be crafted into 9 nether wart</white>",
-                    ),
-                ),
         )
 }
