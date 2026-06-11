@@ -2,7 +2,7 @@ package org.xodium.illyriaplus.recipes
 
 import io.papermc.paper.potion.PotionMix
 import org.bukkit.inventory.Recipe
-import org.xodium.illyriaplus.IllyriaPlus
+import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.data.FaqTab
 import xyz.xenondevs.invui.item.Item
 import kotlin.time.measureTime
@@ -44,10 +44,7 @@ internal interface RecipeInterface {
      */
     fun register(): Long =
         measureTime {
-            recipes.forEach { IllyriaPlus.instance.server.addRecipe(it) }
-            potions.forEach {
-                IllyriaPlus.instance.server.potionBrewer
-                    .addPotionMix(it)
-            }
+            recipes.forEach { instance.server.addRecipe(it) }
+            potions.forEach { instance.server.potionBrewer.addPotionMix(it) }
         }.inWholeMilliseconds
 }

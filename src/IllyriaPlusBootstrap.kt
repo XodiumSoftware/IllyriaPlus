@@ -11,6 +11,7 @@ import io.papermc.paper.registry.keys.tags.ItemTypeTagKeys
 import io.papermc.paper.registry.tag.TagKey
 import io.papermc.paper.tag.TagEntry
 import net.kyori.adventure.key.Key
+import org.xodium.illyriaplus.dialogs.QuickActionsDialog
 import org.xodium.illyriaplus.enchantments.spells.*
 import org.xodium.illyriaplus.enchantments.utility.*
 
@@ -67,6 +68,13 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
                     )
                 }
             }
+            registerEventHandler(
+                RegistryEvents.DIALOG.compose().newHandler { event ->
+                    event.registry().apply {
+                        register(QuickActionsDialog.key) { QuickActionsDialog.invoke(it) }
+                    }
+                },
+            )
             registerEventHandler(
                 RegistryEvents.ENCHANTMENT.compose().newHandler { event ->
                     event.registry().apply {
