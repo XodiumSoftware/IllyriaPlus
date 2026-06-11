@@ -35,12 +35,4 @@ internal interface ItemInterface {
 
     /** Allows callable syntax, e.g. `Trowel()` instead of `Trowel.item`. */
     operator fun invoke(): ItemStack = item
-
-    /**
-     * Checks if the given item matches this custom item.
-     *
-     * @param item The item to check.
-     * @return True if the item is this custom item, false otherwise.
-     */
-    fun isItem(item: ItemStack): Boolean = item.persistentDataContainer.get(key, PersistentDataType.BOOLEAN) == true
 }
