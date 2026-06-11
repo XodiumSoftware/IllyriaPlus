@@ -1,7 +1,7 @@
 package org.xodium.illyriaplus
 
 import org.bukkit.plugin.java.JavaPlugin
-import org.xodium.illyriaplus.enchantments.EnchantmentInterface
+import org.xodium.illyriaplus.data.EnchantmentRegistry
 import org.xodium.illyriaplus.enchantments.spells.*
 import org.xodium.illyriaplus.enchantments.utility.*
 import org.xodium.illyriaplus.enchantments.vanilla.FeatherFallingEnchantment
@@ -29,7 +29,7 @@ internal class IllyriaPlus : JavaPlugin() {
         private set
     lateinit var mechanics: List<MechanicInterface>
         private set
-    lateinit var enchantments: List<EnchantmentInterface>
+    lateinit var enchantments: EnchantmentRegistry
         private set
 
     override fun onEnable() {
@@ -95,25 +95,28 @@ internal class IllyriaPlus : JavaPlugin() {
         )
 
         enchantments =
-            listOf(
-                EarthrendEnchantment,
-                EmbertreadEnchantment,
-                FeatherFallingEnchantment,
-                FrostbindEnchantment,
-                InfernoEnchantment,
-                NimbusEnchantment,
-                QuakeEnchantment,
-                SilkTouchEnchantment,
-                SkysunderEnchantment,
-                TempestEnchantment,
-                TetherEnchantment,
-                VerdanceEnchantment,
-                VoidpullEnchantment,
-                WitherbrandEnchantment,
+            EnchantmentRegistry(
+                listOf(
+                    EarthrendEnchantment,
+                    EmbertreadEnchantment,
+                    FeatherFallingEnchantment,
+                    FrostbindEnchantment,
+                    InfernoEnchantment,
+                    NimbusEnchantment,
+                    QuakeEnchantment,
+                    SilkTouchEnchantment,
+                    SkysunderEnchantment,
+                    TempestEnchantment,
+                    TetherEnchantment,
+                    VerdanceEnchantment,
+                    VoidpullEnchantment,
+                    WitherbrandEnchantment,
+                ),
             )
 
         logger.info(
-            "Registered: ${enchantments.size} enchantment events | Took ${enchantments.sumOf { it.register() }}ms",
+            "Registered: ${enchantments.all.size} enchantment events | " +
+                "Took ${enchantments.all.sumOf { it.register() }}ms",
         )
     }
 }

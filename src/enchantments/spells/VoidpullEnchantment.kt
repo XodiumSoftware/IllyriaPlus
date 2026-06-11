@@ -14,16 +14,11 @@ import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriaplus.Utils
 import org.xodium.illyriaplus.Utils.Enchantment.displayName
-import org.xodium.illyriaplus.Utils.Enchantment.isSelectedSpell
-import org.xodium.illyriaplus.Utils.Enchantment.validateSpellCast
-import org.xodium.illyriaplus.enchantments.EnchantmentInterface
-import org.xodium.illyriaplus.managers.XpManager
 import java.util.*
 
 /** Represents an object handling voidpull enchantment implementation within the system. */
 @Suppress("UnstableApiUsage")
-internal object VoidpullEnchantment : EnchantmentInterface {
-    private const val XP_COST = 3
+internal object VoidpullEnchantment : SpellEnchantmentInterface {
     private const val VELOCITY = 2.5
     private const val MAX_DISTANCE = 30.0
 
@@ -32,6 +27,11 @@ internal object VoidpullEnchantment : EnchantmentInterface {
 
     private val CAST_SOUND: Sound = Sound.sound(Key.key("entity.ender_pearl.throw"), Sound.Source.PLAYER, 1.0f, 1.0f)
     private val PULL_SOUND: Sound = Sound.sound(Key.key("entity.enderman.teleport"), Sound.Source.HOSTILE, 1.0f, 0.8f)
+
+    override val cooldown: Long = 140L
+    override val categoryCooldown: Long = 60L
+    override val castDelay: Long = 10L
+    override val category: SpellCategory = SpellCategory.PROJECTILE
 
     override fun invoke(builder: EnchantmentRegistryEntry.Builder): EnchantmentRegistryEntry.Builder =
         builder
@@ -43,20 +43,8 @@ internal object VoidpullEnchantment : EnchantmentInterface {
             .maximumCost(EnchantmentRegistryEntry.EnchantmentCost.of(65, 5))
             .activeSlots(EquipmentSlotGroup.MAINHAND)
 
-    /**
-     * Handles player interaction for casting Voidpull.
-     *
-     * @param event The interaction event.
-     */
-    @EventHandler
-    fun on(event: PlayerInteractEvent) {
+    override fun cast(event: PlayerInteractEvent) {
         val player = event.player
-        val item = event.item ?: return
-
-        if (!isSelectedSpell(item, get())) return
-        if (!validateSpellCast(event.action, item, get())) return
-        if (!XpManager.consumeXp(event, XP_COST)) return
-
         val direction = player.location.direction.normalize()
         val spawnLocation = player.eyeLocation.add(direction.clone().multiply(1.5))
         val pearl = player.world.spawn(spawnLocation, EnderPearl::class.java)

@@ -6,23 +6,17 @@ import net.kyori.adventure.sound.Sound
 import org.bukkit.Location
 import org.bukkit.Particle
 import org.bukkit.entity.LivingEntity
-import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.util.Vector
 import org.xodium.illyriaplus.Utils.Enchantment.displayName
-import org.xodium.illyriaplus.Utils.Enchantment.isSelectedSpell
-import org.xodium.illyriaplus.Utils.Enchantment.validateSpellCast
-import org.xodium.illyriaplus.enchantments.EnchantmentInterface
-import org.xodium.illyriaplus.managers.XpManager
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
 /** Represents an object handling quake enchantment implementation within the system. */
 @Suppress("UnstableApiUsage")
-internal object QuakeEnchantment : EnchantmentInterface {
-    private const val XP_COST = 3
+internal object QuakeEnchantment : SpellEnchantmentInterface {
     private const val RADIUS = 4.0
     private const val DAMAGE = 6.0
     private const val KNOCKBACK_STRENGTH = 1.2
@@ -30,6 +24,11 @@ internal object QuakeEnchantment : EnchantmentInterface {
 
     private val CAST_SOUND: Sound = Sound.sound(Key.key("entity.warden.attack_impact"), Sound.Source.BLOCK, 1.0f, 0.8f)
     private val HIT_SOUND: Sound = Sound.sound(Key.key("block.anvil.land"), Sound.Source.BLOCK, 0.6f, 0.5f)
+
+    override val cooldown: Long = 240L
+    override val categoryCooldown: Long = 120L
+    override val castDelay: Long = 12L
+    override val category: SpellCategory = SpellCategory.AREA
 
     override fun invoke(builder: EnchantmentRegistryEntry.Builder): EnchantmentRegistryEntry.Builder =
         builder
@@ -41,20 +40,8 @@ internal object QuakeEnchantment : EnchantmentInterface {
             .maximumCost(EnchantmentRegistryEntry.EnchantmentCost.of(65, 5))
             .activeSlots(EquipmentSlotGroup.MAINHAND)
 
-    /**
-     * Handles player interaction for casting Quake.
-     *
-     * @param event The interaction event.
-     */
-    @EventHandler
-    fun on(event: PlayerInteractEvent) {
+    override fun cast(event: PlayerInteractEvent) {
         val player = event.player
-        val item = event.item ?: return
-
-        if (!isSelectedSpell(item, get())) return
-        if (!validateSpellCast(event.action, item, get())) return
-        if (!XpManager.consumeXp(event, XP_COST)) return
-
         val location = player.location
         val world = player.world
 
