@@ -1,6 +1,5 @@
 package org.xodium.illyriaplus.recipes.vanilla
 
-import org.xodium.illyriaplus.recipes.RecipeInterface
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
@@ -10,6 +9,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.StonecuttingRecipe
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
+import org.xodium.illyriaplus.recipes.RecipeInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 
