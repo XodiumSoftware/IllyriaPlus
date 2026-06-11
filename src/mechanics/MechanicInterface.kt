@@ -3,10 +3,8 @@ package org.xodium.illyriaplus.mechanics
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import org.bukkit.event.Listener
 import org.bukkit.permissions.Permission
-import org.xodium.illyriaplus.IllyriaPlus
+import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.data.CommandData
-import org.xodium.illyriaplus.data.FaqTab
-import xyz.xenondevs.invui.item.Item
 import kotlin.time.measureTime
 
 /** Represents a contract for a mechanic within the system. */
@@ -26,20 +24,6 @@ internal interface MechanicInterface : Listener {
     val perms: List<Permission> get() = emptyList()
 
     /**
-     * Retrieves the FAQ tab.
-     *
-     * @return A [org.xodium.illyriaplus.data.FaqTab] instance.
-     */
-    val faqTab: FaqTab
-
-    /**
-     * Retrieves the FAQ display item.
-     *
-     * @return An [xyz.xenondevs.invui.item.Item] instance.
-     */
-    val faqItem: Item
-
-    /**
      * Registers this feature with the server.
      *
      * @return The time taken to register the feature in milliseconds.
@@ -47,11 +31,9 @@ internal interface MechanicInterface : Listener {
     @Suppress("UnstableApiUsage")
     fun register(): Long =
         measureTime {
-            IllyriaPlus.instance.server.pluginManager
-                .addPermissions(perms)
-            IllyriaPlus.instance.server.pluginManager
-                .registerEvents(this, IllyriaPlus.instance)
-            IllyriaPlus.instance.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {
+            instance.server.pluginManager.addPermissions(perms)
+            instance.server.pluginManager.registerEvents(this, instance)
+            instance.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {
                 cmds.forEach { cmd ->
                     it.registrar().register(
                         cmd.builder.build(),

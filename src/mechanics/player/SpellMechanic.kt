@@ -14,13 +14,10 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.bukkit.inventory.ItemStack
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.enchantments.spells.SpellEnchantmentInterface
 import org.xodium.illyriaplus.managers.CooldownManager
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import org.xodium.illyriaplus.pdcs.ItemStackPDC.selectedSpell
-import xyz.xenondevs.invui.item.Item
-import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling spell casting within the system. */
 internal object SpellMechanic : MechanicInterface {
@@ -32,27 +29,6 @@ internal object SpellMechanic : MechanicInterface {
     private object Messages {
         const val SELECTED_SPELL: String = "<spellbite>Current Spell > <white><spell></white></gradient>"
     }
-
-    override val faqTab = FaqTab.PLAYER_MECHANIC
-
-    override val faqItem =
-        Item.simple(
-            ItemBuilder(Material.BLAZE_ROD)
-                .setName(MM.deserialize("<mango>Spell System</gradient>"))
-                .addLoreLines(
-                    MM.deserialize(""),
-                    MM.deserialize(
-                        "<yellow>Wand</yellow> <firewatch>></gradient> <white>Blaze rod with enchantments</white>",
-                    ),
-                    MM.deserialize(
-                        "<yellow>Cycle</yellow> <firewatch>></gradient> <white>Right-click to switch spells</white>",
-                    ),
-                    MM.deserialize(
-                        "<yellow>Cast</yellow> <firewatch>></gradient> " +
-                            "<white>Left-click to cast selected spell</white>",
-                    ),
-                ),
-        )
 
     @EventHandler
     fun on(event: PlayerInteractEvent) = handleWandInteract(event)

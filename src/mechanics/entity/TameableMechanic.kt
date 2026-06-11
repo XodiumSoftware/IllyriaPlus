@@ -4,30 +4,11 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerInteractEntityEvent
-import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.Utils.Player.getLeashedEntity
-import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.mechanics.MechanicInterface
-import xyz.xenondevs.invui.item.Item
-import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling tameable entities within the system. */
 internal object TameableMechanic : MechanicInterface {
-    override val faqTab = FaqTab.ENTITY_MECHANIC
-
-    override val faqItem =
-        Item.simple(
-            ItemBuilder(Material.WOLF_SPAWN_EGG)
-                .setName(MM.deserialize("<mango>Tameable Mechanics</gradient>"))
-                .addLoreLines(
-                    MM.deserialize(""),
-                    MM.deserialize(
-                        "<yellow>Transfer Pets</yellow> <firewatch>></gradient> <white>Hold lead + " +
-                            "right-click player</white>",
-                    ),
-                ),
-        )
-
     @EventHandler
     fun on(event: PlayerInteractEntityEvent) = handleInteract(event)
 

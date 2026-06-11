@@ -1,15 +1,11 @@
 package org.xodium.illyriaplus.mechanics.entity.monster
 
-import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeInstance
 import org.bukkit.entity.Creeper
 import org.bukkit.entity.Monster
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.CreatureSpawnEvent
-import org.xodium.illyriaplus.Utils
-import xyz.xenondevs.invui.item.Item
-import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling creeper behavior and spawns within the system. */
 internal object CreeperMechanic : MonsterInterface {
@@ -20,28 +16,6 @@ internal object CreeperMechanic : MonsterInterface {
     override val attributes: Map<Attribute, (Monster, AttributeInstance) -> Unit> =
         mapOf(
             Attribute.KNOCKBACK_RESISTANCE to { _, attr -> attr.baseValue = (2..5).random() / 10.0 },
-        )
-
-    override val faqItem =
-        Item.simple(
-            ItemBuilder(Material.CREEPER_HEAD)
-                .setName(Utils.MM.deserialize("<mango>Creeper Mechanics</gradient>"))
-                .addLoreLines(
-                    Utils.MM.deserialize(""),
-                    Utils.MM.deserialize(
-                        "<yellow>Charged Spawn</yellow> <firewatch>></gradient> " +
-                            "<white>All creepers spawn powered (charged by lightning).</white>",
-                    ),
-                    Utils.MM.deserialize(
-                        "<yellow>Volatile Payload</yellow> <firewatch>></gradient> " +
-                            "<white>Creeper explosion radius is increased to " +
-                            "${explosionRadiusRange.first}-${explosionRadiusRange.last} blocks.</white>",
-                    ),
-                    Utils.MM.deserialize(
-                        "<yellow>Attribute Modifiers</yellow> <firewatch>></gradient> " +
-                            "<white>+20-50% KB resist.</white>",
-                    ),
-                ),
         )
 
     @EventHandler(ignoreCancelled = true)

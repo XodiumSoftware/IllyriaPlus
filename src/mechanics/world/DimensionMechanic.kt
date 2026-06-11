@@ -13,10 +13,7 @@ import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.event.world.PortalCreateEvent
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.mechanics.MechanicInterface
-import xyz.xenondevs.invui.item.Item
-import xyz.xenondevs.invui.item.ItemBuilder
 import kotlin.math.hypot
 
 /** Represents a mechanic handling dimension effects within the system. */
@@ -25,21 +22,6 @@ internal object DimensionMechanic : MechanicInterface {
     private const val PORTAL_SEARCH_RADIUS: Int = 128
     private const val CREATION_DENIED_MSG: String =
         "<firewatch>No corresponding active portal found in the Overworld!</gradient>"
-
-    override val faqTab = FaqTab.WORLD_MECHANIC
-
-    override val faqItem =
-        Item.simple(
-            ItemBuilder(Material.OBSIDIAN)
-                .setName(MM.deserialize("<mango>Dimension Mechanics</gradient>"))
-                .addLoreLines(
-                    MM.deserialize(""),
-                    MM.deserialize(
-                        "<yellow>Portal Linking</yellow> <firewatch>></gradient> " +
-                            "<white>Nether portals require Overworld link</white>",
-                    ),
-                ),
-        )
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PlayerPortalEvent) = playerPortal(event)

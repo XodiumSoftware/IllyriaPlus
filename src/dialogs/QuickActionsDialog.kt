@@ -30,12 +30,11 @@ internal object QuickActionsDialog : DialogInterface {
                         RegistrySet.keySet(
                             RegistryKey.DIALOG,
                             listOf(
-                                DialogKeys.SERVER_LINKS, // vanilla Server Links dialog
-                                // SettingsDialog.key,  // example custom dialog (must be registered)
-                                // WarpDialog.key,      // example custom dialog (must be registered)
+                                DialogKeys.SERVER_LINKS,
+                                NicknameDialog.key,
                             ),
                         ),
-                    ).columns(1)
+                    ).columns(3)
                     .exitAction(
                         ActionButton.builder(MM.deserialize("<red>Close [Esc]</red>")).build(),
                     ).build(),
