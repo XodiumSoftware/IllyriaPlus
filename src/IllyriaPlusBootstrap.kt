@@ -6,6 +6,7 @@ import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import io.papermc.paper.registry.RegistryKey
 import io.papermc.paper.registry.event.RegistryEvents
 import io.papermc.paper.registry.keys.ItemTypeKeys
+import io.papermc.paper.registry.keys.tags.DialogTagKeys
 import io.papermc.paper.registry.keys.tags.EnchantmentTagKeys
 import io.papermc.paper.registry.keys.tags.ItemTypeTagKeys
 import io.papermc.paper.registry.tag.TagKey
@@ -141,6 +142,11 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
                     }
                 },
             )
+            registerEventHandler(LifecycleEvents.TAGS.postFlatten(RegistryKey.DIALOG)) {
+                it.registrar().apply {
+                    addToTag(DialogTagKeys.QUICK_ACTIONS, listOf(QuickActionsDialog.key))
+                }
+            }
             registerEventHandler(LifecycleEvents.TAGS.postFlatten(RegistryKey.ENCHANTMENT)) {
                 it.registrar().apply {
                     val enchants =

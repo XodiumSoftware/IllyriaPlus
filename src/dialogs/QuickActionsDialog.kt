@@ -17,8 +17,6 @@ import org.xodium.illyriaplus.Utils.MM
  */
 @Suppress("UnstableApiUsage")
 internal object QuickActionsDialog : DialogInterface {
-    override val key = DialogKeys.QUICK_ACTIONS
-
     override fun invoke(builder: DialogRegistryEntry.Builder): DialogRegistryEntry.Builder =
         builder
             .base(
