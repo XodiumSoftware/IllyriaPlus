@@ -1,5 +1,6 @@
 package org.xodium.illyriaplus.mechanics.player
 
+import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.dialog.Dialog
 import io.papermc.paper.registry.data.dialog.ActionButton
 import io.papermc.paper.registry.data.dialog.DialogBase
@@ -15,7 +16,9 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
+import org.xodium.illyriaplus.Utils.Command.playerExecuted
 import org.xodium.illyriaplus.Utils.MM
+import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import org.xodium.illyriaplus.mechanics.server.TabListMechanic.tablist
@@ -25,6 +28,18 @@ import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling player nicknames within the system. */
 internal object NicknameMechanic : MechanicInterface {
+    override val cmds =
+        listOf(
+            CommandData(
+                Commands
+                    .literal("nickname")
+                    .requires { it.sender.hasPermission(perms[0]) }
+                    .playerExecuted { player, _ -> player.showDialog(nicknameDialog(player)) },
+                "Opens the nickname dialog",
+                listOf("nick"),
+            ),
+        )
+
     override val faqTab = FaqTab.PLAYER_MECHANIC
 
     override val faqItem =
@@ -37,7 +52,7 @@ internal object NicknameMechanic : MechanicInterface {
             ).addClickHandler { _, click ->
                 val player = click.player
 
-                if (player.hasPermission(perms[0])) player.showDialog(dialog(player))
+                if (player.hasPermission(perms[0])) player.showDialog(nicknameDialog(player))
             }.build()
 
     override val perms =
@@ -53,7 +68,7 @@ internal object NicknameMechanic : MechanicInterface {
     fun on(event: PlayerJoinEvent) = handleJoin(event)
 
     @Suppress("UnstableApiUsage")
-    private fun dialog(player: Player): Dialog =
+    private fun nicknameDialog(player: Player): Dialog =
         Dialog.create {
             it
                 .empty()
