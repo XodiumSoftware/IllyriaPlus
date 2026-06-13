@@ -1,7 +1,7 @@
 package org.xodium.illyriaplus
 
 import org.bukkit.plugin.java.JavaPlugin
-import org.xodium.illyriaplus.data.EnchantmentRegistry
+import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 import org.xodium.illyriaplus.enchantments.utility.*
 import org.xodium.illyriaplus.enchantments.vanilla.FeatherFallingEnchantment
 import org.xodium.illyriaplus.enchantments.vanilla.SilkTouchEnchantment
@@ -28,7 +28,7 @@ internal class IllyriaPlus : JavaPlugin() {
         private set
     lateinit var mechanics: List<MechanicInterface>
         private set
-    lateinit var enchantments: EnchantmentRegistry
+    lateinit var enchantments: List<EnchantmentInterface>
         private set
 
     override fun onEnable() {
@@ -92,21 +92,18 @@ internal class IllyriaPlus : JavaPlugin() {
         )
 
         enchantments =
-            EnchantmentRegistry(
-                listOf(
-                    EarthrendEnchantment,
-                    EmbertreadEnchantment,
-                    FeatherFallingEnchantment,
-                    NimbusEnchantment,
-                    SilkTouchEnchantment,
-                    TetherEnchantment,
-                    VerdanceEnchantment,
-                ),
+            listOf(
+                EarthrendEnchantment,
+                EmbertreadEnchantment,
+                FeatherFallingEnchantment,
+                NimbusEnchantment,
+                SilkTouchEnchantment,
+                TetherEnchantment,
+                VerdanceEnchantment,
             )
 
         logger.info(
-            "Registered: ${enchantments.all.size} enchantment events | " +
-                "Took ${enchantments.all.sumOf { it.register() }}ms",
+            "Registered: ${enchantments.size} enchantment events | Took ${enchantments.sumOf { it.register() }}ms",
         )
     }
 }

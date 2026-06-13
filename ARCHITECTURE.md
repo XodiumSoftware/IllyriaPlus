@@ -98,7 +98,7 @@ Recipe objects implement **`RecipeInterface`** and are listed in `IllyriaPlus.on
 | Package         | Contents                                                                 |
 |-----------------|--------------------------------------------------------------------------|
 | `mechanics/`    | 27 feature mechanic singletons (organized by category: entity, player, server, world) |
-| `data/`         | `CommandData`, `BookData`, `AdjacentBlockData`, `EnchantmentRegistry`     |
+| `data/`         | `CommandData`, `BookData`, `AdjacentBlockData`                                  |
 | `enchantments/` | Verdance, Tether, Nimbus, Earthrend, Embertread, SilkTouch, FeatherFalling |
 | `interfaces/`   | `ModuleInterface`, `EnchantmentInterface`, `RecipeInterface`, `ItemInterface` |
 | `managers/`     | (empty)                                                                  |
