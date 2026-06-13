@@ -1,7 +1,7 @@
 package org.xodium.illyriaplus
 
 import org.bukkit.plugin.java.JavaPlugin
-import org.xodium.illyriaplus.enchantments.EnchantmentInterface
+import org.xodium.illyriaplus.data.EnchantmentRegistry
 import org.xodium.illyriaplus.enchantments.spells.*
 import org.xodium.illyriaplus.enchantments.utility.*
 import org.xodium.illyriaplus.enchantments.vanilla.FeatherFallingEnchantment
@@ -12,7 +12,8 @@ import org.xodium.illyriaplus.mechanics.entity.monster.*
 import org.xodium.illyriaplus.mechanics.player.*
 import org.xodium.illyriaplus.mechanics.server.*
 import org.xodium.illyriaplus.mechanics.world.*
-import org.xodium.illyriaplus.recipes.*
+import org.xodium.illyriaplus.recipes.RecipeInterface
+import org.xodium.illyriaplus.recipes.vanilla.*
 
 /** Main class of the plugin. */
 internal class IllyriaPlus : JavaPlugin() {
@@ -21,14 +22,14 @@ internal class IllyriaPlus : JavaPlugin() {
             private set
 
         /** The ID of the main class */
-        val ID = this.javaClass.simpleName.lowercase()
+        val ID = IllyriaPlus::class.java.simpleName.lowercase()
     }
 
     lateinit var recipes: List<RecipeInterface>
         private set
     lateinit var mechanics: List<MechanicInterface>
         private set
-    lateinit var enchantments: List<EnchantmentInterface>
+    lateinit var enchantments: EnchantmentRegistry
         private set
 
     override fun onEnable() {
@@ -88,7 +89,6 @@ internal class IllyriaPlus : JavaPlugin() {
                 SpellMechanic,
                 TabListMechanic,
                 TreeMechanic,
-                ElytraSwapMechanic,
             )
 
         logger.info(
@@ -96,25 +96,28 @@ internal class IllyriaPlus : JavaPlugin() {
         )
 
         enchantments =
-            listOf(
-                EarthrendEnchantment,
-                EmbertreadEnchantment,
-                FeatherFallingEnchantment,
-                FrostbindEnchantment,
-                InfernoEnchantment,
-                NimbusEnchantment,
-                QuakeEnchantment,
-                SilkTouchEnchantment,
-                SkysunderEnchantment,
-                TempestEnchantment,
-                TetherEnchantment,
-                VerdanceEnchantment,
-                VoidpullEnchantment,
-                WitherbrandEnchantment,
+            EnchantmentRegistry(
+                listOf(
+                    EarthrendEnchantment,
+                    EmbertreadEnchantment,
+                    FeatherFallingEnchantment,
+                    FrostbindEnchantment,
+                    InfernoEnchantment,
+                    NimbusEnchantment,
+                    QuakeEnchantment,
+                    SilkTouchEnchantment,
+                    SkysunderEnchantment,
+                    TempestEnchantment,
+                    TetherEnchantment,
+                    VerdanceEnchantment,
+                    VoidpullEnchantment,
+                    WitherbrandEnchantment,
+                ),
             )
 
         logger.info(
-            "Registered: ${enchantments.size} enchantment events | Took ${enchantments.sumOf { it.register() }}ms",
+            "Registered: ${enchantments.all.size} enchantment events | " +
+                "Took ${enchantments.all.sumOf { it.register() }}ms",
         )
     }
 }

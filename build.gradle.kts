@@ -2,7 +2,6 @@ import xyz.jpenilla.runtask.task.AbstractRun
 
 plugins {
     id("java")
-    id("idea")
 
     kotlin("jvm") version "2.4.0"
 
@@ -35,8 +34,8 @@ dependencies {
 
     implementation(kotlin("stdlib"))
 
-    implementation("xyz.xenondevs.invui:invui:2.1.0")
-    implementation("xyz.xenondevs.invui:invui-kotlin:2.1.0")
+    implementation("xyz.xenondevs.invui:invui:2.1.1")
+    implementation("xyz.xenondevs.invui:invui-kotlin:2.1.1")
 }
 
 java {
@@ -56,7 +55,6 @@ sourceSets {
 
 dokka {
     moduleName.set("IllyriaPlus")
-
     dokkaPublications.html {
         outputDirectory.set(layout.projectDirectory.dir("docs"))
     }

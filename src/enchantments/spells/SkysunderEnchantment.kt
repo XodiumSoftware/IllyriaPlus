@@ -2,20 +2,19 @@ package org.xodium.illyriaplus.enchantments.spells
 
 import io.papermc.paper.registry.data.EnchantmentRegistryEntry
 import org.bukkit.Particle
-import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.xodium.illyriaplus.Utils.Enchantment.displayName
-import org.xodium.illyriaplus.Utils.Enchantment.isSelectedSpell
-import org.xodium.illyriaplus.Utils.Enchantment.validateSpellCast
-import org.xodium.illyriaplus.enchantments.EnchantmentInterface
-import org.xodium.illyriaplus.managers.XpManager
 
 /** Represents an object handling skysunder enchantment implementation within the system. */
 @Suppress("UnstableApiUsage")
-internal object SkysunderEnchantment : EnchantmentInterface {
-    private const val XP_COST = 3
+internal object SkysunderEnchantment : SpellEnchantmentInterface {
     private const val RANGE = 30.0
+
+    override val cooldown: Long = 300L
+    override val categoryCooldown: Long = 120L
+    override val castDelay: Long = 16L
+    override val category: SpellCategory = SpellCategory.AREA
 
     override fun invoke(builder: EnchantmentRegistryEntry.Builder): EnchantmentRegistryEntry.Builder =
         builder
@@ -27,20 +26,8 @@ internal object SkysunderEnchantment : EnchantmentInterface {
             .maximumCost(EnchantmentRegistryEntry.EnchantmentCost.of(65, 5))
             .activeSlots(EquipmentSlotGroup.MAINHAND)
 
-    /**
-     * Handles player interaction for casting Skysunder.
-     *
-     * @param event The interaction event.
-     */
-    @EventHandler
-    fun on(event: PlayerInteractEvent) {
+    override fun cast(event: PlayerInteractEvent) {
         val player = event.player
-        val item = event.item ?: return
-
-        if (!isSelectedSpell(item, get())) return
-        if (!validateSpellCast(event.action, item, get())) return
-        if (!XpManager.consumeXp(event, XP_COST)) return
-
         val blockResult = player.rayTraceBlocks(RANGE)
         val entityResult = player.rayTraceEntities(RANGE.toInt())
         val eyeLoc = player.eyeLocation

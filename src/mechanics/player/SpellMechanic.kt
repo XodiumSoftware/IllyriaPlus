@@ -1,17 +1,22 @@
 package org.xodium.illyriaplus.mechanics.player
 
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
+import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.Action
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
+import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.bukkit.inventory.ItemStack
+import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.FaqTab
-import org.xodium.illyriaplus.enchantments.spells.*
+import org.xodium.illyriaplus.enchantments.spells.SpellEnchantmentInterface
+import org.xodium.illyriaplus.managers.CooldownManager
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import org.xodium.illyriaplus.pdcs.ItemStackPDC.selectedSpell
 import xyz.xenondevs.invui.item.Item
@@ -19,16 +24,8 @@ import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling spell casting within the system. */
 internal object SpellMechanic : MechanicInterface {
-    private val SPELL_MAP: Map<Enchantment, (PlayerInteractEvent) -> Unit> by lazy {
-        mapOf(
-            FrostbindEnchantment.get() to { FrostbindEnchantment.on(it) },
-            InfernoEnchantment.get() to { InfernoEnchantment.on(it) },
-            QuakeEnchantment.get() to { QuakeEnchantment.on(it) },
-            SkysunderEnchantment.get() to { SkysunderEnchantment.on(it) },
-            TempestEnchantment.get() to { TempestEnchantment.on(it) },
-            VoidpullEnchantment.get() to { VoidpullEnchantment.on(it) },
-            WitherbrandEnchantment.get() to { WitherbrandEnchantment.on(it) },
-        )
+    private val SPELL_MAP: Map<Enchantment, SpellEnchantmentInterface> by lazy {
+        instance.enchantments.spells.associateBy { it.get() }
     }
 
     /** Spell wand interaction message strings. */
@@ -63,12 +60,27 @@ internal object SpellMechanic : MechanicInterface {
     @EventHandler
     fun on(event: PlayerItemHeldEvent) = handleWandHeld(event)
 
+    @EventHandler
+    fun on(event: PlayerSwapHandItemsEvent) {
+        val player = event.player
+
+        if (CooldownManager.isCasting(player)) CooldownManager.interruptCast(player)
+    }
+
+    @EventHandler
+    fun on(event: EntityDamageEvent) {
+        val player = event.entity as? Player ?: return
+
+        if (CooldownManager.isCasting(player)) CooldownManager.interruptCast(player)
+    }
+
     /**
      * Handles player interactions with a spell wand.
      *
      * @param event The PlayerInteractEvent triggered by the player.
      */
     private fun handleWandInteract(event: PlayerInteractEvent) {
+        val player = event.player
         val item = event.item ?: return
 
         if (item.type != Material.BLAZE_ROD) return
@@ -77,11 +89,45 @@ internal object SpellMechanic : MechanicInterface {
         when (event.action) {
             Action.RIGHT_CLICK_AIR, Action.RIGHT_CLICK_BLOCK -> {
                 event.isCancelled = true
-                cycleSpell(item)?.let { showSelectedSpell(event.player, it) }
+                cycleSpell(item)?.let { showSelectedSpell(player, it) }
             }
 
             Action.LEFT_CLICK_AIR, Action.LEFT_CLICK_BLOCK -> {
-                SPELL_MAP[getSelectedSpell(item) ?: return]?.invoke(event)
+                val spell = getSelectedSpell(item) ?: return
+
+                if (player.gameMode != GameMode.CREATIVE && CooldownManager.isOnCooldown(player, spell)) {
+                    event.isCancelled = true
+                    CooldownManager.notifyCooldown(player, spell)
+                    return
+                }
+                if (CooldownManager.isCasting(player)) {
+                    event.isCancelled = true
+                    return
+                }
+
+                if (player.gameMode != GameMode.CREATIVE && spell.castDelay > 0) {
+                    event.isCancelled = true
+                    CooldownManager.startCast(player, spell.castDelay) {
+                        if (!player.isOnline) return@startCast
+
+                        val currentItem = player.inventory.itemInMainHand
+
+                        if (currentItem.type != Material.BLAZE_ROD) return@startCast
+
+                        val currentSpell = getSelectedSpell(currentItem) ?: return@startCast
+
+                        if (currentSpell != spell) return@startCast
+
+                        spell.cast(event)
+
+                        if (player.gameMode != GameMode.CREATIVE) CooldownManager.startCooldowns(player, spell)
+                    }
+                } else {
+                    event.isCancelled = true
+                    spell.cast(event)
+
+                    if (player.gameMode != GameMode.CREATIVE) CooldownManager.startCooldowns(player, spell)
+                }
             }
 
             else -> {}
@@ -89,17 +135,25 @@ internal object SpellMechanic : MechanicInterface {
     }
 
     /**
-     * Handles spell wand display when the player changes held items.
+     * Handles spell wand display when the player changes held items,
+     * and interrupts active casts on item swap.
      *
      * @param event The PlayerItemHeldEvent triggered by the player.
      */
     private fun handleWandHeld(event: PlayerItemHeldEvent) {
-        val item = event.player.inventory.getItem(event.newSlot) ?: return
+        val player = event.player
+
+        if (CooldownManager.isCasting(player)) {
+            CooldownManager.interruptCast(player)
+            return
+        }
+
+        val item = player.inventory.getItem(event.newSlot) ?: return
 
         if (item.type != Material.BLAZE_ROD) return
         if (getSpellsOnWand(item).isEmpty()) return
 
-        getSelectedSpell(item)?.let { showSelectedSpell(event.player, getSpellName(it)) }
+        getSelectedSpell(item)?.let { showSelectedSpell(player, getSpellName(it)) }
     }
 
     /** Gets the list of spells on a wand item. */
@@ -109,15 +163,11 @@ internal object SpellMechanic : MechanicInterface {
      * Gets the display name for a spell enchantment.
      * Derives the name from the enchantment key.
      */
-    private fun getSpellName(spell: Enchantment): String =
-        spell.key
-            .toString()
+    private fun getSpellName(spell: SpellEnchantmentInterface): String =
+        spell.spellKey
             .substringAfterLast(':')
             .removeSuffix("_enchantment")
             .replaceFirstChar { it.uppercase() }
-
-    /** Gets the spell key string for storage. */
-    private fun getSpellKey(spell: Enchantment): String = spell.key.toString()
 
     /** Shows the selected spell name in the player's action bar. */
     private fun showSelectedSpell(
@@ -130,15 +180,20 @@ internal object SpellMechanic : MechanicInterface {
     /** Cycles to the next spell, updates the item's selected spell, and returns its name. */
     private fun cycleSpell(item: ItemStack): String? =
         getSpellsOnWand(item).takeIf { it.isNotEmpty() }?.let { spells ->
-            val nextSpell = spells[(spells.indexOfFirst { getSpellKey(it) == item.selectedSpell } + 1) % spells.size]
+            val spellList = spells.mapNotNull { SPELL_MAP[it] }
+            val currentKey = item.selectedSpell
+            val currentIndex = spellList.indexOfFirst { it.spellKey == currentKey }
+            val nextSpell = spellList[(currentIndex + 1) % spellList.size]
 
-            item.selectedSpell = getSpellKey(nextSpell)
+            item.selectedSpell = nextSpell.spellKey
             getSpellName(nextSpell)
         }
 
     /** Gets the currently selected spell for the item. */
-    private fun getSelectedSpell(item: ItemStack): Enchantment? =
+    private fun getSelectedSpell(item: ItemStack): SpellEnchantmentInterface? =
         getSpellsOnWand(item).takeIf { it.isNotEmpty() }?.let { spells ->
-            spells.find { getSpellKey(it) == item.selectedSpell } ?: spells.first()
+            val found = spells.find { SPELL_MAP[it]?.spellKey == item.selectedSpell }
+
+            (found ?: spells.first()).let { SPELL_MAP[it] }
         }
 }
