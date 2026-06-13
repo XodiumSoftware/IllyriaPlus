@@ -12,6 +12,7 @@ import org.xodium.illyriaplus.IllyriaPlus
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.FaqTab
+import org.xodium.illyriaplus.data.TreeStructureData
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
@@ -27,15 +28,9 @@ import kotlin.io.path.isRegularFile
 import kotlin.io.path.walk
 import kotlin.time.measureTime
 
-/** Wrapper holding a loaded structure and its pre-computed trunk centre offset. */
-private data class TreeStructure(
-    val structure: Structure,
-    val trunkOffset: Vector,
-)
-
 /** Represents a mechanic handling trees within the system. */
 internal object TreeMechanic : MechanicInterface {
-    private val trees = AtomicReference<Map<TreeType, List<TreeStructure>>>(emptyMap())
+    private val trees = AtomicReference<Map<TreeType, List<TreeStructureData>>>(emptyMap())
 
     override val faqTab: FaqTab = FaqTab.WORLD_MECHANIC
 
@@ -55,19 +50,7 @@ internal object TreeMechanic : MechanicInterface {
     override fun register(): Long =
         super.register() +
             measureTime {
-                instance.server.scheduler.runTaskAsynchronously(instance) { _ ->
-                    val loaded = loadAllStructures()
-                    trees.set(loaded)
-                    val total = loaded.values.sumOf { it.size }
-                    instance.logger.info("[TreeMechanic] Loaded $total custom tree structures.")
-                    loaded.forEach { (type, list) ->
-                        if (list.isNotEmpty()) {
-                            instance.logger.info(
-                                "[TreeMechanic]   ${type.name}: ${list.size} structure(s)",
-                            )
-                        }
-                    }
-                }
+                instance.server.scheduler.runTaskAsynchronously(instance) { _ -> trees.set(loadAllStructures()) }
             }.inWholeMilliseconds
 
     @EventHandler
@@ -79,38 +62,19 @@ internal object TreeMechanic : MechanicInterface {
      * @param event The [StructureGrowEvent] to handle.
      */
     private fun handleStructureGrowth(event: StructureGrowEvent) {
-        instance.logger.info(
-            "[TreeMechanic] StructureGrowEvent fired for ${event.species} " +
-                "at ${event.location.blockX}, ${event.location.blockY}, ${event.location.blockZ}",
-        )
         val treeStruct =
             trees
                 .get()[event.species]
                 ?.takeIf { it.isNotEmpty() }
                 ?.randomOrNull()
-                ?: run {
-                    instance.logger.info(
-                        "[TreeMechanic] No custom structures found for ${event.species}; " +
-                            "falling back to vanilla.",
-                    )
-                    return
-                }
+                ?: return
 
         event.isCancelled = true
         event.location.block.type = Material.AIR
-        instance.logger.info("[TreeMechanic] Placing custom structure for ${event.species}")
 
         val placeLoc = event.location.clone().subtract(treeStruct.trunkOffset)
-        instance.logger.info(
-            "[TreeMechanic] Sapling loc: ${event.location.toVector()}, " +
-                "trunkOffset: ${treeStruct.trunkOffset}, " +
-                "placeLoc (structure origin): ${placeLoc.toVector()}",
-        )
 
         treeStruct.structure.place(placeLoc, false, StructureRotation.NONE, Mirror.NONE, 0, 1.0f, Random())
-        instance.logger.info(
-            "[TreeMechanic] Block at sapling location after placement: ${event.location.block.type}",
-        )
     }
 
     /**
@@ -154,49 +118,37 @@ internal object TreeMechanic : MechanicInterface {
     /**
      * Loads every `.nbt` [Structure] found in the mapped folder inside the plugin jar.
      *
-     * The raw NBT is parsed to determine the trunk centre offset so no temporary world placement is required.
-     *
      * @param type The [TreeType] to load structures for.
      * @param fs The jar [FileSystem] containing the plugin resources.
-     * @return A list of [TreeStructure]s; empty if the folder does not exist or is unmapped.
+     * @return A list of [TreeStructureData]s; empty if the folder does not exist or is unmapped.
      */
     private fun loadStructures(
         type: TreeType,
         fs: FileSystem,
-    ): List<TreeStructure> {
+    ): List<TreeStructureData> {
         val folderName = type.folderName() ?: return emptyList()
         val plugin = instance
         val structureManager = plugin.server.structureManager
         val rootPath = fs.getPath("structures/trees/$folderName")
 
-        if (!rootPath.exists()) {
-            instance.logger.info("[TreeMechanic] Folder not found for $type ($folderName)")
-            return emptyList()
-        }
+        if (!rootPath.exists()) return emptyList()
 
-        val files =
-            rootPath
-                .walk()
-                .filter { it.isRegularFile() }
-                .filter { it.toString().endsWith(".nbt") }
-                .toList()
-        instance.logger.info("[TreeMechanic] Found ${files.size} .nbt file(s) for $type ($folderName)")
+        return rootPath
+            .walk()
+            .filter { it.isRegularFile() }
+            .filter { it.toString().endsWith(".nbt") }
+            .mapNotNull { path ->
+                val resourcePath = path.toString().removePrefix("/")
+                val jsonResourcePath = resourcePath.replace(".nbt", ".json")
+                val json = plugin.getResource(jsonResourcePath)?.bufferedReader()?.use { it.readText() }
+                val offset = json?.let { parseManualOffset(it) } ?: return@mapNotNull null
 
-        return files.mapNotNull { path ->
-            val resourcePath = path.toString().removePrefix("/")
-            val jsonResourcePath = resourcePath.replace(".nbt", ".json")
-            val json = plugin.getResource(jsonResourcePath)?.bufferedReader()?.use { it.readText() }
-            val offset = json?.let { parseManualOffset(it) }
-            if (offset == null) {
-                instance.logger.warning("[TreeMechanic] Skipping $resourcePath: missing or invalid $jsonResourcePath")
-                return@mapNotNull null
-            }
-            instance.logger.info("[TreeMechanic] $resourcePath offset: $offset")
-            plugin.getResource(resourcePath)?.use { input ->
-                val structure = structureManager.loadStructure(ByteArrayInputStream(input.readBytes()))
-                TreeStructure(structure, offset)
-            }
-        }.toList()
+                plugin.getResource(resourcePath)?.use {
+                    val structure = structureManager.loadStructure(ByteArrayInputStream(it.readBytes()))
+
+                    TreeStructureData(structure, offset)
+                }
+            }.toList()
     }
 
     /**
@@ -208,22 +160,26 @@ internal object TreeMechanic : MechanicInterface {
         val regex = """"([xyz])"\s*:\s*(-?\d+)""".toRegex()
         val matches = regex.findAll(json)
         val coords = mutableMapOf<String, Int>()
-        matches.forEach { match ->
-            val (key, value) = match.destructured
+
+        matches.forEach {
+            val (key, value) = it.destructured
+
             coords[key] = value.toInt()
         }
+
         val x = coords["x"] ?: return null
         val y = coords["y"] ?: return null
         val z = coords["z"] ?: return null
+
         return Vector(x.toDouble(), y.toDouble(), z.toDouble())
     }
 
     /**
      * Loads all tree structures from the plugin jar.
      *
-     * @return A map containing every [TreeType] and its associated [TreeStructure]s.
+     * @return A map containing every [TreeType] and its associated [TreeStructureData]s.
      */
-    private fun loadAllStructures(): Map<TreeType, List<TreeStructure>> {
+    private fun loadAllStructures(): Map<TreeType, List<TreeStructureData>> {
         instance.logger.info("[TreeMechanic] Loading tree structures from plugin jar...")
         return runCatching {
             val jarFileUri =
