@@ -13,7 +13,6 @@ import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.mechanics.MechanicInterface
-import org.xodium.illyriaplus.mechanics.world.TreeMechanic.mirror
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 import java.io.ByteArrayInputStream
@@ -101,31 +100,16 @@ internal object TreeMechanic : MechanicInterface {
         event.location.block.type = Material.AIR
         instance.logger.info("[TreeMechanic] Placing custom structure for ${event.species}")
 
-        val rotation = StructureRotation.entries.random()
-        val mirror = Mirror.entries.random()
-        val transformedOffset =
-            treeStruct.trunkOffset
-                .clone()
-                .rotate(rotation)
-                .mirror(mirror)
-        val placeLoc = event.location.clone().subtract(transformedOffset)
-
+        val placeLoc = event.location.clone().subtract(treeStruct.trunkOffset)
         instance.logger.info(
             "[TreeMechanic] Sapling loc: ${event.location.toVector()}, " +
-                "trunkOffset (raw): ${treeStruct.trunkOffset}, " +
-                "rotation: $rotation, mirror: $mirror, " +
-                "transformedOffset: $transformedOffset, " +
+                "trunkOffset: ${treeStruct.trunkOffset}, " +
                 "placeLoc (structure origin): ${placeLoc.toVector()}",
         )
-        instance.logger.info(
-            "[TreeMechanic] Expected trunk centre (placeLoc + transformedOffset): " +
-                "${placeLoc.clone().add(transformedOffset).toVector()}",
-        )
 
-        treeStruct.structure.place(placeLoc, false, rotation, mirror, 0, 1.0f, Random())
+        treeStruct.structure.place(placeLoc, false, StructureRotation.NONE, Mirror.NONE, 0, 1.0f, Random())
         instance.logger.info(
-            "[TreeMechanic] Block at sapling location after placement: " +
-                "${event.location.block.type}",
+            "[TreeMechanic] Block at sapling location after placement: ${event.location.block.type}",
         )
     }
 
@@ -260,25 +244,4 @@ internal object TreeMechanic : MechanicInterface {
             }
         }.getOrDefault(emptyMap())
     }
-
-    // ------------------------------------------------------------------
-    // Vector helpers for rotation / mirroring
-    // ------------------------------------------------------------------
-
-    /** Rotates this vector around the Y-axis by the given [rotation]. */
-    private fun Vector.rotate(rotation: StructureRotation): Vector =
-        when (rotation) {
-            StructureRotation.NONE -> Vector(x, y, z)
-            StructureRotation.CLOCKWISE_90 -> Vector(-z, y, x)
-            StructureRotation.CLOCKWISE_180 -> Vector(-x, y, -z)
-            StructureRotation.COUNTERCLOCKWISE_90 -> Vector(z, y, -x)
-        }
-
-    /** Mirrors this vector across the given [mirror] plane. */
-    private fun Vector.mirror(mirror: Mirror): Vector =
-        when (mirror) {
-            Mirror.NONE -> Vector(x, y, z)
-            Mirror.LEFT_RIGHT -> Vector(-x, y, z)
-            Mirror.FRONT_BACK -> Vector(x, y, -z)
-        }
 }
