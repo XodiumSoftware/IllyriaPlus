@@ -17,15 +17,12 @@ import org.xodium.illyriaplus.mechanics.world.TreeMechanic.mirror
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 import java.io.ByteArrayInputStream
-import java.io.DataInputStream
-import java.io.InputStream
 import java.net.URI
 import java.nio.file.FileSystem
 import java.nio.file.FileSystemAlreadyExistsException
 import java.nio.file.FileSystems
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
-import java.util.zip.GZIPInputStream
 import kotlin.io.path.exists
 import kotlin.io.path.isRegularFile
 import kotlin.io.path.walk
@@ -203,20 +200,38 @@ internal object TreeMechanic : MechanicInterface {
 
         return files.mapNotNull { path ->
             val resourcePath = path.toString().removePrefix("/")
+            val jsonResourcePath = resourcePath.replace(".nbt", ".json")
+            val json = plugin.getResource(jsonResourcePath)?.bufferedReader()?.use { it.readText() }
+            val offset = json?.let { parseManualOffset(it) }
+            if (offset == null) {
+                instance.logger.warning("[TreeMechanic] Skipping $resourcePath: missing or invalid $jsonResourcePath")
+                return@mapNotNull null
+            }
+            instance.logger.info("[TreeMechanic] $resourcePath offset: $offset")
             plugin.getResource(resourcePath)?.use { input ->
-                val bytes = input.readBytes()
-                val structure =
-                    ByteArrayInputStream(bytes).use {
-                        structureManager.loadStructure(it)
-                    }
-                val offset =
-                    ByteArrayInputStream(bytes).use {
-                        val root = NbtReader.readRoot(it)
-                        computeOffsetFromNbt(root)
-                    }
+                val structure = structureManager.loadStructure(ByteArrayInputStream(input.readBytes()))
                 TreeStructure(structure, offset)
             }
         }.toList()
+    }
+
+    /**
+     * Parses a simple JSON object of the form `{"x":1,"y":0,"z":2}` into a [Vector].
+     *
+     * Returns `null` if the input is not in the expected format.
+     */
+    private fun parseManualOffset(json: String): Vector? {
+        val regex = """"([xyz])"\s*:\s*(-?\d+)""".toRegex()
+        val matches = regex.findAll(json)
+        val coords = mutableMapOf<String, Int>()
+        matches.forEach { match ->
+            val (key, value) = match.destructured
+            coords[key] = value.toInt()
+        }
+        val x = coords["x"] ?: return null
+        val y = coords["y"] ?: return null
+        val z = coords["z"] ?: return null
+        return Vector(x.toDouble(), y.toDouble(), z.toDouble())
     }
 
     /**
@@ -245,277 +260,6 @@ internal object TreeMechanic : MechanicInterface {
             }
         }.getOrDefault(emptyMap())
     }
-
-    // ------------------------------------------------------------------
-    // NBT parsing
-    // ------------------------------------------------------------------
-
-    /**
-     * Computes the trunk base offset from the raw NBT data. The trunk is identified as
-     * the tallest vertical column of log/wood/stem/hyphae blocks at the lowest layer where
-     * such blocks appear, with ties broken by proximity to the footprint centre.
-     */
-    private fun computeOffsetFromNbt(root: NbtCompound): Vector {
-        val sizeArray = root.getIntArray("size")
-        val sizeX = sizeArray.getOrNull(0) ?: 1
-        val sizeZ = sizeArray.getOrNull(2) ?: 1
-
-        val palette =
-            root
-                .getList("palette")
-                .map { (it as NbtCompound).getString("Name") }
-
-        data class LogBlock(
-            val x: Int,
-            val y: Int,
-            val z: Int,
-        )
-
-        val logBlocks = mutableListOf<LogBlock>()
-        root.getList("blocks").forEach { blockTag ->
-            val compound = blockTag as? NbtCompound ?: return@forEach
-            val state = compound["state"]?.asInt() ?: return@forEach
-            val pos = compound.getList("pos").mapNotNull { (it as? NbtInt)?.value }
-            if (pos.size < 3) return@forEach
-
-            val x = pos[0]
-            val y = pos[1]
-            val z = pos[2]
-            if (isTrunkBlockId(palette.getOrNull(state))) {
-                logBlocks.add(LogBlock(x, y, z))
-            }
-        }
-
-        if (logBlocks.isEmpty()) {
-            return Vector(sizeX / 2.0, 0.0, sizeZ / 2.0)
-        }
-
-        val minY = logBlocks.minOf { it.y }
-        val baseLayer = logBlocks.filter { it.y == minY }.map { it.x to it.z }
-        val logByPosition = logBlocks.map { Triple(it.x, it.y, it.z) }.toSet()
-
-        fun columnHeight(
-            x: Int,
-            z: Int,
-        ): Int {
-            var height = 0
-            var y = minY
-            while (logByPosition.contains(Triple(x, y, z))) {
-                height++
-                y++
-            }
-            return height
-        }
-
-        val centerX = sizeX / 2.0
-        val centerZ = sizeZ / 2.0
-        val candidates =
-            baseLayer
-                .map { (x, z) ->
-                    Triple(x, z, columnHeight(x, z))
-                }.sortedWith(
-                    compareByDescending<Triple<Int, Int, Int>> { it.third }
-                        .thenBy {
-                            val dx = it.first - centerX
-                            val dz = it.second - centerZ
-                            dx * dx + dz * dz
-                        },
-                )
-        instance.logger.info(
-            "[TreeMechanic] Trunk candidates at minY=$minY (size=${sizeX}x$sizeZ): " +
-                candidates.take(5).joinToString { "(${it.first},${it.second})h=${it.third}" },
-        )
-
-        val trunkBase = candidates.first()
-
-        return Vector(trunkBase.first.toDouble(), 0.0, trunkBase.second.toDouble())
-    }
-
-    /** Checks whether a block ID (e.g. `minecraft:oak_log`) represents a trunk block. */
-    private fun isTrunkBlockId(id: String?): Boolean {
-        if (id == null) return false
-        val name = id.removePrefix("minecraft:")
-        return name.endsWith("_log") ||
-            name.endsWith("_wood") ||
-            name.endsWith("_stem") ||
-            name.endsWith("_hyphae") ||
-            name == "mushroom_stem"
-    }
-
-    // ------------------------------------------------------------------
-    // Minimal NBT reader
-    // ------------------------------------------------------------------
-
-    /** Reads the root compound from a (possibly GZIP-compressed) NBT stream. */
-    private object NbtReader {
-        fun readRoot(input: InputStream): NbtCompound {
-            val buffered = input.buffered()
-            buffered.mark(4)
-            val header = buffered.readNBytes(2)
-            buffered.reset()
-
-            val isGzip =
-                header.size == 2 &&
-                    header[0] == 0x1f.toByte() &&
-                    header[1] == 0x8b.toByte()
-
-            val stream = if (isGzip) GZIPInputStream(buffered) else buffered
-            DataInputStream(stream).use { dis ->
-                val (_, tag) = readNamedTag(dis)
-                return tag as NbtCompound
-            }
-        }
-
-        private fun readNamedTag(dis: DataInputStream): Pair<String, NbtTag> {
-            val typeId = dis.readUnsignedByte()
-            if (typeId == 0) return "" to NbtEnd
-            val nameLen = dis.readUnsignedShort()
-            val name =
-                if (nameLen > 0) ByteArray(nameLen).also { dis.readFully(it) }.toString(Charsets.UTF_8) else ""
-            return name to readPayload(typeId, dis)
-        }
-
-        private fun readPayload(
-            typeId: Int,
-            dis: DataInputStream,
-        ): NbtTag =
-            when (typeId) {
-                1 -> {
-                    NbtByte(dis.readByte())
-                }
-
-                2 -> {
-                    NbtShort(dis.readShort())
-                }
-
-                3 -> {
-                    NbtInt(dis.readInt())
-                }
-
-                4 -> {
-                    NbtLong(dis.readLong())
-                }
-
-                5 -> {
-                    NbtFloat(dis.readFloat())
-                }
-
-                6 -> {
-                    NbtDouble(dis.readDouble())
-                }
-
-                7 -> {
-                    val len = dis.readInt()
-                    NbtByteArray(ByteArray(len).also { dis.readFully(it) })
-                }
-
-                8 -> {
-                    val len = dis.readUnsignedShort()
-                    NbtString(ByteArray(len).also { dis.readFully(it) }.toString(Charsets.UTF_8))
-                }
-
-                9 -> {
-                    val elemType = dis.readUnsignedByte()
-                    val len = dis.readInt()
-                    NbtList(List(len) { readPayload(elemType, dis) })
-                }
-
-                10 -> {
-                    val map = mutableMapOf<String, NbtTag>()
-                    while (true) {
-                        val (name, tag) = readNamedTag(dis)
-                        if (tag is NbtEnd) break
-                        map[name] = tag
-                    }
-                    NbtCompound(map)
-                }
-
-                11 -> {
-                    val len = dis.readInt()
-                    NbtIntArray(IntArray(len) { dis.readInt() })
-                }
-
-                12 -> {
-                    val len = dis.readInt()
-                    NbtLongArray(LongArray(len) { dis.readLong() })
-                }
-
-                else -> {
-                    error("Unknown NBT tag type: $typeId")
-                }
-            }
-    }
-
-    /** Sealed hierarchy for NBT tags parsed by [NbtReader]. */
-    private sealed class NbtTag
-
-    private object NbtEnd : NbtTag()
-
-    private data class NbtByte(
-        val value: Byte,
-    ) : NbtTag()
-
-    private data class NbtShort(
-        val value: Short,
-    ) : NbtTag()
-
-    private data class NbtInt(
-        val value: Int,
-    ) : NbtTag()
-
-    private data class NbtLong(
-        val value: Long,
-    ) : NbtTag()
-
-    private data class NbtFloat(
-        val value: Float,
-    ) : NbtTag()
-
-    private data class NbtDouble(
-        val value: Double,
-    ) : NbtTag()
-
-    private data class NbtByteArray(
-        val value: ByteArray,
-    ) : NbtTag()
-
-    private data class NbtString(
-        val value: String,
-    ) : NbtTag()
-
-    private data class NbtList(
-        val value: List<NbtTag>,
-    ) : NbtTag()
-
-    private data class NbtCompound(
-        val value: Map<String, NbtTag>,
-    ) : NbtTag() {
-        operator fun get(key: String): NbtTag? = value[key]
-
-        fun getIntArray(key: String): IntArray = (value[key] as? NbtIntArray)?.value ?: intArrayOf()
-
-        fun getList(key: String): List<NbtTag> = (value[key] as? NbtList)?.value ?: emptyList()
-
-        fun getString(key: String): String = (value[key] as? NbtString)?.value ?: ""
-    }
-
-    private data class NbtIntArray(
-        val value: IntArray,
-    ) : NbtTag()
-
-    private data class NbtLongArray(
-        val value: LongArray,
-    ) : NbtTag()
-
-    /** Converts any numeric NBT tag to an [Int]. */
-    private fun NbtTag.asInt(): Int =
-        when (this) {
-            is NbtInt -> value
-            is NbtShort -> value.toInt()
-            is NbtByte -> value.toInt()
-            is NbtLong -> value.toInt()
-            else -> 0
-        }
 
     // ------------------------------------------------------------------
     // Vector helpers for rotation / mirroring
