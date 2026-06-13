@@ -11,7 +11,6 @@ import io.papermc.paper.registry.keys.tags.ItemTypeTagKeys
 import io.papermc.paper.registry.tag.TagKey
 import io.papermc.paper.tag.TagEntry
 import net.kyori.adventure.key.Key
-import org.xodium.illyriaplus.enchantments.spells.*
 import org.xodium.illyriaplus.enchantments.utility.*
 
 /** Main bootstrap class of the plugin. */
@@ -20,7 +19,6 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
     companion object {
         val TOOLS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaPlus.ID, "tools"))
         val WEAPONS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaPlus.ID, "weapons"))
-        val BLAZE_RODS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaPlus.ID, "blaze_rods"))
         val TETHER_ITEMS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaPlus.ID, "tether_items"))
     }
 
@@ -52,17 +50,10 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
                         ),
                     )
                     setTag(
-                        BLAZE_RODS,
-                        setOf(
-                            TagEntry.valueEntry(ItemTypeKeys.BLAZE_ROD),
-                        ),
-                    )
-                    setTag(
                         TETHER_ITEMS,
                         setOf(
                             TagEntry.tagEntry(TOOLS),
                             TagEntry.tagEntry(WEAPONS),
-                            TagEntry.tagEntry(BLAZE_RODS),
                         ),
                     )
                 }
@@ -95,41 +86,6 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
                                 .invoke(it)
                                 .supportedItems(event.getOrCreateTag(ItemTypeTagKeys.FOOT_ARMOR))
                         }
-                        register(InfernoEnchantment.key) {
-                            InfernoEnchantment
-                                .invoke(it)
-                                .supportedItems(event.getOrCreateTag(BLAZE_RODS))
-                        }
-                        register(SkysunderEnchantment.key) {
-                            SkysunderEnchantment
-                                .invoke(it)
-                                .supportedItems(event.getOrCreateTag(BLAZE_RODS))
-                        }
-                        register(WitherbrandEnchantment.key) {
-                            WitherbrandEnchantment
-                                .invoke(it)
-                                .supportedItems(event.getOrCreateTag(BLAZE_RODS))
-                        }
-                        register(FrostbindEnchantment.key) {
-                            FrostbindEnchantment
-                                .invoke(it)
-                                .supportedItems(event.getOrCreateTag(BLAZE_RODS))
-                        }
-                        register(TempestEnchantment.key) {
-                            TempestEnchantment
-                                .invoke(it)
-                                .supportedItems(event.getOrCreateTag(BLAZE_RODS))
-                        }
-                        register(VoidpullEnchantment.key) {
-                            VoidpullEnchantment
-                                .invoke(it)
-                                .supportedItems(event.getOrCreateTag(BLAZE_RODS))
-                        }
-                        register(QuakeEnchantment.key) {
-                            QuakeEnchantment
-                                .invoke(it)
-                                .supportedItems(event.getOrCreateTag(BLAZE_RODS))
-                        }
                     }
                 },
             )
@@ -142,13 +98,6 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
                             NimbusEnchantment.key,
                             EarthrendEnchantment.key,
                             EmbertreadEnchantment.key,
-                            InfernoEnchantment.key,
-                            SkysunderEnchantment.key,
-                            WitherbrandEnchantment.key,
-                            FrostbindEnchantment.key,
-                            TempestEnchantment.key,
-                            VoidpullEnchantment.key,
-                            QuakeEnchantment.key,
                         )
 
                     addToTag(EnchantmentTagKeys.TRADEABLE, enchants)

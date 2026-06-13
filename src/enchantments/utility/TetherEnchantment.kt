@@ -1,7 +1,6 @@
 package org.xodium.illyriaplus.enchantments.utility
 
 import io.papermc.paper.registry.data.EnchantmentRegistryEntry
-import org.bukkit.Material
 import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -29,7 +28,6 @@ internal object TetherEnchantment : EnchantmentInterface {
         val player = event.player
         val itemInHand = player.inventory.itemInMainHand
 
-        if (itemInHand.type == Material.BLAZE_ROD) return
         if (!itemInHand.containsEnchantment(get())) return
 
         transferItemEntitiesToInventory(player, event.items)
@@ -40,7 +38,6 @@ internal object TetherEnchantment : EnchantmentInterface {
         val player = event.entity.killer ?: return
         val itemInHand = player.inventory.itemInMainHand
 
-        if (itemInHand.type != Material.BLAZE_ROD) return
         if (!itemInHand.containsEnchantment(get())) return
 
         val xp = event.droppedExp

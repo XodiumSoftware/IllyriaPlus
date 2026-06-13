@@ -76,8 +76,8 @@ IllyriaPlus/
 │   ├── mechanics/              # Feature mechanics (entity, player, server, world subfolders)
 │   ├── enchantments/           # Enchantment implementations
 │   ├── interfaces/             # ModuleInterface, EnchantmentInterface, RecipeInterface
-│   ├── managers/               # XpManager
-│   ├── pdcs/                   # PlayerPDC, ItemPDC
+│   ├── managers/               # (empty)
+│   ├── pdcs/                   # PlayerPDC
 │   ├── recipes/                # Recipe implementations
 │   ├── data/                   # Data classes
 │   └── utils/                  # Utility functions
@@ -106,14 +106,6 @@ Custom enchantments implement `EnchantmentInterface` with:
 - `invoke(builder)` to configure registry entry (description, cost, levels, weight, slots)
 - `get()` to retrieve live `Enchantment` instance from registry
 
-**Spell System:**
-
-- Blaze Rod spell enchantments cost XP to cast
-- All spells are **compatible** — can combine multiple on one wand
-- **Left-click:** Cast selected spell (consumes XP, free in Creative)
-- **Right-click:** Cycle spells (shows in action bar)
-- `XpManager` handles XP cost validation and plays `NO_XP_SOUND` on insufficient XP
-
 ### Key Conventions
 
 - All internal classes use `internal` visibility
@@ -125,11 +117,11 @@ Custom enchantments implement `EnchantmentInterface` with:
 - **Import types instead of using fully qualified paths** — e.g., `import org.bukkit.inventory.meta.PotionMeta` instead of `org.bukkit.inventory.meta.PotionMeta`
 - **Use `it` for single-parameter lambdas** — e.g., `list.forEach { it.doSomething() }` instead of `list.forEach { item -> item.doSomething() }`
 - **Use `ItemStack.of()` instead of `ItemStack()` constructor** — Paper's modern API for creating item stacks
-- **Don't create intermediate `const val` for override properties** — assign directly to the override, e.g., `override val key: String = "vanillaplus:mana_potion"` instead of creating a `const val KEY` and then `override val key = KEY`
+- **Don't create intermediate `const val` for override properties** — assign directly to the override, e.g., `override val key: String = "vanillaplus:my_potion"` instead of creating a `const val KEY` and then `override val key = KEY`
 - **Don't add KDoc to implemented overrides** — the base interface/class already has documentation; let it inherit naturally
 - **Use data class builders** — e.g., `potion(PotionData(color = X, displayName = Y))` instead of lambda receivers for simpler configuration
 - **Use explicit named factory functions** — prefer `potion()` and `splash()` over `invoke()` operator for clarity
-- **Alphabetical order for static collections** — `SPELL_MAP` and similar static maps/lists should be sorted alphabetically by key
+- **Alphabetical order for static collections** — static maps/lists should be sorted alphabetically by key
 
 ### Code Structure (in interfaces, classes, objects)
 
@@ -158,7 +150,6 @@ Within each group:
 
 - No file-based configuration — all settings are compile-time constants in mechanic `Config` objects
 - Enchantments must be registered in `IllyriaPlusBootstrap` AND tagged as tradeable/non-treasure/enchanting-table
-- Spell enchantments use `XpManager` to consume XP on cast
 - Project uses Paper's modern lifecycle/registry APIs extensively
 
 ## Claude Code Workflow
@@ -167,7 +158,7 @@ Within each group:
 
 **When creating tasks:**
 
-- Number tasks in the name (e.g., "1. Add Verdance enchantment", "2. Update mana system")
+- Number tasks in the name (e.g., "1. Add Verdance enchantment", "2. Update nickname system")
 - This makes it easy to reference specific tasks in conversation
 
 **After completing each task:**
@@ -185,7 +176,6 @@ Within each group:
 1. **ARCHITECTURE.md** — Update if you:
     - Add/remove enchantments, mechanics, recipes, or managers
     - Change the mechanic system or interfaces
-    - Modify the mana system or spell mechanics
     - Change project structure or conventions
 
 2. **GUIDE.md** — Update if you:
@@ -218,14 +208,9 @@ GitHub Actions workflows in `.github/workflows/`:
     - Add `YournameEnchantment` to the `ENCHANTMENTS` list
     - Add it to the tags (tradeable, non-treasure, enchanting-table)
     - Add supported items to appropriate `ItemTag` if needed
-5. If it's a spell (Blaze Rod enchantment):
-    - Register in `SpellMechanic.SPELL_MAP` (alphabetical order)
-    - Store cost in `PlayerPDC` constants
-    - Add to enchantment compatibility group
-    - Implement `@EventHandler` for `PlayerInteractEvent` or projectile logic
-6. Update `ARCHITECTURE.md` enchantment table
-7. Add KDoc comments to explain the enchantment's behavior
-8. Run `./gradlew dokkaGenerateHtml` to regenerate documentation
+5. Update `ARCHITECTURE.md` enchantment table
+6. Add KDoc comments to explain the enchantment's behavior
+7. Run `./gradlew dokkaGenerateHtml` to regenerate documentation
 
 ### Adding a Mechanic
 
@@ -250,11 +235,10 @@ GitHub Actions workflows in `.github/workflows/`:
 ### Adding a PDC (Persistent Data Container)
 
 1. For player data: edit `src/pdcs/PlayerPDC.kt`
-2. For item data: edit `src/pdcs/ItemPDC.kt`
-3. Add a new property delegate using `by` with `namespacedKey()`
-4. Use primitive types or custom serializers for complex data
-5. Access via `player.mana`, `item.customData`, etc. directly in code
-6. Document the new PDC field in `ARCHITECTURE.md` if significant
+2. Add a new property delegate using `by` with `namespacedKey()`
+3. Use primitive types or custom serializers for complex data
+4. Access via `player.nickname`, etc. directly in code
+5. Document the new PDC field in `ARCHITECTURE.md` if significant
 
 ### Adding an Interface
 

@@ -101,40 +101,15 @@ Enhances base gameplay with custom enchantments, items, and mechanics.
 
 ### Enchantments
 
-Eleven custom enchantments are available:
+Five custom enchantments are available:
 
-| Enchantment          | Slot      | Description                     |
+| Enchantment | Slot      | Description                     |
 |----------------------|-----------|---------------------------------|
 | Verdance             | Main Hand | Enhances hoe abilities          |
 | Tether               | Main Hand | Applies to tools and weapons    |
 | Nimbus               | Saddle    | Happy Ghast harness enhancement |
 | Earthrend            | Main Hand | Pickaxe special ability         |
 | Embertread           | Feet      | Foot armor enhancement          |
-| **Blaze Rod Spells** |           |                                 |
-| Inferno              | Main Hand | Fire spell                      |
-| Skysunder            | Main Hand | Lightning spell                 |
-| Witherbrand          | Main Hand | Wither spell                    |
-| Frostbind            | Main Hand | Ice spell                       |
-| Tempest              | Main Hand | Wind spell                      |
-| Voidpull             | Main Hand | Teleportation spell             |
-| Quake                | Main Hand | Earth spell                     |
-
-#### Spell Cost System
-
-Blaze Rod spells cost **XP** to cast:
-
-- **Cost**: Each spell consumes XP on cast
-- **Creative Mode**: Spells are free (no XP cost)
-- **Insufficient XP**: Plays a sound and shows "Not enough XP!" message
-- **Display**: Selected spell name shown in action bar
-
-#### Wand Mechanics
-
-Blaze rods with spell enchantments function as wands:
-
-- **Left-click**: Cast selected spell
-- **Right-click**: Cycle through available spells
-- **Compatible**: All seven spells can be on one wand
 
 #### Recipes
 
@@ -142,7 +117,6 @@ Custom crafting and brewing recipes:
 
 - Chainmail armor crafting
 - Diamond recycle (smelting)
-- Mana potion brewing
 - Custom paintings
 - Rotten flesh to leather
 - Log crafting improvements
@@ -181,11 +155,6 @@ The project uses ktlint for code style. Fix formatting:
 ```bash
 ./gradlew ktlintFormat
 ```
-
-### Mana bar not appearing
-
-- Must have a Blaze Rod with spell enchantments in main hand
-- Mana bar appears only when holding a valid spell wand
 
 ---
 

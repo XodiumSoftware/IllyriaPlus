@@ -2,7 +2,6 @@ package org.xodium.illyriaplus
 
 import org.bukkit.plugin.java.JavaPlugin
 import org.xodium.illyriaplus.data.EnchantmentRegistry
-import org.xodium.illyriaplus.enchantments.spells.*
 import org.xodium.illyriaplus.enchantments.utility.*
 import org.xodium.illyriaplus.enchantments.vanilla.FeatherFallingEnchantment
 import org.xodium.illyriaplus.enchantments.vanilla.SilkTouchEnchantment
@@ -84,7 +83,6 @@ internal class IllyriaPlus : JavaPlugin() {
                 MotdMechanic,
                 MessagesMechanic,
                 ServerInfoMechanic,
-                SpellMechanic,
                 TabListMechanic,
                 TreeMechanic,
             )
@@ -99,17 +97,10 @@ internal class IllyriaPlus : JavaPlugin() {
                     EarthrendEnchantment,
                     EmbertreadEnchantment,
                     FeatherFallingEnchantment,
-                    FrostbindEnchantment,
-                    InfernoEnchantment,
                     NimbusEnchantment,
-                    QuakeEnchantment,
                     SilkTouchEnchantment,
-                    SkysunderEnchantment,
-                    TempestEnchantment,
                     TetherEnchantment,
                     VerdanceEnchantment,
-                    VoidpullEnchantment,
-                    WitherbrandEnchantment,
                 ),
             )
 

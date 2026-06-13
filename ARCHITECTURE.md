@@ -20,8 +20,8 @@ IllyriaPlus/
 │   ├── mechanics/           # Feature mechanics (organized in subfolders: entity, player, server, world)
 │   ├── enchantments/        # Enchantment implementations
 │   ├── interfaces/          # ModuleInterface, EnchantmentInterface, RecipeInterface
-│   ├── managers/            # CooldownManager
-│   ├── pdcs/                # PlayerPDC, ItemPDC
+│   ├── managers/            # (empty)
+│   ├── pdcs/                # PlayerPDC
 │   ├── recipes/             # Recipe implementations
 │   ├── data/                # Data classes
 │   └── utils/               # Utility functions
@@ -54,7 +54,7 @@ There are no automated tests in this project.
 
 ### Entry Points
 
-- **`IllyriaPlusBootstrap`** — `PluginBootstrap` implementation. Runs before plugin enable. Creates item tags (`vanillaplus:tools`, `vanillaplus:weapons`, `vanillaplus:tools_weapons`, `vanillaplus:blaze_rods`), registers eleven custom enchantments into Paper's registry via `RegistryEvents.ENCHANTMENT`, then tags all eleven as tradeable, non-treasure, and in-enchanting-table via `LifecycleEvents.TAGS.postFlatten`.
+- **`IllyriaPlusBootstrap`** — `PluginBootstrap` implementation. Runs before plugin enable. Creates item tags (`vanillaplus:tools`, `vanillaplus:weapons`, `vanillaplus:tether_items`), registers five custom enchantments into Paper's registry via `RegistryEvents.ENCHANTMENT`, then tags all five as tradeable, non-treasure, and in-enchanting-table via `LifecycleEvents.TAGS.postFlatten`.
 - **`IllyriaPlus`** — `JavaPlugin` main class. On enable: validates server version, registers all recipes, registers all mechanics. All mechanics are active by default (`enabled` defaults to `true` on `ModuleInterface`); override `enabled` to `false` in a specific mechanic to disable it at compile time.
 
 ### Module System
@@ -73,30 +73,21 @@ Custom enchantments implement **`EnchantmentInterface`** and are registered in `
 - **`invoke(builder)`** — override to configure the enchantment's registry entry (description, anvil cost, level range, weight, slot group, etc.). The default implementation is a no-op pass-through.
 - **`get()`** — looks up and returns the live `Enchantment` instance from the registry after bootstrap.
 
-Event handling is done via ordinary `@EventHandler` methods in each enchantment object — there is no generic event type on the interface. Twelve enchantments are actively registered and tagged as tradeable, non-treasure, and in-enchanting-table:
+Event handling is done via ordinary `@EventHandler` methods in each enchantment object — there is no generic event type on the interface. Five enchantments are actively registered and tagged as tradeable, non-treasure, and in-enchanting-table:
 
 | Enchantment | Slot Group | Supported Items                               |
 |-------------|------------|-----------------------------------------------|
 | Verdance    | `MAINHAND` | Hoes                                          |
-| Tether      | `MAINHAND` | Tools + Weapons (`vanillaplus:tools_weapons`) |
+| Tether      | `MAINHAND` | Tools + Weapons (`vanillaplus:tether_items`)  |
 | Nimbus      | `SADDLE`   | Harnesses (Happy Ghast saddle slot)           |
 | Earthrend   | `MAINHAND` | Pickaxes                                      |
 | Embertread  | `FEET`     | Foot armor                                    |
-| Inferno     | `MAINHAND` | Blaze Rods (`vanillaplus:blaze_rods`)         |
-| Skysunder   | `MAINHAND` | Blaze Rods (`vanillaplus:blaze_rods`)         |
-| Witherbrand | `MAINHAND` | Blaze Rods (`vanillaplus:blaze_rods`)         |
-| Frostbind   | `MAINHAND` | Blaze Rods (`vanillaplus:blaze_rods`)         |
-| Tempest     | `MAINHAND` | Blaze Rods (`vanillaplus:blaze_rods`)         |
-| Voidpull    | `MAINHAND` | Blaze Rods (`vanillaplus:blaze_rods`)         |
-| Quake       | `MAINHAND` | Blaze Rods (`vanillaplus:blaze_rods`)         |
 
 SilkTouch and FeatherFalling exist as implementations but are not currently registered in the bootstrap.
 
-**Spell system:** Seven Blaze Rod spell enchantments (Inferno, Skysunder, Witherbrand, Frostbind, Tempest, Voidpull, Quake) implement `SpellEnchantmentInterface` and are held in `EnchantmentRegistry.spells`, accessible via `IllyriaPlus.instance.enchantments.spells`. They are managed by `SpellMechanic`, which reads the spell list from the registry rather than hardcoding it. Each spell has an individual cooldown, a shared category cooldown (`PROJECTILE` or `AREA`), a global cooldown (GCD), and an optional cast delay. All seven are **compatible** with each other and can be combined on a single wand. `SpellMechanic` handles the interaction: **left-click** begins casting the selected spell (after any cast delay), **right-click** cycles through available spells (showing the selected spell name in the action bar). `CooldownManager` tracks individual, category, and global cooldowns, shows remaining cooldown time in the action bar, and plays a sound on attempt while on cooldown. Cast delays can be interrupted by swapping items, swapping hands, or taking damage. Creative mode bypasses cooldowns entirely. Frostbind and Voidpull tag their projectiles with a `NamespacedKey` and resolve hits in `ProjectileHitEvent`. Projectile trail effects are created via `Utils.Schedule.spawnProjectileTrail`, which schedules a per-tick particle task that self-cancels when the entity is no longer valid.
-
 ### PDCs (Persistent Data Containers)
 
-PDC helpers in `pdcs/` expose Kotlin property delegates on entity types. `ItemPDC` provides `selectedSpell` for wand spell selection.
+PDC helpers in `pdcs/` expose Kotlin property delegates on entity types. `PlayerPDC` provides `nickname` and `scoreboardVisibility`.
 
 ### Recipes
 
@@ -104,16 +95,16 @@ Recipe objects implement **`RecipeInterface`** and are listed in `IllyriaPlus.on
 
 ### Package Structure (`org.xodium.illyriaplus` in IllyriaCore)
 
-| Package         | Contents                                                                                                                                         |
-|-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| `mechanics/`    | 25 feature mechanic singletons (organized by category: entity, player, server, world)                                                            |
-| `data/`         | `CommandData`, `BookData`, `AdjacentBlockData`, `EnchantmentRegistry`                                                                             |
-| `enchantments/` | Verdance, Tether, Nimbus, Earthrend, Embertread, Inferno, Skysunder, Witherbrand, Frostbind, Tempest, Voidpull, Quake, SilkTouch, FeatherFalling |
-| `interfaces/`   | `ModuleInterface`, `EnchantmentInterface`, `RecipeInterface`, `ItemInterface`                                                                    |
-| `managers/`     | `CooldownManager`                                                                                                                                  |
-| `pdcs/`         | `PlayerPDC`, `ItemPDC`                                                                                                                           |
-| `recipes/`      | Chainmail, DiamondRecycle, Painting, RottenFlesh, WoodLog                                                                                        |
-| `utils/`        | `Utils`, `CommandUtils`, `BlockUtils`, `PlayerUtils`, `ScheduleUtils`                                                                            |
+| Package         | Contents                                                                 |
+|-----------------|--------------------------------------------------------------------------|
+| `mechanics/`    | 27 feature mechanic singletons (organized by category: entity, player, server, world) |
+| `data/`         | `CommandData`, `BookData`, `AdjacentBlockData`, `EnchantmentRegistry`     |
+| `enchantments/` | Verdance, Tether, Nimbus, Earthrend, Embertread, SilkTouch, FeatherFalling |
+| `interfaces/`   | `ModuleInterface`, `EnchantmentInterface`, `RecipeInterface`, `ItemInterface` |
+| `managers/`     | (empty)                                                                  |
+| `pdcs/`         | `PlayerPDC`                                                              |
+| `recipes/`      | Chainmail, DiamondRecycle, Painting, RottenFlesh, WoodLog                |
+| `utils/`        | `Utils`, `CommandUtils`, `BlockUtils`, `PlayerUtils`, `ScheduleUtils`    |
 
 ### Key Conventions
 

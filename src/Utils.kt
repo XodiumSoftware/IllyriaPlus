@@ -11,20 +11,15 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.Tag
 import org.bukkit.Chunk
 import org.bukkit.Location
-import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeInstance
 import org.bukkit.block.Chest
 import org.bukkit.block.Container
 import org.bukkit.block.DoubleChest
 import org.bukkit.entity.AbstractHorse
-import org.bukkit.entity.Entity
 import org.bukkit.entity.Tameable
-import org.bukkit.event.block.Action
-import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.pdcs.ItemStackPDC.selectedSpell
 
 /** General utilities. */
 internal object Utils {
@@ -40,7 +35,6 @@ internal object Utils {
                     "skyline" to "#1488CC:#2B32B2",
                     "deep-ocean" to "#13547a:#80d0c7",
                     "rose" to "#F4C4F3:#FC67FA",
-                    "spellbite" to "#832466:#BF4299",
                 ).forEach { (name, colors) -> it.tag(name, Tag.preProcessParsed("<gradient:$colors>")) }
             }.build()
 
@@ -73,38 +67,6 @@ internal object Utils {
          */
         fun TypedKey<org.bukkit.enchantments.Enchantment>.displayName(): Component =
             MM.deserialize(value().snakeToProperCase())
-
-        /**
-         * Checks if the given item has the specified spell selected.
-         *
-         * @param item The item to check.
-         * @param spell The enchantment representing the spell.
-         * @return True if the spell is selected, false otherwise.
-         */
-        fun isSelectedSpell(
-            item: ItemStack?,
-            spell: org.bukkit.enchantments.Enchantment,
-        ): Boolean = item?.selectedSpell == spell.key.toString()
-
-        /**
-         * Validates a spell cast interaction.
-         *
-         * @param action The interaction action.
-         * @param item The item used.
-         * @param enchantment The required enchantment.
-         * @return True if valid, false otherwise.
-         */
-        fun validateSpellCast(
-            action: Action,
-            item: ItemStack,
-            enchantment: org.bukkit.enchantments.Enchantment,
-        ): Boolean =
-            when {
-                action != Action.LEFT_CLICK_AIR && action != Action.LEFT_CLICK_BLOCK -> false
-                item.type != Material.BLAZE_ROD -> false
-                !item.containsEnchantment(enchantment) -> false
-                else -> true
-            }
     }
 
     /** Schedule-related utilities. */
@@ -135,32 +97,6 @@ internal object Utils {
                         )
                     }
                 }
-
-        /**
-         * Spawns a particle trail following an entity.
-         *
-         * @param entity The entity to follow.
-         * @param particles Particle logic per tick.
-         * @return The running BukkitTask.
-         */
-        fun spawnProjectileTrail(
-            entity: Entity,
-            particles: (Location) -> Unit,
-        ): BukkitTask {
-            lateinit var task: BukkitTask
-
-            task =
-                schedule(delay = 1L, period = 1L) {
-                    if (!entity.isValid) {
-                        task.cancel()
-                        return@schedule
-                    }
-
-                    particles(entity.location)
-                }
-
-            return task
-        }
     }
 
     /** Command-related utilities. */
