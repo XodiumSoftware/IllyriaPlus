@@ -5,8 +5,6 @@ import org.bukkit.event.Listener
 import org.bukkit.permissions.Permission
 import org.xodium.illyriaplus.IllyriaPlus
 import org.xodium.illyriaplus.data.CommandData
-import org.xodium.illyriaplus.data.FaqTab
-import xyz.xenondevs.invui.item.Item
 import kotlin.time.measureTime
 
 /** Represents a contract for a mechanic within the system. */
@@ -24,20 +22,6 @@ internal interface MechanicInterface : Listener {
      * @return A [List] of [org.bukkit.permissions.Permission] objects representing the permissions for this mechanic.
      */
     val perms: List<Permission> get() = emptyList()
-
-    /**
-     * Retrieves the FAQ tab.
-     *
-     * @return A [org.xodium.illyriaplus.data.FaqTab] instance.
-     */
-    val faqTab: FaqTab
-
-    /**
-     * Retrieves the FAQ display item.
-     *
-     * @return An [xyz.xenondevs.invui.item.Item] instance.
-     */
-    val faqItem: Item
 
     /**
      * Registers this feature with the server.

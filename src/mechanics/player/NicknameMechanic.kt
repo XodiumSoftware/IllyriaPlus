@@ -8,7 +8,6 @@ import io.papermc.paper.registry.data.dialog.action.DialogAction
 import io.papermc.paper.registry.data.dialog.input.DialogInput
 import io.papermc.paper.registry.data.dialog.type.DialogType
 import net.kyori.adventure.text.event.ClickCallback
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -19,12 +18,9 @@ import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.Command.playerExecuted
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
-import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import org.xodium.illyriaplus.mechanics.server.TabListMechanic.tablist
 import org.xodium.illyriaplus.pdcs.PlayerPDC.nickname
-import xyz.xenondevs.invui.item.Item
-import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling player nicknames within the system. */
 internal object NicknameMechanic : MechanicInterface {
@@ -39,21 +35,6 @@ internal object NicknameMechanic : MechanicInterface {
                 listOf("nick"),
             ),
         )
-
-    override val faqTab = FaqTab.PLAYER_MECHANIC
-
-    override val faqItem =
-        Item
-            .builder()
-            .setItemProvider(
-                ItemBuilder(Material.NAME_TAG)
-                    .setName(MM.deserialize("<mango>Nickname</gradient>"))
-                    .addLoreLines(MM.deserialize(""), MM.deserialize("<gray>Click to set your nickname</gray>")),
-            ).addClickHandler { _, click ->
-                val player = click.player
-
-                if (player.hasPermission(perms[0])) player.showDialog(nicknameDialog(player))
-            }.build()
 
     override val perms =
         listOf(

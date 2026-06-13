@@ -5,10 +5,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.ShapelessRecipe
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.recipes.RecipeInterface
-import xyz.xenondevs.invui.item.Item
-import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents an object handling wood-log recipe implementation within the system. */
 internal object WoodLogRecipe : RecipeInterface {
@@ -48,17 +45,4 @@ internal object WoodLogRecipe : RecipeInterface {
                     ItemStack.of(log, 4),
                 ).apply { addIngredient(wood) }
             }.toSet()
-
-    override val faqItem =
-        Item.simple(
-            ItemBuilder(Material.OAK_LOG)
-                .setName(MM.deserialize("<mango>Wood Log Recipes</gradient>"))
-                .addLoreLines(
-                    MM.deserialize(""),
-                    MM.deserialize(
-                        "<yellow>Convert</yellow> <firewatch>></gradient> " +
-                            "<white>Wood blocks can be converted back to logs in a crafting table</white>",
-                    ),
-                ),
-        )
 }

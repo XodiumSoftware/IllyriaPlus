@@ -9,30 +9,10 @@ import org.bukkit.entity.Monster
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerInteractEntityEvent
-import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.mechanics.MechanicInterface
-import xyz.xenondevs.invui.item.Item
-import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic that allows silencing mobs using an amethyst shard. */
 internal object SilenceMechanic : MechanicInterface {
-    override val faqTab = FaqTab.ENTITY_MECHANIC
-
-    override val faqItem =
-        Item.simple(
-            ItemBuilder(Material.AMETHYST_SHARD)
-                .setName(MM.deserialize("<mango>Silence Mechanic</gradient>"))
-                .addLoreLines(
-                    MM.deserialize(""),
-                    MM.deserialize(
-                        "<yellow>Silence Mobs</yellow> <firewatch>></gradient> " +
-                            "<white>Using an amethyst shard on a mob toggles its " +
-                            "silent state on or off.</white>",
-                    ),
-                ),
-        )
-
     @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerInteractEntityEvent) = silenceMob(event)
 

@@ -7,7 +7,6 @@ import io.papermc.paper.event.connection.PlayerConnectionValidateLoginEvent
 import io.papermc.paper.event.player.PlayerServerFullCheckEvent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
-import org.bukkit.Material
 import org.bukkit.advancement.Advancement
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -16,10 +15,7 @@ import org.bukkit.event.command.UnknownCommandEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.*
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.mechanics.MechanicInterface
-import xyz.xenondevs.invui.item.Item
-import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling player messages within the system. */
 internal object MessagesMechanic : MechanicInterface {
@@ -66,26 +62,6 @@ internal object MessagesMechanic : MechanicInterface {
         const val UNKNOWN_COMMAND: String =
             "<firewatch>❗</gradient> <mango>›</gradient> Unknown command. Type <yellow>/help</yellow> for help."
     }
-
-    override val faqTab = FaqTab.SERVER_MECHANIC
-
-    override val faqItem =
-        Item.simple(
-            ItemBuilder(Material.PAPER)
-                .setName(MM.deserialize("<mango>Messages</gradient>"))
-                .addLoreLines(
-                    MM.deserialize(""),
-                    MM.deserialize(
-                        "<yellow>Join/Quit</yellow> <firewatch>></gradient> <white>Custom formatting</white>",
-                    ),
-                    MM.deserialize(
-                        "<yellow>Death</yellow> <firewatch>></gradient> <white>PvP and PvE variants</white>",
-                    ),
-                    MM.deserialize(
-                        "<yellow>Advancements</yellow> <firewatch>></gradient> <white>Task/Goal/Challenge</white>",
-                    ),
-                ),
-        )
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PlayerJoinEvent) = playerJoin(event)

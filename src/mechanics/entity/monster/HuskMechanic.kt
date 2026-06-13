@@ -11,9 +11,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
-import org.xodium.illyriaplus.Utils
-import xyz.xenondevs.invui.item.Item
-import xyz.xenondevs.invui.item.ItemBuilder
 import kotlin.random.Random
 
 /** Represents a mechanic handling husk drops within the system. */
@@ -29,23 +26,6 @@ internal object HuskMechanic : MonsterInterface {
         mapOf(
             Attribute.ARMOR to { _, attr -> attr.baseValue = (2..4).random().toDouble() },
             Attribute.KNOCKBACK_RESISTANCE to { _, attr -> attr.baseValue = (3..6).random() / 10.0 },
-        )
-
-    override val faqItem =
-        Item.simple(
-            ItemBuilder(Material.SAND)
-                .setName(Utils.MM.deserialize("<mango>Husk Mechanics</gradient>"))
-                .addLoreLines(
-                    Utils.MM.deserialize(""),
-                    Utils.MM.deserialize(
-                        "<yellow>Sand Drops</yellow> <firewatch>></gradient> <white>Drop 0-2 sand " +
-                            "(+Looting, bonus on camel)</white>",
-                    ),
-                    Utils.MM.deserialize(
-                        "<yellow>Attribute Modifiers</yellow> <firewatch>></gradient> " +
-                            "<white>+2-4 armor, +30-60% KB resist.</white>",
-                    ),
-                ),
         )
 
     @EventHandler(ignoreCancelled = true)

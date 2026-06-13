@@ -27,10 +27,7 @@ import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.Command.executesCatching
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
-import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.mechanics.MechanicInterface
-import xyz.xenondevs.invui.item.Item
-import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling chat formatting within the system. */
 internal object ChatMechanic : MechanicInterface {
@@ -44,23 +41,7 @@ internal object ChatMechanic : MechanicInterface {
     private const val CLICK_TO_DELETE_MSG = "<mango>Click to delete your message</gradient>"
     private const val PLAYER_IS_NOT_ONLINE_MSG = "<firewatch>Player is not Online!</gradient>"
     private const val JOIN_TITLE = "<firewatch><b>Welcome</b></gradient> <player>"
-    private const val JOIN_SUBTITLE = "<mango>Check out:</gradient> /faq"
-
-    override val faqTab = FaqTab.SERVER_MECHANIC
-
-    override val faqItem =
-        Item.simple(
-            ItemBuilder(Material.TORCH)
-                .setName(MM.deserialize("<mango>Chat Placeholders</gradient>"))
-                .addLoreLines(
-                    MM.deserialize(""),
-                    MM.deserialize(
-                        "<yellow>[item,i]</yellow> <firewatch>></gradient> <white>Shows your held item</white>",
-                    ),
-                    MM.deserialize("<yellow>[pos]</yellow> <firewatch>></gradient> <white>Shows your position</white>"),
-                    MM.deserialize("<yellow>@player</yellow> <firewatch>></gradient> <white>Mentions a player</white>"),
-                ),
-        )
+    private const val JOIN_SUBTITLE = "<mango>Welcome!</gradient>"
 
     override val cmds =
         listOf(

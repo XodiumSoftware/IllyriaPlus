@@ -1,15 +1,9 @@
 package org.xodium.illyriaplus.mechanics.server
 
-import net.kyori.adventure.inventory.Book
-import org.bukkit.Material
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.mechanics.MechanicInterface
-import xyz.xenondevs.invui.item.Item
-import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling rules functionality within the system. */
 internal object RulesMechanic : MechanicInterface {
@@ -56,26 +50,4 @@ internal object RulesMechanic : MechanicInterface {
                 PermissionDefault.TRUE,
             ),
         )
-
-    override val faqTab = FaqTab.SERVER_MECHANIC
-
-    override val faqItem =
-        Item
-            .builder()
-            .setItemProvider(
-                ItemBuilder(Material.WRITTEN_BOOK)
-                    .setName(MM.deserialize("<mango>Rules Book</gradient>"))
-                    .addLoreLines(
-                        MM.deserialize(""),
-                        MM.deserialize("<gray>Click to open</gray>"),
-                    ),
-            ).addClickHandler { _, click ->
-                val player = click.player
-
-                if (player.hasPermission(perms[0])) {
-                    player.openBook(
-                        Book.builder().pages(RULES.map { MM.deserialize(it.joinToString("\n")) }).build(),
-                    )
-                }
-            }.build()
 }

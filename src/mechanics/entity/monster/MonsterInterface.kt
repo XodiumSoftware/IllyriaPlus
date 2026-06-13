@@ -5,13 +5,10 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeInstance
 import org.bukkit.entity.AbstractHorse
 import org.bukkit.entity.Monster
-import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 
 /** Represents a contract for a monster-specific mechanic within the system. */
 internal interface MonsterInterface : MechanicInterface {
-    override val faqTab: FaqTab get() = FaqTab.ENTITY_MECHANIC
-
     /** The difficulty on which this mechanic's spawn modifications apply. */
     val difficulty: Difficulty get() = Difficulty.HARD
 

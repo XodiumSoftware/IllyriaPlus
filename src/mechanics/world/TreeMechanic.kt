@@ -13,12 +13,8 @@ import org.bukkit.util.BlockTransformer
 import org.bukkit.util.Vector
 import org.xodium.illyriaplus.IllyriaPlus
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.data.TreeStructureData
 import org.xodium.illyriaplus.mechanics.MechanicInterface
-import xyz.xenondevs.invui.item.Item
-import xyz.xenondevs.invui.item.ItemBuilder
 import java.io.ByteArrayInputStream
 import java.net.URI
 import java.nio.file.FileSystem
@@ -35,21 +31,6 @@ import kotlin.time.measureTime
 @Suppress("UnstableApiUsage")
 internal object TreeMechanic : MechanicInterface {
     private val trees = AtomicReference<Map<TreeType, List<TreeStructureData>>>(emptyMap())
-
-    override val faqTab: FaqTab = FaqTab.WORLD_MECHANIC
-
-    override val faqItem =
-        Item.simple(
-            ItemBuilder(Material.OAK_SAPLING)
-                .setName(MM.deserialize("<mango>Tree Mechanics</gradient>"))
-                .addLoreLines(
-                    MM.deserialize(""),
-                    MM.deserialize(
-                        "<yellow>Sapling Grows</yellow> <firewatch>></gradient> " +
-                            "<white>Custom tree structures</white>",
-                    ),
-                ),
-        )
 
     override fun register(): Long =
         super.register() +

@@ -8,10 +8,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.StonecuttingRecipe
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.recipes.RecipeInterface
-import xyz.xenondevs.invui.item.Item
-import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents an object handling painting recipe implementation within the system. */
 internal object PaintingRecipe : RecipeInterface {
@@ -34,17 +31,4 @@ internal object PaintingRecipe : RecipeInterface {
                 )
             }
         }
-
-    override val faqItem =
-        Item.simple(
-            ItemBuilder(Material.PAINTING)
-                .setName(MM.deserialize("<mango>Painting Recipes</gradient>"))
-                .addLoreLines(
-                    MM.deserialize(""),
-                    MM.deserialize(
-                        "<yellow>Stonecutter</yellow> <firewatch>></gradient> " +
-                            "<white>Paintings can be crafted via stonecutter from other paintings</white>",
-                    ),
-                ),
-        )
 }

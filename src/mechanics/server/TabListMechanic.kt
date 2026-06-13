@@ -2,15 +2,11 @@ package org.xodium.illyriaplus.mechanics.server
 
 import io.papermc.paper.event.player.PlayerClientLoadedWorldEvent
 import net.kyori.adventure.audience.Audience
-import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.PlayerJoinEvent
 import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.FaqTab
 import org.xodium.illyriaplus.mechanics.MechanicInterface
-import xyz.xenondevs.invui.item.Item
-import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Represents a mechanic handling tab list updates within the system. */
 internal object TabListMechanic : MechanicInterface {
@@ -27,23 +23,6 @@ internal object TabListMechanic : MechanicInterface {
         listOf(
             "",
             "<mango_r><st>─────────────────</st></gradient><mango><st>─────────────────</st></gradient>",
-        )
-
-    override val faqTab = FaqTab.SERVER_MECHANIC
-
-    override val faqItem =
-        Item.simple(
-            ItemBuilder(Material.PAINTING)
-                .setName(MM.deserialize("<mango>Tab List</gradient>"))
-                .addLoreLines(
-                    MM.deserialize(""),
-                    MM.deserialize(
-                        "<yellow>Header</yellow> <firewatch>></gradient> <white>Custom title formatting</white>",
-                    ),
-                    MM.deserialize(
-                        "<yellow>Footer</yellow> <firewatch>></gradient> <white>Decorative separator</white>",
-                    ),
-                ),
         )
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
