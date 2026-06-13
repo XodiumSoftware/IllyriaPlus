@@ -193,9 +193,8 @@ internal object TreeMechanic : MechanicInterface {
      *
      * @return A map containing every [TreeType] and its associated [TreeStructureData]s.
      */
-    private fun loadAllStructures(): Map<TreeType, List<TreeStructureData>> {
-        instance.logger.info("[TreeMechanic] Loading tree structures from plugin jar...")
-        return runCatching {
+    private fun loadAllStructures(): Map<TreeType, List<TreeStructureData>> =
+        runCatching {
             val jarFileUri =
                 IllyriaPlus::class.java.protectionDomain.codeSource.location
                     .toURI()
@@ -213,7 +212,6 @@ internal object TreeMechanic : MechanicInterface {
                 if (shouldClose) runCatching { fs.close() }
             }
         }.getOrDefault(emptyMap())
-    }
 
     /**
      * Skips placing structure blocks at positions where the existing world block is not
