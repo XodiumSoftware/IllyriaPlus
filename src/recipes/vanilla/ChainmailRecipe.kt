@@ -1,12 +1,12 @@
 package org.xodium.illyriaplus.recipes.vanilla
 
-import org.xodium.illyriaplus.recipes.RecipeInterface
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.ShapedRecipe
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
+import org.xodium.illyriaplus.recipes.RecipeInterface
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 

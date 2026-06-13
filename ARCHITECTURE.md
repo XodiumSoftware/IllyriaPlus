@@ -20,7 +20,7 @@ IllyriaPlus/
 │   ├── mechanics/           # Feature mechanics (organized in subfolders: entity, player, server, world)
 │   ├── enchantments/        # Enchantment implementations
 │   ├── interfaces/          # ModuleInterface, EnchantmentInterface, RecipeInterface
-│   ├── managers/            # XpManager
+│   ├── managers/            # CooldownManager
 │   ├── pdcs/                # PlayerPDC, ItemPDC
 │   ├── recipes/             # Recipe implementations
 │   ├── data/                # Data classes
@@ -92,7 +92,7 @@ Event handling is done via ordinary `@EventHandler` methods in each enchantment 
 
 SilkTouch and FeatherFalling exist as implementations but are not currently registered in the bootstrap.
 
-**Spell system:** Seven Blaze Rod spell enchantments (Inferno, Skysunder, Witherbrand, Frostbind, Tempest, Voidpull, Quake) each cost XP to cast. All seven are **compatible** with each other and can be combined on a single wand. `SpellMechanic` manages the interaction: **left-click** casts the selected spell (consuming XP), **right-click** cycles through available spells (showing the selected spell name in the action bar). `XpManager` handles XP cost validation and deduction, playing `NO_XP_SOUND` when the player has insufficient XP. Creative mode bypasses XP costs. Frostbind and Voidpull tag their projectiles with a `NamespacedKey` and resolve hits in `ProjectileHitEvent`. Projectile trail effects are created via `ScheduleUtils.spawnProjectileTrail`, which schedules a per-tick particle task that self-cancels when the entity is no longer valid.
+**Spell system:** Seven Blaze Rod spell enchantments (Inferno, Skysunder, Witherbrand, Frostbind, Tempest, Voidpull, Quake) implement `SpellEnchantmentInterface` and are held in `EnchantmentRegistry.spells`, accessible via `IllyriaPlus.instance.enchantments.spells`. They are managed by `SpellMechanic`, which reads the spell list from the registry rather than hardcoding it. Each spell has an individual cooldown, a shared category cooldown (`PROJECTILE` or `AREA`), a global cooldown (GCD), and an optional cast delay. All seven are **compatible** with each other and can be combined on a single wand. `SpellMechanic` handles the interaction: **left-click** begins casting the selected spell (after any cast delay), **right-click** cycles through available spells (showing the selected spell name in the action bar). `CooldownManager` tracks individual, category, and global cooldowns, shows remaining cooldown time in the action bar, and plays a sound on attempt while on cooldown. Cast delays can be interrupted by swapping items, swapping hands, or taking damage. Creative mode bypasses cooldowns entirely. Frostbind and Voidpull tag their projectiles with a `NamespacedKey` and resolve hits in `ProjectileHitEvent`. Projectile trail effects are created via `Utils.Schedule.spawnProjectileTrail`, which schedules a per-tick particle task that self-cancels when the entity is no longer valid.
 
 ### PDCs (Persistent Data Containers)
 
@@ -107,10 +107,10 @@ Recipe objects implement **`RecipeInterface`** and are listed in `IllyriaPlus.on
 | Package         | Contents                                                                                                                                         |
 |-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
 | `mechanics/`    | 25 feature mechanic singletons (organized by category: entity, player, server, world)                                                            |
-| `data/`         | `CommandData`, `BookData`, `AdjacentBlockData`                                                                                                   |
+| `data/`         | `CommandData`, `BookData`, `AdjacentBlockData`, `EnchantmentRegistry`                                                                             |
 | `enchantments/` | Verdance, Tether, Nimbus, Earthrend, Embertread, Inferno, Skysunder, Witherbrand, Frostbind, Tempest, Voidpull, Quake, SilkTouch, FeatherFalling |
 | `interfaces/`   | `ModuleInterface`, `EnchantmentInterface`, `RecipeInterface`, `ItemInterface`                                                                    |
-| `managers/`     | `XpManager`                                                                                                                                      |
+| `managers/`     | `CooldownManager`                                                                                                                                  |
 | `pdcs/`         | `PlayerPDC`, `ItemPDC`                                                                                                                           |
 | `recipes/`      | Chainmail, DiamondRecycle, Painting, RottenFlesh, WoodLog                                                                                        |
 | `utils/`        | `Utils`, `CommandUtils`, `BlockUtils`, `PlayerUtils`, `ScheduleUtils`                                                                            |
