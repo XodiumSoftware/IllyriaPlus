@@ -2,11 +2,14 @@ package org.xodium.illyriaplus.mechanics.world
 
 import org.bukkit.Material
 import org.bukkit.TreeType
+import org.bukkit.block.BlockState
 import org.bukkit.block.structure.Mirror
 import org.bukkit.block.structure.StructureRotation
 import org.bukkit.event.EventHandler
 import org.bukkit.event.world.StructureGrowEvent
+import org.bukkit.generator.LimitedRegion
 import org.bukkit.structure.Structure
+import org.bukkit.util.BlockTransformer
 import org.bukkit.util.Vector
 import org.xodium.illyriaplus.IllyriaPlus
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
@@ -29,6 +32,7 @@ import kotlin.io.path.walk
 import kotlin.time.measureTime
 
 /** Represents a mechanic handling trees within the system. */
+@Suppress("UnstableApiUsage")
 internal object TreeMechanic : MechanicInterface {
     private val trees = AtomicReference<Map<TreeType, List<TreeStructureData>>>(emptyMap())
 
@@ -74,7 +78,17 @@ internal object TreeMechanic : MechanicInterface {
 
         val placeLoc = event.location.clone().subtract(treeStruct.trunkOffset)
 
-        treeStruct.structure.place(placeLoc, false, StructureRotation.NONE, Mirror.NONE, 0, 1.0f, Random())
+        treeStruct.structure.place(
+            placeLoc,
+            false,
+            StructureRotation.NONE,
+            Mirror.NONE,
+            0,
+            1.0f,
+            Random(),
+            listOf(ReplaceableBlockTransformer),
+            emptyList(),
+        )
     }
 
     /**
@@ -199,5 +213,21 @@ internal object TreeMechanic : MechanicInterface {
                 if (shouldClose) runCatching { fs.close() }
             }
         }.getOrDefault(emptyMap())
+    }
+
+    /**
+     * Skips placing structure blocks at positions where the existing world block is not
+     * replaceable (for example, stone or player-built blocks), mirroring vanilla sapling growth
+     * behaviour.
+     */
+    private object ReplaceableBlockTransformer : BlockTransformer {
+        override fun transform(
+            region: LimitedRegion,
+            x: Int,
+            y: Int,
+            z: Int,
+            original: BlockState,
+            state: BlockTransformer.TransformationState,
+        ): BlockState = if (state.world.blockData.isReplaceable) original else state.world
     }
 }
