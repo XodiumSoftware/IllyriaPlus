@@ -88,6 +88,7 @@ internal class IllyriaPlus : JavaPlugin() {
                 ServerInfoMechanic,
                 SpellMechanic,
                 TabListMechanic,
+                TreeMechanic,
             )
 
         logger.info(
