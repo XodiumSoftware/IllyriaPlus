@@ -60,7 +60,17 @@ internal object TreeMechanic : MechanicInterface {
         super.register() +
             measureTime {
                 instance.server.scheduler.runTaskAsynchronously(instance) { _ ->
-                    trees.set(loadAllStructures())
+                    val loaded = loadAllStructures()
+                    trees.set(loaded)
+                    val total = loaded.values.sumOf { it.size }
+                    instance.logger.info("[TreeMechanic] Loaded $total custom tree structures.")
+                    loaded.forEach { (type, list) ->
+                        if (list.isNotEmpty()) {
+                            instance.logger.info(
+                                "[TreeMechanic]   ${type.name}: ${list.size} structure(s)",
+                            )
+                        }
+                    }
                 }
             }.inWholeMilliseconds
 
@@ -73,26 +83,53 @@ internal object TreeMechanic : MechanicInterface {
      * @param event The [StructureGrowEvent] to handle.
      */
     private fun handleStructureGrowth(event: StructureGrowEvent) {
+        instance.logger.info(
+            "[TreeMechanic] StructureGrowEvent fired for ${event.species} " +
+                "at ${event.location.blockX}, ${event.location.blockY}, ${event.location.blockZ}",
+        )
         val treeStruct =
             trees
                 .get()[event.species]
                 ?.takeIf { it.isNotEmpty() }
                 ?.randomOrNull()
-                ?: return
+                ?: run {
+                    instance.logger.info(
+                        "[TreeMechanic] No custom structures found for ${event.species}; " +
+                            "falling back to vanilla.",
+                    )
+                    return
+                }
 
         event.isCancelled = true
         event.location.block.type = Material.AIR
+        instance.logger.info("[TreeMechanic] Placing custom structure for ${event.species}")
 
         val rotation = StructureRotation.entries.random()
         val mirror = Mirror.entries.random()
         val transformedOffset =
             treeStruct.trunkOffset
                 .clone()
-                .mirror(mirror)
                 .rotate(rotation)
+                .mirror(mirror)
         val placeLoc = event.location.clone().subtract(transformedOffset)
 
+        instance.logger.info(
+            "[TreeMechanic] Sapling loc: ${event.location.toVector()}, " +
+                "trunkOffset (raw): ${treeStruct.trunkOffset}, " +
+                "rotation: $rotation, mirror: $mirror, " +
+                "transformedOffset: $transformedOffset, " +
+                "placeLoc (structure origin): ${placeLoc.toVector()}",
+        )
+        instance.logger.info(
+            "[TreeMechanic] Expected trunk centre (placeLoc + transformedOffset): " +
+                "${placeLoc.clone().add(transformedOffset).toVector()}",
+        )
+
         treeStruct.structure.place(placeLoc, false, rotation, mirror, 0, 1.0f, Random())
+        instance.logger.info(
+            "[TreeMechanic] Block at sapling location after placement: " +
+                "${event.location.block.type}",
+        )
     }
 
     /**
@@ -151,28 +188,35 @@ internal object TreeMechanic : MechanicInterface {
         val structureManager = plugin.server.structureManager
         val rootPath = fs.getPath("structures/trees/$folderName")
 
-        if (!rootPath.exists()) return emptyList()
+        if (!rootPath.exists()) {
+            instance.logger.info("[TreeMechanic] Folder not found for $type ($folderName)")
+            return emptyList()
+        }
 
-        return rootPath
-            .walk()
-            .filter { it.isRegularFile() }
-            .filter { it.toString().endsWith(".nbt") }
-            .mapNotNull { path ->
-                val resourcePath = path.toString().removePrefix("/")
-                plugin.getResource(resourcePath)?.use { input ->
-                    val bytes = input.readBytes()
-                    val structure =
-                        ByteArrayInputStream(bytes).use {
-                            structureManager.loadStructure(it)
-                        }
-                    val offset =
-                        ByteArrayInputStream(bytes).use {
-                            val root = NbtReader.readRoot(it)
-                            computeOffsetFromNbt(root)
-                        }
-                    TreeStructure(structure, offset)
-                }
-            }.toList()
+        val files =
+            rootPath
+                .walk()
+                .filter { it.isRegularFile() }
+                .filter { it.toString().endsWith(".nbt") }
+                .toList()
+        instance.logger.info("[TreeMechanic] Found ${files.size} .nbt file(s) for $type ($folderName)")
+
+        return files.mapNotNull { path ->
+            val resourcePath = path.toString().removePrefix("/")
+            plugin.getResource(resourcePath)?.use { input ->
+                val bytes = input.readBytes()
+                val structure =
+                    ByteArrayInputStream(bytes).use {
+                        structureManager.loadStructure(it)
+                    }
+                val offset =
+                    ByteArrayInputStream(bytes).use {
+                        val root = NbtReader.readRoot(it)
+                        computeOffsetFromNbt(root)
+                    }
+                TreeStructure(structure, offset)
+            }
+        }.toList()
     }
 
     /**
@@ -180,8 +224,9 @@ internal object TreeMechanic : MechanicInterface {
      *
      * @return A map containing every [TreeType] and its associated [TreeStructure]s.
      */
-    private fun loadAllStructures(): Map<TreeType, List<TreeStructure>> =
-        runCatching {
+    private fun loadAllStructures(): Map<TreeType, List<TreeStructure>> {
+        instance.logger.info("[TreeMechanic] Loading tree structures from plugin jar...")
+        return runCatching {
             val jarFileUri =
                 IllyriaPlus::class.java.protectionDomain.codeSource.location
                     .toURI()
@@ -199,14 +244,16 @@ internal object TreeMechanic : MechanicInterface {
                 if (shouldClose) runCatching { fs.close() }
             }
         }.getOrDefault(emptyMap())
+    }
 
     // ------------------------------------------------------------------
     // NBT parsing
     // ------------------------------------------------------------------
 
     /**
-     * Computes the average X/Z centre of all log/wood blocks in the structure's
-     * bottom layer (relative Y == 0) by inspecting the raw NBT data.
+     * Computes the trunk base offset from the raw NBT data. The trunk is identified as
+     * the tallest vertical column of log/wood/stem/hyphae blocks at the lowest layer where
+     * such blocks appear, with ties broken by proximity to the footprint centre.
      */
     private fun computeOffsetFromNbt(root: NbtCompound): Vector {
         val sizeArray = root.getIntArray("size")
@@ -218,7 +265,13 @@ internal object TreeMechanic : MechanicInterface {
                 .getList("palette")
                 .map { (it as NbtCompound).getString("Name") }
 
-        val logPositions = mutableListOf<Pair<Int, Int>>()
+        data class LogBlock(
+            val x: Int,
+            val y: Int,
+            val z: Int,
+        )
+
+        val logBlocks = mutableListOf<LogBlock>()
         root.getList("blocks").forEach { blockTag ->
             val compound = blockTag as? NbtCompound ?: return@forEach
             val state = compound["state"]?.asInt() ?: return@forEach
@@ -228,19 +281,54 @@ internal object TreeMechanic : MechanicInterface {
             val x = pos[0]
             val y = pos[1]
             val z = pos[2]
-            if (y == 0 && isTrunkBlockId(palette.getOrNull(state))) {
-                logPositions.add(x to z)
+            if (isTrunkBlockId(palette.getOrNull(state))) {
+                logBlocks.add(LogBlock(x, y, z))
             }
         }
 
-        return if (logPositions.isEmpty()) {
-            // Fallback: centre of the structure footprint.
-            Vector(sizeX / 2.0, 0.0, sizeZ / 2.0)
-        } else {
-            val avgX = logPositions.map { it.first }.average()
-            val avgZ = logPositions.map { it.second }.average()
-            Vector(avgX, 0.0, avgZ)
+        if (logBlocks.isEmpty()) {
+            return Vector(sizeX / 2.0, 0.0, sizeZ / 2.0)
         }
+
+        val minY = logBlocks.minOf { it.y }
+        val baseLayer = logBlocks.filter { it.y == minY }.map { it.x to it.z }
+        val logByPosition = logBlocks.map { Triple(it.x, it.y, it.z) }.toSet()
+
+        fun columnHeight(
+            x: Int,
+            z: Int,
+        ): Int {
+            var height = 0
+            var y = minY
+            while (logByPosition.contains(Triple(x, y, z))) {
+                height++
+                y++
+            }
+            return height
+        }
+
+        val centerX = sizeX / 2.0
+        val centerZ = sizeZ / 2.0
+        val candidates =
+            baseLayer
+                .map { (x, z) ->
+                    Triple(x, z, columnHeight(x, z))
+                }.sortedWith(
+                    compareByDescending<Triple<Int, Int, Int>> { it.third }
+                        .thenBy {
+                            val dx = it.first - centerX
+                            val dz = it.second - centerZ
+                            dx * dx + dz * dz
+                        },
+                )
+        instance.logger.info(
+            "[TreeMechanic] Trunk candidates at minY=$minY (size=${sizeX}x$sizeZ): " +
+                candidates.take(5).joinToString { "(${it.first},${it.second})h=${it.third}" },
+        )
+
+        val trunkBase = candidates.first()
+
+        return Vector(trunkBase.first.toDouble(), 0.0, trunkBase.second.toDouble())
     }
 
     /** Checks whether a block ID (e.g. `minecraft:oak_log`) represents a trunk block. */
