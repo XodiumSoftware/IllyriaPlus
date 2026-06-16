@@ -13,9 +13,9 @@ import org.bukkit.inventory.EquipmentSlotGroup
 import org.xodium.illyriaplus.Utils.Enchantment.displayName
 import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 
-/** Represents an object handling earthrend enchantment implementation within the system. */
+/** Represents an object handling vinemine enchantment implementation within the system. */
 @Suppress("UnstableApiUsage")
-internal object EarthrendEnchantment : EnchantmentInterface {
+internal object VinemineEnchantment : EnchantmentInterface {
     private val DIRECTIONS =
         arrayOf(
             BlockFace.UP,

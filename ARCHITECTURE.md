@@ -69,7 +69,7 @@ All mechanics are instantiated as `object` singletons and listed explicitly in `
 
 Custom enchantments implement **`EnchantmentInterface`** and are registered in `IllyriaPlusBootstrap` via `RegistryEvents.ENCHANTMENT`. The interface provides:
 
-- **`key`** — a `TypedKey<Enchantment>` derived automatically from the class name (e.g. `VerdanceEnchantment` → `vanillaplus:verdance`).
+- **`key`** — a `TypedKey<Enchantment>` derived automatically from the class name (e.g. `VinemineEnchantment` → `vanillaplus:vinemine`).
 - **`invoke(builder)`** — override to configure the enchantment's registry entry (description, anvil cost, level range, weight, slot group, etc.). The default implementation is a no-op pass-through.
 - **`get()`** — looks up and returns the live `Enchantment` instance from the registry after bootstrap.
 
@@ -77,11 +77,12 @@ Event handling is done via ordinary `@EventHandler` methods in each enchantment 
 
 | Enchantment | Slot Group | Supported Items                               |
 |-------------|------------|-----------------------------------------------|
-| Verdance    | `MAINHAND` | Hoes                                          |
+| Vinemine    | `MAINHAND` | Pickaxes                                      |
 | Tether      | `MAINHAND` | Tools + Weapons (`vanillaplus:tether_items`)  |
 | Nimbus      | `SADDLE`   | Harnesses (Happy Ghast saddle slot)           |
-| Earthrend   | `MAINHAND` | Pickaxes                                      |
 | Embertread  | `FEET`     | Foot armor                                    |
+| Silk Touch  | `MAINHAND` | Pickaxes                                      |
+| Feather Falling | `FEET` | Foot armor                                  |
 
 SilkTouch and FeatherFalling exist as implementations but are not currently registered in the bootstrap.
 
@@ -99,7 +100,7 @@ Recipe objects implement **`RecipeInterface`** and are listed in `IllyriaPlus.on
 |-----------------|--------------------------------------------------------------------------|
 | `mechanics/`    | 27 feature mechanic singletons (organized by category: entity, player, server, world) |
 | `data/`         | `CommandData`, `BookData`, `AdjacentBlockData`                                  |
-| `enchantments/` | Verdance, Tether, Nimbus, Earthrend, Embertread, SilkTouch, FeatherFalling |
+| `enchantments/` | Vinemine, Tether, Nimbus, Embertread, SilkTouch, FeatherFalling |
 | `interfaces/`   | `ModuleInterface`, `EnchantmentInterface`, `RecipeInterface`, `ItemInterface` |
 | `managers/`     | (empty)                                                                  |
 | `pdcs/`         | `PlayerPDC`                                                              |

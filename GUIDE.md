@@ -103,13 +103,15 @@ Enhances base gameplay with custom enchantments, items, and mechanics.
 
 Five custom enchantments are available:
 
-| Enchantment | Slot      | Description                     |
-|----------------------|-----------|---------------------------------|
-| Verdance             | Main Hand | Enhances hoe abilities          |
-| Tether               | Main Hand | Applies to tools and weapons    |
-| Nimbus               | Saddle    | Happy Ghast harness enhancement |
-| Earthrend            | Main Hand | Pickaxe special ability         |
-| Embertread           | Feet      | Foot armor enhancement          |
+| Enchantment | Slot      | Description                                  |
+|----------------------|-----------|----------------------------------------------|
+| Vinemine             | Main Hand | Pickaxe special ability                      |
+| Tether               | Main Hand | Applies to tools and weapons                 |
+| Nimbus               | Saddle    | Happy Ghast harness enhancement              |
+| Embertread           | Feet      | Foot armor enhancement                       |
+| Silk Touch           | Main Hand | Pickaxe special ability                      |
+| Feather Falling      | Feet      | Prevents farmland from being trampled        |
+| Fortune              | Main Hand | Hoes with Fortune II+ auto-replant crops     |
 
 #### Recipes
 

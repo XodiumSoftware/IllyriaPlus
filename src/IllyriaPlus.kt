@@ -2,8 +2,12 @@ package org.xodium.illyriaplus
 
 import org.bukkit.plugin.java.JavaPlugin
 import org.xodium.illyriaplus.enchantments.EnchantmentInterface
-import org.xodium.illyriaplus.enchantments.utility.*
+import org.xodium.illyriaplus.enchantments.utility.EmbertreadEnchantment
+import org.xodium.illyriaplus.enchantments.utility.NimbusEnchantment
+import org.xodium.illyriaplus.enchantments.utility.TetherEnchantment
+import org.xodium.illyriaplus.enchantments.utility.VinemineEnchantment
 import org.xodium.illyriaplus.enchantments.vanilla.FeatherFallingEnchantment
+import org.xodium.illyriaplus.enchantments.vanilla.FortuneEnchantment
 import org.xodium.illyriaplus.enchantments.vanilla.SilkTouchEnchantment
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import org.xodium.illyriaplus.mechanics.entity.*
@@ -93,13 +97,13 @@ internal class IllyriaPlus : JavaPlugin() {
 
         enchantments =
             listOf(
-                EarthrendEnchantment,
                 EmbertreadEnchantment,
                 FeatherFallingEnchantment,
+                FortuneEnchantment,
                 NimbusEnchantment,
                 SilkTouchEnchantment,
                 TetherEnchantment,
-                VerdanceEnchantment,
+                VinemineEnchantment,
             )
 
         logger.info(

@@ -11,7 +11,10 @@ import io.papermc.paper.registry.keys.tags.ItemTypeTagKeys
 import io.papermc.paper.registry.tag.TagKey
 import io.papermc.paper.tag.TagEntry
 import net.kyori.adventure.key.Key
-import org.xodium.illyriaplus.enchantments.utility.*
+import org.xodium.illyriaplus.enchantments.utility.EmbertreadEnchantment
+import org.xodium.illyriaplus.enchantments.utility.NimbusEnchantment
+import org.xodium.illyriaplus.enchantments.utility.TetherEnchantment
+import org.xodium.illyriaplus.enchantments.utility.VinemineEnchantment
 
 /** Main bootstrap class of the plugin. */
 @Suppress("UnstableApiUsage", "Unused")
@@ -61,10 +64,10 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
             registerEventHandler(
                 RegistryEvents.ENCHANTMENT.compose().newHandler { event ->
                     event.registry().apply {
-                        register(VerdanceEnchantment.key) {
-                            VerdanceEnchantment
+                        register(VinemineEnchantment.key) {
+                            VinemineEnchantment
                                 .invoke(it)
-                                .supportedItems(event.getOrCreateTag(ItemTypeTagKeys.HOES))
+                                .supportedItems(event.getOrCreateTag(ItemTypeTagKeys.PICKAXES))
                         }
                         register(TetherEnchantment.key) {
                             TetherEnchantment
@@ -75,11 +78,6 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
                             NimbusEnchantment
                                 .invoke(it)
                                 .supportedItems(event.getOrCreateTag(ItemTypeTagKeys.HARNESSES))
-                        }
-                        register(EarthrendEnchantment.key) {
-                            EarthrendEnchantment
-                                .invoke(it)
-                                .supportedItems(event.getOrCreateTag(ItemTypeTagKeys.PICKAXES))
                         }
                         register(EmbertreadEnchantment.key) {
                             EmbertreadEnchantment
@@ -93,10 +91,9 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
                 it.registrar().apply {
                     val enchants =
                         setOf(
-                            VerdanceEnchantment.key,
+                            VinemineEnchantment.key,
                             TetherEnchantment.key,
                             NimbusEnchantment.key,
-                            EarthrendEnchantment.key,
                             EmbertreadEnchantment.key,
                         )
 
