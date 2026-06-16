@@ -1,6 +1,5 @@
 package org.xodium.illyriaplus.enchantments.vanilla
 
-import org.bukkit.Material
 import org.bukkit.Tag
 import org.bukkit.block.data.Ageable
 import org.bukkit.enchantments.Enchantment
@@ -9,6 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.inventory.ItemStack
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.enchantments.EnchantmentInterface
+import org.xodium.illyriaplus.enchantments.vanilla.FortuneEnchantment.MIN_REPLANT_LEVEL
 
 /** Represents an object handling fortune enchantment implementation within the system. */
 internal object FortuneEnchantment : EnchantmentInterface {
