@@ -20,6 +20,10 @@ import org.bukkit.entity.AbstractHorse
 import org.bukkit.entity.Tameable
 import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
+import kotlin.time.Duration
+
+/** Converts a [Duration] to Minecraft ticks (20 ticks per second). */
+internal fun Duration.toTicks(): Int = inWholeSeconds.toInt() * 20
 
 /** General utilities. */
 internal object Utils {
