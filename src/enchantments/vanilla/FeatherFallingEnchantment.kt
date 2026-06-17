@@ -16,7 +16,7 @@ internal object FeatherFallingEnchantment : EnchantmentInterface {
         when {
             event.action != Action.PHYSICAL -> return
             event.clickedBlock?.type != Material.FARMLAND -> return
-            !isValidTool(event.player.inventory.boots) -> return
+            !isValidItem(event.player.inventory.boots) -> return
             else -> event.isCancelled = true
         }
     }
@@ -27,8 +27,6 @@ internal object FeatherFallingEnchantment : EnchantmentInterface {
      * @param item The item to check.
      * @return `true` if the item is foot armor with Feather Falling, otherwise `false`.
      */
-    private fun isValidTool(item: ItemStack?): Boolean =
-        item?.let {
-            Tag.ITEMS_FOOT_ARMOR.isTagged(it.type) && it.containsEnchantment(Enchantment.FEATHER_FALLING)
-        } ?: false
+    private fun isValidItem(item: ItemStack): Boolean =
+        Tag.ITEMS_FOOT_ARMOR.isTagged(item.type) && item.containsEnchantment(Enchantment.FEATHER_FALLING)
 }

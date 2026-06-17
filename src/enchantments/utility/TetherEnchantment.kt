@@ -26,9 +26,8 @@ internal object TetherEnchantment : EnchantmentInterface {
     @EventHandler
     fun on(event: BlockDropItemEvent) {
         val player = event.player
-        val itemInHand = player.inventory.itemInMainHand
 
-        if (!itemInHand.containsEnchantment(get())) return
+        if (!player.inventory.itemInMainHand.containsEnchantment(get())) return
 
         transferItemEntitiesToInventory(player, event.items)
     }

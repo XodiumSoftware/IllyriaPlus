@@ -8,6 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.inventory.ItemStack
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.enchantments.EnchantmentInterface
+import org.xodium.illyriaplus.enchantments.vanilla.FortuneEnchantment.MIN_REPLANT_LEVEL
 
 /** Represents an object handling fortune enchantment implementation within the system. */
 internal object FortuneEnchantment : EnchantmentInterface {
@@ -16,9 +17,7 @@ internal object FortuneEnchantment : EnchantmentInterface {
 
     @EventHandler
     fun on(event: BlockBreakEvent) {
-        val itemInHand = event.player.inventory.itemInMainHand
-
-        if (!isValidTool(itemInHand)) return
+        if (!isValidItem(event.player.inventory.itemInMainHand)) return
 
         val block = event.block
         val ageable = block.blockData as? Ageable ?: return
@@ -38,9 +37,6 @@ internal object FortuneEnchantment : EnchantmentInterface {
      * @param item The item to check.
      * @return `true` if the item is a hoe with sufficient Fortune, otherwise `false`.
      */
-    private fun isValidTool(item: ItemStack?): Boolean =
-        item?.let {
-            Tag.ITEMS_HOES.isTagged(it.type) &&
-                it.getEnchantmentLevel(Enchantment.FORTUNE) >= MIN_REPLANT_LEVEL
-        } ?: false
+    private fun isValidItem(item: ItemStack): Boolean =
+        Tag.ITEMS_HOES.isTagged(item.type) && item.getEnchantmentLevel(Enchantment.FORTUNE) >= MIN_REPLANT_LEVEL
 }

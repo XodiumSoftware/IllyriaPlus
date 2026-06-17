@@ -27,7 +27,7 @@ internal object EmbertreadEnchantment : EnchantmentInterface {
     fun on(event: EntityDamageEvent) {
         val player = event.entity as? Player ?: return
 
-        if (!isValidBoots(player.inventory.boots)) return
+        if (!isValidItem(player.inventory.boots)) return
 
         when (event.cause) {
             EntityDamageEvent.DamageCause.HOT_FLOOR -> event.isCancelled = true
@@ -42,6 +42,6 @@ internal object EmbertreadEnchantment : EnchantmentInterface {
      * @param item The item to check.
      * @return `true` if the item is foot armor with Embertread, otherwise `false`.
      */
-    private fun isValidBoots(item: ItemStack?): Boolean =
-        item?.let { Tag.ITEMS_FOOT_ARMOR.isTagged(it.type) && it.containsEnchantment(get()) } ?: false
+    private fun isValidItem(item: ItemStack): Boolean =
+        Tag.ITEMS_FOOT_ARMOR.isTagged(item.type) && item.containsEnchantment(get())
 }

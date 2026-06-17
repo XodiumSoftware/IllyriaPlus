@@ -13,7 +13,7 @@ import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 internal object SilkTouchEnchantment : EnchantmentInterface {
     @EventHandler
     fun on(event: BlockBreakEvent) {
-        if (!isValidTool(event.player.inventory.itemInMainHand)) return
+        if (!isValidItem(event.player.inventory.itemInMainHand)) return
 
         when (event.block.type) {
             Material.SPAWNER -> handleSpawnerBreak(event)
@@ -58,8 +58,6 @@ internal object SilkTouchEnchantment : EnchantmentInterface {
      * @param item The item to check.
      * @return `true` if the item is a pickaxe with Silk Touch, otherwise `false`.
      */
-    private fun isValidTool(item: ItemStack?): Boolean =
-        item?.let {
-            Tag.ITEMS_PICKAXES.isTagged(it.type) && it.containsEnchantment(Enchantment.SILK_TOUCH)
-        } ?: false
+    private fun isValidItem(item: ItemStack): Boolean =
+        Tag.ITEMS_PICKAXES.isTagged(item.type) && item.containsEnchantment(Enchantment.SILK_TOUCH)
 }
