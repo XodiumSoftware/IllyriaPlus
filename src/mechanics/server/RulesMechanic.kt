@@ -1,8 +1,13 @@
 package org.xodium.illyriaplus.mechanics.server
 
+import io.papermc.paper.command.brigadier.Commands
+import net.kyori.adventure.inventory.Book
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
+import org.xodium.illyriaplus.Utils.Command.playerExecuted
+import org.xodium.illyriaplus.Utils.MM
+import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 
 /** Represents a mechanic handling rules functionality within the system. */
@@ -39,6 +44,23 @@ internal object RulesMechanic : MechanicInterface {
                     "<red>Do not spawn blocks or items for other players",
                 "<gold>▶ <dark_aqua>03 <dark_gray>| <red>When Trading, only buy and sell legit items",
                 "<gold>▶ <dark_aqua>05 <dark_gray>| <red>No Power Abuse",
+            ),
+        )
+
+    override val cmds: Collection<CommandData> =
+        listOf(
+            CommandData(
+                Commands
+                    .literal("rules")
+                    .requires { it.sender.hasPermission(perms[0]) }
+                    .playerExecuted { player, _ ->
+                        player.openBook(
+                            Book.builder()
+                                .pages(RULES.map { MM.deserialize(it.joinToString("\n")) })
+                                .build(),
+                        )
+                    },
+                "This command opens the Rules book",
             ),
         )
 

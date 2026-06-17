@@ -24,7 +24,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils.Command.executesCatching
+import org.xodium.illyriaplus.Utils.Command.playerExecuted
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.mechanics.MechanicInterface
@@ -55,24 +55,18 @@ internal object ChatMechanic : MechanicInterface {
                             .then(
                                 Commands
                                     .argument("message", StringArgumentType.greedyString())
-                                    .executesCatching {
-                                        if (it.source.sender !is Player) {
-                                            instance.logger.warning(
-                                                "Command can only be executed by a Player!",
-                                            )
-                                        }
-
-                                        val sender = it.source.sender as Player
-                                        val targetResolver =
-                                            it.getArgument("target", PlayerSelectorArgumentResolver::class.java)
-                                        val target =
-                                            targetResolver.resolve(it.source).singleOrNull()
-                                                ?: return@executesCatching sender.sendActionBar(
+                                    .playerExecuted { player, ctx ->
+                                        whisper(
+                                            player,
+                                            ctx
+                                                .getArgument("target", PlayerSelectorArgumentResolver::class.java)
+                                                .resolve(ctx.source)
+                                                .singleOrNull()
+                                                ?: return@playerExecuted player.sendActionBar(
                                                     MM.deserialize(PLAYER_IS_NOT_ONLINE_MSG),
-                                                )
-                                        val message = it.getArgument("message", String::class.java)
-
-                                        whisper(sender, target, message)
+                                                ),
+                                            ctx.getArgument("message", String::class.java),
+                                        )
                                     },
                             ),
                     ),
