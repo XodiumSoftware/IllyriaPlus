@@ -1,6 +1,6 @@
 package org.xodium.illyriaplus.mechanics.server
 
-import org.xodium.illyriaplus.IllyriaPlus
+import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import kotlin.time.measureTime
@@ -15,7 +15,5 @@ internal object MotdMechanic : MechanicInterface {
 
     override fun register(): Long =
         super.register() +
-            measureTime {
-                IllyriaPlus.instance.server.motd((MM.deserialize(MOTD.joinToString("\n"))))
-            }.inWholeMilliseconds
+            measureTime { instance.server.motd((MM.deserialize(MOTD.joinToString("\n")))) }.inWholeMilliseconds
 }
