@@ -14,7 +14,7 @@
 
 ## Prerequisites
 
-- [Paper](https://papermc.io/) Minecraft server 26.1
+- [Paper](https://papermc.io/) Minecraft server 26.1.2
 - Java 25
 
 ## Download Nightly Build
@@ -65,7 +65,7 @@ To quickly test the plugin:
 ./gradlew runServer
 ```
 
-This automatically downloads Paper 26.1 and starts a local test server with the plugin.
+This automatically downloads Paper 26.1.2 and starts a local test server with the plugin.
 
 ## Installation
 
@@ -75,23 +75,23 @@ This automatically downloads Paper 26.1 and starts a local test server with the 
 
 ## Configuration
 
-IllyriaPlus plugins use **compile-time configuration** — there are no config files to edit. All settings are hardcoded in the source code.
+IllyriaPlus uses **compile-time configuration** — there are no config files to edit. All settings are hardcoded as constants directly in each module object.
 
-To customize a plugin, you must:
+To customize behavior, you must:
 
 1. Fork the repository
-2. Edit the `Config` objects in each mechanic
+2. Edit the constants in the relevant mechanic, enchantment, or recipe object
 3. Rebuild the plugin
 
 ### Mechanic Configuration Location
 
-Each mechanic has a nested `Config` object, for example:
+Each mechanic stores its settings as `private const val` or `private val` properties directly in its `object`, for example:
 
 ```kotlin
 // In src/mechanics/player/MessagesMechanic.kt
-object Config {
-    const val ENABLED = true
-    // ... other settings
+internal object MessagesMechanic : MechanicInterface {
+    private const val JOIN_MSG = "<green>➕ <player> joined!</green>"
+    // ...
 }
 ```
 
@@ -101,33 +101,43 @@ Enhances base gameplay with custom enchantments, items, and mechanics.
 
 ### Enchantments
 
-Five custom enchantments are available:
+Custom enchantments are divided into two groups:
+
+**Custom utility enchantments** (registered in Paper's registry):
 
 | Enchantment | Slot      | Description                                  |
-|----------------------|-----------|----------------------------------------------|
-| Vinemine             | Main Hand | Pickaxe special ability                      |
-| Tether               | Main Hand | Applies to tools and weapons                 |
-| Nimbus               | Saddle    | Happy Ghast harness enhancement              |
-| Embertread           | Feet      | Foot armor enhancement                       |
-| Silk Touch           | Main Hand | Pickaxe special ability                      |
-| Feather Falling      | Feet      | Prevents farmland from being trampled        |
-| Fortune              | Main Hand | Hoes with Fortune II+ auto-replant crops     |
+|-------------|-----------|----------------------------------------------|
+| Vinemine    | Main Hand | Pickaxe special ability                      |
+| Tether      | Main Hand | Applies to tools and weapons                 |
+| Nimbus      | Saddle    | Happy Ghast harness enhancement              |
+| Embertread  | Feet      | Foot armor enhancement                       |
+
+**Vanilla behavior overrides** (event listeners, not registered as custom enchantments):
+
+| Enchantment     | Slot      | Description                              |
+|-----------------|-----------|------------------------------------------|
+| Silk Touch      | Main Hand | Allows mining spawners and budding amethyst |
+| Feather Falling | Feet      | Prevents farmland from being trampled    |
+| Fortune         | Main Hand | Hoes with Fortune II+ auto-replant crops |
 
 #### Recipes
 
-Custom crafting and brewing recipes:
+Custom crafting, smelting, stonecutting, and shapeless recipes:
 
 - Chainmail armor crafting
-- Diamond recycle (smelting)
-- Custom paintings
+- Diamond recycle (blasting)
+- Blue/packed ice breakdown
+- Nether wart block breakdown
+- Custom paintings via stonecutter
 - Rotten flesh to leather
-- Log crafting improvements
+- Log/wood crafting improvements
+- Wool to string
 
 ## Troubleshooting
 
 ### "Plugin disabled itself"
 
-- Verify server version is Paper 1.21.11
+- Verify server version is Paper 26.1.2
 - Check console for version mismatch errors
 - Update your server or use a compatible plugin version
 
@@ -139,7 +149,7 @@ Custom crafting and brewing recipes:
 
 ### Build fails
 
-- Verify Java 21 is installed and active:
+- Verify Java 25 is installed and active:
   ```bash
   java -version
   ```
