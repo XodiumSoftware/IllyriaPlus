@@ -65,6 +65,7 @@ internal class IllyriaPlus : JavaPlugin() {
 
         mechanics =
             listOf(
+                AlcoholMechanic,
                 NicknameMechanic,
                 ScoreBoardMechanic,
                 LocatorMechanic,

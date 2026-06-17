@@ -100,11 +100,11 @@ Mechanics are grouped by category under `src/mechanics/`:
 
 - `entity/` — Bat, Griefing, Silence, SpawnEgg, Tameable
 - `entity/monster/` — AbstractSkeleton, Creeper, Husk, Monster, Zombie (`MonsterInterface` base)
-- `player/` — Enderchest, Head, Locator, Messages, Nickname, Sit, Xp
+- `player/` — Alcohol, Enderchest, Head, Locator, Messages, Nickname, Sit, Xp
 - `server/` — Chat, Motd, Rules, ScoreBoard, ServerInfo, TabList
 - `world/` — BlockPlacement, ChiseledBookshelf, Dimension, Inventory, Openable, Tree
 
-Currently **25** mechanics are registered in `IllyriaPlus.onEnable()`.
+Currently **26** mechanics are registered in `IllyriaPlus.onEnable()`.
 
 ### Enchantments
 
@@ -143,6 +143,8 @@ PDC helpers in `src/pdcs/` expose Kotlin property delegates on entity types. `Pl
 
 - `Player.nickname` — stored under `illyriaplus:nickname`; returns the player's real name when unset.
 - `Player.scoreboardVisibility` — stored under `illyriaplus:scoreboard_visibility`; defaults to `false`.
+- `Player.intoxication` — stored under `illyriaplus:intoxication`; current alcoholic intoxication level.
+- `Player.lastDrinkTime` — stored under `illyriaplus:last_drink_time`; epoch millis of the last alcoholic drink.
 
 ### Recipes
 
@@ -187,7 +189,7 @@ General utilities are in `src/Utils.kt` as the `internal object Utils`, with nes
 
 | Package | Contents |
 |---------|----------|
-| `mechanics/` | 25 mechanic singletons (organized by category) |
+| `mechanics/` | 26 mechanic singletons (organized by category) |
 | `mechanics/entity/monster/` | 6 monster-specific mechanics plus `MonsterInterface` |
 | `data/` | `AdjacentBlockData`, `BuildSetupData`, `CommandData`, `TreeStructureData` |
 | `enchantments/` | `EnchantmentInterface`; Embertread, Nimbus, Tether, Vinemine, FeatherFalling, Fortune, SilkTouch |
