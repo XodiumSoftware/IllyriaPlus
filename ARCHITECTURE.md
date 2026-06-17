@@ -27,6 +27,8 @@ IllyriaPlus/
 │   ├── enchantments/         # Enchantment implementations
 │   │   ├── utility/          # Custom utility enchantments
 │   │   └── vanilla/          # Vanilla enchantment overrides
+│   ├── items/                # Reusable item builders
+│   │   └── alcoholics/       # Alcoholic drink items
 │   ├── recipes/              # Recipe implementations
 │   │   └── vanilla/          # Vanilla-style custom recipes
 │   ├── data/                 # Data classes
@@ -78,8 +80,19 @@ Every feature is an `object` implementing the appropriate interface.
 | Mechanics | `MechanicInterface` (extends Bukkit `Listener`) | `PluginManager.registerEvents()` + command/permission registration via `register()` |
 | Enchantments | `EnchantmentInterface` (extends Bukkit `Listener`) | `PluginManager.registerEvents()` via `register()` |
 | Recipes | `RecipeInterface` | `Server.addRecipe()` / `PotionBrewer.addPotionMix()` via `register()` |
+| Items | `ItemInterface` | Called directly via `SomeItem()` to produce an `ItemStack` |
 
 All modules are singletons. There is no file-based configuration — values are hardcoded as `private const val` / `private val` properties directly in each module object. To change behavior, edit the source and rebuild.
+
+### Items
+
+Reusable item builders live in `src/items/` and implement **`ItemInterface`**, which exposes an `operator fun invoke(): ItemStack` so each object can be called like a factory function.
+
+Current groups:
+
+- `alcoholics/` — Ale, Mead, RedWine, Rum
+
+These items are consumed by `AlcoholRecipe` for brewing results, but can be used anywhere an `ItemStack` is needed.
 
 ### Mechanics
 
@@ -135,8 +148,9 @@ PDC helpers in `src/pdcs/` expose Kotlin property delegates on entity types. `Pl
 
 Recipe objects implement **`RecipeInterface`** and are listed in `IllyriaPlus.onEnable()`. They expose `recipes` and `potions` collections plus a `register()` function that returns elapsed time in ms.
 
-Currently **8** recipes are registered:
+Currently **9** recipe modules are registered:
 
+- AlcoholRecipe
 - ChainmailRecipe
 - DiamondRecycleRecipe
 - IceBreakdownRecipe
@@ -145,6 +159,8 @@ Currently **8** recipes are registered:
 - RottenFleshRecipe
 - WoodLogRecipe
 - WoolToStringRecipe
+
+`AlcoholRecipe` provides 4 custom `PotionMix` brewing recipes.
 
 ### Data Classes
 
