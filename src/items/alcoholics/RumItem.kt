@@ -5,15 +5,19 @@ import io.papermc.paper.datacomponent.item.PotionContents
 import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.items.ItemInterface
+import org.xodium.illyriaplus.items.ItemInterface.Companion.ALCOHOL_STRENGTH_KEY
 import org.xodium.illyriaplus.toTicks
 import kotlin.time.Duration.Companion.seconds
 
 /** Represents a bottle of Rum. */
 internal object RumItem : ItemInterface {
+    override val alcoholStrength: Int = 3
+
     @Suppress("UnstableApiUsage")
     override operator fun invoke(): ItemStack =
         ItemStack.of(Material.POTION).apply {
@@ -26,5 +30,6 @@ internal object RumItem : ItemInterface {
                     .addCustomEffect(PotionEffect(PotionEffectType.NAUSEA, 90.seconds.toTicks(), 2, false, true, true))
                     .build(),
             )
+            editPersistentDataContainer { it.set(ALCOHOL_STRENGTH_KEY, PersistentDataType.INTEGER, alcoholStrength) }
         }
 }
