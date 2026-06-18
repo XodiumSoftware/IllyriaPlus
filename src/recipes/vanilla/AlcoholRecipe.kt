@@ -13,6 +13,7 @@ import org.xodium.illyriaplus.items.alcoholics.AleItem
 import org.xodium.illyriaplus.items.alcoholics.MeadItem
 import org.xodium.illyriaplus.items.alcoholics.RedWineItem
 import org.xodium.illyriaplus.items.alcoholics.RumItem
+import org.xodium.illyriaplus.items.alcoholics.VodkaItem
 import org.xodium.illyriaplus.recipes.RecipeInterface
 
 /** Represents an object handling custom alcoholic drink brewing recipes within the system. */
@@ -37,6 +38,12 @@ internal object AlcoholRecipe : RecipeInterface {
                     RumItem(),
                     RecipeChoice.ExactChoice(input(PotionType.AWKWARD)),
                     RecipeChoice.MaterialChoice(Material.SUGAR_CANE),
+                ),
+                PotionMix(
+                    NamespacedKey(instance, "vodka_brewing_recipe"),
+                    VodkaItem(),
+                    RecipeChoice.ExactChoice(input(PotionType.AWKWARD)),
+                    RecipeChoice.MaterialChoice(Material.POTATO),
                 ),
                 PotionMix(
                     NamespacedKey(instance, "mead_brewing_recipe"),

@@ -90,7 +90,7 @@ Reusable item builders live in `src/items/` and implement **`ItemInterface`**, w
 
 Current groups:
 
-- `alcoholics/` — Ale, Mead, RedWine, Rum
+- `alcoholics/` — Ale, Mead, RedWine, Rum, Vodka
 
 These items are consumed by `AlcoholRecipe` for brewing results, but can be used anywhere an `ItemStack` is needed.
 
@@ -162,7 +162,7 @@ Currently **9** recipe modules are registered:
 - WoodLogRecipe
 - WoolToStringRecipe
 
-`AlcoholRecipe` provides 4 custom `PotionMix` brewing recipes.
+`AlcoholRecipe` provides 5 custom `PotionMix` brewing recipes.
 
 ### Data Classes
 
