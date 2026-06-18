@@ -33,6 +33,12 @@ internal object AlcoholMechanic : MechanicInterface {
     private val BLINDNESS_DURATION = 15.seconds
     private val trackedPlayers = mutableSetOf<Player>()
 
+    override fun register(): Long {
+        schedule(period = DECAY_INTERVAL.inWholeSeconds * 20L) { trackedPlayers.toList().forEach { applyDecay(it) } }
+        schedule(period = DAMAGE_INTERVAL.inWholeSeconds * 20L) { trackedPlayers.toList().forEach { applyDamage(it) } }
+        return super.register()
+    }
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     fun on(event: PlayerItemConsumeEvent) = handleDrink(event.player, event.item)
 
@@ -42,12 +48,6 @@ internal object AlcoholMechanic : MechanicInterface {
             trackedPlayers.add(event.player)
             applyEffects(event.player)
         }
-    }
-
-    override fun register(): Long {
-        schedule(period = DECAY_INTERVAL.inWholeSeconds * 20L) { trackedPlayers.toList().forEach { applyDecay(it) } }
-        schedule(period = DAMAGE_INTERVAL.inWholeSeconds * 20L) { trackedPlayers.toList().forEach { applyDamage(it) } }
-        return super.register()
     }
 
     /**
