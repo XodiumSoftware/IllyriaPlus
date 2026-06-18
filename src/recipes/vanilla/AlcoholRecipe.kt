@@ -11,13 +11,17 @@ import org.bukkit.potion.PotionType
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.items.alcoholics.AbsintheItem
 import org.xodium.illyriaplus.items.alcoholics.AleItem
+import org.xodium.illyriaplus.items.alcoholics.ChorusWineItem
 import org.xodium.illyriaplus.items.alcoholics.CiderItem
+import org.xodium.illyriaplus.items.alcoholics.GlowshineItem
 import org.xodium.illyriaplus.items.alcoholics.MeadItem
 import org.xodium.illyriaplus.items.alcoholics.MoonshineItem
+import org.xodium.illyriaplus.items.alcoholics.NetherAleItem
 import org.xodium.illyriaplus.items.alcoholics.RedWineItem
 import org.xodium.illyriaplus.items.alcoholics.RumItem
 import org.xodium.illyriaplus.items.alcoholics.StoutItem
 import org.xodium.illyriaplus.items.alcoholics.VodkaItem
+import org.xodium.illyriaplus.items.alcoholics.WhiskeyItem
 import org.xodium.illyriaplus.recipes.RecipeInterface
 
 /** Represents an object handling custom alcoholic drink brewing recipes within the system. */
@@ -38,10 +42,22 @@ internal object AlcoholRecipe : RecipeInterface {
                     RecipeChoice.MaterialChoice(Material.WHEAT),
                 ),
                 PotionMix(
+                    NamespacedKey(instance, "chorus_wine_brewing_recipe"),
+                    ChorusWineItem(),
+                    RecipeChoice.ExactChoice(input(PotionType.WATER)),
+                    RecipeChoice.MaterialChoice(Material.CHORUS_FRUIT),
+                ),
+                PotionMix(
                     NamespacedKey(instance, "cider_brewing_recipe"),
                     CiderItem(),
                     RecipeChoice.ExactChoice(input(PotionType.WATER)),
                     RecipeChoice.MaterialChoice(Material.APPLE),
+                ),
+                PotionMix(
+                    NamespacedKey(instance, "glowshine_brewing_recipe"),
+                    GlowshineItem(),
+                    RecipeChoice.ExactChoice(input(PotionType.AWKWARD)),
+                    RecipeChoice.MaterialChoice(Material.GLOW_BERRIES),
                 ),
                 PotionMix(
                     NamespacedKey(instance, "mead_brewing_recipe"),
@@ -54,6 +70,12 @@ internal object AlcoholRecipe : RecipeInterface {
                     MoonshineItem(),
                     RecipeChoice.ExactChoice(input(PotionType.AWKWARD)),
                     RecipeChoice.MaterialChoice(Material.SUGAR),
+                ),
+                PotionMix(
+                    NamespacedKey(instance, "nether_ale_brewing_recipe"),
+                    NetherAleItem(),
+                    RecipeChoice.ExactChoice(input(PotionType.AWKWARD)),
+                    RecipeChoice.MaterialChoice(Material.NETHER_WART),
                 ),
                 PotionMix(
                     NamespacedKey(instance, "red_wine_brewing_recipe"),
@@ -78,6 +100,12 @@ internal object AlcoholRecipe : RecipeInterface {
                     VodkaItem(),
                     RecipeChoice.ExactChoice(input(PotionType.AWKWARD)),
                     RecipeChoice.MaterialChoice(Material.POTATO),
+                ),
+                PotionMix(
+                    NamespacedKey(instance, "whiskey_brewing_recipe"),
+                    WhiskeyItem(),
+                    RecipeChoice.ExactChoice(input(PotionType.AWKWARD)),
+                    RecipeChoice.MaterialChoice(Material.WHEAT),
                 ),
             )
 
