@@ -143,9 +143,9 @@ Custom painting variants implement **`PaintingInterface`** and are registered in
 
 Painting variants have no event listeners, so unlike mechanics and enchantments they are not registered in `IllyriaPlus.onEnable()`.
 
-The **`PaintingData`** data class in `src/data/PaintingData.kt` holds `key`, `size` (`Pair<Int, Int>`), and optional `title`/`author` translation keys defaulting to `painting.<IllyriaPlus.ID>.<key>.*`.
+The **`YAPETTO`** shared namespace constant lives in `PaintingInterface.Companion`. Each painting object in `src/paintings/yapetto/` uses it for the sprite asset id (`yapetto:<key>`) and author, while the title is derived from the snake_case key using `snakeToProperCase()`.
 
-The **`YapettoPaintings`** holder in `src/paintings/YapettoPaintings.kt` defines a single `DATA` list of `PaintingData` entries and shared top-level vals for the asset namespace (`IllyriaPlus.ID`) and title/author colors. Its `all` property maps each `PaintingData` to a `PaintingInterface` instance. All **108** Portfolio variants are added to the `minecraft:painting_variant/placeable` tag during bootstrap so they appear when placing paintings in-game.
+All **117** Yapetto variants are collected into the `paintings` list in `IllyriaPlusBootstrap` and added to the `minecraft:painting_variant/placeable` tag during bootstrap so they appear when placing paintings in-game.
 
 ### Recipes
 
