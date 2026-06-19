@@ -51,9 +51,11 @@ internal object Utils {
      *
      * @return The generated registry key fragment.
      */
-    inline fun <reified T> Class<*>.toRegistryKeyFragment(): String =
+    inline fun <reified T> Class<*>.toRegistryKeyFragment(): String = toRegistryKeyFragment(T::class.simpleName ?: "")
+
+    fun Class<*>.toRegistryKeyFragment(suffix: String): String =
         simpleName
-            .removeSuffix(T::class.simpleName ?: "")
+            .removeSuffix(suffix)
             .split(Regex("(?=[A-Z])"))
             .filter { it.isNotEmpty() }
             .joinToString("_") { it.lowercase() }

@@ -1,0 +1,20 @@
+package org.xodium.illyriaplus.paintings.yapetto
+
+import io.papermc.paper.registry.data.PaintingVariantRegistryEntry
+import net.kyori.adventure.key.Key
+import org.xodium.illyriaplus.Utils.MM
+import org.xodium.illyriaplus.Utils.snakeToProperCase
+import org.xodium.illyriaplus.paintings.PaintingInterface
+import org.xodium.illyriaplus.paintings.PaintingInterface.Companion.YAPETTO
+
+/** Yapetto painting variant: cave game. */
+@Suppress("UnstableApiUsage")
+internal object CaveGamePainting : PaintingInterface {
+    override fun invoke(builder: PaintingVariantRegistryEntry.Builder): PaintingVariantRegistryEntry.Builder =
+        builder
+            .assetId(Key.key(YAPETTO, "cave_game"))
+            .width(3)
+            .height(2)
+            .title(MM.deserialize("cave_game".snakeToProperCase()))
+            .author(MM.deserialize(YAPETTO))
+}

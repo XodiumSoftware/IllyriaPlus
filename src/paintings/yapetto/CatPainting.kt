@@ -1,0 +1,20 @@
+package org.xodium.illyriaplus.paintings.yapetto
+
+import io.papermc.paper.registry.data.PaintingVariantRegistryEntry
+import net.kyori.adventure.key.Key
+import org.xodium.illyriaplus.Utils.MM
+import org.xodium.illyriaplus.Utils.snakeToProperCase
+import org.xodium.illyriaplus.paintings.PaintingInterface
+import org.xodium.illyriaplus.paintings.PaintingInterface.Companion.YAPETTO
+
+/** Yapetto painting variant: cat. */
+@Suppress("UnstableApiUsage")
+internal object CatPainting : PaintingInterface {
+    override fun invoke(builder: PaintingVariantRegistryEntry.Builder): PaintingVariantRegistryEntry.Builder =
+        builder
+            .assetId(Key.key(YAPETTO, "cat"))
+            .width(1)
+            .height(2)
+            .title(MM.deserialize("cat".snakeToProperCase()))
+            .author(MM.deserialize(YAPETTO))
+}

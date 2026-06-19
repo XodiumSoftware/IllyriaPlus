@@ -12,8 +12,16 @@ import org.xodium.illyriaplus.Utils.toRegistryKeyFragment
 /** Represents a contract for painting variants within the system. */
 @Suppress("UnstableApiUsage")
 internal interface PaintingInterface {
+    companion object {
+        /** Shared namespace/author constant for Yapetto painting variants. */
+        const val YAPETTO = "yapetto"
+    }
+
     /**
      * The unique typed key identifying this painting variant in the registry.
+     *
+     * Class names must end with `Painting` (e.g. `AlphaPainting`) so the derived
+     * registry key matches the intended variant key.
      *
      * @see io.papermc.paper.registry.TypedKey
      * @see io.papermc.paper.registry.RegistryKey.PAINTING_VARIANT
@@ -22,7 +30,7 @@ internal interface PaintingInterface {
         get() =
             TypedKey.create(
                 RegistryKey.PAINTING_VARIANT,
-                Key.key(IllyriaPlus.ID, javaClass.toRegistryKeyFragment<Art>()),
+                Key.key(IllyriaPlus.ID, javaClass.toRegistryKeyFragment("Painting")),
             )
 
     /**
