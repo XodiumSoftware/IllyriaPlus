@@ -5,17 +5,19 @@ Use this skill when the user wants to add a new painting variant to IllyriaPlus.
 ## Before Writing Code
 
 1. Ask the user:
-   - What is the painting name (snake_case registry fragment)?
-   - What are its width and height in blocks?
-   - What namespace should the sprite asset live under? (default: `portfolio`)
-   - What translation keys should be used for title and author? (default: `painting.portfolio.<name>.title` and `painting.portfolio.<name>.author`)
+   - What is the painting key (snake_case registry fragment)?
+   - What is its size as `width x height` in blocks?
+   - What namespace should the sprite asset live under? (default: `IllyriaPlus.ID` / `illyriaplus`)
+   - What translation keys should be used for title and author? (default: `painting.<IllyriaPlus.ID>.<key>.title` and `painting.<IllyriaPlus.ID>.<key>.author`)
 2. Confirm the painting should be placeable (almost always yes).
 
 ## Creating the Painting Data
 
 1. Open `src/paintings/YapettoPaintings.kt`.
-2. Add a new `PaintingData("name", width, height)` entry to the `DATA` list, keeping entries in alphabetical order.
-3. If the new painting needs its own file (e.g. it has custom behavior), create `src/paintings/<Name>Painting.kt` instead and make it implement `PaintingInterface`. Use `PaintingData` for metadata.
+2. Add a new `PaintingData("key", Pair(width, height))` entry to the `DATA` list, keeping entries in alphabetical order.
+   - If the painting needs non-default title/author keys, pass them explicitly:
+     `PaintingData("key", Pair(width, height), title = "...", author = "...")`.
+3. If the new painting needs its own file (e.g. it has custom behavior), create `src/paintings/<Name>Painting.kt` instead and make it implement `PaintingInterface`. Use `PaintingData` for metadata and reference the top-level shared vals in `YapettoPaintings` if appropriate.
 
 ## Wiring
 
@@ -42,31 +44,22 @@ package org.xodium.illyriaplus.paintings
 import io.papermc.paper.registry.data.PaintingVariantRegistryEntry
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
 import org.xodium.illyriaplus.data.PaintingData
 
 /** Represents the <Name> painting variant. */
 @Suppress("UnstableApiUsage")
 internal object <Name>Painting : PaintingInterface {
-    private val DATA = PaintingData("<name>", <width>, <height>)
+    private val DATA = PaintingData("<key>", Pair(<width>, <height>))
 
     override fun invoke(
         builder: PaintingVariantRegistryEntry.Builder,
     ): PaintingVariantRegistryEntry.Builder =
         builder
-            .assetId(Key.key("portfolio", DATA.name))
-            .width(DATA.width)
-            .height(DATA.height)
-            .title(
-                Component
-                    .translatable("painting.portfolio.${DATA.name}.title")
-                    .color(NamedTextColor.YELLOW),
-            )
-            .author(
-                Component
-                    .translatable("painting.portfolio.${DATA.name}.author")
-                    .color(NamedTextColor.GRAY),
-            )
+            .assetId(Key.key(YapettoPaintings.ASSET_NAMESPACE, DATA.key))
+            .width(DATA.size.first)
+            .height(DATA.size.second)
+            .title(Component.translatable(DATA.title).color(YapettoPaintings.TITLE_COLOR))
+            .author(Component.translatable(DATA.author).color(YapettoPaintings.AUTHOR_COLOR))
 }
 ```
 

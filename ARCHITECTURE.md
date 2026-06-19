@@ -138,12 +138,14 @@ PDC helpers in `src/pdcs/` expose Kotlin property delegates on entity types. `Pl
 Custom painting variants implement **`PaintingInterface`** and are registered in `IllyriaPlusBootstrap` via `RegistryEvents.PAINTING_VARIANT`. The interface provides:
 
 - **`key`** — a `TypedKey<Art>` derived automatically from the class name (e.g. `AlphaPainting` → `illyriaplus:alpha`).
-- **`invoke(builder)`** — configures the variant's asset id (`portfolio:<name>`), width, height, title, and author.
+- **`invoke(builder)`** — configures the variant's asset id, width, height, title, and author.
 - **`get()`** — looks up and returns the live `Art` instance from the registry after bootstrap.
 
 Painting variants have no event listeners, so unlike mechanics and enchantments they are not registered in `IllyriaPlus.onEnable()`.
 
-The **`YapettoPaintings`** holder in `src/paintings/YapettoPaintings.kt` exposes `all`, a list of all **108** Portfolio painting variants built from `PaintingData`. They are added to the `minecraft:painting_variant/placeable` tag during bootstrap so they appear when placing paintings in-game.
+The **`PaintingData`** data class in `src/data/PaintingData.kt` holds `key`, `size` (`Pair<Int, Int>`), and optional `title`/`author` translation keys defaulting to `painting.<IllyriaPlus.ID>.<key>.*`.
+
+The **`YapettoPaintings`** holder in `src/paintings/YapettoPaintings.kt` defines a single `DATA` list of `PaintingData` entries and shared top-level vals for the asset namespace (`IllyriaPlus.ID`) and title/author colors. Its `all` property maps each `PaintingData` to a `PaintingInterface` instance. All **108** Portfolio variants are added to the `minecraft:painting_variant/placeable` tag during bootstrap so they appear when placing paintings in-game.
 
 ### Recipes
 
@@ -167,6 +169,7 @@ Data classes live in `src/data/`:
 - `AdjacentBlockData`
 - `BuildSetupData`
 - `CommandData`
+- `PaintingData`
 - `TreeStructureData`
 
 ### Utilities
