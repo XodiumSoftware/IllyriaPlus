@@ -1,6 +1,7 @@
 package org.xodium.illyriaplus.data
 
 import org.xodium.illyriaplus.Utils.snakeToProperCase
+import org.xodium.illyriaplus.paintings.PaintingInterface
 
 /**
  * Holds the metadata for a painting variant.
@@ -11,8 +12,8 @@ import org.xodium.illyriaplus.Utils.snakeToProperCase
  * @property title The display title derived from [name], converted to proper case.
  */
 internal data class PaintingData(
-    val name: String,
-    val size: Pair<Int, Int>,
-    val author: String,
-    val title: String = name.snakeToProperCase(),
-)
+    override val name: String,
+    override val size: Pair<Int, Int>,
+    override val author: String,
+    override val title: String = name.snakeToProperCase(),
+) : PaintingInterface

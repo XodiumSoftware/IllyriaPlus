@@ -16,7 +16,7 @@ import org.xodium.illyriaplus.enchantments.utility.EmbertreadEnchantment
 import org.xodium.illyriaplus.enchantments.utility.NimbusEnchantment
 import org.xodium.illyriaplus.enchantments.utility.TetherEnchantment
 import org.xodium.illyriaplus.enchantments.utility.VinemineEnchantment
-import org.xodium.illyriaplus.paintings.yapetto.*
+import org.xodium.illyriaplus.paintings.YapettoPaintings
 
 /** Main bootstrap class of the plugin. */
 @Suppress("UnstableApiUsage", "Unused")
@@ -28,127 +28,6 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
     }
 
     override fun bootstrap(ctx: BootstrapContext) {
-        val paintings =
-            listOf(
-                AlphaPainting,
-                AnIntruderPainting,
-                AncestorPainting,
-                AnchorPainting,
-                AquaculturePainting,
-                AwfulHousingPainting,
-                BeachsidePainting,
-                BestFriendPainting,
-                BetaPainting,
-                BlissPainting,
-                BlossomsPainting,
-                BoscagePainting,
-                BouquetEditionPainting,
-                BubblesPainting,
-                CaricaturePainting,
-                CatPainting,
-                CaveGamePainting,
-                ChaosPainting,
-                CherryMoonPainting,
-                ClothPainting,
-                CloudCuckooPainting,
-                CrustyPainting,
-                DeathPainting,
-                DecayPainting,
-                DistantPeaksPainting,
-                DrippyPainting,
-                EndyWarholPainting,
-                EscapelessPainting,
-                EtherPainting,
-                EyePainting,
-                FarlanderPainting,
-                FaunaPainting,
-                FeatherFallingPainting,
-                FilmPainting,
-                FloraPainting,
-                FoxPainting,
-                FrostPainting,
-                GearsPainting,
-                GeneratorPainting,
-                GiantPainting,
-                GreatswordPainting,
-                GullsPainting,
-                HarvestMoonPainting,
-                HeartbeatPainting,
-                HeavensLadderPainting,
-                HeirloomPainting,
-                IchorPainting,
-                IconographyPainting,
-                JazzTownPainting,
-                JohnDevouringHisSonPainting,
-                JourneysEndPainting,
-                JusticePainting,
-                LifePainting,
-                LifeCyclePainting,
-                LightPainting,
-                LuminescentPainting,
-                MacabrePainting,
-                MacabreAltPainting,
-                MacrocosmPainting,
-                MedleyPainting,
-                ModeCreativePainting,
-                MoonlightTowerPainting,
-                MorningOnTheSeinePainting,
-                MountainsPainting,
-                NeverBloomingWattlePainting,
-                NightPainting,
-                NullityPainting,
-                NyctinastyPainting,
-                OakDoorPainting,
-                OperatorPainting,
-                OrderPainting,
-                ParrotPainting,
-                PerennialPainting,
-                PicturesquePainting,
-                PixelGobelinPainting,
-                PostMortemPainting,
-                PricklePainting,
-                PyramidPainting,
-                RainbowsPainting,
-                RainbowsAltPainting,
-                RainbowsTransPainting,
-                RainforestPainting,
-                RanaPainting,
-                RandomtickspeedPainting,
-                RedDawnPainting,
-                RisingSunAndFadingDeathPainting,
-                RosemallingPainting,
-                SandstonesPainting,
-                SerpentPainting,
-                ShapesPainting,
-                SlimeChunkPainting,
-                SquidGamesPainting,
-                StairHallPainting,
-                StalksPainting,
-                StatuePainting,
-                StillLifePainting,
-                StormPainting,
-                SunflowerPainting,
-                SunriseSparsePainting,
-                TablePainting,
-                TheFarLandsPainting,
-                TheFarLandsAltPainting,
-                ThePaintingAtEndOfCataloguePainting,
-                TheScreamPainting,
-                TravellerPainting,
-                TussieMussiePainting,
-                UnderworldPainting,
-                UnwrapPainting,
-                VicePainting,
-                VirtuosiPasDeDeuxPainting,
-                VoidManorPainting,
-                WavesPainting,
-                WeNeedToGoDeeperPainting,
-                WildstylePainting,
-                WindmillFieldPainting,
-                WrongSidePainting,
-                YonderPainting,
-            )
-
         ctx.lifecycleManager.apply {
             registerEventHandler(LifecycleEvents.TAGS.preFlatten(RegistryKey.ITEM)) { event ->
                 event.registrar().apply {
@@ -213,7 +92,7 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
             registerEventHandler(
                 RegistryEvents.PAINTING_VARIANT.compose().newHandler { event ->
                     event.registry().apply {
-                        paintings.forEach { painting ->
+                        YapettoPaintings.paintings.forEach { painting ->
                             register(painting.key) { painting.invoke(it) }
                         }
                     }
@@ -237,7 +116,7 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
             registerEventHandler(LifecycleEvents.TAGS.postFlatten(RegistryKey.PAINTING_VARIANT)) { event ->
                 event.registrar().addToTag(
                     PaintingVariantTagKeys.PLACEABLE,
-                    paintings.map { it.key },
+                    YapettoPaintings.paintings.map { it.key },
                 )
             }
         }

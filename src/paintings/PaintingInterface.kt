@@ -7,19 +7,29 @@ import io.papermc.paper.registry.data.PaintingVariantRegistryEntry
 import net.kyori.adventure.key.Key
 import org.bukkit.Art
 import org.xodium.illyriaplus.IllyriaPlus
-import org.xodium.illyriaplus.Utils.toRegistryKeyFragment
-import org.xodium.illyriaplus.data.PaintingData
+import org.xodium.illyriaplus.Utils.MM
+import org.xodium.illyriaplus.Utils.snakeToProperCase
 
-/** Represents a contract for painting variants within the system. */
+/** Represents a single registerable painting variant within the system. */
 @Suppress("UnstableApiUsage")
 internal interface PaintingInterface {
-    val paintings: List<PaintingData>
+    /** The registry key fragment (snake_case) identifying this painting variant. */
+    val name: String
+
+    /** The width and height of the painting in blocks, represented as `Pair(width, height)`. */
+    val size: Pair<Int, Int>
+
+    /** The namespace/author key for the painting asset. */
+    val author: String
+
+    /** The display title derived from [name], converted to proper case. */
+    val title: String get() = name.snakeToProperCase()
+
+    /** The asset key fragment used to locate the painting texture. */
+    val assetKey: String get() = name
 
     /**
      * The unique typed key identifying this painting variant in the registry.
-     *
-     * Class names must end with `Painting` (e.g. `AlphaPainting`) so the derived
-     * registry key matches the intended variant key.
      *
      * @see io.papermc.paper.registry.TypedKey
      * @see io.papermc.paper.registry.RegistryKey.PAINTING_VARIANT
@@ -28,7 +38,7 @@ internal interface PaintingInterface {
         get() =
             TypedKey.create(
                 RegistryKey.PAINTING_VARIANT,
-                Key.key(IllyriaPlus.ID, javaClass.toRegistryKeyFragment("Painting")),
+                Key.key(IllyriaPlus.ID, name),
             )
 
     /**
@@ -37,7 +47,13 @@ internal interface PaintingInterface {
      * @param builder The builder used to define the painting variant properties.
      * @return The builder for method chaining.
      */
-    fun invoke(builder: PaintingVariantRegistryEntry.Builder): PaintingVariantRegistryEntry.Builder = builder
+    fun invoke(builder: PaintingVariantRegistryEntry.Builder): PaintingVariantRegistryEntry.Builder =
+        builder
+            .assetId(Key.key(author, assetKey))
+            .width(size.first)
+            .height(size.second)
+            .title(MM.deserialize(title))
+            .author(MM.deserialize(author))
 
     /**
      * Retrieves the painting variant from the registry.
