@@ -29,6 +29,7 @@ IllyriaPlus/
 │   │   └── vanilla/          # Vanilla enchantment overrides
 │   ├── recipes/              # Recipe implementations
 │   │   └── vanilla/          # Vanilla-style custom recipes
+│   ├── painting/             # Custom painting variant implementations
 │   ├── data/                 # Data classes
 │   └── pdcs/                 # Persistent Data Container helpers
 └── docs/                     # Generated documentation
@@ -78,6 +79,7 @@ Every feature is an `object` implementing the appropriate interface.
 | Mechanics | `MechanicInterface` (extends Bukkit `Listener`) | `PluginManager.registerEvents()` + command/permission registration via `register()` |
 | Enchantments | `EnchantmentInterface` (extends Bukkit `Listener`) | `PluginManager.registerEvents()` via `register()` |
 | Recipes | `RecipeInterface` | `Server.addRecipe()` / `PotionBrewer.addPotionMix()` via `register()` |
+| Paintings | `PaintingInterface` | Registered in `IllyriaPlusBootstrap` via `RegistryEvents.PAINTING_VARIANT` and added to `minecraft:painting_variant/placeable` |
 
 All modules are singletons. There is no file-based configuration — values are hardcoded as `private const val` / `private val` properties directly in each module object. To change behavior, edit the source and rebuild.
 
@@ -131,6 +133,18 @@ PDC helpers in `src/pdcs/` expose Kotlin property delegates on entity types. `Pl
 - `Player.nickname` — stored under `illyriaplus:nickname`; returns the player's real name when unset.
 - `Player.scoreboardVisibility` — stored under `illyriaplus:scoreboard_visibility`; defaults to `false`.
 
+### Paintings
+
+Custom painting variants implement **`PaintingInterface`** and are registered in `IllyriaPlusBootstrap` via `RegistryEvents.PAINTING_VARIANT`. The interface provides:
+
+- **`key`** — a `TypedKey<Art>` derived automatically from the class name (e.g. `AlphaPainting` → `illyriaplus:alpha`).
+- **`invoke(builder)`** — configures the variant's asset id (`portfolio:<name>`), width, height, title, and author.
+- **`get()`** — looks up and returns the live `Art` instance from the registry after bootstrap.
+
+Painting variants have no event listeners, so unlike mechanics and enchantments they are not registered in `IllyriaPlus.onEnable()`.
+
+The **`YapettoPaintings`** holder in `src/paintings/YapettoPaintings.kt` exposes `all`, a list of all **108** Portfolio painting variants built from `PaintingData`. They are added to the `minecraft:painting_variant/placeable` tag during bootstrap so they appear when placing paintings in-game.
+
 ### Recipes
 
 Recipe objects implement **`RecipeInterface`** and are listed in `IllyriaPlus.onEnable()`. They expose `recipes` and `potions` collections plus a `register()` function that returns elapsed time in ms.
@@ -177,6 +191,7 @@ General utilities are in `src/Utils.kt` as the `internal object Utils`, with nes
 | `enchantments/` | `EnchantmentInterface`; Embertread, Nimbus, Tether, Vinemine, FeatherFalling, Fortune, SilkTouch |
 | `enchantments/utility/` | Custom utility enchantments registered in the bootstrap |
 | `enchantments/vanilla/` | Vanilla enchantment behavior overrides |
+| `painting/` | `PaintingInterface`; 108 Yapetto painting variants from the Portfolio datapack |
 | `recipes/` | `RecipeInterface`; 8 vanilla-style recipes |
 | `pdcs/` | `PlayerPDC` |
 
