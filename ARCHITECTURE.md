@@ -138,12 +138,14 @@ PDC helpers in `src/pdcs/` expose Kotlin property delegates on entity types. `Pl
 Custom painting variants implement **`PaintingInterface`** and are registered in `IllyriaPlusBootstrap` via `RegistryEvents.PAINTING_VARIANT`. The interface provides:
 
 - **`key`** — a `TypedKey<Art>` derived automatically from the class name (e.g. `AlphaPainting` → `illyriaplus:alpha`).
+- **`assetKey`** — the snake_case fragment used for the sprite asset id, derived from the class name (e.g. `AlphaPainting` → `alpha`).
+- **`title`** — the display title in proper case, also derived from the class name.
 - **`invoke(builder)`** — configures the variant's asset id, width, height, title, and author.
 - **`get()`** — looks up and returns the live `Art` instance from the registry after bootstrap.
 
 Painting variants have no event listeners, so unlike mechanics and enchantments they are not registered in `IllyriaPlus.onEnable()`.
 
-The **`YAPETTO`** shared namespace constant lives in `PaintingInterface.Companion`. Each painting object in `src/paintings/yapetto/` uses it for the sprite asset id (`yapetto:<key>`) and author, while the title is derived from the snake_case key using `snakeToProperCase()`.
+The **`YAPETTO`** shared namespace constant lives in `PaintingInterface.Companion`. Each painting object in `src/paintings/yapetto/` only hardcodes its width and height; the registry key, asset id, and title are all derived from the class name by stripping the `Painting` suffix. The author is always `YAPETTO`.
 
 All **117** Yapetto variants are collected into the `paintings` list in `IllyriaPlusBootstrap` and added to the `minecraft:painting_variant/placeable` tag during bootstrap so they appear when placing paintings in-game.
 

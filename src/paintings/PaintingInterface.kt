@@ -7,6 +7,7 @@ import io.papermc.paper.registry.data.PaintingVariantRegistryEntry
 import net.kyori.adventure.key.Key
 import org.bukkit.Art
 import org.xodium.illyriaplus.IllyriaPlus
+import org.xodium.illyriaplus.Utils.snakeToProperCase
 import org.xodium.illyriaplus.Utils.toRegistryKeyFragment
 
 /** Represents a contract for painting variants within the system. */
@@ -32,6 +33,18 @@ internal interface PaintingInterface {
                 RegistryKey.PAINTING_VARIANT,
                 Key.key(IllyriaPlus.ID, javaClass.toRegistryKeyFragment("Painting")),
             )
+
+    /**
+     * The asset key fragment derived from the class name, with the `Painting`
+     * suffix removed and converted to snake_case.
+     */
+    val assetKey: String get() = javaClass.toRegistryKeyFragment("Painting")
+
+    /**
+     * The display title derived from the class name, with the `Painting` suffix
+     * removed and converted to proper case.
+     */
+    val title: String get() = javaClass.toRegistryKeyFragment("Painting").snakeToProperCase()
 
     /**
      * Configures the properties of the painting variant using the provided builder.
