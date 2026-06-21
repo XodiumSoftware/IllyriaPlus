@@ -8,6 +8,7 @@ import io.papermc.paper.registry.event.RegistryEvents
 import io.papermc.paper.registry.keys.ItemTypeKeys
 import io.papermc.paper.registry.keys.tags.EnchantmentTagKeys
 import io.papermc.paper.registry.keys.tags.ItemTypeTagKeys
+import io.papermc.paper.registry.keys.tags.PaintingVariantTagKeys
 import io.papermc.paper.registry.tag.TagKey
 import io.papermc.paper.tag.TagEntry
 import net.kyori.adventure.key.Key
@@ -15,6 +16,7 @@ import org.xodium.illyriaplus.enchantments.utility.EmbertreadEnchantment
 import org.xodium.illyriaplus.enchantments.utility.NimbusEnchantment
 import org.xodium.illyriaplus.enchantments.utility.TetherEnchantment
 import org.xodium.illyriaplus.enchantments.utility.VinemineEnchantment
+import org.xodium.illyriaplus.paintings.YapettoPaintings
 
 /** Main bootstrap class of the plugin. */
 @Suppress("UnstableApiUsage", "Unused")
@@ -27,8 +29,8 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
 
     override fun bootstrap(ctx: BootstrapContext) {
         ctx.lifecycleManager.apply {
-            registerEventHandler(LifecycleEvents.TAGS.preFlatten(RegistryKey.ITEM)) {
-                it.registrar().apply {
+            registerEventHandler(LifecycleEvents.TAGS.preFlatten(RegistryKey.ITEM)) { event ->
+                event.registrar().apply {
                     setTag(
                         TOOLS,
                         setOf(
@@ -87,8 +89,17 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
                     }
                 },
             )
-            registerEventHandler(LifecycleEvents.TAGS.postFlatten(RegistryKey.ENCHANTMENT)) {
-                it.registrar().apply {
+            registerEventHandler(
+                RegistryEvents.PAINTING_VARIANT.compose().newHandler { event ->
+                    event.registry().apply {
+                        YapettoPaintings.paintings.forEach { painting ->
+                            register(painting.key) { painting.invoke(it) }
+                        }
+                    }
+                },
+            )
+            registerEventHandler(LifecycleEvents.TAGS.postFlatten(RegistryKey.ENCHANTMENT)) { event ->
+                event.registrar().apply {
                     val enchants =
                         setOf(
                             VinemineEnchantment.key,
@@ -101,6 +112,12 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
                     addToTag(EnchantmentTagKeys.NON_TREASURE, enchants)
                     addToTag(EnchantmentTagKeys.IN_ENCHANTING_TABLE, enchants)
                 }
+            }
+            registerEventHandler(LifecycleEvents.TAGS.postFlatten(RegistryKey.PAINTING_VARIANT)) { event ->
+                event.registrar().addToTag(
+                    PaintingVariantTagKeys.PLACEABLE,
+                    YapettoPaintings.paintings.map { it.key },
+                )
             }
         }
     }
