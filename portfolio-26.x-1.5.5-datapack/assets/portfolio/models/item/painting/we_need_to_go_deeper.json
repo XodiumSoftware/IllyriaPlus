@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "portfolio:item/painting/we_need_to_go_deeper"
-  }
-}

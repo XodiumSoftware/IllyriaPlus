@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "portfolio:item/painting/the_painting_at_end_of_catalogue"
-  }
-}
