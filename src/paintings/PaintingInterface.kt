@@ -34,12 +34,7 @@ internal interface PaintingInterface {
      * @see io.papermc.paper.registry.TypedKey
      * @see io.papermc.paper.registry.RegistryKey.PAINTING_VARIANT
      */
-    val key: TypedKey<Art>
-        get() =
-            TypedKey.create(
-                RegistryKey.PAINTING_VARIANT,
-                Key.key(IllyriaPlus.ID, name),
-            )
+    val key: TypedKey<Art> get() = TypedKey.create(RegistryKey.PAINTING_VARIANT, Key.key(IllyriaPlus.ID, name))
 
     /**
      * Configures the properties of the painting variant using the provided builder.
@@ -49,7 +44,7 @@ internal interface PaintingInterface {
      */
     fun invoke(builder: PaintingVariantRegistryEntry.Builder): PaintingVariantRegistryEntry.Builder =
         builder
-            .assetId(Key.key(author, assetKey))
+            .assetId(Key.key(IllyriaPlus.ID, assetKey))
             .width(size.first)
             .height(size.second)
             .title(MM.deserialize(title))
