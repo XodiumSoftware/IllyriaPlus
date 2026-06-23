@@ -606,5 +606,8 @@
     "block.minecraft.banner.illyriaplus.yin_yang.purple": "Purple Yin and Yang",
     "block.minecraft.banner.illyriaplus.yin_yang.red": "Red Yin and Yang",
     "block.minecraft.banner.illyriaplus.yin_yang.white": "White Yin and Yang",
-    "block.minecraft.banner.illyriaplus.yin_yang.yellow": "Yellow Yin and Yang"
+    "block.minecraft.banner.illyriaplus.yin_yang.yellow": "Yellow Yin and Yang",
+    "death.attack.alcohol_poisoning": "%1$s died from alcohol poisoning",
+    "death.attack.alcohol_poisoning.item": "%1$s died from alcohol poisoning caused by %3$s",
+    "death.attack.alcohol_poisoning.player": "%1$s died from alcohol poisoning whilst fighting %2$s"
 }
