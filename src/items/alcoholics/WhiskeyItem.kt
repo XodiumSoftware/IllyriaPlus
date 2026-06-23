@@ -4,7 +4,7 @@ import io.papermc.paper.datacomponent.item.PotionContents
 import org.bukkit.Color
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.xodium.illyriaplus.toTicks
+import org.xodium.illyriaplus.Utils.toTicks
 import kotlin.time.Duration.Companion.seconds
 
 /** Represents a bottle of Whiskey. */
