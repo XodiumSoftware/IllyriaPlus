@@ -33,10 +33,7 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
                 NimbusEnchantment.key,
                 EmbertreadEnchantment.key,
             )
-        private val PAINTINGS =
-            buildList {
-                addAll(YapettoPaintings.paintings)
-            }
+        private val PAINTINGS = YapettoPaintings.paintings
     }
 
     override fun bootstrap(ctx: BootstrapContext) {
@@ -108,7 +105,7 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
                 RegistryEvents.PAINTING_VARIANT.compose().newHandler { event ->
                     event.registry().apply {
                         PAINTINGS.forEach { painting ->
-                            register(painting.key) { painting.invoke(it) }
+                            register(YapettoPaintings.key(painting.name)) { YapettoPaintings.invoke(painting.name, it) }
                         }
                     }
                 },
@@ -126,7 +123,7 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
             registerEventHandler(LifecycleEvents.TAGS.postFlatten(RegistryKey.PAINTING_VARIANT)) { event ->
                 event.registrar().addToTag(
                     PaintingVariantTagKeys.PLACEABLE,
-                    PAINTINGS.map { it.key },
+                    PAINTINGS.map { YapettoPaintings.key(it.name) },
                 )
             }
         }

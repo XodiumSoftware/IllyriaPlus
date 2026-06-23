@@ -3,12 +3,12 @@ package org.xodium.illyriaplus.paintings
 import org.xodium.illyriaplus.data.PaintingData
 
 /** Aggregates all Yapetto painting variants into a single collection. */
-internal object YapettoPaintings {
+internal object YapettoPaintings : PaintingInterface {
     /** Shared namespace/author key for Yapetto painting assets. */
     private const val YAPETTO = "yapetto"
 
     /** The complete list of Yapetto painting variants and their block sizes. */
-    val paintings: List<PaintingInterface> =
+    override val paintings: List<PaintingData> =
         listOf(
             PaintingData("alpha", Pair(1, 1), YAPETTO),
             PaintingData("an_intruder", Pair(2, 3), YAPETTO),
