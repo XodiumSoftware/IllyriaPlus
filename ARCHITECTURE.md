@@ -145,9 +145,9 @@ Custom painting variants implement **`PaintingInterface`** and are registered in
 
 Painting variants have no event listeners, so unlike mechanics and enchantments they are not registered in `IllyriaPlus.onEnable()`.
 
-The **`YAPETTO`** shared namespace constant lives in `PaintingInterface.Companion`. Each painting object in `src/paintings/yapetto/` only hardcodes its width and height; the registry key, asset id, and title are all derived from the class name by stripping the `Painting` suffix. The author is always `YAPETTO`.
+The **`YAPETTO`** shared namespace/author constant lives in `YapettoPaintings`. All painting variants are declared in the single `paintings` list in `src/paintings/YapettoPaintings.kt`, with each entry hardcoding its registry key, block size, and author. They are collected in `IllyriaPlusBootstrap` and added to the `minecraft:painting_variant/placeable` tag during bootstrap so they appear when placing paintings in-game.
 
-All **117** Yapetto variants are collected into the `paintings` list in `IllyriaPlusBootstrap` and added to the `minecraft:painting_variant/placeable` tag during bootstrap so they appear when placing paintings in-game.
+The in-hand painting item models are synchronized into the vanilla `resourcepack/assets/minecraft/items/painting.json` via the `merge-paintings` agent skill (`IllyriaPlus/.agents/skills/merge-paintings/merge_yapetto_paintings.py`). The script is idempotent: it removes any existing `illyriaplus:*` / `yapetto:*` cases and re-adds one case for every model found under `resourcepack/assets/illyriaplus/models/item/painting/`.
 
 ### Recipes
 

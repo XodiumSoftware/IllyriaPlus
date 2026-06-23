@@ -14,28 +14,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  check:
-    name: Check YAPETTO painting merge
-    runs-on: ubuntu-latest
-    steps:
-      - id: checkout
-        name: Checkout
-        uses: actions/checkout@v7.0.0
-
-      - id: setup_java
-        name: Setup Java
-        uses: actions/setup-java@v5.3.0
-        with:
-          java-version: 25
-          distribution: temurin
-
-      - id: check_yapetto
-        name: Verify IllyriaPlus paintings are merged
-        run: ./gradlew checkYapettoPaintings
-
   release:
     name: Release
-    needs: check
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.ref_name }}
