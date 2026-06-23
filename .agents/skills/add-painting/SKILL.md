@@ -1,3 +1,8 @@
+---
+name: add-painting
+description: Scaffold a new IllyriaPlus painting variant in the Yapetto paintings list.
+---
+
 # Add a Painting
 
 Use this skill when the user wants to add a new painting variant to IllyriaPlus.

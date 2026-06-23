@@ -22,18 +22,16 @@ jobs:
         name: Checkout
         uses: actions/checkout@v7.0.0
 
-      - id: setup_kotlin
-        name: Setup Kotlin
-        run: |
-          curl -s "https://get.sdkman.io" | bash
-          export SDKMAN_DIR="$HOME/.sdkman"
-          source "$SDKMAN_DIR/bin/sdkman-init.sh"
-          sdk install kotlin
-          echo "$SDKMAN_DIR/candidates/kotlin/current/bin" >> "$GITHUB_PATH"
+      - id: setup_java
+        name: Setup Java
+        uses: actions/setup-java@v5.3.0
+        with:
+          java-version: 25
+          distribution: temurin
 
       - id: check_yapetto
         name: Verify IllyriaPlus paintings are merged
-        run: kotlin scripts/merge_yapetto_painting_items.kts --check
+        run: ./gradlew checkYapettoPaintings
 
   release:
     name: Release
