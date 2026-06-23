@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "type=bottom": { "model": "block/foliage/dirt/dirt_slab" },
+        "type=top": { "model": "block/wood/furniture/table" },
+        "type=double": { "model": "block/oak_planks" }
+    }
+}

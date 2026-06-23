@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/mutton",
+  "textures": {
+    "layer0": "minecraft:item/excalibur/eating_animation/mutton_eating_0"
+  }
+}

@@ -1,0 +1,26 @@
+{
+	"variants": {
+		"half=lower":[
+            { "model": "block/foliage/large_fern/bottom_1", "weight": 9 },
+			{ "model": "block/foliage/large_fern/bottom_2", "weight": 3 },
+			{ "model": "block/foliage/large_fern/bottom_3", "weight": 30 },
+
+			{ "model": "block/foliage/large_fern/bottom_cross_23", "weight": 1 },
+			{ "model": "block/foliage/large_fern/bottom_cross_45", "weight": 1 },
+			{ "model": "block/foliage/large_fern/bottom_cross_67", "weight": 1 },
+
+			{ "model": "block/foliage/large_fern/bottom_cross_double_23", "weight": 20 }
+			],
+		"half=upper":[
+			{ "model": "block/foliage/large_fern/top_1", "weight": 9 },
+			{ "model": "block/foliage/large_fern/top_2", "weight": 3 },
+			{ "model": "block/foliage/large_fern/top_3", "weight": 30 },
+
+			{ "model": "block/foliage/large_fern/top_cross_23", "weight": 1 },
+			{ "model": "block/foliage/large_fern/top_cross_45", "weight": 1 },
+			{ "model": "block/foliage/large_fern/top_cross_67", "weight": 1 },
+
+			{ "model": "block/foliage/large_fern/top_cross_double_23", "weight": 20 }
+			]
+    }
+}

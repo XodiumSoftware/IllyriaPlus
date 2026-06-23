@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/melon_slice",
+  "textures": {
+    "layer0": "minecraft:item/excalibur/eating_animation/melon_slice_eating_0"
+  }
+}

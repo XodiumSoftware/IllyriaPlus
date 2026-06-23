@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/cit/suspicious_stew/suspicious_stew_23_saturation"
+  }
+}

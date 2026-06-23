@@ -1,0 +1,9 @@
+{
+    "variants": {
+        "": [
+            { "model": "block/packed_ice" },
+			{ "model": "block/packed_ice/packed_ice1"},
+			{ "model": "block/packed_ice/packed_ice2"}
+		]
+    }
+}

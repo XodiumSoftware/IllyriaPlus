@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "": [
+        { "model": "block/foliage/grass/grass", "weight": 40 },
+        { "model": "block/foliage/grass/grass1", "weight": 30 },
+        { "model": "block/foliage/grass/grass2", "weight": 35 },
+        { "model": "block/foliage/grass/grass3", "weight": 20 },
+        { "model": "block/foliage/grass/grass4", "weight": 30 },
+        { "model": "block/foliage/grass/low_grass", "weight": 10 }		
+        ]
+    }
+}

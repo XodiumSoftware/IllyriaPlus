@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "particle": "block/sandstone",	
+        "up": "block/sandstone_top_square",
+		"down": "block/sandstone_bottom",
+        "north": "block/chiseled_sandstone",
+        "east": "block/chiseled_sandstone",
+        "south": "block/chiseled_sandstone",
+        "west": "block/chiseled_sandstone"
+    }
+}

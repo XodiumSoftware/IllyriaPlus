@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/milk_bucket",
+  "textures": {
+    "layer0": "minecraft:item/excalibur/eating_animation/milk_bucket_drinking_1"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/chorus_fruit"
+    },
+    "on_true": {
+      "type": "minecraft:range_dispatch",
+      "entries": [
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/excalibur/eating_animation/chorus_fruit_eating_0"
+          },
+          "threshold": 0.35
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/excalibur/eating_animation/chorus_fruit_eating_1"
+          },
+          "threshold": 0.7
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/excalibur/eating_animation/chorus_fruit_eating_2"
+          },
+          "threshold": 0.9
+        }
+      ],
+      "fallback": {
+        "type": "minecraft:model",
+        "model": "minecraft:item/chorus_fruit"
+      },
+      "property": "minecraft:use_duration",
+      "scale": 0.035
+    },
+    "property": "minecraft:using_item"
+  }
+}

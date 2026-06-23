@@ -1,0 +1,71 @@
+{
+	"parent": "block/fence_inventory",
+	"ambientocclusion": false,
+	"textures": {
+		"particle": "block/fence_spruce"
+	},
+	"elements": [
+		{
+			"name": "Left post",
+			"from": [6, 0, 0],
+			"to": [10, 16, 4],
+			"faces": {
+				"north": {"uv": [6, 0, 10, 16], "texture": "#particle"},
+				"east": {"uv": [6, 0, 10, 16], "texture": "#particle"},
+				"south": {"uv": [6, 0, 10, 16], "texture": "#particle"},
+				"west": {"uv": [6, 0, 10, 16], "texture": "#particle"},
+				"up": {"uv": [6, 0, 10, 4], "texture": "#particle"},
+				"down": {"uv": [6, 0, 10, 4], "texture": "#particle", "cullface": "down"}
+			}
+		},
+		{
+			"name": "Right post",
+			"from": [6, 0, 12],
+			"to": [10, 16, 16],
+			"faces": {
+				"north": {"uv": [6, 0, 10, 16], "texture": "#particle"},
+				"east": {"uv": [6, 0, 10, 16], "texture": "#particle"},
+				"south": {"uv": [6, 0, 10, 16], "texture": "#particle"},
+				"west": {"uv": [6, 0, 10, 16], "texture": "#particle"},
+				"up": {"uv": [6, 12, 10, 16], "texture": "#particle"},
+				"down": {"uv": [6, 12, 10, 16], "texture": "#particle", "cullface": "down"}
+			}
+		},
+		{
+			"name": "Top bar",
+			"from": [7, 11, -2],
+			"to": [9, 14, 18],
+			"faces": {
+				"north": {"uv": [7, 1, 9, 4], "texture": "#particle"},
+				"east": {"uv": [6, 0, 9, 16], "rotation": 90, "texture": "#particle"},
+				"south": {"uv": [7, 1, 9, 4], "texture": "#particle"},
+				"west": {"uv": [6, 0, 9, 16], "rotation": 90, "texture": "#particle"},
+				"up": {"uv": [7, 0, 9, 16], "texture": "#particle"},
+				"down": {"uv": [7, 0, 9, 16], "texture": "#particle"}
+			}
+		},
+		{
+			"name": "Lower bar",
+			"from": [7, 2, -2],
+			"to": [9, 5, 18],
+			"faces": {
+				"north": {"uv": [7, 8, 9, 11], "texture": "#particle"},
+				"east": {"uv": [6, 0, 9, 16], "rotation": 90, "texture": "#particle"},
+				"south": {"uv": [7, 8, 9, 11], "texture": "#particle"},
+				"west": {"uv": [6, 0, 9, 16], "rotation": 90, "texture": "#particle"},
+				"up": {"uv": [7, 0, 9, 16], "texture": "#particle"},
+				"down": {"uv": [7, 0, 9, 16], "texture": "#particle"}
+			}
+		}
+	],
+	"display": {
+		"gui": {
+			"rotation": [30, 135, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"fixed": {
+			"rotation": [0, 90, 0],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	}
+}

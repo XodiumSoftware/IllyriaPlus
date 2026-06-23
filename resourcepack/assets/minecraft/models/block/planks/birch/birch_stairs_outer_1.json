@@ -1,0 +1,32 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"side": "block/planks/birch_planks_atlas",
+		"particle": "block/birch_planks1"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 8, 16],
+			"faces": {
+				"north": {"uv": [4, 6, 8, 8], "texture": "#side", "cullface": "north"},
+				"east": {"uv": [4, 6, 8, 8], "texture": "#side", "cullface": "east"},
+				"south": {"uv": [4, 6, 8, 8], "texture": "#side", "cullface": "south"},
+				"west": {"uv": [4, 6, 8, 8], "texture": "#side", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#particle"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#particle", "cullface": "down"}
+			}
+		},
+		{
+			"from": [8, 8, 8],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [4, 0, 6, 2], "texture": "#side"},
+				"east": {"uv": [4, 0, 6, 2], "texture": "#side", "cullface": "east"},
+				"south": {"uv": [6, 0, 8, 2], "texture": "#side", "cullface": "south"},
+				"west": {"uv": [6, 0, 8, 2], "texture": "#side"},
+				"up": {"uv": [8, 8, 16, 16], "texture": "#particle", "cullface": "up"}
+			}
+		}
+	]
+}

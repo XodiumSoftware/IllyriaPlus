@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "particle": "block/jukebox_side",
+        "down": "block/note_block",
+        "up": "block/jukebox_top",
+        "north": "block/jukebox_side",
+        "east": "block/jukebox_side",
+        "south": "block/jukebox_side",
+        "west": "block/jukebox_side"
+    }
+}

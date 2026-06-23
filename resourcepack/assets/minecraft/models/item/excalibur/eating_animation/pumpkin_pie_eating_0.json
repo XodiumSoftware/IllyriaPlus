@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/pumpkin_pie",
+  "textures": {
+    "layer0": "minecraft:item/excalibur/eating_animation/pumpkin_pie_eating_0"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/cooked_chicken",
+  "textures": {
+    "layer0": "minecraft:item/excalibur/eating_animation/cooked_chicken_eating_1"
+  }
+}

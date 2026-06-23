@@ -31,6 +31,7 @@ IllyriaPlus/
 │   │   └── alcoholics/       # Alcoholic drink items
 │   ├── recipes/              # Recipe implementations
 │   │   └── vanilla/          # Vanilla-style custom recipes
+│   ├── painting/             # Custom painting variant implementations
 │   ├── data/                 # Data classes
 │   └── pdcs/                 # Persistent Data Container helpers
 └── docs/                     # Generated documentation
@@ -80,7 +81,7 @@ Every feature is an `object` implementing the appropriate interface.
 | Mechanics | `MechanicInterface` (extends Bukkit `Listener`) | `PluginManager.registerEvents()` + command/permission registration via `register()` |
 | Enchantments | `EnchantmentInterface` (extends Bukkit `Listener`) | `PluginManager.registerEvents()` via `register()` |
 | Recipes | `RecipeInterface` | `Server.addRecipe()` / `PotionBrewer.addPotionMix()` via `register()` |
-| Items | `ItemInterface` | Called directly via `SomeItem()` to produce an `ItemStack` |
+| Paintings | `PaintingInterface` | Registered in `IllyriaPlusBootstrap` via `RegistryEvents.PAINTING_VARIANT` and added to `minecraft:painting_variant/placeable` |
 
 All modules are singletons. There is no file-based configuration — values are hardcoded as `private const val` / `private val` properties directly in each module object. To change behavior, edit the source and rebuild.
 
@@ -146,6 +147,22 @@ PDC helpers in `src/pdcs/` expose Kotlin property delegates on entity types. `Pl
 - `Player.intoxication` — stored under `illyriaplus:intoxication`; current alcoholic intoxication level.
 - `Player.lastDrinkTime` — stored under `illyriaplus:last_drink_time`; epoch millis of the last alcoholic drink.
 
+### Paintings
+
+Custom painting variants implement **`PaintingInterface`** and are registered in `IllyriaPlusBootstrap` via `RegistryEvents.PAINTING_VARIANT`. The interface provides:
+
+- **`key`** — a `TypedKey<Art>` derived automatically from the class name (e.g. `AlphaPainting` → `illyriaplus:alpha`).
+- **`assetKey`** — the snake_case fragment used for the sprite asset id, derived from the class name (e.g. `AlphaPainting` → `alpha`).
+- **`title`** — the display title in proper case, also derived from the class name.
+- **`invoke(builder)`** — configures the variant's asset id, width, height, title, and author.
+- **`get()`** — looks up and returns the live `Art` instance from the registry after bootstrap.
+
+Painting variants have no event listeners, so unlike mechanics and enchantments they are not registered in `IllyriaPlus.onEnable()`.
+
+The **`YAPETTO`** shared namespace constant lives in `PaintingInterface.Companion`. Each painting object in `src/paintings/yapetto/` only hardcodes its width and height; the registry key, asset id, and title are all derived from the class name by stripping the `Painting` suffix. The author is always `YAPETTO`.
+
+All **117** Yapetto variants are collected into the `paintings` list in `IllyriaPlusBootstrap` and added to the `minecraft:painting_variant/placeable` tag during bootstrap so they appear when placing paintings in-game.
+
 ### Recipes
 
 Recipe objects implement **`RecipeInterface`** and are listed in `IllyriaPlus.onEnable()`. They expose `recipes` and `potions` collections plus a `register()` function that returns elapsed time in ms.
@@ -171,6 +188,7 @@ Data classes live in `src/data/`:
 - `AdjacentBlockData`
 - `BuildSetupData`
 - `CommandData`
+- `PaintingData`
 - `TreeStructureData`
 
 ### Utilities
@@ -195,6 +213,7 @@ General utilities are in `src/Utils.kt` as the `internal object Utils`, with nes
 | `enchantments/` | `EnchantmentInterface`; Embertread, Nimbus, Tether, Vinemine, FeatherFalling, Fortune, SilkTouch |
 | `enchantments/utility/` | Custom utility enchantments registered in the bootstrap |
 | `enchantments/vanilla/` | Vanilla enchantment behavior overrides |
+| `painting/` | `PaintingInterface`; 108 Yapetto painting variants from the Portfolio datapack |
 | `recipes/` | `RecipeInterface`; 8 vanilla-style recipes |
 | `pdcs/` | `PlayerPDC` |
 

@@ -1,0 +1,19 @@
+{
+	"textures": {
+		"particle": "block/bamboo_stalk",
+		"all": "block/bamboo_stalk"
+	},
+	"elements": [
+		{
+			"from": [6.5, 0, 6.5],
+			"to": [9.5, 16, 9.5],
+			"faces": {
+				"north": {"uv": [9, 0, 12, 16], "texture": "#all"},
+				"east": {"uv": [9, 0, 12, 16], "texture": "#all"},
+				"south": {"uv": [9, 0, 12, 16], "texture": "#all"},
+				"west": {"uv": [9, 0, 12, 16], "texture": "#all"},
+				"up": {"uv": [13, 0, 16, 3], "texture": "#all", "cullface": "up"}
+			}
+		}
+	]
+}

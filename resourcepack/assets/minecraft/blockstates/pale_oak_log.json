@@ -1,0 +1,36 @@
+{
+  "variants": {
+    "axis=x": 
+      [
+        { "model": "minecraft:block/pale_oak_log_horizontal", "x": 90, "y": 90 }
+      ],    
+    "axis=y": 
+      [
+        { "model": "block/pale_oak_log", "weight": 36 },
+
+        { "model": "block/logs/pale_oak_log/pale_oak_log1", "y":   0, "weight": 1 },
+        { "model": "block/logs/pale_oak_log/pale_oak_log1", "y":  90, "weight": 1 },
+        { "model": "block/logs/pale_oak_log/pale_oak_log1", "y": 180, "weight": 1 },
+        { "model": "block/logs/pale_oak_log/pale_oak_log1", "y": 270, "weight": 1 },
+
+        { "model": "block/logs/pale_oak_log/pale_oak_log2", "y":   0, "weight": 1 },
+        { "model": "block/logs/pale_oak_log/pale_oak_log2", "y":  90, "weight": 1 },
+        { "model": "block/logs/pale_oak_log/pale_oak_log2", "y": 180, "weight": 1 },
+        { "model": "block/logs/pale_oak_log/pale_oak_log2", "y": 270, "weight": 1 },
+
+        { "model": "block/logs/pale_oak_log/pale_oak_log3", "y":   0, "weight": 1 },
+        { "model": "block/logs/pale_oak_log/pale_oak_log3", "y":  90, "weight": 1 },
+        { "model": "block/logs/pale_oak_log/pale_oak_log3", "y": 180, "weight": 1 },
+        { "model": "block/logs/pale_oak_log/pale_oak_log3", "y": 270, "weight": 1 },
+
+        { "model": "block/logs/pale_oak_log/pale_oak_log4", "y":   0, "weight": 48 },
+        { "model": "block/logs/pale_oak_log/pale_oak_log4", "y":  90, "weight": 48 },
+        { "model": "block/logs/pale_oak_log/pale_oak_log4", "y": 180, "weight": 48 },
+        { "model": "block/logs/pale_oak_log/pale_oak_log4", "y": 270, "weight": 48 }
+      ],    
+      "axis=z": 
+        [
+          { "model": "minecraft:block/pale_oak_log_horizontal", "x": 90 }
+        ]
+  }
+}

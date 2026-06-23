@@ -1,0 +1,99 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "property": "minecraft:has_component",
+    "component": "minecraft:custom_name",
+      "on_true": {
+        "type": "minecraft:select",
+        "model": "minecraft:item/copper_hoe",
+        "property": "minecraft:component",
+        "component": "minecraft:custom_name",
+        "cases": [
+          {
+            "when": "Exposed Copper Hoe",
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/copper/exposed_hoe"
+            }
+          },
+          {
+            "when": "Exposed Hoe",
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/copper/exposed_hoe"
+            }
+          },	
+          {
+            "when": "Weathered Copper Hoe",
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/copper/weathered_hoe"
+            }
+          },
+          {
+            "when": "Weathered Hoe",
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/copper/weathered_hoe"
+            }
+          },		  
+          {
+            "when": "Oxidized Copper Hoe",
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/copper/oxidized_hoe"
+            }
+          },
+          {
+            "when": "Oxidized Hoe",
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/copper/oxidized_hoe"
+            }
+          }		  
+        ],
+        "fallback": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/copper_hoe"
+        }
+      },
+      "on_false": {
+        "type": "minecraft:range_dispatch",
+        "property": "minecraft:damage",
+		"entries": [
+		  {
+			"threshold": 0,
+			"model": {
+			  "type": "minecraft:model",
+			  "model": "minecraft:item/copper_hoe"
+			}
+		  },
+		  {
+			"threshold": 0.25,
+			"model": {
+			  "type": "minecraft:model",
+			  "model": "minecraft:item/excalibur/tools/copper/exposed_hoe"
+			}
+		  },
+		  {
+			"threshold": 0.5,
+			"model": {
+			  "type": "minecraft:model",
+			  "model": "minecraft:item/excalibur/tools/copper/weathered_hoe"
+			}
+		  },
+		  {
+			"threshold": 0.75,
+			"model": {
+			  "type": "minecraft:model",
+			  "model": "minecraft:item/excalibur/tools/copper/oxidized_hoe"
+			}
+		  }
+        ],
+        "fallback": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/copper_hoe"
+        }
+      }
+  }
+}

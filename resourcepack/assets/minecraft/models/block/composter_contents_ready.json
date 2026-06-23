@@ -1,0 +1,38 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"inside": "block/composter_ready",
+		"particle": "block/composter_compost"
+	},
+	"elements": [
+		{
+			"from": [1, 0, 1],
+			"to": [15, 15, 15],
+			"faces": {
+				"up": {"uv": [1, 1, 15, 15], "texture": "#inside"}
+			}
+		},
+		{
+			"from": [5.99, 14.49, 7.99],
+			"to": [8.01, 15.51, 10.01],
+			"faces": {
+				"north": {"uv": [7, 9, 8, 10], "texture": "#inside"},
+				"east": {"uv": [7, 9, 8, 10], "texture": "#inside"},
+				"south": {"uv": [7, 9, 8, 10], "texture": "#inside"},
+				"west": {"uv": [7, 9, 8, 10], "texture": "#inside"},
+				"up": {"uv": [6, 8, 8, 10], "texture": "#inside"}
+			}
+		},
+		{
+			"from": [8.99, 14.49, 3.99],
+			"to": [11.01, 15.51, 6.01],
+			"faces": {
+				"north": {"uv": [7, 9, 8, 10], "texture": "#inside"},
+				"east": {"uv": [7, 9, 8, 10], "texture": "#inside"},
+				"south": {"uv": [7, 9, 8, 10], "texture": "#inside"},
+				"west": {"uv": [7, 9, 8, 10], "texture": "#inside"},
+				"up": {"uv": [9, 4, 11, 6], "texture": "#inside"}
+			}
+		}
+	]
+}

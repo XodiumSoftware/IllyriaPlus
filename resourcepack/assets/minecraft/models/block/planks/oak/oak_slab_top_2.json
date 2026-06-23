@@ -1,0 +1,21 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"top": "block/planks/oak_planks_atlas",
+		"particle": "block/oak_planks2"
+	},
+	"elements": [
+		{
+			"from": [0, 8, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [10.66667, 5.33333, 16, 8], "texture": "#top", "cullface": "north"},
+				"east": {"uv": [10.66667, 5.33333, 16, 8], "texture": "#top", "cullface": "east"},
+				"south": {"uv": [10.66667, 5.33333, 16, 8], "texture": "#top", "cullface": "south"},
+				"west": {"uv": [10.66667, 5.33333, 16, 8], "texture": "#top", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#particle", "cullface": "up"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#particle"}
+			}
+		}
+	]
+}

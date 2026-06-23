@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "": [
+            { "model": "minecraft:block/pale_moss_block", "weight": 1 },
+            { "model": "minecraft:block/foliage/pale_moss_block_0", "weight": 1 }	
+		]
+    }
+}

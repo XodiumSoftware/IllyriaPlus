@@ -1,0 +1,7 @@
+{
+    "parent": "block/wall_side_tall",
+    "textures": {
+        "wall": "block/sandstone_wall_tall",
+		"top": "block/sandstone_wall_top"
+    }
+}

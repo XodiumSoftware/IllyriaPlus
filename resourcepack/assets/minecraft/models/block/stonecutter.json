@@ -1,0 +1,73 @@
+{
+	"parent": "block/block",
+	"textures": {
+		"particle": "block/stonecutter_bottom",
+		"bottom": "block/stonecutter_bottom",
+		"top": "block/stonecutter_top",
+		"side": "block/stonecutter_side",
+		"saw": "block/stonecutter_saw"
+	},
+	"elements": [ 	 
+		{
+			"__comment": "cube",
+			"from": [ 0, 0, 0 ],
+			"to": [ 16, 9, 16 ],
+			"faces": {
+				"down": { "uv": [ 0, 0, 16, 16 ], "texture": "#bottom", "cullface": "down" },
+				"up": { "uv": [ 0, 0, 16, 16 ], "texture": "#top" },
+				"north": { "uv": [ 0, 7, 16, 16 ], "texture": "#side", "cullface": "north" },
+				"south": { "uv": [ 0, 7, 16, 16 ], "texture": "#side", "cullface": "south" },
+				"west": { "uv": [ 0, 7, 16, 16 ], "texture": "#side", "cullface": "west" },
+				"east": { "uv": [ 0, 7, 16, 16 ], "texture": "#side", "cullface": "east" }
+			}
+		},
+		{
+			"__comment": "saw1",
+			"from": [ 5, 15, 7.5 ],
+			"to": [ 11, 16, 8.5 ],
+			"faces": {
+				"up": { "uv": [ 11, 9, 5, 10 ], "texture": "#saw", "cullface": "up" },
+				"north": { "uv": [ 5, 9, 11, 10 ], "texture": "#saw" },
+				"south": { "uv": [ 11, 9, 5, 10 ], "texture": "#saw" },
+				"west": { "uv": [ 5, 9, 6, 10 ], "texture": "#saw" },
+				"east": { "uv": [ 10, 9, 11, 10 ], "texture": "#saw" }
+			}
+		},
+		{
+			"__comment": "saw2",
+			"from": [ 3, 14, 7.5 ],
+			"to": [ 13, 15, 8.5 ],
+			"faces": {
+				"up": { "uv": [ 13, 10, 3, 11 ], "texture": "#saw" },
+				"north": { "uv": [ 3, 10, 13, 11 ], "texture": "#saw" },
+				"south": { "uv": [ 13, 10, 3, 11 ], "texture": "#saw" },
+				"west": { "uv": [ 3, 10, 4, 11 ], "texture": "#saw" },
+				"east": { "uv": [ 12, 10, 13, 11 ], "texture": "#saw" }
+			}
+		},
+		{
+			"__comment": "saw3",
+			"from": [ 2, 12, 7.5 ],
+			"to": [ 14, 14, 8.5 ],
+			"faces": {
+				"up": { "uv": [ 14, 11, 2, 12 ], "texture": "#saw" },
+				"north": { "uv": [ 2, 11, 14, 13 ], "texture": "#saw" },
+				"south": { "uv": [ 14, 11, 2, 13 ], "texture": "#saw" },
+				"west": { "uv": [ 13, 11, 14, 13 ], "texture": "#saw" },
+				"east": { "uv": [ 2, 11, 3, 13 ], "texture": "#saw" }
+			}
+		},
+		{
+			"__comment": "saw4",
+			"from": [ 1, 9, 7.5 ],
+			"to": [ 15, 12, 8.5 ],
+			"faces": {
+				"up": { "uv": [ 15, 13, 1, 14 ], "texture": "#saw" },
+				"north": { "uv": [ 1, 13, 15, 16 ], "texture": "#saw" },
+				"south": { "uv": [ 15, 13, 1, 16 ], "texture": "#saw" },
+				"west": { "uv": [ 14, 13, 15, 16 ], "texture": "#saw" },
+				"east": { "uv": [ 1, 13, 2, 16 ], "texture": "#saw" }
+			}
+		}
+	]
+}

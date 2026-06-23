@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/baked_potato",
+  "textures": {
+    "layer0": "minecraft:item/excalibur/eating_animation/baked_potato_eating_2"
+  }
+}

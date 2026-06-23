@@ -1,0 +1,15 @@
+{
+    "variants": {
+        "": [	
+            { "model": "block/foliage/mushroom/crimson_fungus" },
+            { "model": "block/foliage/mushroom/crimson_fungus", "y": 90 },
+            { "model": "block/foliage/mushroom/crimson_fungus", "y": 180 },
+            { "model": "block/foliage/mushroom/crimson_fungus", "y": 270 },				
+            { "model": "block/foliage/mushroom/crimson_fungus1" },
+            { "model": "block/foliage/mushroom/crimson_fungus1", "y": 90 },
+            { "model": "block/foliage/mushroom/crimson_fungus1", "y": 180 },
+            { "model": "block/foliage/mushroom/crimson_fungus1", "y": 270 }	
+        ]
+    }
+}
+			

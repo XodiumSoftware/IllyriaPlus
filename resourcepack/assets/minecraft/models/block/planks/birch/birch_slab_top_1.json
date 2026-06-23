@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [64, 64],
+	"textures": {
+		"top": "block/planks/birch_planks_atlas",
+		"particle": "block/birch_planks1"
+	},
+	"elements": [
+		{
+			"from": [0, 8, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [4, 4, 8, 6], "texture": "#top", "cullface": "north"},
+				"east": {"uv": [4, 4, 8, 6], "texture": "#top", "cullface": "east"},
+				"south": {"uv": [4, 4, 8, 6], "texture": "#top", "cullface": "south"},
+				"west": {"uv": [4, 4, 8, 6], "texture": "#top", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#particle", "cullface": "up"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#particle"}
+			}
+		}
+	]
+}

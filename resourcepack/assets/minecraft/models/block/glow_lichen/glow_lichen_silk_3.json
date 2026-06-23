@@ -1,0 +1,39 @@
+{
+	"credit": "Made with Blockbench - GrandPappyJay",
+	"ambientocclusion": false,
+	"textures": {
+		"particle": "block/glow_lichen",
+		"cross": "block/glow_lichen_silk_3",
+		"glow_lichen": "block/glow_lichen_side"
+	},
+	"elements": [
+		{
+			"from": [8, 0, 0.8],
+			"to": [8, 16, 15.2],
+			"shade": false,
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#cross"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#cross"}
+			}
+		},
+		{
+			"from": [0.8, 0, 8],
+			"to": [15.2, 16, 8],
+			"shade": false,
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#cross"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#cross"}
+			}
+		},
+		{
+			"from": [0, 15.9, 0],
+			"to": [16, 15.9, 16],
+			"faces": {
+				"up": {"uv": [16, 0, 0, 16], "rotation": 180, "texture": "#glow_lichen", "cullface": "up"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#glow_lichen"}
+			}
+		}
+	]
+}

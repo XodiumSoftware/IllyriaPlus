@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "item/excalibur/eating_animation/suspicious_stew/weakness_eating_0"
+  }
+}

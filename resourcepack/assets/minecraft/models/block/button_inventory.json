@@ -1,0 +1,71 @@
+{
+	"credit": "Made by Maffhew",
+	"parent": "block/block",
+    "textures": {
+        "particle": "#texture"
+    },
+	"elements": [
+		{
+			"name": "cube",
+			"from": [5, 6, 5],
+			"to": [11, 8, 11],
+			"faces": {
+				"north": {
+					"uv": [5, 14, 11, 16],
+					"texture": "#texture"
+				},
+				"east": {
+					"uv": [5, 14, 11, 16],
+					"texture": "#texture"
+				},
+				"south": {
+					"uv": [5, 14, 11, 16],
+					"texture": "#texture"
+				},
+				"west": {
+					"uv": [5, 14, 11, 16],
+					"texture": "#texture"
+				},
+				"up": {"uv": [5, 5, 11, 11], "texture": "#texture"},
+				"down": {
+					"uv": [5, 5, 11, 11],
+					"texture": "#texture"
+				}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"scale": [0.375, 0.375, 0.375],
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0]
+		},
+		"thirdperson_lefthand": {
+			"scale": [0.375, 0.375, 0.375],
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0]
+		},
+		"firstperson_righthand": {
+			"scale": [0.4, 0.4, 0.4],
+			"rotation": [0, 45, 0],
+			"translation": [0, 2, 0]
+		},
+		"firstperson_lefthand": {
+			"scale": [0.4, 0.4, 0.4],
+			"rotation": [0, 225, 0],
+			"translation": [0, 2, 0]
+		},
+		"head": {
+			"scale": [1, 1, 1],
+			"translation": [0, 8.5, 0]
+		},
+		"ground": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"scale": [0.625, 0.625, 0.625],
+			"rotation": [30, 225, 0],
+			"translation": [0, -1.5, 0]
+		}
+	}
+}

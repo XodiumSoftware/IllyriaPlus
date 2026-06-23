@@ -3,7 +3,7 @@ package org.xodium.illyriaplus.mechanics
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import org.bukkit.event.Listener
 import org.bukkit.permissions.Permission
-import org.xodium.illyriaplus.IllyriaPlus
+import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.data.CommandData
 import kotlin.time.measureTime
 
@@ -31,11 +31,9 @@ internal interface MechanicInterface : Listener {
     @Suppress("UnstableApiUsage")
     fun register(): Long =
         measureTime {
-            IllyriaPlus.instance.server.pluginManager
-                .addPermissions(perms)
-            IllyriaPlus.instance.server.pluginManager
-                .registerEvents(this, IllyriaPlus.instance)
-            IllyriaPlus.instance.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {
+            instance.server.pluginManager.addPermissions(perms)
+            instance.server.pluginManager.registerEvents(this, instance)
+            instance.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {
                 cmds.forEach { cmd ->
                     it.registrar().register(
                         cmd.builder.build(),

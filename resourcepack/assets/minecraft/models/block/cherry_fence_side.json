@@ -1,0 +1,43 @@
+{
+	"parent": "block/fence_side",	
+	"textures": {
+		"texture": "block/fence_cherry",
+		"top": "block/fence_cherry_top"
+	},
+	"elements": [
+		{
+			"from": [7.5, 0, 1],
+			"to": [8.5, 15, 4],
+			"faces": {
+				"north": {"uv": [3, 1, 4, 16], "texture": "#texture"},
+				"east": {"uv": [1, 1, 4, 16], "texture": "#texture"},
+				"south": {"uv": [3, 1, 4, 16], "texture": "#texture"},
+				"west": {"uv": [1, 1, 4, 16], "texture": "#texture"},
+				"up": {"uv": [1, 4, 2, 7], "texture": "#texture"},
+				"down": {"uv": [1, 4, 2, 7], "texture": "#texture", "cullface": "down"}
+			}
+		},
+		{
+			"from": [7, 10, 0],
+			"to": [9, 12, 6],
+			"faces": {
+				"north": {"uv": [1, 4, 2, 6], "texture": "#texture"},
+				"east": {"uv": [10, 4, 16, 6], "texture": "#texture"},
+				"west": {"uv": [0, 4, 6, 6], "texture": "#texture"},
+				"up": {"uv": [7, 0, 9, 6], "texture": "#top"},
+				"down": {"uv": [7, 0, 9, 6], "texture": "#top"}
+			}
+		},
+		{
+			"from": [7, 2, 0],
+			"to": [9, 4, 6],
+			"faces": {
+				"north": {"uv": [1, 12, 2, 14], "texture": "#texture"},
+				"east": {"uv": [10, 12, 16, 14], "texture": "#texture"},
+				"west": {"uv": [0, 12, 6, 14], "texture": "#texture"},
+				"up": {"uv": [7, 0, 9, 6], "texture": "#top"},
+				"down": {"uv": [7, 0, 9, 6], "texture": "#top"}
+			}
+		}
+	]
+}
