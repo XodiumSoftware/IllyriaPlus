@@ -16,7 +16,8 @@ import org.xodium.illyriaplus.mechanics.player.*
 import org.xodium.illyriaplus.mechanics.server.*
 import org.xodium.illyriaplus.mechanics.world.*
 import org.xodium.illyriaplus.recipes.RecipeInterface
-import org.xodium.illyriaplus.recipes.custom.*
+import org.xodium.illyriaplus.recipes.custom.AlcoholRecipe
+import org.xodium.illyriaplus.recipes.custom.GreatswordRecipe
 import org.xodium.illyriaplus.recipes.vanilla.*
 
 /** Main class of the plugin. */
@@ -60,7 +61,11 @@ internal class IllyriaPlus : JavaPlugin() {
 
         logger.info(
             """
-            Registered: ${recipes.sumOf { it.recipes.size }} recipe(s) and ${recipes.sumOf { it.potions.size }} potion mix(es)
+            Registered: ${
+                recipes.sumOf {
+                    it.recipes.size
+                }
+            } recipe(s) and ${recipes.sumOf { it.potions.size }} potion mix(es)
             Took ${recipes.sumOf { it.register() }}ms
             """.trimIndent(),
         )
