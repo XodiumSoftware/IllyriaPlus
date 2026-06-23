@@ -31,8 +31,6 @@ internal object ResourcePackMechanic : MechanicInterface {
     private const val ASSET_SUFFIX = ".zip"
     private const val HASH_PATTERN = "SHA-1 Hash: ([a-f0-9]{40})"
     private const val REQUIRED = true
-    private const val PROMPT =
-        "<firewatch>The IllyriaPlus resource pack is required to play on this server.</gradient>"
     private const val CONNECT_TIMEOUT_MS = 10_000
     private const val READ_TIMEOUT_MS = 10_000
 
@@ -80,9 +78,7 @@ internal object ResourcePackMechanic : MechanicInterface {
                 .resourcePackRequest()
                 .packs(resourcePackInfo!!)
                 .required(REQUIRED)
-                .prompt(
-                    MM.deserialize(PROMPT),
-                ).build(),
+                .build(),
         )
     }
 
@@ -122,7 +118,6 @@ internal object ResourcePackMechanic : MechanicInterface {
                                     .resourcePackRequest()
                                     .packs(info)
                                     .required(REQUIRED)
-                                    .prompt(MM.deserialize(PROMPT))
                                     .build(),
                             )
                         }
