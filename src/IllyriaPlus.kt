@@ -45,6 +45,7 @@ internal class IllyriaPlus : JavaPlugin() {
 
         recipes =
             listOf(
+                AlcoholRecipe,
                 ChainmailRecipe,
                 DiamondRecycleRecipe,
                 IceBreakdownRecipe,
@@ -56,11 +57,15 @@ internal class IllyriaPlus : JavaPlugin() {
             )
 
         logger.info(
-            "Registered: ${recipes.sumOf { it.recipes.size }} recipes(s) | Took ${recipes.sumOf { it.register() }}ms",
+            """
+            Registered: ${recipes.sumOf { it.recipes.size }} recipe(s) and ${recipes.sumOf { it.potions.size }} potion mix(es)
+            Took ${recipes.sumOf { it.register() }}ms
+            """.trimIndent(),
         )
 
         mechanics =
             listOf(
+                AlcoholMechanic,
                 NicknameMechanic,
                 ScoreBoardMechanic,
                 LocatorMechanic,
