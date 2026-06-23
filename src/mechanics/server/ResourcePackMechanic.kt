@@ -1,15 +1,16 @@
 package org.xodium.illyriaplus.mechanics.server
 
 import io.papermc.paper.command.brigadier.Commands
+import io.papermc.paper.event.connection.configuration.AsyncPlayerConnectionConfigureEvent
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.resource.ResourcePackInfo
 import net.kyori.adventure.resource.ResourcePackRequest
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
-import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
@@ -66,17 +67,15 @@ internal object ResourcePackMechanic : MechanicInterface {
 
     override fun register(): Long = super.register() + measureTime { fetchResourcePackInfoAsync() }.inWholeMilliseconds
 
+    @Suppress("UnstableApiUsage")
     @EventHandler(priority = EventPriority.NORMAL)
-    fun on(event: PlayerJoinEvent) {
-        if (resourcePackInfo == null) {
-            instance.logger.warning("Resource pack not available for ${event.player.name}")
-            return
-        }
+    fun on(event: AsyncPlayerConnectionConfigureEvent) {
+        val connection = event.connection as? Audience ?: return
 
-        event.player.sendResourcePacks(
+        connection.sendResourcePacks(
             ResourcePackRequest
                 .resourcePackRequest()
-                .packs(resourcePackInfo!!)
+                .packs(resourcePackInfo ?: return)
                 .required(REQUIRED)
                 .build(),
         )
