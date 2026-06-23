@@ -8,6 +8,7 @@ import net.kyori.adventure.key.Key
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.Listener
 import org.xodium.illyriaplus.IllyriaPlus
+import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.toRegistryKeyFragment
 import kotlin.time.measureTime
 
@@ -50,8 +51,5 @@ internal interface EnchantmentInterface : Listener {
      * @return Time taken to register in milliseconds.
      */
     fun register(): Long =
-        measureTime {
-            IllyriaPlus.instance.server.pluginManager
-                .registerEvents(this, IllyriaPlus.instance)
-        }.inWholeMilliseconds
+        measureTime { instance.server.pluginManager.registerEvents(this, instance) }.inWholeMilliseconds
 }

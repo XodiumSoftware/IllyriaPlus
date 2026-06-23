@@ -14,6 +14,7 @@ import io.papermc.paper.registry.tag.TagKey
 import io.papermc.paper.tag.TagEntry
 import net.kyori.adventure.key.Key
 import org.xodium.illyriaplus.banners.MoxvallixBanners
+import org.xodium.illyriaplus.damagetypes.AlcoholDamageType
 import org.xodium.illyriaplus.enchantments.utility.EmbertreadEnchantment
 import org.xodium.illyriaplus.enchantments.utility.NimbusEnchantment
 import org.xodium.illyriaplus.enchantments.utility.TetherEnchantment
@@ -29,6 +30,10 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
         val TETHER_ITEMS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaPlus.ID, "tether_items"))
 
         private val BANNERS = MoxvallixBanners.banners
+        private val DAMAGE_TYPES =
+            setOf(
+                AlcoholDamageType.key,
+            )
         private val ENCHANTMENTS =
             setOf(
                 VinemineEnchantment.key,
@@ -103,6 +108,17 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
                 },
             )
             ctx.logger.info("Registered: ${ENCHANTMENTS.size} custom enchantment(s).")
+
+            registerEventHandler(
+                RegistryEvents.DAMAGE_TYPE.compose().newHandler { event ->
+                    event.registry().apply {
+                        DAMAGE_TYPES.forEach { damageType ->
+                            register(damageType) { AlcoholDamageType.invoke(it) }
+                        }
+                    }
+                },
+            )
+            ctx.logger.info("Registered: ${DAMAGE_TYPES.size} custom damage type(s).")
 
             registerEventHandler(
                 RegistryEvents.PAINTING_VARIANT.compose().newHandler { event ->
