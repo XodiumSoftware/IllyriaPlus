@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerRespawnEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
@@ -50,6 +51,11 @@ internal object AlcoholMechanic : MechanicInterface {
             trackedPlayers.add(event.player)
             applyEffects(event.player)
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    fun on(event: PlayerRespawnEvent) {
+        reset(event.player)
     }
 
     /**
