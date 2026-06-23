@@ -25,6 +25,18 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
         val TOOLS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaPlus.ID, "tools"))
         val WEAPONS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaPlus.ID, "weapons"))
         val TETHER_ITEMS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaPlus.ID, "tether_items"))
+
+        private val ENCHANTMENTS =
+            setOf(
+                VinemineEnchantment.key,
+                TetherEnchantment.key,
+                NimbusEnchantment.key,
+                EmbertreadEnchantment.key,
+            )
+        private val PAINTINGS =
+            buildList {
+                addAll(YapettoPaintings.paintings)
+            }
     }
 
     override fun bootstrap(ctx: BootstrapContext) {
@@ -63,6 +75,7 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
                     )
                 }
             }
+
             registerEventHandler(
                 RegistryEvents.ENCHANTMENT.compose().newHandler { event ->
                     event.registry().apply {
@@ -89,34 +102,31 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
                     }
                 },
             )
+            ctx.logger.info("Registered: ${ENCHANTMENTS.size} custom enchantment(s).")
+
             registerEventHandler(
                 RegistryEvents.PAINTING_VARIANT.compose().newHandler { event ->
                     event.registry().apply {
-                        YapettoPaintings.paintings.forEach { painting ->
+                        PAINTINGS.forEach { painting ->
                             register(painting.key) { painting.invoke(it) }
                         }
                     }
                 },
             )
+            ctx.logger.info("Registered: ${PAINTINGS.size} painting variant(s).")
+
             registerEventHandler(LifecycleEvents.TAGS.postFlatten(RegistryKey.ENCHANTMENT)) { event ->
                 event.registrar().apply {
-                    val enchants =
-                        setOf(
-                            VinemineEnchantment.key,
-                            TetherEnchantment.key,
-                            NimbusEnchantment.key,
-                            EmbertreadEnchantment.key,
-                        )
-
-                    addToTag(EnchantmentTagKeys.TRADEABLE, enchants)
-                    addToTag(EnchantmentTagKeys.NON_TREASURE, enchants)
-                    addToTag(EnchantmentTagKeys.IN_ENCHANTING_TABLE, enchants)
+                    addToTag(EnchantmentTagKeys.TRADEABLE, ENCHANTMENTS)
+                    addToTag(EnchantmentTagKeys.NON_TREASURE, ENCHANTMENTS)
+                    addToTag(EnchantmentTagKeys.IN_ENCHANTING_TABLE, ENCHANTMENTS)
                 }
             }
+
             registerEventHandler(LifecycleEvents.TAGS.postFlatten(RegistryKey.PAINTING_VARIANT)) { event ->
                 event.registrar().addToTag(
                     PaintingVariantTagKeys.PLACEABLE,
-                    YapettoPaintings.paintings.map { it.key },
+                    PAINTINGS.map { it.key },
                 )
             }
         }
