@@ -82,23 +82,7 @@ internal object AlcoholMechanic : MechanicInterface {
      * @param player The player to affect.
      */
     private fun applyEffects(player: Player) {
-        val level = player.intoxication
-
-        when {
-            level >= DAMAGE_THRESHOLD -> {
-                player.sendMessage(MM.deserialize("<red>You are heavily intoxicated and taking damage!"))
-            }
-
-            level >= BLINDNESS_THRESHOLD -> {
-                player.sendMessage(MM.deserialize("<gold>You are feeling tipsy and your vision blurs..."))
-            }
-
-            level >= 1 -> {
-                player.sendMessage(MM.deserialize("<yellow>You feel a buzz from the drink."))
-            }
-        }
-
-        if (level >= BLINDNESS_THRESHOLD) {
+        if (player.intoxication >= BLINDNESS_THRESHOLD) {
             player.addPotionEffect(
                 PotionEffect(
                     PotionEffectType.BLINDNESS,
