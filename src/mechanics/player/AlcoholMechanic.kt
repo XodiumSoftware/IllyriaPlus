@@ -1,5 +1,7 @@
 package org.xodium.illyriaplus.mechanics.player
 
+import org.bukkit.NamespacedKey
+import org.bukkit.damage.DamageSource
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -9,9 +11,10 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.Utils.Schedule.schedule
-import org.xodium.illyriaplus.items.ItemInterface.Companion.ALCOHOL_STRENGTH_KEY
+import org.xodium.illyriaplus.damagetypes.AlcoholDamageType
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import org.xodium.illyriaplus.pdcs.PlayerPDC.intoxication
 import org.xodium.illyriaplus.pdcs.PlayerPDC.lastDrinkTime
@@ -29,6 +32,8 @@ internal object AlcoholMechanic : MechanicInterface {
     private val DAMAGE_INTERVAL = 3.seconds
     private val BLINDNESS_DURATION = 15.seconds
     private val trackedPlayers = mutableSetOf<Player>()
+
+    val ALCOHOL_STRENGTH_KEY = NamespacedKey(instance, "alcohol_strength")
 
     override fun register(): Long {
         schedule(period = DECAY_INTERVAL.inWholeSeconds * 20L) { trackedPlayers.toList().forEach { applyDecay(it) } }
@@ -142,7 +147,9 @@ internal object AlcoholMechanic : MechanicInterface {
             trackedPlayers.remove(player)
             return
         }
-        if (player.intoxication >= DAMAGE_THRESHOLD) player.damage(1.0)
+        if (player.intoxication >= DAMAGE_THRESHOLD) {
+            player.damage(1.0, DamageSource.builder(AlcoholDamageType.get()).build())
+        }
     }
 
     /**
