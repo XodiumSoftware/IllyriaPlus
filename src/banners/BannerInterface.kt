@@ -36,8 +36,11 @@ internal interface BannerInterface {
         name: String,
         builder: BannerPatternRegistryEntry.Builder,
     ): BannerPatternRegistryEntry.Builder =
-        banners.first { it.name == name }.let { (name) ->
-            builder.apply { assetId(Key.key(IllyriaPlus.ID, name)) }
+        banners.first { it.name == name }.let { banner ->
+            builder.apply {
+                assetId(Key.key(IllyriaPlus.ID, banner.name))
+                translationKey(banner.translationKey)
+            }
         }
 
     /**

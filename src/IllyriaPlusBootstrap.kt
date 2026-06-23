@@ -6,12 +6,14 @@ import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import io.papermc.paper.registry.RegistryKey
 import io.papermc.paper.registry.event.RegistryEvents
 import io.papermc.paper.registry.keys.ItemTypeKeys
+import io.papermc.paper.registry.keys.tags.BannerPatternTagKeys
 import io.papermc.paper.registry.keys.tags.EnchantmentTagKeys
 import io.papermc.paper.registry.keys.tags.ItemTypeTagKeys
 import io.papermc.paper.registry.keys.tags.PaintingVariantTagKeys
 import io.papermc.paper.registry.tag.TagKey
 import io.papermc.paper.tag.TagEntry
 import net.kyori.adventure.key.Key
+import org.xodium.illyriaplus.banners.MoxvallixBanners
 import org.xodium.illyriaplus.enchantments.utility.EmbertreadEnchantment
 import org.xodium.illyriaplus.enchantments.utility.NimbusEnchantment
 import org.xodium.illyriaplus.enchantments.utility.TetherEnchantment
@@ -26,6 +28,7 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
         val WEAPONS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaPlus.ID, "weapons"))
         val TETHER_ITEMS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaPlus.ID, "tether_items"))
 
+        private val BANNERS = MoxvallixBanners.banners
         private val ENCHANTMENTS =
             setOf(
                 VinemineEnchantment.key,
@@ -112,6 +115,17 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
             )
             ctx.logger.info("Registered: ${PAINTINGS.size} painting variant(s).")
 
+            registerEventHandler(
+                RegistryEvents.BANNER_PATTERN.compose().newHandler { event ->
+                    event.registry().apply {
+                        BANNERS.forEach { banner ->
+                            register(MoxvallixBanners.key(banner.name)) { MoxvallixBanners.invoke(banner.name, it) }
+                        }
+                    }
+                },
+            )
+            ctx.logger.info("Registered: ${BANNERS.size} banner pattern(s).")
+
             registerEventHandler(LifecycleEvents.TAGS.postFlatten(RegistryKey.ENCHANTMENT)) { event ->
                 event.registrar().apply {
                     addToTag(EnchantmentTagKeys.TRADEABLE, ENCHANTMENTS)
@@ -125,6 +139,84 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
                     PaintingVariantTagKeys.PLACEABLE,
                     PAINTINGS.map { YapettoPaintings.key(it.name) },
                 )
+            }
+
+            registerEventHandler(LifecycleEvents.TAGS.postFlatten(RegistryKey.BANNER_PATTERN)) { event ->
+                event.registrar().apply {
+                    addToTag(
+                        BannerPatternTagKeys.NO_ITEM_REQUIRED,
+                        listOf(
+                            MoxvallixBanners.key("chequered"),
+                            MoxvallixBanners.key("circle_tiles"),
+                            MoxvallixBanners.key("cogs"),
+                            MoxvallixBanners.key("curtains"),
+                            MoxvallixBanners.key("double_bars"),
+                            MoxvallixBanners.key("double_gradient"),
+                            MoxvallixBanners.key("fancy"),
+                            MoxvallixBanners.key("tattered"),
+                        ),
+                    )
+                    addToTag(
+                        BannerPatternTagKeys.PATTERN_ITEM_CREEPER,
+                        listOf(
+                            MoxvallixBanners.key("blam"),
+                            MoxvallixBanners.key("ribs"),
+                            MoxvallixBanners.key("pillager"),
+                            MoxvallixBanners.key("villager"),
+                            MoxvallixBanners.key("ghast"),
+                        ),
+                    )
+                    addToTag(
+                        BannerPatternTagKeys.PATTERN_ITEM_FLOWER,
+                        listOf(
+                            MoxvallixBanners.key("moon"),
+                            MoxvallixBanners.key("peace"),
+                            MoxvallixBanners.key("sun"),
+                            MoxvallixBanners.key("yin_yang"),
+                            MoxvallixBanners.key("knot"),
+                        ),
+                    )
+                    addToTag(
+                        BannerPatternTagKeys.PATTERN_ITEM_GLOBE,
+                        listOf(
+                            MoxvallixBanners.key("pumpkin"),
+                            MoxvallixBanners.key("horn"),
+                        ),
+                    )
+                    addToTag(
+                        BannerPatternTagKeys.PATTERN_ITEM_MOJANG,
+                        listOf(
+                            MoxvallixBanners.key("clubs"),
+                            MoxvallixBanners.key("diamonds"),
+                            MoxvallixBanners.key("hearts"),
+                            MoxvallixBanners.key("spades"),
+                            MoxvallixBanners.key("anchor"),
+                            MoxvallixBanners.key("eye"),
+                            MoxvallixBanners.key("companion"),
+                            MoxvallixBanners.key("revolution"),
+                            MoxvallixBanners.key("emoji"),
+                        ),
+                    )
+                    addToTag(
+                        BannerPatternTagKeys.PATTERN_ITEM_PIGLIN,
+                        listOf(
+                            MoxvallixBanners.key("castle"),
+                            MoxvallixBanners.key("palace"),
+                            MoxvallixBanners.key("pyramid"),
+                            MoxvallixBanners.key("tower"),
+                        ),
+                    )
+                    addToTag(
+                        BannerPatternTagKeys.PATTERN_ITEM_SKULL,
+                        listOf(
+                            MoxvallixBanners.key("crown"),
+                            MoxvallixBanners.key("hammer"),
+                            MoxvallixBanners.key("shield"),
+                            MoxvallixBanners.key("sword"),
+                            MoxvallixBanners.key("trident"),
+                        ),
+                    )
+                }
             }
         }
     }
