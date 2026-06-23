@@ -31,6 +31,7 @@ IllyriaPlus/
 │   │   └── alcoholics/       # Alcoholic drink items
 │   ├── paintings/            # Custom painting variant implementations
 │   ├── recipes/              # Recipe implementations
+│   │   ├── custom/           # Custom item recipes
 │   │   └── vanilla/          # Vanilla-style custom recipes
 │   ├── damagetypes/          # Custom damage type implementations
 │   ├── data/                 # Data classes
@@ -187,11 +188,12 @@ The `messageId` must have matching translations in the resource pack (`resourcep
 
 Recipe objects implement **`RecipeInterface`** and are listed in `IllyriaPlus.onEnable()`. They expose `recipes` and `potions` collections plus a `register()` function that returns elapsed time in ms.
 
-Currently **9** recipe modules are registered:
+Currently **10** recipe modules are registered:
 
 - AlcoholRecipe
 - ChainmailRecipe
 - DiamondRecycleRecipe
+- GreatswordRecipe
 - IceBreakdownRecipe
 - NetherWartBlockRecipe
 - PaintingRecipe
@@ -235,7 +237,7 @@ General utilities are in `src/Utils.kt` as the `internal object Utils`, with nes
 | `enchantments/vanilla/` | Vanilla enchantment behavior overrides |
 | `paintings/` | `PaintingInterface`; 117 Yapetto painting variants from the Portfolio datapack |
 | `damagetypes/` | `DamageTypeInterface`; custom damage types such as `AlcoholDamageType` |
-| `recipes/` | `RecipeInterface`; 8 vanilla-style recipes |
+| `recipes/` | `RecipeInterface`; 2 custom recipes + 7 vanilla-style recipes |
 | `pdcs/` | `PlayerPDC` |
 
 ### Key Conventions

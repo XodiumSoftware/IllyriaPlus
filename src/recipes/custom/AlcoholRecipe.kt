@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.recipes.vanilla
+package org.xodium.illyriaplus.recipes.custom
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.PotionContents
