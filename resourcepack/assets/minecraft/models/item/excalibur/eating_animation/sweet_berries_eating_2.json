@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/sweet_berries",
+  "textures": {
+    "layer0": "minecraft:item/excalibur/eating_animation/sweet_berries_eating_2"
+  }
+}

@@ -1,0 +1,84 @@
+{
+	"parent": "block/block",
+	"textures": {
+		"particle": "block/campfire_logpile",
+		"log": "block/campfire_logpile"
+	},
+	"elements": [
+		{
+			"name": "Element",
+			"from": [0, 0, 0],
+			"to": [5, 5, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [7, 8, 8]},
+			"faces": {
+				"north": {"uv": [5, 4, 10, 9], "texture": "#log"},
+				"east": {"uv": [16, 11, 0, 16], "texture": "#log"},
+				"south": {"uv": [5, 4, 10, 9], "texture": "#log"},
+				"west": {"uv": [16, 11, 0, 16], "texture": "#log"},
+				"up": {"uv": [0, 11, 16, 16], "rotation": 90, "texture": "#log"},
+				"down": {"uv": [0, 11, 16, 16], "rotation": 90, "texture": "#log", "cullface": "down"}
+			}
+		},
+		{
+			"name": "Element",
+			"from": [11, 0, 0],
+			"to": [16, 5, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [18, 8, 8]},
+			"faces": {
+				"north": {"uv": [5, 4, 10, 9], "texture": "#log"},
+				"east": {"uv": [16, 11, 0, 16], "texture": "#log"},
+				"south": {"uv": [5, 4, 10, 9], "texture": "#log"},
+				"west": {"uv": [16, 11, 0, 16], "texture": "#log"},
+				"up": {"uv": [0, 11, 16, 16], "rotation": 90, "texture": "#log"},
+				"down": {"uv": [0, 11, 16, 16], "rotation": 90, "texture": "#log", "cullface": "down"}
+			}
+		},
+		{
+			"name": "Element",
+			"from": [6, 0, 1],
+			"to": [10, 4, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [3, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 4, 4, 8], "texture": "#log", "cullface": "north"},
+				"east": {"uv": [1, 0, 15, 4], "texture": "#log"},
+				"south": {"uv": [0, 4, 4, 8], "texture": "#log", "cullface": "south"},
+				"west": {"uv": [15, 0, 1, 4], "texture": "#log"},
+				"up": {"uv": [1, 0, 15, 4], "rotation": 90, "texture": "#log"},
+				"down": {"uv": [1, 0, 15, 4], "rotation": 90, "texture": "#log", "cullface": "down"}
+			}
+		},
+		{
+			"name": "Element",
+			"from": [3, 5, 1],
+			"to": [7, 9, 15],
+			"rotation": {"angle": -22.5, "axis": "z", "origin": [5, 7, 8]},
+			"faces": {
+				"north": {"uv": [0, 4, 4, 8], "texture": "#log"},
+				"east": {"uv": [1, 0, 15, 4], "texture": "#log"},
+				"south": {"uv": [0, 4, 4, 8], "texture": "#log"},
+				"west": {"uv": [15, 0, 1, 4], "texture": "#log"},
+				"up": {"uv": [1, 0, 15, 4], "rotation": 90, "texture": "#log"},
+				"down": {"uv": [1, 0, 15, 4], "rotation": 90, "texture": "#log", "cullface": "down"}
+			}
+		},
+		{
+			"name": "Element",
+			"from": [8, 5, 0],
+			"to": [13, 10, 16],
+			"rotation": {"angle": 22.5, "axis": "z", "origin": [10, 7, 8]},
+			"faces": {
+				"north": {"uv": [5, 4, 10, 9], "texture": "#log"},
+				"east": {"uv": [16, 11, 0, 16], "texture": "#log"},
+				"south": {"uv": [5, 4, 10, 9], "texture": "#log"},
+				"west": {"uv": [16, 11, 0, 16], "texture": "#log"},
+				"up": {"uv": [0, 11, 16, 16], "rotation": 90, "texture": "#log"},
+				"down": {"uv": [0, 11, 16, 16], "rotation": 90, "texture": "#log", "cullface": "down"}
+			}
+		}
+	],
+	"display": {
+		"head": {
+			"translation": [0, 10.5, 0]
+		}
+	}
+}

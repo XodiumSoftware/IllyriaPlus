@@ -1,0 +1,38 @@
+{
+    "variants": {
+        "": [	
+            { "model": "block/foliage/lily_pad/lily_pad", "weight": 3 },
+            { "model": "block/foliage/lily_pad/lily_pad", "y": 90, "weight": 3 },
+            { "model": "block/foliage/lily_pad/lily_pad", "y": 180, "weight": 3 },
+            { "model": "block/foliage/lily_pad/lily_pad", "y": 270, "weight": 3 },			
+            { "model": "block/foliage/lily_pad/lily_pad1", "weight": 5 },
+            { "model": "block/foliage/lily_pad/lily_pad1", "y": 90, "weight": 4 },			
+            { "model": "block/foliage/lily_pad/lily_pad1", "y": 180, "weight": 4 },
+            { "model": "block/foliage/lily_pad/lily_pad1", "y": 270, "weight": 4 },            
+			{ "model": "block/foliage/lily_pad/lily_pad2", "weight": 1 },
+            { "model": "block/foliage/lily_pad/lily_pad2", "y": 90, "weight": 1 },
+            { "model": "block/foliage/lily_pad/lily_pad2", "y": 180, "weight": 1 },			
+            { "model": "block/foliage/lily_pad/lily_pad2", "y": 270, "weight": 1 },	
+			{ "model": "block/foliage/lily_pad/lily_pad3", "weight": 3 },
+            { "model": "block/foliage/lily_pad/lily_pad3", "y": 90, "weight": 4 },
+            { "model": "block/foliage/lily_pad/lily_pad3", "y": 180, "weight": 4 },			
+            { "model": "block/foliage/lily_pad/lily_pad3", "y": 270, "weight": 4 },			
+            { "model": "block/foliage/lily_pad/lily_pad_lotus", "weight": 1 },			
+            { "model": "block/foliage/lily_pad/lily_pad_lotus", "y": 90, "weight": 1 },			
+            { "model": "block/foliage/lily_pad/lily_pad_lotus", "y": 180, "weight": 1 },	
+            { "model": "block/foliage/lily_pad/lily_pad_lotus", "y": 270, "weight": 1 },
+            { "model": "block/foliage/lily_pad/lily_pad_lotus2", "weight": 1 },			
+            { "model": "block/foliage/lily_pad/lily_pad_lotus2", "y": 90, "weight": 1 },			
+            { "model": "block/foliage/lily_pad/lily_pad_lotus2", "y": 180, "weight": 1 },	
+            { "model": "block/foliage/lily_pad/lily_pad_lotus2", "y": 270, "weight": 1 },
+            { "model": "block/foliage/lily_pad/lily_pad_lotus3", "weight": 1 },			
+            { "model": "block/foliage/lily_pad/lily_pad_lotus3", "y": 90, "weight": 1 },			
+            { "model": "block/foliage/lily_pad/lily_pad_lotus3", "y": 180, "weight": 1 },	
+            { "model": "block/foliage/lily_pad/lily_pad_lotus3", "y": 270, "weight": 1 },
+            { "model": "block/foliage/lily_pad/lily_pad_lotus4", "weight": 1 },			
+            { "model": "block/foliage/lily_pad/lily_pad_lotus4", "y": 90, "weight": 1 },			
+            { "model": "block/foliage/lily_pad/lily_pad_lotus4", "y": 180, "weight": 1 },	
+            { "model": "block/foliage/lily_pad/lily_pad_lotus4", "y": 270, "weight": 1 }				
+        ]
+    }
+}

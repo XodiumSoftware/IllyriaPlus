@@ -1,0 +1,25 @@
+{
+  "multipart": [
+
+		{"apply": 	[
+					{"model": "minecraft:block/foliage/flowers/dandelion",	"weight": 200},
+					{"model": "minecraft:block/foliage/flowers/dandelion1",	"weight": 400}
+					]
+		},	  
+
+		{"apply": 	[
+					{"model": "minecraft:block/foliage/flowers/butterfly_white",	"y": 0, 	"weight": 1},
+					{"model": "minecraft:block/foliage/flowers/butterfly_white",	"y": 90, 	"weight": 1},
+					{"model": "minecraft:block/foliage/flowers/butterfly_white",	"y": 180, 	"weight": 1},
+					{"model": "minecraft:block/foliage/flowers/butterfly_white",	"y": 270, 	"weight": 1},
+
+					{"model": "minecraft:block/foliage/flowers/butterfly_white1",	"y": 0, 	"weight": 1},
+					{"model": "minecraft:block/foliage/flowers/butterfly_white1",	"y": 90, 	"weight": 1},
+					{"model": "minecraft:block/foliage/flowers/butterfly_white1",	"y": 180, 	"weight": 1},
+					{"model": "minecraft:block/foliage/flowers/butterfly_white1",	"y": 270, 	"weight": 1},
+
+					{"model": "minecraft:block/air","weight": 192}
+					]
+		}
+  	]
+}

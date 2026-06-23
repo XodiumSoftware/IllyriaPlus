@@ -1,0 +1,99 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "property": "minecraft:has_component",
+    "component": "minecraft:custom_name",
+      "on_true": {
+        "type": "minecraft:select",
+        "model": "minecraft:item/copper_sword",
+        "property": "minecraft:component",
+        "component": "minecraft:custom_name",
+        "cases": [
+          {
+            "when": "Exposed Copper Sword",
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/copper/exposed_sword"
+            }
+          },
+          {
+            "when": "Exposed Sword",
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/copper/exposed_sword"
+            }
+          },	
+          {
+            "when": "Weathered Copper Sword",
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/copper/weathered_sword"
+            }
+          },
+          {
+            "when": "Weathered Sword",
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/copper/weathered_sword"
+            }
+          },		  
+          {
+            "when": "Oxidized Copper Sword",
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/copper/oxidized_sword"
+            }
+          },
+          {
+            "when": "Oxidized Sword",
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/copper/oxidized_sword"
+            }
+          }		  
+        ],
+        "fallback": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/copper_sword"
+        }
+      },
+      "on_false": {
+        "type": "minecraft:range_dispatch",
+        "property": "minecraft:damage",
+		"entries": [
+		  {
+			"threshold": 0,
+			"model": {
+			  "type": "minecraft:model",
+			  "model": "minecraft:item/copper_sword"
+			}
+		  },
+		  {
+			"threshold": 0.25,
+			"model": {
+			  "type": "minecraft:model",
+			  "model": "minecraft:item/excalibur/tools/copper/exposed_sword"
+			}
+		  },
+		  {
+			"threshold": 0.5,
+			"model": {
+			  "type": "minecraft:model",
+			  "model": "minecraft:item/excalibur/tools/copper/weathered_sword"
+			}
+		  },
+		  {
+			"threshold": 0.75,
+			"model": {
+			  "type": "minecraft:model",
+			  "model": "minecraft:item/excalibur/tools/copper/oxidized_sword"
+			}
+		  }
+        ],
+        "fallback": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/copper_sword"
+        }
+      }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "property": "minecraft:has_component",
+    "component": "minecraft:custom_name",
+      "on_true": {
+        "type": "minecraft:select",
+        "model": "minecraft:item/golden_sword",
+        "property": "minecraft:component",
+        "component": "minecraft:custom_name",
+        "cases": [
+          {
+            "when": "Golden Excalibur",
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/custom_name/golden_excalibur"
+            }
+          }
+        ],
+        "fallback": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/golden_sword"
+        }
+      },
+      "on_false": {
+        "type": "minecraft:select",
+        "property": "minecraft:context_entity_type",
+        "cases": [
+          {
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/golden_sword_piglin"
+            },
+            "when": [
+              "minecraft:piglin", 
+              "minecraft:zombified_piglin"
+            ]
+          }
+        ],
+        "fallback": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/golden_sword"
+        }
+      }
+  }
+}

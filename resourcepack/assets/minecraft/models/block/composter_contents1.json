@@ -1,0 +1,16 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"particle": "block/composter_compost",
+		"inside": "block/composter_compost"
+	},
+	"elements": [
+		{
+			"from": [1, 0, 1],
+			"to": [15, 3, 15],
+			"faces": {
+				"up": {"uv": [1, 1, 15, 15], "texture": "#inside"}
+			}
+		}
+	]
+}

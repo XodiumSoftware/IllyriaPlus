@@ -1,0 +1,9 @@
+{
+    "variants": {
+        "": [
+            { "model": "block/sculk", "weight": 20 },
+            { "model": "block/sculk1", "weight": 10 },			
+			{ "model": "block/sculk2", "weight": 7 }
+		]
+    }
+}

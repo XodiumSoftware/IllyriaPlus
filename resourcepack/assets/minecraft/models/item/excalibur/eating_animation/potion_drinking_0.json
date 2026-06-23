@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer1": "minecraft:item/excalibur/eating_animation/potion_bottle",
+    "layer0": "minecraft:item/excalibur/eating_animation/potion_overlay_drinking_0"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/rotten_flesh",
+  "textures": {
+    "layer0": "minecraft:item/excalibur/eating_animation/rotten_flesh_eating_1"
+  }
+}

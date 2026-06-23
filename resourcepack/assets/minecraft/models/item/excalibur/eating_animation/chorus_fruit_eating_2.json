@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/chorus_fruit",
+  "textures": {
+    "layer0": "minecraft:item/excalibur/eating_animation/chorus_fruit_eating_2"
+  }
+}

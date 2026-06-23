@@ -1,0 +1,74 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"particle": "block/melon_growing",	
+		"3": "block/melon_growing",
+		"4": "block/melon_stem_stage7",
+		"stem": "block/melon_stem_stage5",
+		"bottom": "block/melon_stem_bottom"
+	},
+	"elements": [
+		{
+			"name": "melon",
+			"from": [5, 0, 0],
+			"to": [11.01, 6, 6],
+			"faces": {
+				"north": {"uv": [1, 10, 7, 16], "texture": "#3"},
+				"east": {"uv": [1, 10, 7, 16], "texture": "#3"},
+				"south": {"uv": [1, 10, 7, 16], "texture": "#3"},
+				"west": {"uv": [1, 10, 7, 16], "texture": "#3"},
+				"up": {"uv": [1, 1, 7, 7], "texture": "#3"},
+				"down": {"uv": [1, 1, 7, 7], "texture": "#3"}
+			}
+		},
+		{
+			"name": "Stem",
+			"from": [8, -1, 0],
+			"to": [8.001, 15, 16],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#stem"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#stem"}
+			}
+		},
+		{
+			"name": "Stem",
+			"from": [8, -1, -2],
+			"to": [8.001, 15, 14],
+			"faces": {
+				"east": {"uv": [16, 0, 0, 16], "texture": "#4"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#4"}
+			}
+		},
+		{
+			"name": "Stem",
+			"from": [7.999, -1, 0],
+			"to": [8, 15, 16],
+			"rotation": {"angle": -45, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#stem"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#stem"}
+			}
+		},
+		{
+			"name": "Bottom1",
+			"from": [8, -1.001, 0],
+			"to": [24, -1, 16],
+			"rotation": {"angle": 22.5, "axis": "z", "origin": [8, -1, 0]},
+			"faces": {
+				"up": {"uv": [16, 16, 0, 1], "rotation": 270, "texture": "#bottom"},
+				"down": {"uv": [0, 1, 16, 16], "rotation": 90, "texture": "#bottom"}
+			}
+		},
+		{
+			"name": "Bottom2",
+			"from": [-8, -1, 0],
+			"to": [8, -0.999, 16],
+			"rotation": {"angle": -22.5, "axis": "z", "origin": [8, -1, 0]},
+			"faces": {
+				"up": {"uv": [0, 1, 16, 16], "rotation": 270, "texture": "#bottom"},
+				"down": {"uv": [16, 16, 0, 1], "rotation": 90, "texture": "#bottom"}
+			}
+		}
+	]
+}

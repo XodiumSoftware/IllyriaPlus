@@ -1,0 +1,18 @@
+{
+	"format_version": "1.21.6",
+	"parent": "block/block",
+	"textures": {
+		"1": "block/glow_lichen_side",
+		"particle": "block/glow_lichen_shroom_base"
+	},
+	"elements": [
+		{
+			"from": [0, 0.1, 0],
+			"to": [16, 0.1, 16],
+			"faces": {
+				"up": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#1", "cullface": "down"}
+			}
+		}
+	]
+}

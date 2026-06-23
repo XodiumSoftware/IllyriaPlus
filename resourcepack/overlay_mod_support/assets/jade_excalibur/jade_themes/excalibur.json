@@ -1,0 +1,63 @@
+{
+	"version": 100,
+	"tooltipStyle": {
+		"sprite": "jade_excalibur:excalibur",
+		"withIconSprite": "jade_excalibur:excalibur",
+		"padding": [
+			6,
+			7,
+			6,
+			6
+		],
+		"boxProgressOffset": [
+			1,
+			1,
+			2,
+			-2
+		],
+		"boxProgressColors": {
+			"normal": "#938472",
+			"failure": "#FF4444"
+		}
+	},
+	"nestedBoxStyle": {
+		"borderColor": [
+			"#423628",
+			"#423628",
+			"#766758",
+			"#766758"
+		],
+		"borderWidth": 1
+	},
+	"viewGroupStyle": {
+		"backgroundColor": "#913E0033",
+		"borderColor": [
+			"#913E0033",
+			"#913E0033",
+			"#913E0033",
+			"#913E0033"
+		],
+		"borderWidth": 0.75
+	},
+	"text": {
+		"colors": {
+			"title": "#a0a0a0",
+			"normal": "#a0a0a0",
+			"info": "#a0a0a0",
+			"success": "#4a7236",
+			"warning": "#aa8448",
+			"danger": "#823128",
+			"failure": "#a7643b"
+		},
+		"shadow": true,
+		"modNameStyle": {
+			"italic": false
+		}
+	},
+	"changeOpacity": 1,
+	"changeRoundCorner": false,
+	"autoEnable": true,
+	"lightColorScheme": true,
+	"iconSlotSprite": "jade_excalibur:icon_slot_sprite",
+	"iconSlotInflation": -6
+}

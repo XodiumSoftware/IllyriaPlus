@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/cookie",
+  "textures": {
+    "layer0": "minecraft:item/excalibur/eating_animation/cookie_eating_1"
+  }
+}

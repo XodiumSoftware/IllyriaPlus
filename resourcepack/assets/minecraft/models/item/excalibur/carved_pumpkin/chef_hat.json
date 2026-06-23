@@ -1,0 +1,67 @@
+{
+	"format_version": "1.21.6",
+	"credit": "Made with Blockbench",
+	"texture_size": [24, 24],
+	"textures": {
+		"particle": "item/excalibur/carved_pumpkin/toque_blanche"
+	},
+	"elements": [
+		{
+			"from": [3.5, 6, 3.5],
+			"to": [12.5, 11, 12.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [3, 6, 3]},
+			"faces": {
+				"north": {"uv": [8.66667, 9.33333, 14.66667, 12.66667], "texture": "#particle"},
+				"east": {"uv": [8.66667, 9.33333, 14.66667, 12.66667], "texture": "#particle"},
+				"south": {"uv": [8.66667, 9.33333, 14.66667, 12.66667], "texture": "#particle"},
+				"west": {"uv": [8.66667, 9.33333, 14.66667, 12.66667], "texture": "#particle"},
+				"down": {"uv": [14.66667, 3.33333, 8.66667, 9.33333], "texture": "#particle"}
+			}
+		},
+		{
+			"from": [2.5, 10.25, 2.75],
+			"to": [13.5, 15.25, 13.75],
+			"rotation": {"angle": 7.5, "axis": "x", "origin": [8, 12.5, 8]},
+			"faces": {
+				"north": {"uv": [8, 0, 15.33333, 3.33333], "texture": "#particle"},
+				"east": {"uv": [8, 0, 15.33333, 3.33333], "texture": "#particle"},
+				"south": {"uv": [8, 0, 15.33333, 3.33333], "texture": "#particle"},
+				"west": {"uv": [8, 0, 15.33333, 3.33333], "texture": "#particle"},
+				"up": {"uv": [0, 0, 7.33333, 7.33333], "texture": "#particle"},
+				"down": {"uv": [0, 7.33333, 7.33333, 14.66667], "texture": "#particle"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 54, 0],
+			"translation": [0, 1.5, -2],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, 54, 0],
+			"translation": [0, 1.5, -2],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_righthand": {
+			"translation": [0.25, -0.25, 0.5],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_lefthand": {
+			"translation": [0.25, -0.25, 0.5],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"ground": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"rotation": [-152.93, -48.97, 177.28],
+			"translation": [1, -2.25, 0],
+			"scale": [0.8, 0.8, 0.8]
+		},
+		"head": {
+			"translation": [0, 5, 0],
+			"scale": [1.64, 1.64, 1.64]
+		}
+	}
+}

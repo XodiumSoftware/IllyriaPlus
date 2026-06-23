@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/cooked_porkchop",
+  "textures": {
+    "layer0": "minecraft:item/excalibur/eating_animation/cooked_porkchop_eating_0"
+  }
+}

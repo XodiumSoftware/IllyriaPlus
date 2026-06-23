@@ -1,0 +1,53 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "property": "minecraft:has_component",
+    "component": "minecraft:custom_name",
+      "on_true": {
+        "type": "minecraft:select",
+        "model": "minecraft:item/iron_axe",
+        "property": "minecraft:component",
+        "component": "minecraft:custom_name",
+        "cases": [
+          {
+			"when": "Iron Hammer",
+			"model": {
+			  "type": "minecraft:model",
+			  "model": "minecraft:item/excalibur/custom_name/iron_hammer"
+            }
+          },
+          {
+			"when": "Illager Axe",
+			"model": {
+			  "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/iron_axe_vindicator"
+            }
+          }		  
+        ],
+        "fallback": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/iron_axe"
+        }
+      },
+      "on_false": {
+        "type": "minecraft:select",
+        "property": "minecraft:context_entity_type",
+        "cases": [
+          {
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/iron_axe_vindicator"
+            },
+            "when": [
+              "minecraft:vindicator",
+			  "minecraft:pillager"
+            ]
+          }
+        ],
+        "fallback": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/iron_axe"
+        }
+      }
+  }
+}

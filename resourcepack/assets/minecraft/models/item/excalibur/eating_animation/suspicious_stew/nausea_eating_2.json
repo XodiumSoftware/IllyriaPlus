@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/excalibur/eating_animation/suspicious_stew/nausea_eating_2"
+  }
+}

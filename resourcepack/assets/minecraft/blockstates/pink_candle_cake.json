@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "lit=false": [
+      {
+        "model": "block/pink_candle_cake"
+      },
+      {
+        "model": "block/misc/cake/pink_bread_candle"
+      },
+      {
+        "model": "block/misc/cake/pink_pie_candle"
+      }
+    ],
+    "lit=true": [
+      {
+        "model": "block/pink_candle_cake_lit"
+      },
+      {
+        "model": "block/misc/cake/pink_bread_candle_lit"
+      },
+      {
+        "model": "block/misc/cake/pink_pie_candle_lit"
+      }
+    ]
+  }
+}

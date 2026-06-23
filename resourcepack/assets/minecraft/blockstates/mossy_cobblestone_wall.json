@@ -1,0 +1,166 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "minecraft:block/mossy_cobblestone_wall_post"
+      },
+      "when": {
+        "AND": [
+          {
+            "up": "true"
+          },
+          {
+            "OR": [
+              {
+                "north": "none"
+              },
+              {
+                "south": "none"
+              },
+              {
+                "east": "none"
+              },
+              {
+                "west": "none"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "minecraft:block/mossy_cobblestone_wall_post_tall"
+      },
+      "when": {
+        "AND": [
+          {
+            "up": "true"
+          },
+          {
+            "OR": [
+              {
+                "north": "low"
+              },
+              {
+                "south": "low"
+              },
+              {
+                "east": "low"
+              },
+              {
+                "west": "low"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "minecraft:block/mossy_cobblestone_wall_post"
+      },
+      "when": {
+        "AND": [
+          {
+            "up": "true"
+          },
+          {
+            "OR": [
+              {
+                "north": "tall"
+              },
+              {
+                "south": "tall"
+              },
+              {
+                "east": "tall"
+              },
+              {
+                "west": "tall"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "minecraft:block/mossy_cobblestone_wall_side",
+        "uvlock": true
+      },
+      "when": {
+        "north": "low"
+      }
+    },
+    {
+      "apply": {
+        "model": "minecraft:block/mossy_cobblestone_wall_side",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": {
+        "east": "low"
+      }
+    },
+    {
+      "apply": {
+        "model": "minecraft:block/mossy_cobblestone_wall_side",
+        "uvlock": true,
+        "y": 180
+      },
+      "when": {
+        "south": "low"
+      }
+    },
+    {
+      "apply": {
+        "model": "minecraft:block/mossy_cobblestone_wall_side",
+        "uvlock": true,
+        "y": 270
+      },
+      "when": {
+        "west": "low"
+      }
+    },
+    {
+      "apply": {
+        "model": "minecraft:block/mossy_cobblestone_wall_side_tall",
+        "uvlock": true
+      },
+      "when": {
+        "north": "tall"
+      }
+    },
+    {
+      "apply": {
+        "model": "minecraft:block/mossy_cobblestone_wall_side_tall",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": {
+        "east": "tall"
+      }
+    },
+    {
+      "apply": {
+        "model": "minecraft:block/mossy_cobblestone_wall_side_tall",
+        "uvlock": true,
+        "y": 180
+      },
+      "when": {
+        "south": "tall"
+      }
+    },
+    {
+      "apply": {
+        "model": "minecraft:block/mossy_cobblestone_wall_side_tall",
+        "uvlock": true,
+        "y": 270
+      },
+      "when": {
+        "west": "tall"
+      }
+    }
+  ]
+}

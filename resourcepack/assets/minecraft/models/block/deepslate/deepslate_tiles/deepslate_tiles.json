@@ -1,0 +1,8 @@
+{
+    "parent": "block/cube_bottom_top",
+    "textures": {
+        "bottom": "block/deepslate_tiles_top",
+        "top": "block/deepslate_tiles_top",
+        "side": "block/deepslate_tiles"
+    }
+}

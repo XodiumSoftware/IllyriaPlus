@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "": [
+			{ "model": "block/tuff_bricks", "weight": 50 },
+			{ "model": "block/stone/tuff_bricks/1", "weight": 30 }
+		]
+    }
+}

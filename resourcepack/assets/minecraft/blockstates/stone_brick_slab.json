@@ -1,0 +1,31 @@
+{
+    "variants": {
+        "type=double":[
+			{ "model": "block/stone_bricks", "weight": 15 },
+			{ "model": "block/stone/stonebrick/1", "weight": 15 },
+            { "model": "block/stone/stonebrick/2", "weight": 20 },
+            { "model": "block/stone/stonebrick/3", "weight": 10 },
+			{ "model": "block/stone/stonebrick/4", "weight": 10 },
+            { "model": "block/stone/stonebrick/5", "weight": 10 },
+			{ "model": "block/stone/stonebrick/6", "weight": 15 }
+		],
+        "type=bottom": [
+			{ "model": "block/stone_brick_slab", "weight": 30 },
+			{ "model": "block/stone/stonebrick/halfslab/1", "weight": 15 },
+            { "model": "block/stone/stonebrick/halfslab/2", "weight": 15 },
+            { "model": "block/stone/stonebrick/halfslab/3", "weight": 10 },
+			{ "model": "block/stone/stonebrick/halfslab/4", "weight": 10 },
+            { "model": "block/stone/stonebrick/halfslab/5", "weight": 10 },
+			{ "model": "block/stone/stonebrick/halfslab/6", "weight": 10 }
+		],
+        "type=top": [
+			{ "model": "block/stone_brick_slab_top", "weight": 30 },
+			{ "model": "block/stone/stonebrick/halfslab/7", "weight": 15 },
+            { "model": "block/stone/stonebrick/halfslab/8", "weight": 15 },
+            { "model": "block/stone/stonebrick/halfslab/9", "weight": 10 },
+			{ "model": "block/stone/stonebrick/halfslab/10", "weight": 10 },
+            { "model": "block/stone/stonebrick/halfslab/11", "weight": 10 },
+			{ "model": "block/stone/stonebrick/halfslab/12", "weight": 10 }
+		]			
+    }
+}

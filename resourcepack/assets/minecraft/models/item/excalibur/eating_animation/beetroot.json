@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/carrot",
+  "textures": {
+    "layer0": "minecraft:item/excalibur/eating_animation/beetroot"
+  }
+}

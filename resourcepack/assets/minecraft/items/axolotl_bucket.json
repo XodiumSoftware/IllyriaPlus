@@ -1,0 +1,48 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:component",
+    "component": "minecraft:axolotl/variant",
+    "cases": [
+      {
+        "when": "lucy",
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/axolotl_bucket/lucy"
+        }
+      },
+      {
+        "when": "wild",
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/axolotl_bucket/wild"
+        }
+      },
+      {
+        "when": "gold",
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/axolotl_bucket/gold"
+        }
+      },
+      {
+        "when": "cyan",
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/axolotl_bucket/cyan"
+        }
+      },
+      {
+        "when": "blue",
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/axolotl_bucket/blue"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/axolotl_bucket"
+    }
+  }
+}

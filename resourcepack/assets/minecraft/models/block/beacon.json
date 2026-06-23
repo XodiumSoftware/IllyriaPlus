@@ -1,0 +1,67 @@
+{
+	"parent": "block/block",
+	"ambientocclusion": false,
+	"textures": {
+		"beacon": "block/beacon_base",
+		"top_bottom": "block/beacon_top",
+		"particle": "block/beacon"
+	},
+	"elements": [
+		{
+			"from": [2.5, 9, 2.5],
+			"to": [13.5, 12, 13.5],
+			"faces": {
+				"north": {"uv": [3, 4, 14, 7], "texture": "#beacon"},
+				"east": {"uv": [3, 4, 14, 7], "texture": "#beacon"},
+				"south": {"uv": [3, 4, 14, 7], "texture": "#beacon"},
+				"west": {"uv": [3, 4, 14, 7], "texture": "#beacon"},
+				"up": {"uv": [3, 3, 14, 14], "texture": "#top_bottom"},
+				"down": {"uv": [3, 3, 14, 14], "texture": "#top_bottom"}
+			}
+		},
+		{
+			"from": [3, 0, 3],
+			"to": [13, 2, 13],
+			"faces": {
+				"north": {"uv": [4, 14, 14, 16], "texture": "#beacon"},
+				"east": {"uv": [4, 14, 14, 16], "texture": "#beacon"},
+				"south": {"uv": [4, 14, 14, 16], "texture": "#beacon"},
+				"west": {"uv": [4, 14, 14, 16], "texture": "#beacon"},
+				"up": {"uv": [3, 3, 13, 13], "texture": "#top_bottom"},
+				"down": {"uv": [3, 3, 13, 13], "texture": "#top_bottom", "cullface": "down"}
+			}
+		},
+		{
+			"from": [3.5, 2, 3.5],
+			"to": [12.5, 9, 12.5],
+			"faces": {
+				"north": {"uv": [4, 7, 13, 14], "texture": "#beacon"},
+				"east": {"uv": [4, 7, 13, 14], "texture": "#beacon"},
+				"south": {"uv": [4, 7, 13, 14], "texture": "#beacon"},
+				"west": {"uv": [4, 7, 13, 14], "texture": "#beacon"}
+			}
+		},
+		{
+			"from": [4.5, 12, 4.5],
+			"to": [11.5, 14, 11.5],
+			"faces": {
+				"north": {"uv": [5, 2, 12, 4], "texture": "#beacon"},
+				"east": {"uv": [5, 2, 12, 4], "texture": "#beacon"},
+				"south": {"uv": [5, 2, 12, 4], "texture": "#beacon"},
+				"west": {"uv": [5, 2, 12, 4], "texture": "#beacon"},
+				"up": {"uv": [5, 4, 12, 11], "texture": "#top_bottom"}
+			}
+		},
+		{
+			"from": [6.5, 14, 6.5],
+			"to": [9.5, 16, 9.5],
+			"faces": {
+				"north": {"uv": [7, 0, 10, 2], "texture": "#beacon"},
+				"east": {"uv": [7, 0, 10, 2], "texture": "#beacon"},
+				"south": {"uv": [7, 0, 10, 2], "texture": "#beacon"},
+				"west": {"uv": [7, 0, 10, 2], "texture": "#beacon"},
+				"up": {"uv": [7, 7, 10, 10], "texture": "#top_bottom", "cullface": "up"}
+			}
+		}
+	]
+}

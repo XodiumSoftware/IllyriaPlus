@@ -1,0 +1,47 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"side": "block/planks/spruce_planks_atlas",
+		"particle": "block/spruce_planks1"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 8, 16],
+			"faces": {
+				"north": {"uv": [4, 6, 8, 8], "texture": "#side", "cullface": "north"},
+				"east": {"uv": [4, 6, 8, 8], "texture": "#side", "cullface": "east"},
+				"south": {"uv": [4, 6, 8, 8], "texture": "#side", "cullface": "south"},
+				"west": {"uv": [4, 6, 8, 8], "texture": "#side", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#particle"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#particle", "cullface": "down"}
+			}
+		},
+		{
+			"from": [8, 8, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [4, 0, 6, 2], "texture": "#side", "cullface": "north"},
+				"east": {"uv": [4, 4, 8, 6], "texture": "#side", "cullface": "east"},
+				"south": {"uv": [6, 0, 8, 2], "texture": "#side", "cullface": "south"},
+				"west": {"uv": [4, 4, 8, 6], "texture": "#side"},
+				"up": {"uv": [8, 0, 16, 16], "texture": "#particle", "cullface": "up"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_lefthand": {
+			"rotation": [75, -135, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"gui": {
+			"rotation": [30, 135, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"head": {
+			"rotation": [0, -90, 0]
+		}
+	}
+}

@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "type=bottom": { "model": "block/bamboo_mosaic_slab" },
+        "type=top": { "model": "block/bamboo_mosaic_slab_top" },
+        "type=double": { "model": "block/wood/bamboo/mosaic_doubleslab" }
+    }
+}

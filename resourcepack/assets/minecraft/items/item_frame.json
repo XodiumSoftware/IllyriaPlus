@@ -1,0 +1,27 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:component",
+    "component": "minecraft:custom_name",
+    "cases": [
+      {
+        "when": "o",
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/custom_name/decor/wheel"
+        }
+      },
+      {
+        "when": "Wheel",
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/custom_name/decor/wheel"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/item_frame"
+    }
+  }
+}

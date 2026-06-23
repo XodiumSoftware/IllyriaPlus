@@ -1,0 +1,30 @@
+{
+	"variants": {
+		"half=lower":[
+            { "model": "block/foliage/tall_grass/tall_grass_bottom", 		"weight": 5 },
+			{ "model": "block/foliage/tall_grass/tall_grass1_bottom", 		"weight": 5 },
+			{ "model": "block/foliage/tall_grass/tall_grass2_bottom", 		"weight": 3 },
+			
+			{ "model": "block/foliage/tall_grass/tall_grass_blue_bottom", 	"weight": 3 },
+			{ "model": "block/foliage/tall_grass/tall_grass_blue1_bottom", "weight": 3 },
+			{ "model": "block/foliage/tall_grass/tall_grass_blue2_bottom", "weight": 3 },
+		
+			{ "model": "block/foliage/tall_grass/tall_grass_yellow_bottom", "weight": 3 },
+			{ "model": "block/foliage/tall_grass/tall_grass_yellow1_bottom", "weight": 1 },
+			{ "model": "block/foliage/tall_grass/tall_grass_yellow2_bottom", "weight": 1 }
+			],
+		"half=upper":[
+			{ "model": "block/foliage/tall_grass/tall_grass_top", 		"weight": 5 },
+			{ "model": "block/foliage/tall_grass/tall_grass1_top", 		"weight": 5 },
+			{ "model": "block/foliage/tall_grass/tall_grass2_top", 		"weight": 3 },
+			
+			{ "model": "block/foliage/tall_grass/tall_grass_blue_top", 	"weight": 3 },
+			{ "model": "block/foliage/tall_grass/tall_grass_blue1_top", "weight": 3 },
+			{ "model": "block/foliage/tall_grass/tall_grass_blue2_top", "weight": 3 },
+		
+			{ "model": "block/foliage/tall_grass/tall_grass_yellow_top", "weight": 3 },
+			{ "model": "block/foliage/tall_grass/tall_grass_yellow1_top", "weight": 1 },
+			{ "model": "block/foliage/tall_grass/tall_grass_yellow2_top", "weight": 1 }
+			]
+    }
+}

@@ -1,0 +1,21 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:display_context",
+    "cases": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "item/excalibur/carved_pumpkin/carved_pumpkin_lantern"
+        },
+        "when": [
+          "head"
+        ]
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "minecraft:block/jack_o_lantern"
+    }
+  }
+}

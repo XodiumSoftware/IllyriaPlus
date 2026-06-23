@@ -1,0 +1,7 @@
+{
+    "parent": "block/cube_top",
+    "textures": {
+        "side": "block/brick2",
+        "top": "block/bricks"
+    }
+}

@@ -1,0 +1,48 @@
+{
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"textures": {
+		"particle": "block/large_fern_top",
+		"bottom": "block/large_fern_bottom"
+	},
+	"elements": [
+		{
+			"name": "ns",
+			"from": [0, 0, 8],
+			"to": [16, 16, 8],
+			"shade": false,
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, -8, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#bottom", "tintindex": 0},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#bottom", "tintindex": 0}
+			}
+		},
+		{
+			"name": "ew",
+			"from": [8, 0, 0],
+			"to": [8, 16, 16],
+			"shade": false,
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, -8, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#bottom", "tintindex": 0},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#bottom", "tintindex": 0}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "bottom",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [
+				{
+					"name": "cross",
+					"origin": [8, 8, 8],
+					"color": 0,
+					"children": [0, 1]
+				}
+			]
+		}
+	],
+	"note": "BLANK"
+}

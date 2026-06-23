@@ -1,0 +1,24 @@
+{
+    "variants": {
+        "type=bottom": 
+            [
+            { "model": "block/planks/spruce/spruce_slab_bottom_0", "weight": 30 },
+            { "model": "block/planks/spruce/spruce_slab_bottom_1", "weight": 20 },
+            { "model": "block/planks/spruce/spruce_slab_bottom_2", "weight": 20 },
+            { "model": "block/planks/spruce/spruce_slab_bottom_3", "weight": 10 }
+            ],
+
+        "type=top": 
+            [
+            { "model": "block/planks/spruce/spruce_slab_top_0", "weight": 30 },
+            { "model": "block/planks/spruce/spruce_slab_top_1", "weight": 20 },
+            { "model": "block/planks/spruce/spruce_slab_top_2", "weight": 20 },
+            { "model": "block/planks/spruce/spruce_slab_top_3", "weight": 10 }
+            ],
+
+        "type=double": 
+            [
+			{ "model": "block/planks/spruce/spruce_doubleslab", "weight": 1 }
+		    ]
+    }
+}

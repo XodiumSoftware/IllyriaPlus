@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/beef",
+  "textures": {
+    "layer0": "minecraft:item/excalibur/eating_animation/beef_eating_2"
+  }
+}

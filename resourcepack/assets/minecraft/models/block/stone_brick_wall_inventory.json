@@ -1,0 +1,43 @@
+{
+    "parent": "block/wall_inventory",
+	"textures": {
+		"top": "block/cobble_wall_top",
+		"wall": "block/stonebrick_wall_side"
+	},
+	"elements": [
+		{
+			"from": [4, 0, 4],
+			"to": [12, 4, 12],
+			"faces": {
+				"north": {"uv": [4, 12, 12, 16], "texture": "#wall"},
+				"east": {"uv": [4, 12, 12, 16], "texture": "#wall"},
+				"south": {"uv": [4, 12, 12, 16], "texture": "#wall"},
+				"west": {"uv": [4, 12, 12, 16], "texture": "#wall"},
+				"up": {"uv": [4, 4, 12, 12], "texture": "#top"},
+				"down": {"uv": [4, 4, 12, 12], "texture": "#top"}
+			}
+		},
+		{
+			"from": [5, 4, 5],
+			"to": [11, 12, 11],
+			"faces": {
+				"north": {"uv": [5, 4, 11, 12], "texture": "#wall"},
+				"east": {"uv": [5, 4, 11, 12], "texture": "#wall"},
+				"south": {"uv": [5, 4, 11, 12], "texture": "#wall"},
+				"west": {"uv": [5, 4, 11, 12], "texture": "#wall"}
+			}
+		},
+		{
+			"from": [4, 11.95, 4],
+			"to": [12, 16.05, 12],
+			"faces": {
+				"north": {"uv": [4, 12, 12, 16], "texture": "#wall"},
+				"east": {"uv": [4, 12, 12, 16], "texture": "#wall"},
+				"south": {"uv": [4, 12, 12, 16], "texture": "#wall"},
+				"west": {"uv": [4, 12, 12, 16], "texture": "#wall"},
+				"up": {"uv": [4, 4, 12, 12], "texture": "#top"},
+				"down": {"uv": [4, 4, 12, 12], "texture": "#top"}
+			}
+		}
+	]
+}

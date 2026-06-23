@@ -1,0 +1,25 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "particle": "block/cartography_table_side3",
+        "bottom": "block/cartography_table_bottom",
+        "top": "block/cartography_table_top",
+        "side3": "block/cartography_table_side3",
+        "side1": "block/cartography_table_side1",
+        "side2": "block/cartography_table_side2"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#side3", "cullface": "north"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#side3", "cullface": "east"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#side1", "cullface": "south"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#side2", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#top", "cullface": "up"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#bottom", "cullface": "down"}
+			}
+		}
+	]
+}

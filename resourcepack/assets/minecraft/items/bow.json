@@ -1,0 +1,91 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "on_false": {
+      "type": "minecraft:select",
+      "property": "minecraft:component",
+      "component": "minecraft:enchantments",
+      "cases": [
+        {
+          "when": { "minecraft:infinity": 1 },
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/excalibur/bow/infinity"
+          }
+        }
+      ],
+      "fallback": {
+        "type": "minecraft:model",
+        "model": "minecraft:item/bow"
+      }
+    },
+    "on_true": {
+      "type": "minecraft:range_dispatch",
+      "entries": [
+        {
+          "model": {
+            "type": "minecraft:select",
+            "property": "minecraft:component",
+            "component": "minecraft:enchantments",
+            "cases": [
+              {
+                "when": { "minecraft:infinity": 1 },
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/bow/infinity_pulling_1"
+                }
+              }
+            ],
+            "fallback": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/bow_pulling_1"
+            }
+          },
+          "threshold": 0.65
+        },
+        {
+          "model": {
+            "type": "minecraft:select",
+            "property": "minecraft:component",
+            "component": "minecraft:enchantments",
+            "cases": [
+              {
+                "when": { "minecraft:infinity": 1 },
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/bow/infinity_pulling_2"
+                }
+              }
+            ],
+            "fallback": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/bow_pulling_2"
+            }
+          },
+          "threshold": 0.9
+        }
+      ],
+      "fallback": {
+        "type": "minecraft:select",
+        "property": "minecraft:component",
+        "component": "minecraft:enchantments",
+        "cases": [
+          {
+            "when": { "minecraft:infinity": 1 },
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/bow/infinity_pulling_0"
+            }
+          }
+        ],
+        "fallback": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/bow_pulling_0"
+        }
+      },
+      "property": "minecraft:use_duration",
+      "scale": 0.05
+    },
+    "property": "minecraft:using_item"
+  }
+}

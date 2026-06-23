@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "": [
+			{ "model": "block/deepslate/deepslate_tiles/deepslate_tiles" }
+		]
+    }
+}

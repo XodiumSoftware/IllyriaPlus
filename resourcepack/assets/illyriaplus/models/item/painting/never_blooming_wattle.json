@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "illyriaplus:item/painting/never_blooming_wattle"
+  }
+}
