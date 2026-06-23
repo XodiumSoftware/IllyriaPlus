@@ -1,5 +1,6 @@
 package org.xodium.illyriaplus.mechanics.server
 
+import io.papermc.paper.command.brigadier.Commands
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
@@ -9,12 +10,17 @@ import net.kyori.adventure.resource.ResourcePackRequest
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.permissions.Permission
+import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
+import org.xodium.illyriaplus.Utils.Command.playerExecuted
 import org.xodium.illyriaplus.Utils.MM
+import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import org.xodium.illyriaplus.mechanics.server.ResourcePackMechanic.resourcePackInfo
 import java.net.URI
 import javax.net.ssl.HttpsURLConnection
+import kotlin.time.measureTime
 
 /** Represents a mechanic that sends the IllyriaPlus resource pack to joining players. */
 internal object ResourcePackMechanic : MechanicInterface {
@@ -33,10 +39,34 @@ internal object ResourcePackMechanic : MechanicInterface {
     private val json = Json { ignoreUnknownKeys = true }
     private var resourcePackInfo: ResourcePackInfo? = null
 
-    override fun register(): Long {
-        fetchResourcePackInfoAsync()
-        return super.register()
-    }
+    override val cmds: Collection<CommandData> =
+        listOf(
+            CommandData(
+                Commands
+                    .literal("reloadresourcepack")
+                    .requires { it.sender.hasPermission(perms[0]) }
+                    .playerExecuted { player, _ ->
+                        instance.server.onlinePlayers.forEach { it.clearResourcePacks() }
+                        player.sendActionBar(
+                            MM.deserialize("<green>Reloading IllyriaPlus resource pack for all online players..."),
+                        )
+                        reloadResourcePackForAll()
+                    },
+                "Reloads the IllyriaPlus resource pack for all online players",
+                listOf("rrp"),
+            ),
+        )
+
+    override val perms =
+        listOf(
+            Permission(
+                "${instance.javaClass.simpleName}.reloadresourcepack".lowercase(),
+                "Allows reloading the IllyriaPlus resource pack",
+                PermissionDefault.OP,
+            ),
+        )
+
+    override fun register(): Long = super.register() + measureTime { fetchResourcePackInfoAsync() }.inWholeMilliseconds
 
     @EventHandler(priority = EventPriority.NORMAL)
     fun on(event: PlayerJoinEvent) {
@@ -45,17 +75,15 @@ internal object ResourcePackMechanic : MechanicInterface {
             return
         }
 
-        val info = resourcePackInfo!!
-        val request =
+        event.player.sendResourcePacks(
             ResourcePackRequest
                 .resourcePackRequest()
-                .packs(info)
+                .packs(resourcePackInfo!!)
                 .required(REQUIRED)
                 .prompt(
                     MM.deserialize(PROMPT),
-                ).build()
-
-        event.player.sendResourcePacks(request)
+                ).build(),
+        )
     }
 
     /**
@@ -66,11 +94,44 @@ internal object ResourcePackMechanic : MechanicInterface {
     private fun fetchResourcePackInfoAsync() {
         instance.server.scheduler.runTaskAsynchronously(instance) { _ ->
             runCatching { fetchLatestResourcePack() }
-                .onSuccess { info ->
-                    resourcePackInfo = info
-                    instance.logger.info("Resource pack resolved: ${info.uri()}")
+                .onSuccess {
+                    resourcePackInfo = it
+                    instance.logger.info("Resource pack resolved: ${it.uri()}")
                 }.onFailure {
                     instance.logger.warning("Failed to resolve latest resource pack URL: ${it.message}")
+                }
+        }
+    }
+
+    /**
+     * Reloads the resource pack by re-querying GitHub and sending it to every online player.
+     *
+     * Existing packs are cleared before the new pack is applied. The fetch is performed
+     * asynchronously; players keep playing if the update fails.
+     */
+    private fun reloadResourcePackForAll() {
+        instance.server.scheduler.runTaskAsynchronously(instance) { _ ->
+            runCatching { fetchLatestResourcePack() }
+                .onSuccess { info ->
+                    resourcePackInfo = info
+                    instance.server.scheduler.runTask(instance) { _ ->
+                        instance.server.onlinePlayers.forEach {
+                            it.clearResourcePacks()
+                            it.sendResourcePacks(
+                                ResourcePackRequest
+                                    .resourcePackRequest()
+                                    .packs(info)
+                                    .required(REQUIRED)
+                                    .prompt(MM.deserialize(PROMPT))
+                                    .build(),
+                            )
+                        }
+                        instance.logger.info(
+                            "Resource pack reloaded for ${instance.server.onlinePlayers.size} player(s)",
+                        )
+                    }
+                }.onFailure {
+                    instance.logger.warning("Failed to reload resource pack: ${it.message}")
                 }
         }
     }
@@ -87,7 +148,6 @@ internal object ResourcePackMechanic : MechanicInterface {
      */
     private fun fetchLatestResourcePack(): ResourcePackInfo {
         val connection = URI.create(API_URL).toURL().openConnection() as HttpsURLConnection
-
         connection.requestMethod = "GET"
         connection.setRequestProperty("Accept", "application/vnd.github+json")
         connection.setRequestProperty("X-GitHub-Api-Version", "2022-11-28")
@@ -103,8 +163,8 @@ internal object ResourcePackMechanic : MechanicInterface {
             assets
                 .map { it.jsonObject }
                 .firstOrNull { asset ->
-                    asset["name"]?.jsonPrimitive?.content?.let { name ->
-                        name.startsWith(ASSET_PREFIX) && name.endsWith(ASSET_SUFFIX)
+                    asset["name"]?.jsonPrimitive?.content?.let {
+                        it.startsWith(ASSET_PREFIX) && it.endsWith(ASSET_SUFFIX)
                     } == true
                 }
                 ?: error("No $ASSET_PREFIX*$ASSET_SUFFIX asset found in release $TAG")
