@@ -1,0 +1,19 @@
+{
+    "pack": {
+        "pack_format": 75,
+        "supported_formats": { "min_inclusive": 18, "max_inclusive": 999 },
+        "min_format": [ 18,0 ],
+        "max_format": [ 999,0 ],
+        "description": "\u00A77Adventure Awaits \n\u00A74By Maffhew Modified by Illyrius \u00A77for \u00A76MC 26.1"
+    },
+    "overlays": {
+        "entries": [
+            {
+                "directory": "overlay_mod_support",
+                "formats": { "min_inclusive": 18, "max_inclusive": 999 },
+                "min_format": [ 18,0 ],
+                "max_format": [ 999,0 ]
+            }
+        ]
+    }
+}

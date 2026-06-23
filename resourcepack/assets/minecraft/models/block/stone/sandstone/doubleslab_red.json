@@ -1,0 +1,23 @@
+{
+    "parent": "block/block",
+    "textures": {
+        "particle": "block/red_sandstone_double",	
+        "texture": "block/red_sandstone_double",
+        "top": "block/red_sandstone_top_smooth",
+        "bottom": "block/red_sandstone_top"		
+      },
+    "elements": [
+        {   "from": [ 0, 0, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+                "down":  { "texture": "#bottom", "cullface": "down" },
+                "up":    { "texture": "#top", "cullface": "up"   },
+                "north": { "texture": "#texture" },
+                "south": { "texture": "#texture" },
+                "west":  { "texture": "#texture" },
+                "east":  { "texture": "#texture" }
+            },
+            "__comment": "block"
+        }
+    ]
+}

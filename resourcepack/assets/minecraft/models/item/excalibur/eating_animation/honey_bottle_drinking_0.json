@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/honey_bottle",
+  "textures": {
+    "layer0": "minecraft:item/excalibur/eating_animation/honey_bottle_drinking_0"
+  }
+}

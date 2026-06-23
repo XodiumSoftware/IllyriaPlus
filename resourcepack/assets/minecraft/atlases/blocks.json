@@ -1,0 +1,9 @@
+{
+    "sources": [
+        {
+            "type":     "single",
+            "resource": "error/missing_block_or_item_sprite",
+            "sprite":   "missingno"
+        }
+    ]
+}

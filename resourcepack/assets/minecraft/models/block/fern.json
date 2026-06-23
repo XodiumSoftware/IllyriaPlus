@@ -1,0 +1,55 @@
+{
+	"textures": {
+		"bottom": "block/fern",
+		"particle": "block/fern"
+	},
+	"elements": [
+		{
+			"name": "cross",
+			"from": [8, 1, 0],
+			"to": [8, 17, 16],
+			"shade": false,
+			"faces": {
+				"east": {
+					"uv": [0, 0, 16, 16],
+					"texture": "#bottom",
+					"tintindex": 0
+				},
+				"west": {
+					"uv": [0, 0, 16, 16],
+					"texture": "#bottom",
+					"tintindex": 0
+				}
+			},
+			"rotation": {
+				"origin": [8, 8, 8],
+				"axis": "y",
+				"angle": 45
+			}
+		},
+		{
+			"name": "cross",
+			"from": [8, 1, 0],
+			"to": [8, 17, 16],
+			"shade": false,
+			"faces": {
+				"east": {
+					"uv": [0, 0, 16, 16],
+					"texture": "#bottom",
+					"tintindex": 0
+				},
+				"west": {
+					"uv": [0, 0, 16, 16],
+					"texture": "#bottom",
+					"tintindex": 0
+				}
+			},
+			"rotation": {
+				"origin": [8, 8, 8],
+				"axis": "y",
+				"angle": -45
+			}
+		}
+	],
+	"ambientocclusion": false
+}

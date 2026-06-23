@@ -1,0 +1,21 @@
+{
+    "parent": "block/wall_inventory",
+    "textures": {
+        "wall": "block/cobble_mossy_wall_side",
+		"top": "block/moss_block"
+    },
+    "elements": [
+        {   "from": [ 4, 0, 4 ],
+            "to": [ 12, 16, 12 ],
+            "faces": {
+                "down":  { "uv": [ 4, 4, 12, 12 ], "texture": "#wall", "cullface": "down" },
+                "up":    { "uv": [ 4, 4, 12, 12 ], "texture": "#top" },
+                "north": { "uv": [ 4, 0, 12, 16 ], "texture": "#wall" },
+                "south": { "uv": [ 4, 0, 12, 16 ], "texture": "#wall" },
+                "west":  { "uv": [ 4, 0, 12, 16 ], "texture": "#wall" },
+                "east":  { "uv": [ 4, 0, 12, 16 ], "texture": "#wall" }
+            },
+            "__comment": "Center post"
+        }
+    ]
+}

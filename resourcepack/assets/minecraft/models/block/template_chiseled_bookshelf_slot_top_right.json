@@ -1,0 +1,14 @@
+{
+    "textures": {
+      "particle": "#texture"
+    },
+	"elements": [
+		{
+			"from": [0, 8, 1],
+			"to": [5, 16, 1],
+			"faces": {
+				"north": {"uv": [11, 0, 16, 8], "texture": "#texture", "cullface": "north"}
+			}
+		}
+	]
+}

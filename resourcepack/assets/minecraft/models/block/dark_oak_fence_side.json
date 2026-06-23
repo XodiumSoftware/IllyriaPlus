@@ -1,0 +1,33 @@
+{
+	"format_version": "1.21.6",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"texture": "block/fence_dark_oak1",
+		"top": "block/fence_dark_oak_top",
+		"particle": "block/fence_dark_oak"
+	},
+	"elements": [
+		{
+			"from": [6, 2, 0],
+			"to": [10, 5, 6],
+			"faces": {
+				"north": {"uv": [6, 10, 10, 13], "texture": "#texture"},
+				"east": {"uv": [10, 11, 16, 14], "texture": "#particle"},
+				"west": {"uv": [0, 11, 6, 14], "texture": "#particle"},
+				"up": {"uv": [6, 0, 10, 6], "texture": "#top"},
+				"down": {"uv": [10, 6, 6, 0], "texture": "#top"}
+			}
+		},
+		{
+			"from": [6, 13, 0],
+			"to": [10, 16, 6],
+			"faces": {
+				"north": {"uv": [6, 0, 10, 3], "texture": "#texture"},
+				"east": {"uv": [10, 1, 16, 4], "texture": "#particle"},
+				"west": {"uv": [0, 1, 6, 4], "texture": "#particle"},
+				"up": {"uv": [6, 0, 10, 6], "texture": "#top"},
+				"down": {"uv": [10, 6, 6, 0], "texture": "#top"}
+			}
+		}
+	]
+}

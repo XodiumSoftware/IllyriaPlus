@@ -1,0 +1,909 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:component",
+    "component": "minecraft:stored_enchantments",
+    "cases": [
+      {
+        "when": { "minecraft:aqua_affinity": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/aqua_affinity"
+        }
+      },
+      {
+        "when": { "minecraft:bane_of_arthropods": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/bane_of_arthropods"
+        }
+      },
+      {
+        "when": { "minecraft:bane_of_arthropods": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/bane_of_arthropods"
+        }
+      },
+      {
+        "when": { "minecraft:bane_of_arthropods": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/bane_of_arthropods"
+        }
+      },
+      {
+        "when": { "minecraft:bane_of_arthropods": 4 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/bane_of_arthropods"
+        }
+      },
+      {
+        "when": { "minecraft:bane_of_arthropods": 5 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/bane_of_arthropods"
+        }
+      },
+      {
+        "when": { "minecraft:binding_curse": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/binding_curse"
+        }
+      },
+      {
+        "when": { "minecraft:blast_protection": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/blast_protection"
+        }
+      },
+      {
+        "when": { "minecraft:blast_protection": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/blast_protection"
+        }
+      },
+      {
+        "when": { "minecraft:blast_protection": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/blast_protection"
+        }
+      },
+      {
+        "when": { "minecraft:blast_protection": 4 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/blast_protection"
+        }
+      },
+      {
+        "when": { "minecraft:breach": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/breach"
+        }
+      },
+      {
+        "when": { "minecraft:breach": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/breach"
+        }
+      },
+      {
+        "when": { "minecraft:breach": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/breach"
+        }
+      },
+      {
+        "when": { "minecraft:breach": 4 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/breach"
+        }
+      },
+      {
+        "when": { "minecraft:channeling": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/channeling"
+        }
+      },
+      {
+        "when": { "minecraft:density": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/density"
+        }
+      },
+      {
+        "when": { "minecraft:density": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/density"
+        }
+      },
+      {
+        "when": { "minecraft:density": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/density"
+        }
+      },
+      {
+        "when": { "minecraft:density": 4 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/density"
+        }
+      },
+      {
+        "when": { "minecraft:density": 5 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/density"
+        }
+      },
+      {
+        "when": { "minecraft:depth_strider": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/depth_strider"
+        }
+      },
+      {
+        "when": { "minecraft:depth_strider": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/depth_strider"
+        }
+      },
+      {
+        "when": { "minecraft:depth_strider": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/depth_strider"
+        }
+      },
+      {
+        "when": { "minecraft:efficiency": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/efficiency"
+        }
+      },
+      {
+        "when": { "minecraft:efficiency": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/efficiency"
+        }
+      },
+      {
+        "when": { "minecraft:efficiency": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/efficiency"
+        }
+      },
+      {
+        "when": { "minecraft:efficiency": 4 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/efficiency"
+        }
+      },
+      {
+        "when": { "minecraft:efficiency": 5 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/efficiency"
+        }
+      },
+      {
+        "when": { "minecraft:feather_falling": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/feather_falling"
+        }
+      },
+      {
+        "when": { "minecraft:feather_falling": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/feather_falling"
+        }
+      },
+      {
+        "when": { "minecraft:feather_falling": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/feather_falling"
+        }
+      },
+      {
+        "when": { "minecraft:feather_falling": 4 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/feather_falling"
+        }
+      },
+      {
+        "when": { "minecraft:fire_aspect": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/fire_aspect"
+        }
+      },
+      {
+        "when": { "minecraft:fire_aspect": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/fire_aspect"
+        }
+      },
+      {
+        "when": { "minecraft:fire_protection": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/fire_protection"
+        }
+      },
+      {
+        "when": { "minecraft:fire_protection": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/fire_protection"
+        }
+      },
+      {
+        "when": { "minecraft:fire_protection": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/fire_protection"
+        }
+      },
+      {
+        "when": { "minecraft:fire_protection": 4 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/fire_protection"
+        }
+      },
+      {
+        "when": { "minecraft:flame": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/flame"
+        }
+      },
+      {
+        "when": { "minecraft:fortune": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/fortune"
+        }
+      },
+      {
+        "when": { "minecraft:fortune": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/fortune"
+        }
+      },
+      {
+        "when": { "minecraft:fortune": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/fortune"
+        }
+      },
+      {
+        "when": { "minecraft:frost_walker": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/frost_walker"
+        }
+      },
+      {
+        "when": { "minecraft:frost_walker": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/frost_walker"
+        }
+      },
+      {
+        "when": { "minecraft:impaling": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/impaling"
+        }
+      },
+      {
+        "when": { "minecraft:impaling": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/impaling"
+        }
+      },
+      {
+        "when": { "minecraft:impaling": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/impaling"
+        }
+      },
+      {
+        "when": { "minecraft:impaling": 4 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/impaling"
+        }
+      },
+      {
+        "when": { "minecraft:impaling": 5 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/impaling"
+        }
+      },
+      {
+        "when": { "minecraft:infinity": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/infinity"
+        }
+      },
+      {
+        "when": { "minecraft:knockback": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/knockback"
+        }
+      },
+      {
+        "when": { "minecraft:knockback": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/knockback"
+        }
+      },
+      {
+        "when": { "minecraft:looting": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/looting"
+        }
+      },
+      {
+        "when": { "minecraft:looting": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/looting"
+        }
+      },
+      {
+        "when": { "minecraft:looting": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/looting"
+        }
+      },
+      {
+        "when": { "minecraft:loyalty": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/loyalty"
+        }
+      },
+      {
+        "when": { "minecraft:loyalty": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/loyalty"
+        }
+      },
+      {
+        "when": { "minecraft:loyalty": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/loyalty"
+        }
+      },
+      {
+        "when": { "minecraft:luck_of_the_sea": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/luck_of_the_sea"
+        }
+      },
+      {
+        "when": { "minecraft:luck_of_the_sea": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/luck_of_the_sea"
+        }
+      },
+      {
+        "when": { "minecraft:luck_of_the_sea": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/luck_of_the_sea"
+        }
+      },
+      {
+        "when": { "minecraft:lunge": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/lunge"
+        }
+      },
+      {
+        "when": { "minecraft:lunge": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/lunge"
+        }
+      },
+      {
+        "when": { "minecraft:lunge": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/lunge"
+        }
+      },	  
+      {
+        "when": { "minecraft:lure": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/lure"
+        }
+      },
+      {
+        "when": { "minecraft:lure": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/lure"
+        }
+      },
+      {
+        "when": { "minecraft:lure": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/lure"
+        }
+      },
+      {
+        "when": { "minecraft:mending": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/mending"
+        }
+      },
+      {
+        "when": { "minecraft:multishot": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/multishot"
+        }
+      },
+      {
+        "when": { "minecraft:piercing": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/piercing"
+        }
+      },
+      {
+        "when": { "minecraft:piercing": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/piercing"
+        }
+      },
+      {
+        "when": { "minecraft:piercing": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/piercing"
+        }
+      },
+      {
+        "when": { "minecraft:piercing": 4 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/piercing"
+        }
+      },
+      {
+        "when": { "minecraft:power": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/power"
+        }
+      },
+      {
+        "when": { "minecraft:power": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/power"
+        }
+      },
+      {
+        "when": { "minecraft:power": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/power"
+        }
+      },
+      {
+        "when": { "minecraft:power": 4 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/power"
+        }
+      },
+      {
+        "when": { "minecraft:power": 5 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/power"
+        }
+      },
+      {
+        "when": { "minecraft:projectile_protection": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/projectile_protection"
+        }
+      },
+      {
+        "when": { "minecraft:projectile_protection": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/projectile_protection"
+        }
+      },
+      {
+        "when": { "minecraft:projectile_protection": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/projectile_protection"
+        }
+      },
+      {
+        "when": { "minecraft:projectile_protection": 4 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/projectile_protection"
+        }
+      },
+      {
+        "when": { "minecraft:protection": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/protection"
+        }
+      },
+      {
+        "when": { "minecraft:protection": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/protection"
+        }
+      },
+      {
+        "when": { "minecraft:protection": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/protection"
+        }
+      },
+      {
+        "when": { "minecraft:protection": 4 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/protection"
+        }
+      },
+      {
+        "when": { "minecraft:punch": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/punch"
+        }
+      },
+      {
+        "when": { "minecraft:punch": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/punch"
+        }
+      },
+      {
+        "when": { "minecraft:quick_charge": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/quick_charge"
+        }
+      },
+      {
+        "when": { "minecraft:quick_charge": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/quick_charge"
+        }
+      },
+      {
+        "when": { "minecraft:quick_charge": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/quick_charge"
+        }
+      },
+      {
+        "when": { "minecraft:respiration": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/respiration"
+        }
+      },
+      {
+        "when": { "minecraft:respiration": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/respiration"
+        }
+      },
+      {
+        "when": { "minecraft:respiration": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/respiration"
+        }
+      },
+      {
+        "when": { "minecraft:riptide": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/riptide"
+        }
+      },
+      {
+        "when": { "minecraft:riptide": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/riptide"
+        }
+      },
+      {
+        "when": { "minecraft:riptide": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/riptide"
+        }
+      },
+      {
+        "when": { "minecraft:sharpness": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/sharpness"
+        }
+      },
+      {
+        "when": { "minecraft:sharpness": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/sharpness"
+        }
+      },
+      {
+        "when": { "minecraft:sharpness": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/sharpness"
+        }
+      },
+      {
+        "when": { "minecraft:sharpness": 4 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/sharpness"
+        }
+      },
+      {
+        "when": { "minecraft:sharpness": 5 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/sharpness"
+        }
+      },
+      {
+        "when": { "minecraft:silk_touch": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/silk_touch"
+        }
+      },
+      {
+        "when": { "minecraft:smite": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/smite"
+        }
+      },
+      {
+        "when": { "minecraft:smite": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/smite"
+        }
+      },
+      {
+        "when": { "minecraft:smite": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/smite"
+        }
+      },
+      {
+        "when": { "minecraft:smite": 4 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/smite"
+        }
+      },
+      {
+        "when": { "minecraft:smite": 5 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/smite"
+        }
+      },
+      {
+        "when": { "minecraft:soul_speed": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/soul_speed"
+        }
+      },
+      {
+        "when": { "minecraft:soul_speed": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/soul_speed"
+        }
+      },
+      {
+        "when": { "minecraft:soul_speed": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/soul_speed"
+        }
+      },
+      {
+        "when": { "minecraft:sweeping_edge": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/sweeping_edge"
+        }
+      },
+      {
+        "when": { "minecraft:sweeping_edge": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/sweeping_edge"
+        }
+      },
+      {
+        "when": { "minecraft:sweeping_edge": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/sweeping_edge"
+        }
+      },
+      {
+        "when": { "minecraft:swift_sneak": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/swift_sneak"
+        }
+      },
+      {
+        "when": { "minecraft:swift_sneak": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/swift_sneak"
+        }
+      },
+      {
+        "when": { "minecraft:swift_sneak": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/swift_sneak"
+        }
+      },
+      {
+        "when": { "minecraft:thorns": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/thorns"
+        }
+      },
+      {
+        "when": { "minecraft:thorns": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/thorns"
+        }
+      },
+      {
+        "when": { "minecraft:thorns": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/thorns"
+        }
+      },
+      {
+        "when": { "minecraft:unbreaking": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/unbreaking"
+        }
+      },
+      {
+        "when": { "minecraft:unbreaking": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/unbreaking"
+        }
+      },
+      {
+        "when": { "minecraft:unbreaking": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/unbreaking"
+        }
+      },
+      {
+        "when": { "minecraft:vanishing_curse": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/vanishing_curse"
+        }
+      },
+      {
+        "when": { "minecraft:wind_burst": 1 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/wind_burst"
+        }
+      },
+      {
+        "when": { "minecraft:wind_burst": 2 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/wind_burst"
+        }
+      },
+      {
+        "when": { "minecraft:wind_burst": 3 },
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/excalibur/enchanted_book/wind_burst"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/enchanted_book"
+    }
+  }
+}

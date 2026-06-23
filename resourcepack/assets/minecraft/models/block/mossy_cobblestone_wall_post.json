@@ -1,0 +1,7 @@
+{
+    "parent": "block/wall_post",
+    "textures": {
+        "wall": "block/cobble_mossy_wall",
+		"top": "block/cobble_mossy_wall"
+    }
+}

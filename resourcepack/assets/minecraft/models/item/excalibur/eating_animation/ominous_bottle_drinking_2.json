@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/ominous_bottle",
+  "textures": {
+    "layer0": "minecraft:item/excalibur/eating_animation/ominous_bottle_drinking_2"
+  }
+}

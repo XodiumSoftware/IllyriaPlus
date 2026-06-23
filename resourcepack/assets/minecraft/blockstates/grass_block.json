@@ -1,0 +1,35 @@
+{
+    "variants": {
+        "snowy=false": [
+            { "model": "block/foliage/grass_block/grass_normal", "weight": 35 },
+            { "model": "block/foliage/grass_block/grass_normal", "weight": 35, "y": 90 },
+            { "model": "block/foliage/grass_block/grass_normal", "weight": 35, "y": 180 },
+            { "model": "block/foliage/grass_block/grass_normal", "weight": 35, "y": 270 },
+            { "model": "block/foliage/grass_block/grass_normal1", "weight": 14 },
+            { "model": "block/foliage/grass_block/grass_normal1", "weight": 14, "y": 90 },
+            { "model": "block/foliage/grass_block/grass_normal1", "weight": 14, "y": 180 },
+            { "model": "block/foliage/grass_block/grass_normal1", "weight": 14, "y": 270 },
+            { "model": "block/foliage/grass_block/grass_normal2", "weight": 15 },
+            { "model": "block/foliage/grass_block/grass_normal2", "weight": 14, "y": 90 },
+            { "model": "block/foliage/grass_block/grass_normal2", "weight": 15, "y": 180 },
+            { "model": "block/foliage/grass_block/grass_normal2", "weight": 15, "y": 270 },
+            { "model": "block/foliage/grass_block/grass_normal3", "weight": 15 },
+            { "model": "block/foliage/grass_block/grass_normal3", "weight": 15, "y": 90 },
+            { "model": "block/foliage/grass_block/grass_normal3", "weight": 15, "y": 180 },
+            { "model": "block/foliage/grass_block/grass_normal3", "weight": 15, "y": 270 },
+            { "model": "block/foliage/grass_block/grass_normal4", "weight": 25 },
+            { "model": "block/foliage/grass_block/grass_normal4", "weight": 25, "y": 90 },
+            { "model": "block/foliage/grass_block/grass_normal4", "weight": 25, "y": 180 },
+            { "model": "block/foliage/grass_block/grass_normal4", "weight": 25, "y": 270 },
+            { "model": "block/foliage/grass_block/grass_normal5", "weight": 1 },
+            { "model": "block/foliage/grass_block/grass_normal5", "weight": 1, "y": 90 },
+            { "model": "block/foliage/grass_block/grass_normal5", "weight": 1, "y": 180 },
+            { "model": "block/foliage/grass_block/grass_normal5", "weight": 1, "y": 270 },
+            { "model": "block/foliage/grass_block/grass_normal6", "weight": 1 },
+            { "model": "block/foliage/grass_block/grass_normal6", "weight": 1, "y": 90 },
+            { "model": "block/foliage/grass_block/grass_normal6", "weight": 1, "y": 180 },
+            { "model": "block/foliage/grass_block/grass_normal6", "weight": 1, "y": 270 }
+        ],
+        "snowy=true":  { "model": "block/grass_block_snow" }
+    }
+}

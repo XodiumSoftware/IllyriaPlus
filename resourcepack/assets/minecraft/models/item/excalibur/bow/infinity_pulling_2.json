@@ -1,0 +1,6 @@
+{
+  "parent": "item/bow",
+  "textures": {
+      "layer0": "minecraft:item/excalibur/bow/infinity_pulling_2"
+  }
+}

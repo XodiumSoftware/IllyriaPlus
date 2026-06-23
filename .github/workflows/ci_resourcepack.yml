@@ -1,0 +1,114 @@
+name: Xodium CI/CD - Release Resourcepack
+
+on:
+  push:
+    branches: [main]
+    paths: ["resourcepack/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Check YAPETTO painting merge
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v7.0.0
+
+      - id: setup_kotlin
+        name: Setup Kotlin
+        run: |
+          curl -s "https://get.sdkman.io" | bash
+          export SDKMAN_DIR="$HOME/.sdkman"
+          source "$SDKMAN_DIR/bin/sdkman-init.sh"
+          sdk install kotlin
+          echo "$SDKMAN_DIR/candidates/kotlin/current/bin" >> "$GITHUB_PATH"
+
+      - id: check_yapetto
+        name: Verify IllyriaPlus paintings are merged
+        run: kotlin scripts/merge_yapetto_painting_items.kts --check
+
+  release:
+    name: Release
+    needs: check
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name }}
+      url: ${{ steps.create_release.outputs.url }}
+    outputs:
+      VERSION: ${{ steps.get_version.outputs.VERSION }}
+      SHA1: ${{ steps.calculate_sha1.outputs.SHA1 }}
+    steps:
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v7.0.0
+        with:
+          fetch-depth: 0
+
+      - id: get_version
+        name: Get Version
+        run: |
+          MC_VERSION=$(jq -r '.pack.description' resourcepack/pack.mcmeta | grep -oP '\d+\.\d+(?:\.\d+)?')
+          echo "VERSION=${MC_VERSION}-${{ github.run_number }}" >> $GITHUB_OUTPUT
+
+      - id: packsquash
+        name: Create Zip & Optimize with Packsquash
+        uses: ComunidadAylas/PackSquash-action@c5784c113a6548a7a74c26e8a1c5c76fe4bca3fa
+        with:
+          packsquash_version: latest-unstable
+          options: |
+            pack_directory = 'resourcepack'
+            output_file_path = 'irp_v${{ steps.get_version.outputs.VERSION }}.zip'
+
+      - id: calculate_sha1
+        name: Calculate SHA1
+        run: echo "SHA1=$(sha1sum "irp_v${{ steps.get_version.outputs.VERSION }}.zip" | awk '{ print $1 }')" >> $GITHUB_OUTPUT
+
+      - id: update_nightly_tag
+        name: Update Nightly Tag
+        run: |
+          gh api repos/${{ github.repository }}/git/refs/tags/nightly_resourcepack \
+            --method PATCH \
+            --field sha=${{ github.sha }} \
+            --field force=true 2>/dev/null || \
+          gh api repos/${{ github.repository }}/git/refs \
+            --method POST \
+            --field ref=refs/tags/nightly_resourcepack \
+            --field sha=${{ github.sha }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: delete_old_release_assets
+        name: Delete Old Release Assets
+        run: |
+          release_id=$(gh api repos/${{ github.repository }}/releases/tags/nightly_resourcepack --jq '.id' 2>/dev/null || echo "")
+          if [ -n "$release_id" ]; then
+            asset_ids=$(gh api repos/${{ github.repository }}/releases/$release_id/assets --jq '.[].id' 2>/dev/null || echo "")
+            for asset_id in $asset_ids; do
+              echo "Deleting asset $asset_id"
+              gh api repos/${{ github.repository }}/releases/assets/$asset_id --method DELETE
+            done
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: create_release
+        name: Create Nightly Release
+        uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: irp_v${{ steps.get_version.outputs.VERSION }}.zip
+          body: |
+            From commit: ${{ github.sha }}
+            Generated on: ${{ github.event.head_commit.timestamp }}
+            SHA-1 Hash: ${{ steps.calculate_sha1.outputs.SHA1 }}
+          tag_name: nightly_resourcepack
+          name: Nightly Build Resourcepack

@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/logs/log_variation",
+  "textures": {
+    "end":      "minecraft:block/oak_log_top",
+    "side":     "minecraft:block/oak_log",
+    "side_alt": "minecraft:block/oak_log2",
+    "variant":  "minecraft:block/oak_log1"
+  }
+}

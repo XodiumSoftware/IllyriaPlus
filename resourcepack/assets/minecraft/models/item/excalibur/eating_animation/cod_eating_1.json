@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/cod",
+  "textures": {
+    "layer0": "minecraft:item/excalibur/eating_animation/cod_eating_1"
+  }
+}

@@ -1,0 +1,9 @@
+{
+    "variants": {
+        "": [
+            { "model": "minecraft:block/foliage/dirt/dirt_0", "weight": 2 },
+            { "model": "minecraft:block/foliage/dirt/dirt_1", "weight": 1 },
+            { "model": "minecraft:block/foliage/dirt/dirt_2", "weight": 1 }
+		]
+    }
+}

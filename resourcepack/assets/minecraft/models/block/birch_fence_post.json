@@ -1,0 +1,42 @@
+{
+	"textures": {
+		"particle": "block/fence_birch",		
+		"texture": "block/fence_birch",
+		"top": "block/fence_birch_top"
+	},
+	"elements": [
+		{
+			"name": "cube",
+			"from": [7, 0, 7],
+			"to": [9, 16, 9],
+			"faces": {
+				"north": {
+					"uv": [7, 0, 9, 16],
+					"texture": "#texture"
+				},
+				"east": {
+					"uv": [7, 0, 9, 16],
+					"texture": "#texture"
+				},
+				"south": {
+					"uv": [7, 0, 9, 16],
+					"texture": "#texture"
+				},
+				"west": {
+					"uv": [7, 0, 9, 16],
+					"texture": "#texture"
+				},
+				"up": {
+					"uv": [7, 7, 9, 9],
+					"texture": "#top",
+					"cullface": "up"
+				},
+				"down": {
+					"uv": [7, 7, 9, 9],
+					"texture": "#top",
+					"cullface": "down"
+				}
+			}
+		}
+	]
+}

@@ -1,0 +1,71 @@
+{
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"textures": {
+		"particle": "block/cactus_flower"
+	},
+	"elements": [
+		{
+			"from": [-7, 2.5, 0],
+			"to": [9, 2.5, 16],
+			"shade": false,
+			"rotation": {"angle": -22.5, "axis": "z", "origin": [2, 3, 8]},
+			"faces": {
+				"up": {"uv": [0, 0, 16, 16], "rotation": 270, "texture": "#particle", "tintindex": 0},
+				"down": {"uv": [0, 0, 16, 16], "rotation": 270, "texture": "#particle", "tintindex": 0}
+			}
+		},
+		{
+			"from": [7, 3, 0],
+			"to": [23, 3, 16],
+			"shade": false,
+			"rotation": {"angle": 22.5, "axis": "z", "origin": [15, 4, 8]},
+			"faces": {
+				"up": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#particle", "tintindex": 0},
+				"down": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#particle", "tintindex": 0}
+			}
+		},
+		{
+			"from": [0, 2.5, -7],
+			"to": [16, 2.5, 9],
+			"shade": false,
+			"rotation": {"angle": 22.5, "axis": "x", "origin": [8, 3, 2]},
+			"faces": {
+				"up": {"uv": [0, 0, 16, 16], "texture": "#particle", "tintindex": 0},
+				"down": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#particle", "tintindex": 0}
+			}
+		},
+		{
+			"from": [0, 2.5, 7],
+			"to": [16, 2.5, 23],
+			"shade": false,
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 3, 14]},
+			"faces": {
+				"up": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#particle", "tintindex": 0},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#particle", "tintindex": 0}
+			}
+		},
+		{
+			"name": "cross",
+			"from": [8, 0, 0],
+			"to": [8, 16, 16],
+			"shade": false,
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 7, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#particle", "tintindex": 0},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#particle", "tintindex": 0}
+			}
+		},
+		{
+			"name": "cross",
+			"from": [8, 0, 0],
+			"to": [8, 16, 16],
+			"shade": false,
+			"rotation": {"angle": -45, "axis": "y", "origin": [8, 7, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#particle", "tintindex": 0},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#particle", "tintindex": 0}
+			}
+		}
+	]
+}

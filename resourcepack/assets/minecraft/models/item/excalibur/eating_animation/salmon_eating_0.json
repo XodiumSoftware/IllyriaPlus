@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/salmon",
+  "textures": {
+    "layer0": "minecraft:item/excalibur/eating_animation/salmon_eating_0"
+  }
+}

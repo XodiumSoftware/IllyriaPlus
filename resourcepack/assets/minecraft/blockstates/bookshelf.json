@@ -1,0 +1,10 @@
+{
+    "__comment": "Stay in school!",
+    "variants": {
+        "": [
+		{ "model": "block/bookshelf" },
+		{ "model": "block/wood/bookshelf/bookshelf1" },
+		{ "model": "block/wood/bookshelf/bookshelf2" }
+		]
+    }
+}

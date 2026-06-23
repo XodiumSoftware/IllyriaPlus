@@ -1,0 +1,50 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"particle": "block/melon_growing",	
+		"stem": "block/melon_stem_stage2",
+		"bottom": "block/melon_stem_bottom"
+	},
+	"elements": [
+		{
+			"name": "Plane",
+			"from": [8, -1, 0],
+			"to": [8.001, 15, 16],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#stem"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#stem"}
+			}
+		},
+		{
+			"name": "Plane",
+			"from": [8, -1, 0],
+			"to": [8.001, 15, 16],
+			"rotation": {"angle": -45, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#stem"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#stem"}
+			}
+		},
+		{
+			"name": "Bottom",
+			"from": [8, -1.001, 0],
+			"to": [24, -1, 16],
+			"rotation": {"angle": 22.5, "axis": "z", "origin": [8, -1, 0]},
+			"faces": {
+				"up": {"uv": [16, 16, 0, 1], "rotation": 270, "texture": "#bottom"},
+				"down": {"uv": [0, 1, 16, 16], "rotation": 90, "texture": "#bottom"}
+			}
+		},
+		{
+			"name": "Bottom",
+			"from": [-8, -1, 0],
+			"to": [8, -0.999, 16],
+			"rotation": {"angle": -22.5, "axis": "z", "origin": [8, -1, 0]},
+			"faces": {
+				"up": {"uv": [0, 1, 16, 16], "rotation": 270, "texture": "#bottom"},
+				"down": {"uv": [16, 16, 0, 1], "rotation": 90, "texture": "#bottom"}
+			}
+		}
+	]
+}

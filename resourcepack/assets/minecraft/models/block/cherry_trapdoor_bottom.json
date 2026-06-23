@@ -1,0 +1,61 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/thin_block",
+	"textures": {
+		"particle": "block/cherry_trapdoor"
+	},
+	"elements": [
+		{
+			"from": [4, 0, 12],
+			"to": [12, 3, 16],
+			"faces": {
+				"north": {"uv": [4, 0, 12, 3], "texture": "#particle"},
+				"south": {"uv": [4, 13, 12, 16], "texture": "#particle", "cullface": "south"},
+				"up": {"uv": [4, 12, 12, 16], "texture": "#particle"},
+				"down": {"uv": [4, 16, 12, 12], "texture": "#particle", "cullface": "down"}
+			}
+		},
+		{
+			"from": [4, 0, 0],
+			"to": [12, 3, 4],
+			"faces": {
+				"north": {"uv": [4, 0, 12, 3], "texture": "#particle", "cullface": "north"},
+				"south": {"uv": [12, 3, 4, 0], "texture": "#particle"},
+				"up": {"uv": [4, 0, 12, 4], "texture": "#particle"},
+				"down": {"uv": [4, 4, 12, 0], "texture": "#particle", "cullface": "down"}
+			}
+		},
+		{
+			"from": [0, 0, 0],
+			"to": [4, 3, 16],
+			"faces": {
+				"north": {"uv": [12, 0, 16, 3], "texture": "#particle", "cullface": "north"},
+				"east": {"uv": [3, 16, 0, 0], "rotation": 90, "texture": "#particle"},
+				"south": {"uv": [0, 13, 4, 16], "texture": "#particle", "cullface": "south"},
+				"west": {"uv": [0, 13, 16, 16], "texture": "#particle", "cullface": "west"},
+				"up": {"uv": [0, 0, 4, 16], "texture": "#particle"},
+				"down": {"uv": [16, 16, 12, 0], "texture": "#particle", "cullface": "down"}
+			}
+		},
+		{
+			"from": [12, 0, 0],
+			"to": [16, 3, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 4, 3], "texture": "#particle", "cullface": "north"},
+				"east": {"uv": [0, 0, 16, 3], "texture": "#particle", "cullface": "east"},
+				"south": {"uv": [12, 13, 16, 16], "texture": "#particle", "cullface": "south"},
+				"west": {"uv": [13, 0, 16, 16], "rotation": 90, "texture": "#particle"},
+				"up": {"uv": [12, 0, 16, 16], "texture": "#particle"},
+				"down": {"uv": [4, 16, 0, 0], "texture": "#particle", "cullface": "down"}
+			}
+		},
+		{
+			"from": [4, 1.5, 4],
+			"to": [12, 1.5, 12],
+			"faces": {
+				"up": {"uv": [4, 4, 12, 12], "texture": "#particle"},
+				"down": {"uv": [4, 4, 12, 12], "texture": "#particle", "cullface": "down"}
+			}
+		}
+	]
+}

@@ -1,0 +1,677 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "on_false": {
+      "type": "minecraft:select",
+      "property": "minecraft:component",
+      "component": "minecraft:suspicious_stew_effects",
+      "cases": [
+        {
+          "when": [
+            {
+              "id": "blindness",
+              "duration": 220
+            }
+          ],
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/blindness"
+          }
+        },
+        {
+          "when": [
+            {
+              "id": "fire_resistance",
+              "duration": 60
+            }
+          ],
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/fire_resistance"
+          }
+        },
+        {
+          "when": [
+            {
+              "id": "jump_boost",
+              "duration": 100
+            }
+          ],
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/jump_boost"
+          }
+        },
+        {
+          "when": [
+            {
+              "id": "nausea",
+              "duration": 140
+            }
+          ],
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/nausea"
+          }
+        },
+        {
+          "when": [
+            {
+              "id": "night_vision",
+              "duration": 100
+            }
+          ],
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/night_vision"
+          }
+        },
+        {
+          "when": [
+            {
+              "id": "poison",
+              "duration": 220
+            }
+          ],
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/poison"
+          }
+        },
+        {
+          "when": [
+            {
+              "id": "regeneration",
+              "duration": 140
+            }
+          ],
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/regeneration"
+          }
+        },
+        {
+          "when": [
+            {
+              "id": "saturation",
+              "duration": 7
+            }
+          ],
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/saturation"
+          }
+        },
+        {
+          "when": [
+            {
+              "id": "weakness",
+              "duration": 140
+            }
+          ],
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/weakness"
+          }
+        },
+        {
+          "when": [
+            {
+              "id": "wither",
+              "duration": 140
+            }
+          ],
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/wither"
+          }
+        }
+      ],
+      "fallback": {
+        "type": "minecraft:model",
+        "model": "minecraft:item/suspicious_stew"
+      }
+    },
+    "on_true": {
+      "type": "minecraft:range_dispatch",
+      "entries": [
+        {
+          "model": {
+            "type": "minecraft:select",
+            "property": "minecraft:component",
+            "component": "minecraft:suspicious_stew_effects",
+            "cases": [
+              {
+                "when": [
+                  {
+                    "id": "blindness",
+                    "duration": 220
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/blindness_eating_0"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "fire_resistance",
+                    "duration": 60
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/fire_resistance_eating_0"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "jump_boost",
+                    "duration": 100
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/jump_boost_eating_0"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "nausea",
+                    "duration": 140
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/nausea_eating_0"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "night_vision",
+                    "duration": 100
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/night_vision_eating_0"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "poison",
+                    "duration": 220
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/poison_eating_0"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "regeneration",
+                    "duration": 140
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/regeneration_eating_0"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "saturation",
+                    "duration": 7
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/saturation_eating_0"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "weakness",
+                    "duration": 140
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/weakness_eating_0"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "wither",
+                    "duration": 140
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/wither_eating_0"
+                }
+              }
+            ],
+            "fallback": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/suspicious_stew_eating_0"
+            }
+          },
+          "threshold": 0.35
+        },
+        {
+          "model": {
+            "type": "minecraft:select",
+            "property": "minecraft:component",
+            "component": "minecraft:suspicious_stew_effects",
+            "cases": [
+              {
+                "when": [
+                  {
+                    "id": "blindness",
+                    "duration": 220
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/blindness_eating_1"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "fire_resistance",
+                    "duration": 60
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/fire_resistance_eating_1"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "jump_boost",
+                    "duration": 100
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/jump_boost_eating_1"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "nausea",
+                    "duration": 140
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/nausea_eating_1"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "night_vision",
+                    "duration": 100
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/night_vision_eating_1"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "poison",
+                    "duration": 220
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/poison_eating_1"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "regeneration",
+                    "duration": 140
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/regeneration_eating_1"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "saturation",
+                    "duration": 7
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/saturation_eating_1"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "weakness",
+                    "duration": 140
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/weakness_eating_1"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "wither",
+                    "duration": 140
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/wither_eating_1"
+                }
+              }
+            ],
+            "fallback": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/suspicious_stew_eating_1"
+            }
+          },
+          "threshold": 0.7
+        },
+        {
+          "model": {
+            "type": "minecraft:select",
+            "property": "minecraft:component",
+            "component": "minecraft:suspicious_stew_effects",
+            "cases": [
+              {
+                "when": [
+                  {
+                    "id": "blindness",
+                    "duration": 220
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/blindness_eating_2"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "fire_resistance",
+                    "duration": 60
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/fire_resistance_eating_2"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "jump_boost",
+                    "duration": 100
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/jump_boost_eating_2"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "nausea",
+                    "duration": 140
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/nausea_eating_2"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "night_vision",
+                    "duration": 100
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/night_vision_eating_2"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "poison",
+                    "duration": 220
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/poison_eating_2"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "regeneration",
+                    "duration": 140
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/regeneration_eating_2"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "saturation",
+                    "duration": 7
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/saturation_eating_2"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "weakness",
+                    "duration": 140
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/weakness_eating_2"
+                }
+              },
+              {
+                "when": [
+                  {
+                    "id": "wither",
+                    "duration": 140
+                  }
+                ],
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/wither_eating_2"
+                }
+              }
+            ],
+            "fallback": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/suspicious_stew_eating_2"
+            }
+          },
+          "threshold": 0.9
+        }
+      ],
+      "fallback": {
+        "type": "minecraft:select",
+        "property": "minecraft:component",
+        "component": "minecraft:suspicious_stew_effects",
+        "cases": [
+          {
+            "when": [
+              {
+                "id": "blindness",
+                "duration": 220
+              }
+            ],
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/blindness"
+            }
+          },
+          {
+            "when": [
+              {
+                "id": "fire_resistance",
+                "duration": 60
+              }
+            ],
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/fire_resistance"
+            }
+          },
+          {
+            "when": [
+              {
+                "id": "jump_boost",
+                "duration": 100
+              }
+            ],
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/jump_boost"
+            }
+          },
+          {
+            "when": [
+              {
+                "id": "nausea",
+                "duration": 140
+              }
+            ],
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/nausea"
+            }
+          },
+          {
+            "when": [
+              {
+                "id": "night_vision",
+                "duration": 100
+              }
+            ],
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/night_vision"
+            }
+          },
+          {
+            "when": [
+              {
+                "id": "poison",
+                "duration": 220
+              }
+            ],
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/poison"
+            }
+          },
+          {
+            "when": [
+              {
+                "id": "regeneration",
+                "duration": 140
+              }
+            ],
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/regeneration"
+            }
+          },
+          {
+            "when": [
+              {
+                "id": "saturation",
+                "duration": 7
+              }
+            ],
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/saturation"
+            }
+          },
+          {
+            "when": [
+              {
+                "id": "weakness",
+                "duration": 140
+              }
+            ],
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/weakness"
+            }
+          },
+          {
+            "when": [
+              {
+                "id": "wither",
+                "duration": 140
+              }
+            ],
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/eating_animation/suspicious_stew/wither"
+            }
+          }
+        ],
+        "fallback": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/suspicious_stew"
+        }
+      },
+      "property": "minecraft:use_duration",
+      "scale": 0.035
+    },
+    "property": "minecraft:using_item"
+  }
+}

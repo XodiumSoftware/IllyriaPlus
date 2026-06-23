@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/potato",
+  "textures": {
+    "layer0": "minecraft:item/excalibur/eating_animation/potato_eating_0"
+  }
+}

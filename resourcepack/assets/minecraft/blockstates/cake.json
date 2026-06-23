@@ -1,0 +1,39 @@
+{
+    "variants": {
+        "bites=0": [
+             { "model": "block/cake_uneaten" },
+             { "model": "block/misc/cake/bread_uneaten" },
+             { "model": "block/misc/cake/pie_uneaten" }
+	],
+        "bites=1": [
+             { "model": "block/cake_slice1" },
+             { "model": "block/misc/cake/bread_slice1" },
+             { "model": "block/misc/cake/pie_slice1" }
+	],
+        "bites=2": [
+             { "model": "block/cake_slice2" },
+             { "model": "block/misc/cake/bread_slice2" },
+             { "model": "block/misc/cake/pie_slice2" }
+	],
+        "bites=3": [
+             { "model": "block/cake_slice3" },
+             { "model": "block/misc/cake/bread_slice3" },
+             { "model": "block/misc/cake/pie_slice3" }
+	],
+        "bites=4": [
+             { "model": "block/cake_slice4" },
+             { "model": "block/misc/cake/bread_slice4" },
+             { "model": "block/misc/cake/pie_slice4" }
+	],
+        "bites=5": [
+             { "model": "block/cake_slice5" },
+             { "model": "block/misc/cake/bread_slice5" },
+             { "model": "block/misc/cake/pie_slice5" }
+	],
+        "bites=6": [
+             { "model": "block/cake_slice6" },
+             { "model": "block/misc/cake/bread_slice6" },
+             { "model": "block/misc/cake/pie_slice6" }
+	]
+    }
+}

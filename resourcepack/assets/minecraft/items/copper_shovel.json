@@ -1,0 +1,99 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "property": "minecraft:has_component",
+    "component": "minecraft:custom_name",
+      "on_true": {
+        "type": "minecraft:select",
+        "model": "minecraft:item/copper_shovel",
+        "property": "minecraft:component",
+        "component": "minecraft:custom_name",
+        "cases": [
+          {
+            "when": "Exposed Copper Shovel",
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/copper/exposed_shovel"
+            }
+          },
+          {
+            "when": "Exposed Shovel",
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/copper/exposed_shovel"
+            }
+          },	
+          {
+            "when": "Weathered Copper Shovel",
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/copper/weathered_shovel"
+            }
+          },
+          {
+            "when": "Weathered Shovel",
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/copper/weathered_shovel"
+            }
+          },		  
+          {
+            "when": "Oxidized Copper Shovel",
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/copper/oxidized_shovel"
+            }
+          },
+          {
+            "when": "Oxidized Shovel",
+            "model": {
+              "type": "minecraft:model",
+              "model": "minecraft:item/excalibur/tools/copper/oxidized_shovel"
+            }
+          }		  
+        ],
+        "fallback": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/copper_shovel"
+        }
+      },
+      "on_false": {
+        "type": "minecraft:range_dispatch",
+        "property": "minecraft:damage",
+		"entries": [
+		  {
+			"threshold": 0,
+			"model": {
+			  "type": "minecraft:model",
+			  "model": "minecraft:item/copper_shovel"
+			}
+		  },
+		  {
+			"threshold": 0.25,
+			"model": {
+			  "type": "minecraft:model",
+			  "model": "minecraft:item/excalibur/tools/copper/exposed_shovel"
+			}
+		  },
+		  {
+			"threshold": 0.5,
+			"model": {
+			  "type": "minecraft:model",
+			  "model": "minecraft:item/excalibur/tools/copper/weathered_shovel"
+			}
+		  },
+		  {
+			"threshold": 0.75,
+			"model": {
+			  "type": "minecraft:model",
+			  "model": "minecraft:item/excalibur/tools/copper/oxidized_shovel"
+			}
+		  }
+        ],
+        "fallback": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/copper_shovel"
+        }
+      }
+  }
+}

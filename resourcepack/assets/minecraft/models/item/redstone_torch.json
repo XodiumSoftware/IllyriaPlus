@@ -1,0 +1,75 @@
+{
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"textures": {
+		"0": "block/redstone_torch_base",
+		"particle": "block/redstone_torch"
+	},
+	"elements": [
+		{
+			"name": "Torch",
+			"from": [7.5, 0, 7.5],
+			"to": [8.5, 10, 8.5],
+			"shade": false,
+			"faces": {
+				"north": {"uv": [7, 6, 8, 16], "texture": "#particle"},
+				"east": {"uv": [8, 6, 9, 16], "texture": "#particle"},
+				"south": {"uv": [7, 6, 8, 16], "texture": "#particle"},
+				"west": {"uv": [8, 6, 9, 16], "texture": "#particle"},
+				"up": {"uv": [7, 6, 8, 7], "texture": "#particle"}
+			}
+		},
+		{
+			"name": "Grip",
+			"from": [6.5, 0, 6.5],
+			"to": [9.5, 1, 9.5],
+			"shade": false,
+			"faces": {
+				"north": {"uv": [12, 11, 15, 12], "texture": "#0"},
+				"east": {"uv": [12, 11, 15, 12], "texture": "#0"},
+				"south": {"uv": [12, 11, 15, 12], "texture": "#0"},
+				"west": {"uv": [12, 11, 15, 12], "texture": "#0"},
+				"down": {"uv": [12, 12, 15, 15], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Plate",
+			"from": [6, 1, 6],
+			"to": [10, 2, 10],
+			"shade": false,
+			"faces": {
+				"north": {"uv": [12, 15, 16, 16], "texture": "#0"},
+				"east": {"uv": [12, 15, 16, 16], "texture": "#0"},
+				"south": {"uv": [12, 15, 16, 16], "texture": "#0"},
+				"west": {"uv": [12, 15, 16, 16], "texture": "#0"},
+				"up": {"uv": [12, 12, 16, 16], "texture": "#0"},
+				"down": {"uv": [12, 12, 16, 16], "texture": "#0"}
+			}
+		}
+	],
+	"gui_light": "front",
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [53, 0, 0],
+			"translation": [0, 3, 3],
+			"scale": [0.75, 0.75, 0.75]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [53, 0, 0],
+			"translation": [0, 3, 3],
+			"scale": [0.75, 0.75, 0.75]
+		},
+		"firstperson_righthand": {
+			"translation": [1, 5.5, 0],
+			"scale": [0.7, 0.7, 0.7]
+		},
+		"firstperson_lefthand": {
+			"translation": [1, 5.5, 0],
+			"scale": [0.7, 0.7, 0.7]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.7, 0.7, 0.7]
+		}
+	}
+}

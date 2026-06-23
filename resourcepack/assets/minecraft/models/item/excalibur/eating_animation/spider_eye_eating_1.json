@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/spider_eye",
+  "textures": {
+    "layer0": "minecraft:item/excalibur/eating_animation/spider_eye_eating_1"
+  }
+}
