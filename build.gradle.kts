@@ -109,7 +109,7 @@ fun yapettoExtractCasesSection(text: String): Triple<String, String, String>? {
                     return Triple(
                         text.substring(0, casesArrayStart + 1),
                         text.substring(casesArrayStart + 1, i),
-                        text.substring(i)
+                        text.substring(i),
                     )
                 }
             }
@@ -172,17 +172,19 @@ fun yapettoCaseWhen(caseText: String): String? {
     return sb.toString()
 }
 
-fun yapettoMakeCase(variant: String): String = """          {
-            "when": "illyriaplus:${variant}",
+fun yapettoMakeCase(variant: String): String =
+    """          {
+            "when": "illyriaplus:$variant",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/${variant}"
+              "model": "illyriaplus:item/painting/$variant"
             }
           }"""
 
 fun yapettoCollectVariants(modelsDir: java.io.File): List<String> {
     if (!modelsDir.isDirectory) return emptyList()
-    return modelsDir.listFiles { f -> f.isFile && f.extension == "json" }
+    return modelsDir
+        .listFiles { f -> f.isFile && f.extension == "json" }
         ?.map { it.nameWithoutExtension }
         ?.sorted()
         ?: emptyList()
@@ -193,20 +195,29 @@ tasks.register("mergeYapettoPaintings") {
     description = "Merge IllyriaPlus painting item cases into the vanilla painting.json."
     notCompatibleWithConfigurationCache("uses project layout at execution time")
     doLast {
-        val vanillaFile = layout.projectDirectory.file("resourcepack/assets/minecraft/items/painting.json").asFile
-        val modelsDir = layout.projectDirectory.file("resourcepack/assets/illyriaplus/models/item/painting").asFile
+        val vanillaFile =
+            layout.projectDirectory.file("resourcepack/assets/minecraft/items/painting.json").asFile
+        val modelsDir =
+            layout.projectDirectory.file("resourcepack/assets/illyriaplus/models/item/painting").asFile
         val text = vanillaFile.readText()
-        val section = yapettoExtractCasesSection(text)
-            ?: error("Could not find cases array in ${vanillaFile.relativeTo(project.rootDir)}")
+        val section =
+            yapettoExtractCasesSection(text)
+                ?: error("Could not find cases array in ${vanillaFile.relativeTo(project.rootDir)}")
         val caseObjects = yapettoSplitCases(section.second)
-        val vanillaCases = caseObjects.filter { case ->
-            val whenValue = yapettoCaseWhen(case) ?: ""
-            !whenValue.startsWith("illyriaplus:") && !whenValue.startsWith("yapetto:")
-        }
+        val vanillaCases =
+            caseObjects.filter { case ->
+                val whenValue = yapettoCaseWhen(case) ?: ""
+                !whenValue.startsWith("illyriaplus:") && !whenValue.startsWith("yapetto:")
+            }
         val expectedVariants = yapettoCollectVariants(modelsDir)
         val illyriaplusCases = expectedVariants.map { yapettoMakeCase(it) }
         val allCases = vanillaCases + illyriaplusCases
-        val innerIndentation = if (allCases.isEmpty()) "" else "\n${allCases.joinToString(",\n")}\n        "
+        val innerIndentation =
+            if (allCases.isEmpty()) {
+                ""
+            } else {
+                "\n${allCases.joinToString(",\n")}\n        "
+            }
         vanillaFile.writeText(section.first + innerIndentation + section.third)
         println("Updated ${vanillaFile.relativeTo(project.rootDir)}")
         println("  Vanilla cases: ${vanillaCases.size}")
@@ -221,16 +232,21 @@ tasks.register("checkYapettoPaintings") {
     description = "Verify IllyriaPlus painting item cases are merged into painting.json."
     notCompatibleWithConfigurationCache("uses project layout at execution time")
     doLast {
-        val vanillaFile = layout.projectDirectory.file("resourcepack/assets/minecraft/items/painting.json").asFile
-        val modelsDir = layout.projectDirectory.file("resourcepack/assets/illyriaplus/models/item/painting").asFile
+        val vanillaFile =
+            layout.projectDirectory.file("resourcepack/assets/minecraft/items/painting.json").asFile
+        val modelsDir =
+            layout.projectDirectory.file("resourcepack/assets/illyriaplus/models/item/painting").asFile
         val text = vanillaFile.readText()
-        val section = yapettoExtractCasesSection(text)
-            ?: error("Could not find cases array in ${vanillaFile.relativeTo(project.rootDir)}")
+        val section =
+            yapettoExtractCasesSection(text)
+                ?: error("Could not find cases array in ${vanillaFile.relativeTo(project.rootDir)}")
         val caseObjects = yapettoSplitCases(section.second)
-        val current = caseObjects.mapNotNull { yapettoCaseWhen(it) }
-            .filter { it.startsWith("illyriaplus:") }
-            .map { it.removePrefix("illyriaplus:") }
-            .toSet()
+        val current =
+            caseObjects
+                .mapNotNull { yapettoCaseWhen(it) }
+                .filter { it.startsWith("illyriaplus:") }
+                .map { it.removePrefix("illyriaplus:") }
+                .toSet()
         val expected = yapettoCollectVariants(modelsDir).toSet()
         val missing = (expected - current).toSortedSet()
         val extra = (current - expected).toSortedSet()
