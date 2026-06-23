@@ -165,13 +165,13 @@ jobs:
       - id: update_nightly_tag
         name: Update Nightly Tag
         run: |
-          gh api repos/${{ github.repository }}/git/refs/tags/nightly \
+          gh api repos/${{ github.repository }}/git/refs/tags/nightly_plugin \
             --method PATCH \
             --field sha=${{ github.sha }} \
             --field force=true 2>/dev/null || \
           gh api repos/${{ github.repository }}/git/refs \
             --method POST \
-            --field ref=refs/tags/nightly \
+            --field ref=refs/tags/nightly_plugin \
             --field sha=${{ github.sha }}
         env:
           GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
@@ -179,8 +179,8 @@ jobs:
       - id: delete_old_release_assets
         name: Delete Old Release Assets
         run: |
-          # Get the release ID for the nightly tag
-          release_id=$(gh api repos/${{ github.repository }}/releases/tags/nightly --jq '.id' 2>/dev/null || echo "")
+          # Get the release ID for the nightly_plugin tag
+          release_id=$(gh api repos/${{ github.repository }}/releases/tags/nightly_plugin --jq '.id' 2>/dev/null || echo "")
           if [ -n "$release_id" ]; then
             # Get all asset IDs for this release
             asset_ids=$(gh api repos/${{ github.repository }}/releases/$release_id/assets --jq '.[].id' 2>/dev/null || echo "")
@@ -201,8 +201,8 @@ jobs:
         with:
           prerelease: true
           files: dist/*.jar
-          tag_name: nightly
-          name: Nightly Build
+          tag_name: nightly_plugin
+          name: Nightly Build Plugin
           body: |
             From commit: ${{ github.sha }}
             Generated on: ${{ github.event.head_commit.timestamp }}

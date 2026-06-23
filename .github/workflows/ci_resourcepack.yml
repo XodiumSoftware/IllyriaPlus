@@ -62,17 +62,44 @@ jobs:
         name: Calculate SHA1
         run: echo "SHA1=$(sha1sum "irp_v${{ steps.get_version.outputs.VERSION }}.zip" | awk '{ print $1 }')" >> $GITHUB_OUTPUT
 
+      - id: update_nightly_tag
+        name: Update Nightly Tag
+        run: |
+          gh api repos/${{ github.repository }}/git/refs/tags/nightly_resourcepack \
+            --method PATCH \
+            --field sha=${{ github.sha }} \
+            --field force=true 2>/dev/null || \
+          gh api repos/${{ github.repository }}/git/refs \
+            --method POST \
+            --field ref=refs/tags/nightly_resourcepack \
+            --field sha=${{ github.sha }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: delete_old_release_assets
+        name: Delete Old Release Assets
+        run: |
+          release_id=$(gh api repos/${{ github.repository }}/releases/tags/nightly_resourcepack --jq '.id' 2>/dev/null || echo "")
+          if [ -n "$release_id" ]; then
+            asset_ids=$(gh api repos/${{ github.repository }}/releases/$release_id/assets --jq '.[].id' 2>/dev/null || echo "")
+            for asset_id in $asset_ids; do
+              echo "Deleting asset $asset_id"
+              gh api repos/${{ github.repository }}/releases/assets/$asset_id --method DELETE
+            done
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - id: create_release
-        name: Create Release
+        name: Create Nightly Release
         uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          draft: ${{ contains(github.event.head_commit.message, '.draft') }}
           files: irp_v${{ steps.get_version.outputs.VERSION }}.zip
           body: |
-            Direct Download Link: https://github.com/${{ github.repository }}/releases/download/v${{ steps.get_version.outputs.VERSION }}/irp_v${{ steps.get_version.outputs.VERSION }}.zip
+            From commit: ${{ github.sha }}
+            Generated on: ${{ github.event.head_commit.timestamp }}
             SHA-1 Hash: ${{ steps.calculate_sha1.outputs.SHA1 }}
-          generate_release_notes: true
-          prerelease: ${{ contains(github.event.head_commit.message, '.pre') }}
-          tag_name: v${{ steps.get_version.outputs.VERSION }}
+          tag_name: nightly_resourcepack
+          name: Nightly Build Resourcepack
