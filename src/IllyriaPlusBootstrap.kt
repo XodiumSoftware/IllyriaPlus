@@ -107,7 +107,7 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
                     }
                 },
             )
-            ctx.logger.info("Registered: ${ENCHANTMENTS.size} custom enchantment(s).")
+            ctx.logger.info("Registered: ${ENCHANTMENTS.size} enchantment(s).")
 
             registerEventHandler(
                 RegistryEvents.DAMAGE_TYPE.compose().newHandler { event ->
@@ -118,7 +118,7 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
                     }
                 },
             )
-            ctx.logger.info("Registered: ${DAMAGE_TYPES.size} custom damage type(s).")
+            ctx.logger.info("Registered: ${DAMAGE_TYPES.size} damage type(s).")
 
             registerEventHandler(
                 RegistryEvents.PAINTING_VARIANT.compose().newHandler { event ->
