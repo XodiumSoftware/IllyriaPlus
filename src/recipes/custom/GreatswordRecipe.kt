@@ -5,7 +5,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.inventory.RecipeChoice
 import org.bukkit.inventory.SmithingTransformRecipe
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.items.GreatswordItem
+import org.xodium.illyriaplus.items.aura.GreatswordItem
 import org.xodium.illyriaplus.recipes.RecipeInterface
 
 /** Represents the recipe for upgrading a Netherite Sword into a Greatsword. */
