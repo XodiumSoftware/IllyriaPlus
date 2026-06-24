@@ -11,12 +11,14 @@ import org.xodium.illyriaplus.Utils.MM
 /** Represents a Greatsword. */
 @Suppress("UnstableApiUsage")
 internal object GreatswordItem : ItemInterface {
+    override val key: NamespacedKey = NamespacedKey(instance, "greatsword")
+
     override fun invoke(): ItemStack =
         ItemStack.of(Material.NETHERITE_SWORD).apply {
-            setData(DataComponentTypes.CUSTOM_NAME, MM.deserialize("Netherite Greatsword"))
-            setData(DataComponentTypes.ITEM_MODEL, NamespacedKey(instance, "greatsword"))
-            editPersistentDataContainer {
-                it.set(NamespacedKey(instance, "greatsword"), PersistentDataType.INTEGER, 1)
+            if (!hasData(DataComponentTypes.CUSTOM_NAME) && !hasData(DataComponentTypes.ITEM_NAME)) {
+                setData(DataComponentTypes.CUSTOM_NAME, MM.deserialize("Netherite Greatsword"))
             }
+            setData(DataComponentTypes.ITEM_MODEL, key)
+            editPersistentDataContainer { it.set(key, PersistentDataType.INTEGER, 1) }
         }
 }
