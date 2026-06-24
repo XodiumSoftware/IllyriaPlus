@@ -17,7 +17,7 @@ internal object GreatswordRecipe : RecipeInterface {
                 GreatswordItem(),
                 RecipeChoice.MaterialChoice(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
                 RecipeChoice.MaterialChoice(Material.NETHERITE_SWORD),
-                RecipeChoice.MaterialChoice(Material.NETHERITE_INGOT),
+                RecipeChoice.MaterialChoice(Material.NETHER_STAR),
             ),
         )
 }
