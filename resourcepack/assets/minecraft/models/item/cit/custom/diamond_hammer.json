@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:item/handheld",
-  "textures": {
-    "layer0": "minecraft:item/cit/custom/diamond_hammer"
-  }
+    "parent": "minecraft:item/handheld",
+    "textures": {
+        "layer0": "minecraft:item/cit/custom/diamond_hammer"
+    }
 }

@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "illyriaplus:item/painting/the_far_lands"
-  }
+    "parent": "minecraft:item/generated",
+    "textures": {
+        "layer0": "illyriaplus:item/painting/the_far_lands"
+    }
 }

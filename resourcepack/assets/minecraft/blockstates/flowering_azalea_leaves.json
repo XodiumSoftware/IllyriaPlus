@@ -1,7 +1,7 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/leaves/flowering_azalea_leaves"
+    "variants": {
+        "": {
+            "model": "minecraft:block/leaves/flowering_azalea_leaves"
+        }
     }
-  }
 }

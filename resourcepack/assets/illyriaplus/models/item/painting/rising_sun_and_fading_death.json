@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "illyriaplus:item/painting/rising_sun_and_fading_death"
-  }
+    "parent": "minecraft:item/generated",
+    "textures": {
+        "layer0": "illyriaplus:item/painting/rising_sun_and_fading_death"
+    }
 }

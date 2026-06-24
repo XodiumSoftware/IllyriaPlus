@@ -1,98 +1,80 @@
 {
-  "model": {
-    "type": "minecraft:condition",
-    "on_false": {
-      "type": "minecraft:condition",
-      "property": "minecraft:has_component",
-      "component": "minecraft:custom_name",
-      "on_true": {
-        "type": "minecraft:select",
-        "model": "minecraft:item/shield",
-        "property": "minecraft:component",
-        "component": "minecraft:custom_name",
-        "cases": [
-          {
-            "when": "Round Shield",
-            "model": {
-              "type": "minecraft:model",
-              "model": "minecraft:item/excalibur/custom_name/shield/shield_round"
+    "model": {
+        "type": "minecraft:condition",
+        "on_false": {
+            "type": "minecraft:condition",
+            "property": "minecraft:has_component",
+            "component": "minecraft:custom_name",
+            "on_true": {
+                "type": "minecraft:select",
+                "model": "minecraft:item/shield",
+                "property": "minecraft:component",
+                "component": "minecraft:custom_name",
+                "cases": [
+                    {
+                        "when": "Round Shield",
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "minecraft:item/excalibur/custom_name/shield/shield_round"
+                        }
+                    }
+                ],
+                "fallback": {
+                    "type": "minecraft:special",
+                    "base": "minecraft:item/shield",
+                    "model": {
+                        "type": "minecraft:shield"
+                    }
+                }
+            },
+            "on_false": {
+                "type": "minecraft:special",
+                "base": "minecraft:item/shield",
+                "model": {
+                    "type": "minecraft:shield"
+                }
             }
-          }
-        ],
-        "fallback": {
-          "type": "minecraft:special",
-          "base": "minecraft:item/shield",
-          "model": {
-            "type": "minecraft:shield"
-          }
-        }
-      },
-      "on_false": {
-        "type": "minecraft:special",
-        "base": "minecraft:item/shield",
-        "model": {
-          "type": "minecraft:shield"
-        }
-      }
-    },
-    "on_true": {
-      "type": "minecraft:condition",
-      "property": "minecraft:has_component",
-      "component": "minecraft:custom_name",
-      "on_true": {
-        "type": "minecraft:select",
-        "model": "minecraft:item/shield_blocking",
-        "property": "minecraft:component",
-        "component": "minecraft:custom_name",
-        "cases": [
-          {
-            "when": "Round Shield",
-            "model": {
-              "type": "minecraft:model",
-              "model": "minecraft:item/excalibur/custom_name/shield/shield_round_blocking"
+        },
+        "on_true": {
+            "type": "minecraft:condition",
+            "property": "minecraft:has_component",
+            "component": "minecraft:custom_name",
+            "on_true": {
+                "type": "minecraft:select",
+                "model": "minecraft:item/shield_blocking",
+                "property": "minecraft:component",
+                "component": "minecraft:custom_name",
+                "cases": [
+                    {
+                        "when": "Round Shield",
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "minecraft:item/excalibur/custom_name/shield/shield_round_blocking"
+                        }
+                    }
+                ],
+                "fallback": {
+                    "type": "minecraft:special",
+                    "base": "minecraft:item/shield_blocking",
+                    "model": {
+                        "type": "minecraft:shield"
+                    }
+                }
+            },
+            "on_false": {
+                "type": "minecraft:special",
+                "base": "minecraft:item/shield_blocking",
+                "model": {
+                    "type": "minecraft:shield"
+                }
             }
-          }
-        ],
-        "fallback": {
-          "type": "minecraft:special",
-          "base": "minecraft:item/shield_blocking",
-          "model": {
-            "type": "minecraft:shield"
-          }
+        },
+        "property": "minecraft:using_item",
+        "transformation": {
+            "left_rotation": [0, 0, 0, 1],
+            "right_rotation": [0, 0, 0, 1],
+            "scale": [1, -1, -1],
+            "translation": [0, 0, 0]
         }
-      },
-      "on_false": {
-        "type": "minecraft:special",
-        "base": "minecraft:item/shield_blocking",
-        "model": {
-          "type": "minecraft:shield"
-        }
-      }
-    },
-    "property": "minecraft:using_item",
-    "transformation": {
-      "left_rotation": [
-        0,
-        0,
-        0,
-        1
-      ],
-      "right_rotation": [
-        0,
-        0,
-        0,
-        1
-      ],
-      "scale": [
-        1,
-        -1,
-        -1
-      ],
-      "translation": [
-        0,
-        0,
-        0
-      ]
     }
-  }
 }

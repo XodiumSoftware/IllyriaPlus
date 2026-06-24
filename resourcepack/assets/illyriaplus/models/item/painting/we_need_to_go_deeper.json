@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "illyriaplus:item/painting/we_need_to_go_deeper"
-  }
+    "parent": "minecraft:item/generated",
+    "textures": {
+        "layer0": "illyriaplus:item/painting/we_need_to_go_deeper"
+    }
 }

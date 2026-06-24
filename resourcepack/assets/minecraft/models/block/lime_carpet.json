@@ -1,7 +1,7 @@
 {
-  "parent": "block/carpet",
-  "textures": {
-    "wool": "block/lime_carpet",
-    "particle": "block/lime_carpet"
-  }
+    "parent": "block/carpet",
+    "textures": {
+        "wool": "block/lime_carpet",
+        "particle": "block/lime_carpet"
+    }
 }

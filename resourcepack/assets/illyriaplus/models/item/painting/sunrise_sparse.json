@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "illyriaplus:item/painting/sunrise_sparse"
-  }
+    "parent": "minecraft:item/generated",
+    "textures": {
+        "layer0": "illyriaplus:item/painting/sunrise_sparse"
+    }
 }

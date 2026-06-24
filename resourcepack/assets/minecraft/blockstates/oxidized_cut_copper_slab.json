@@ -2,6 +2,8 @@
     "variants": {
         "type=bottom": { "model": "block/oxidized_cut_copper_slab" },
         "type=top": { "model": "block/oxidized_cut_copper_slab_top" },
-        "type=double": { "model": "block/copper/oxidized_cut_copper_doubleslab" }
+        "type=double": {
+            "model": "block/copper/oxidized_cut_copper_doubleslab"
+        }
     }
 }

@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "illyriaplus:item/painting/best_friend"
-  }
+    "parent": "minecraft:item/generated",
+    "textures": {
+        "layer0": "illyriaplus:item/painting/best_friend"
+    }
 }

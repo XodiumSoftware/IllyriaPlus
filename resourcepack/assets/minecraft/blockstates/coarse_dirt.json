@@ -3,6 +3,6 @@
         "": [
             { "model": "block/coarse_dirt", "weight": 6 },
             { "model": "block/foliage/dirt/coarse1", "weight": 5 }
-		]
+        ]
     }
 }

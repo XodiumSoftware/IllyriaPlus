@@ -2,8 +2,14 @@
     "variants": {
         "": [
             { "model": "minecraft:block/end_stone", "weight": 1 },
-            { "model": "minecraft:block/stone/end_stone/end_stone1", "weight": 1 },
-            { "model": "minecraft:block/stone/end_stone/end_stone2", "weight": 1 }
-		]
+            {
+                "model": "minecraft:block/stone/end_stone/end_stone1",
+                "weight": 1
+            },
+            {
+                "model": "minecraft:block/stone/end_stone/end_stone2",
+                "weight": 1
+            }
+        ]
     }
 }

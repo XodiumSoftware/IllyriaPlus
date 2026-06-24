@@ -2,6 +2,6 @@
     "parent": "block/wall_side",
     "textures": {
         "wall": "block/cobble_mossy_wall_side",
-		"top": "block/moss_block"
+        "top": "block/moss_block"
     }
 }

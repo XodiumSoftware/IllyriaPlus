@@ -1,6 +1,6 @@
 {
-  "model": {
-    "type": "model",
-    "model": "item/waxed_oxidized_lightning_rod"
-  }
+    "model": {
+        "type": "model",
+        "model": "item/waxed_oxidized_lightning_rod"
+    }
 }

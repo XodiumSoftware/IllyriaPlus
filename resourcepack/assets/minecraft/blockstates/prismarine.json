@@ -2,9 +2,18 @@
     "variants": {
         "": [
             { "model": "minecraft:block/prismarine", "weight": 1 },
-            { "model": "minecraft:block/stone/prismarine/prismarine1", "weight": 1 },
-            { "model": "minecraft:block/stone/prismarine/prismarine2", "weight": 1 },
-            { "model": "minecraft:block/stone/prismarine/prismarine3", "weight": 1 }
-		]
+            {
+                "model": "minecraft:block/stone/prismarine/prismarine1",
+                "weight": 1
+            },
+            {
+                "model": "minecraft:block/stone/prismarine/prismarine2",
+                "weight": 1
+            },
+            {
+                "model": "minecraft:block/stone/prismarine/prismarine3",
+                "weight": 1
+            }
+        ]
     }
 }

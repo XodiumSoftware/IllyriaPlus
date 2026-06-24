@@ -3,7 +3,7 @@
         "": [
             { "model": "block/netherrack", "weight": 4 },
             { "model": "block/stone/nether/netherrack1", "weight": 3 },
-            { "model": "block/stone/nether/netherrack2", "weight": 3 }		
+            { "model": "block/stone/nether/netherrack2", "weight": 3 }
         ]
     }
 }

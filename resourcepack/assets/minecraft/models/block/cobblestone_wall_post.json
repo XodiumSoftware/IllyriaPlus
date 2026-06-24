@@ -2,6 +2,6 @@
     "parent": "block/wall_post",
     "textures": {
         "wall": "block/cobble_wall_side",
-		"top": "block/cobble_wall_top"
+        "top": "block/cobble_wall_top"
     }
 }

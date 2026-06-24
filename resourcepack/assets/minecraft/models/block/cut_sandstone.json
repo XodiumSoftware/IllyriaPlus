@@ -1,9 +1,9 @@
 {
     "parent": "block/cube",
     "textures": {
-        "particle": "block/sandstone",	
+        "particle": "block/sandstone",
         "up": "block/sandstone_top_smooth",
-		"down": "block/sandstone_top",
+        "down": "block/sandstone_top",
         "north": "block/cut_sandstone",
         "east": "block/cut_sandstone",
         "south": "block/cut_sandstone",
