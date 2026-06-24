@@ -5,16 +5,53 @@
         "predicate": "minecraft:enchantments",
         "value": [
             {
-                "enchantments": "fire_aspect"
+                "enchantments": "fire_aspect",
+                "levels": {
+                    "min": 3
+                }
             }
         ],
         "on_true": {
             "type": "minecraft:model",
-            "model": "illyriaplus:item/greatsword_flaming"
+            "model": "illyriaplus:item/sword/greatsword_flaming_soul"
         },
         "on_false": {
-            "type": "minecraft:model",
-            "model": "illyriaplus:item/greatsword_plain"
+            "type": "minecraft:condition",
+            "property": "minecraft:component",
+            "predicate": "minecraft:enchantments",
+            "value": [
+                {
+                    "enchantments": "fire_aspect",
+                    "levels": {
+                        "min": 2
+                    }
+                }
+            ],
+            "on_true": {
+                "type": "minecraft:model",
+                "model": "illyriaplus:item/sword/greatsword_flaming_copper"
+            },
+            "on_false": {
+                "type": "minecraft:condition",
+                "property": "minecraft:component",
+                "predicate": "minecraft:enchantments",
+                "value": [
+                    {
+                        "enchantments": "fire_aspect",
+                        "levels": {
+                            "min": 1
+                        }
+                    }
+                ],
+                "on_true": {
+                    "type": "minecraft:model",
+                    "model": "illyriaplus:item/sword/greatsword_flaming"
+                },
+                "on_false": {
+                    "type": "minecraft:model",
+                    "model": "illyriaplus:item/sword/greatsword_plain"
+                }
+            }
         }
     }
 }

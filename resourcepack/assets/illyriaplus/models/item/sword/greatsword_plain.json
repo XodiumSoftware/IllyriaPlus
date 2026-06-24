@@ -1,5 +1,5 @@
 {
-    "parent": "illyriaplus:item/greatsword",
+    "parent": "illyriaplus:item/sword/greatsword",
     "textures": {
         "layer0": "illyriaplus:item/sword/greatsword"
     }
