@@ -9,6 +9,8 @@ import org.xodium.illyriaplus.enchantments.utility.VinemineEnchantment
 import org.xodium.illyriaplus.enchantments.vanilla.FeatherFallingEnchantment
 import org.xodium.illyriaplus.enchantments.vanilla.FortuneEnchantment
 import org.xodium.illyriaplus.enchantments.vanilla.SilkTouchEnchantment
+import org.xodium.illyriaplus.items.GreatswordItem
+import org.xodium.illyriaplus.items.ItemInterface
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import org.xodium.illyriaplus.mechanics.entity.*
 import org.xodium.illyriaplus.mechanics.entity.monster.*
@@ -16,6 +18,8 @@ import org.xodium.illyriaplus.mechanics.player.*
 import org.xodium.illyriaplus.mechanics.server.*
 import org.xodium.illyriaplus.mechanics.world.*
 import org.xodium.illyriaplus.recipes.RecipeInterface
+import org.xodium.illyriaplus.recipes.custom.AlcoholRecipe
+import org.xodium.illyriaplus.recipes.custom.GreatswordRecipe
 import org.xodium.illyriaplus.recipes.vanilla.*
 
 /** Main class of the plugin. */
@@ -29,6 +33,8 @@ internal class IllyriaPlus : JavaPlugin() {
     }
 
     lateinit var recipes: List<RecipeInterface>
+        private set
+    lateinit var items: List<ItemInterface>
         private set
     lateinit var mechanics: List<MechanicInterface>
         private set
@@ -48,6 +54,7 @@ internal class IllyriaPlus : JavaPlugin() {
                 AlcoholRecipe,
                 ChainmailRecipe,
                 DiamondRecycleRecipe,
+                GreatswordRecipe,
                 IceBreakdownRecipe,
                 NetherWartBlockRecipe,
                 PaintingRecipe,
@@ -57,11 +64,17 @@ internal class IllyriaPlus : JavaPlugin() {
             )
 
         logger.info(
-            """
-            Registered: ${recipes.sumOf { it.recipes.size }} recipe(s) and ${recipes.sumOf { it.potions.size }} potion mix(es)
-            Took ${recipes.sumOf { it.register() }}ms
-            """.trimIndent(),
+            "Registered: ${recipes.sumOf { it.recipes.size }} recipe(s) " +
+                "and ${recipes.sumOf { it.potions.size }} potion mix(es) |" +
+                "Took ${recipes.sumOf { it.register() }}ms",
         )
+
+        items =
+            listOf(
+                GreatswordItem,
+            )
+
+        logger.info("Registered: ${items.size} item(s) | Took ${items.sumOf { it.register() }}ms")
 
         mechanics =
             listOf(
@@ -98,9 +111,7 @@ internal class IllyriaPlus : JavaPlugin() {
                 ResourcePackMechanic,
             )
 
-        logger.info(
-            "Registered: ${mechanics.size} module(s) | Took ${mechanics.sumOf { it.register() }}ms",
-        )
+        logger.info("Registered: ${mechanics.size} module(s) | Took ${mechanics.sumOf { it.register() }}ms")
 
         enchantments =
             listOf(

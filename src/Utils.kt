@@ -22,9 +22,6 @@ import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import kotlin.time.Duration
 
-/** Converts a [Duration] to Minecraft ticks (20 ticks per second). */
-internal fun Duration.toTicks(): Int = inWholeSeconds.toInt() * 20
-
 /** General utilities. */
 internal object Utils {
     /** MiniMessage instance for parsing formatted strings with custom gradient aliases. */
@@ -41,6 +38,9 @@ internal object Utils {
                     "rose" to "#F4C4F3:#FC67FA",
                 ).forEach { (name, colors) -> it.tag(name, Tag.preProcessParsed("<gradient:$colors>")) }
             }.build()
+
+    /** Converts a [Duration] to Minecraft ticks (20 ticks per second). */
+    fun Duration.toTicks(): Int = inWholeSeconds.toInt() * 20
 
     /**
      * Converts a snake_case string to Proper Case with spaces.
