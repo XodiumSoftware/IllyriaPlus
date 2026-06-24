@@ -2,10 +2,12 @@ package org.xodium.illyriaplus.items
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemAttributeModifiers
+import io.papermc.paper.event.player.PlayerArmSwingEvent
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
+import org.bukkit.event.EventHandler
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
@@ -39,4 +41,11 @@ internal object GreatswordItem : ItemInterface {
             )
             editPersistentDataContainer { it.set(key, PersistentDataType.INTEGER, 1) }
         }
+
+    @EventHandler
+    fun on(event: PlayerArmSwingEvent) {
+        if (isItem(event.player.inventory.itemInMainHand)) effect()
+    }
+
+    private fun effect() {}
 }

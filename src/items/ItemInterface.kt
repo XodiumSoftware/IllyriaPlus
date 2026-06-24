@@ -3,6 +3,7 @@ package org.xodium.illyriaplus.items
 import org.bukkit.NamespacedKey
 import org.bukkit.event.Listener
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import kotlin.time.measureTime
 
@@ -22,4 +23,12 @@ internal interface ItemInterface : Listener {
      */
     fun register(): Long =
         measureTime { instance.server.pluginManager.registerEvents(this, instance) }.inWholeMilliseconds
+
+    /**
+     * Returns `true` if the given [item] is an instance of this custom item type.
+     *
+     * @param item The item to check.
+     * @return Whether the item matches this custom item type based on its persistent data.
+     */
+    fun isItem(item: ItemStack): Boolean = item.persistentDataContainer.get(key, PersistentDataType.INTEGER) == 1
 }
