@@ -1,6 +1,20 @@
 {
     "model": {
-        "type": "minecraft:model",
-        "model": "illyriaplus:item/greatsword"
+        "type": "minecraft:condition",
+        "property": "minecraft:component",
+        "predicate": "minecraft:enchantments",
+        "value": [
+            {
+                "enchantments": "fire_aspect"
+            }
+        ],
+        "on_true": {
+            "type": "minecraft:model",
+            "model": "illyriaplus:item/greatsword_flaming"
+        },
+        "on_false": {
+            "type": "minecraft:model",
+            "model": "illyriaplus:item/greatsword_plain"
+        }
     }
 }

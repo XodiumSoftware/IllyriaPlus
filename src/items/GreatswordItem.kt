@@ -9,13 +9,13 @@ import org.bukkit.attribute.AttributeModifier
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
-import org.xodium.illyriaplus.IllyriaPlus
+import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils
 
 /** Represents a Greatsword. */
 @Suppress("UnstableApiUsage")
 internal object GreatswordItem : ItemInterface {
-    override val key: NamespacedKey = NamespacedKey(IllyriaPlus.instance, "greatsword")
+    override val key: NamespacedKey = NamespacedKey(instance, "greatsword")
 
     override fun invoke(): ItemStack =
         ItemStack.of(Material.NETHERITE_SWORD).apply {
