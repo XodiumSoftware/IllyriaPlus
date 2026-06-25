@@ -2,10 +2,6 @@ package org.xodium.illyriaplus.mechanics.server
 
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.event.connection.configuration.AsyncPlayerConnectionConfigureEvent
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.resource.ResourcePackInfo
 import net.kyori.adventure.resource.ResourcePackRequest
@@ -18,25 +14,25 @@ import org.xodium.illyriaplus.Utils.Command.playerExecuted
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.mechanics.MechanicInterface
-import org.xodium.illyriaplus.mechanics.server.ResourcePackMechanic.resourcePackInfo
 import java.net.URI
-import javax.net.ssl.HttpsURLConnection
-import kotlin.time.measureTime
 
 /** Represents a mechanic that sends the IllyriaPlus resource pack to joining players. */
 internal object ResourcePackMechanic : MechanicInterface {
-    private const val REPOSITORY = "XodiumSoftware/IllyriaPlus"
-    private const val TAG = "nightly_resourcepack"
-    private const val API_URL = "https://api.github.com/repos/$REPOSITORY/releases/tags/$TAG"
-    private const val ASSET_PREFIX = "irp_v"
-    private const val ASSET_SUFFIX = ".zip"
-    private const val HASH_PATTERN = "SHA-1 Hash: ([a-f0-9]{40})"
-    private const val REQUIRED = true
-    private const val CONNECT_TIMEOUT_MS = 10_000
-    private const val READ_TIMEOUT_MS = 10_000
+    private const val PACK_URL =
+        "https://github.com/XodiumSoftware/IllyriaPlus/releases/download/nightly_resourcepack/irp.zip"
 
-    private val json = Json { ignoreUnknownKeys = true }
-    private var resourcePackInfo: ResourcePackInfo? = null
+    private val request: ResourcePackRequest by lazy {
+        ResourcePackRequest
+            .resourcePackRequest()
+            .packs(
+                ResourcePackInfo
+                    .resourcePackInfo()
+                    .uri(URI.create(PACK_URL))
+                    .computeHashAndBuild()
+                    .join(),
+            ).required(true)
+            .build()
+    }
 
     override val cmds: Collection<CommandData> =
         listOf(
@@ -45,11 +41,13 @@ internal object ResourcePackMechanic : MechanicInterface {
                     .literal("reloadresourcepack")
                     .requires { it.sender.hasPermission(perms[0]) }
                     .playerExecuted { player, _ ->
-                        instance.server.onlinePlayers.forEach { it.clearResourcePacks() }
                         player.sendActionBar(
                             MM.deserialize("<green>Reloading IllyriaPlus resource pack for all online players..."),
                         )
-                        reloadResourcePackForAll()
+                        instance.server.onlinePlayers.forEach {
+                            it.clearResourcePacks()
+                            it.sendResourcePacks(request)
+                        }
                     },
                 "Reloads the IllyriaPlus resource pack for all online players",
                 listOf("rrp"),
@@ -65,125 +63,13 @@ internal object ResourcePackMechanic : MechanicInterface {
             ),
         )
 
-    override fun register(): Long = super.register() + measureTime { fetchResourcePackInfoAsync() }.inWholeMilliseconds
+    override fun register(): Long = super.register().also { request }
 
     @Suppress("UnstableApiUsage")
     @EventHandler(priority = EventPriority.NORMAL)
     fun on(event: AsyncPlayerConnectionConfigureEvent) {
         val connection = event.connection as? Audience ?: return
 
-        connection.sendResourcePacks(
-            ResourcePackRequest
-                .resourcePackRequest()
-                .packs(resourcePackInfo ?: return)
-                .required(REQUIRED)
-                .build(),
-        )
+        connection.sendResourcePacks(request)
     }
-
-    /**
-     * Fetches the latest resource pack information from GitHub asynchronously.
-     *
-     * The result is stored in [resourcePackInfo] and logged on success or failure.
-     */
-    private fun fetchResourcePackInfoAsync() {
-        instance.server.scheduler.runTaskAsynchronously(instance) { _ ->
-            runCatching { fetchLatestResourcePack() }
-                .onSuccess {
-                    resourcePackInfo = it
-                    instance.logger.info("Resource pack resolved: ${it.uri()}")
-                }.onFailure {
-                    instance.logger.warning("Failed to resolve latest resource pack URL: ${it.message}")
-                }
-        }
-    }
-
-    /**
-     * Reloads the resource pack by re-querying GitHub and sending it to every online player.
-     *
-     * Existing packs are cleared before the new pack is applied. The fetch is performed
-     * asynchronously; players keep playing if the update fails.
-     */
-    private fun reloadResourcePackForAll() {
-        instance.server.scheduler.runTaskAsynchronously(instance) { _ ->
-            runCatching { fetchLatestResourcePack() }
-                .onSuccess { info ->
-                    resourcePackInfo = info
-                    instance.server.scheduler.runTask(instance) { _ ->
-                        instance.server.onlinePlayers.forEach {
-                            it.clearResourcePacks()
-                            it.sendResourcePacks(
-                                ResourcePackRequest
-                                    .resourcePackRequest()
-                                    .packs(info)
-                                    .required(REQUIRED)
-                                    .build(),
-                            )
-                        }
-                        instance.logger.info(
-                            "Resource pack reloaded for ${instance.server.onlinePlayers.size} player(s)",
-                        )
-                    }
-                }.onFailure {
-                    instance.logger.warning("Failed to reload resource pack: ${it.message}")
-                }
-        }
-    }
-
-    /**
-     * Queries the GitHub API for the configured nightly release and builds a
-     * [ResourcePackInfo] from the first matching `irp_v*.zip` asset.
-     *
-     * If the release body contains a SHA-1 hash in the expected format, it is included
-     * so the client can skip re-downloading an unchanged pack.
-     *
-     * @return The resolved resource pack information.
-     * @throws IllegalStateException if the release or matching asset cannot be found.
-     */
-    private fun fetchLatestResourcePack(): ResourcePackInfo {
-        val connection = URI.create(API_URL).toURL().openConnection() as HttpsURLConnection
-        connection.requestMethod = "GET"
-        connection.setRequestProperty("Accept", "application/vnd.github+json")
-        connection.setRequestProperty("X-GitHub-Api-Version", "2022-11-28")
-        connection.setRequestProperty("User-Agent", "IllyriaPlus/$REPOSITORY")
-        connection.connectTimeout = CONNECT_TIMEOUT_MS
-        connection.readTimeout = READ_TIMEOUT_MS
-        connection.doInput = true
-
-        val response = connection.inputStream.use { it.reader().readText() }
-        val release = json.parseToJsonElement(response).jsonObject
-        val assets = release["assets"]?.jsonArray ?: error("Release has no assets")
-        val asset =
-            assets
-                .map { it.jsonObject }
-                .firstOrNull { asset ->
-                    asset["name"]?.jsonPrimitive?.content?.let {
-                        it.startsWith(ASSET_PREFIX) && it.endsWith(ASSET_SUFFIX)
-                    } == true
-                }
-                ?: error("No $ASSET_PREFIX*$ASSET_SUFFIX asset found in release $TAG")
-
-        val url =
-            asset["browser_download_url"]?.jsonPrimitive?.content
-                ?: error("Asset download URL missing")
-        val hash = release["body"]?.jsonPrimitive?.content?.let { parseHash(it) }
-        val builder = ResourcePackInfo.resourcePackInfo().uri(URI.create(url))
-
-        hash?.let { builder.hash(it) }
-
-        return builder.build()
-    }
-
-    /**
-     * Parses a 40-character lowercase SHA-1 hash from the release body.
-     *
-     * @param body The release body text to search.
-     * @return The parsed hash, or `null` if no match is found.
-     */
-    private fun parseHash(body: String): String? =
-        Regex(HASH_PATTERN)
-            .find(body)
-            ?.groupValues
-            ?.get(1)
-            ?.lowercase()
 }
