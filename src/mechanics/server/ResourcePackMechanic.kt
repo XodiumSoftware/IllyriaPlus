@@ -18,7 +18,6 @@ import org.xodium.illyriaplus.Utils.Command.playerExecuted
 import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.mechanics.MechanicInterface
-import org.xodium.illyriaplus.mechanics.server.ResourcePackMechanic.resourcePackInfo
 import java.net.URI
 import java.util.concurrent.CompletableFuture
 import javax.net.ssl.HttpsURLConnection
@@ -26,10 +25,9 @@ import kotlin.time.measureTime
 
 /** Represents a mechanic that sends the IllyriaPlus resource pack to joining players. */
 internal object ResourcePackMechanic : MechanicInterface {
-    private const val API_URL =
-        "https://api.github.com/repos/XodiumSoftware/IllyriaPlus/releases/tags/nightly_resourcepack"
-    private const val RELEASE_URL =
-        "https://github.com/XodiumSoftware/IllyriaPlus/releases/download/nightly_resourcepack/"
+    private const val RELEASE_TAG = "nightly_resourcepack"
+    private const val API_URL = "https://api.github.com/repos/XodiumSoftware/IllyriaPlus/releases/tags/$RELEASE_TAG"
+    private const val RELEASE_URL = "https://github.com/XodiumSoftware/IllyriaPlus/releases/download/$RELEASE_TAG/"
     private const val ASSET_PREFIX = "irp_v"
     private const val ASSET_SUFFIX = ".zip"
     private const val REQUIRED = true
@@ -74,61 +72,33 @@ internal object ResourcePackMechanic : MechanicInterface {
     fun on(event: AsyncPlayerConnectionConfigureEvent) {
         val connection = event.connection as? Audience ?: return
 
-        connection.sendResourcePacks(
-            ResourcePackRequest
-                .resourcePackRequest()
-                .packs(resourcePackInfo ?: return)
-                .required(REQUIRED)
-                .build(),
-        )
+        connection.sendResourcePacks(createRequest(resourcePackInfo ?: return))
     }
 
-    /**
-     * Fetches the latest resource pack information from GitHub asynchronously.
-     *
-     * The result is passed to [onResolved] on the server's main thread, and is also
-     * stored in [resourcePackInfo] and logged on success or failure.
-     */
+    private fun createRequest(info: ResourcePackInfo): ResourcePackRequest =
+        ResourcePackRequest
+            .resourcePackRequest()
+            .packs(info)
+            .required(REQUIRED)
+            .build()
+
     private fun fetchResourcePackInfoAsync(onResolved: ((ResourcePackInfo) -> Unit)? = null) {
         instance.server.scheduler.runTaskAsynchronously(instance) { _ ->
-            runCatching { fetchLatestResourcePack() }
-                .onSuccess { future ->
-                    future
-                        .thenAccept { info ->
-                            instance.server.scheduler.runTask(instance) { _ ->
-                                resourcePackInfo = info
-                                instance.logger.info("Resource pack resolved: ${info.uri()}")
-                                onResolved?.invoke(info)
-                            }
-                        }.exceptionally { error ->
-                            instance.logger.warning("Failed to compute resource pack hash: ${error.message}")
-                            null
+            try {
+                fetchLatestResourcePack()
+                    .thenAccept { info ->
+                        instance.server.scheduler.runTask(instance) { _ ->
+                            resourcePackInfo = info
+                            instance.logger.info("Resource pack resolved: ${info.uri()}")
+                            onResolved?.invoke(info)
                         }
-                }.onFailure {
-                    instance.logger.warning("Failed to resolve latest resource pack URL: ${it.message}")
-                }
-        }
-    }
-
-    /**
-     * Reloads the resource pack by re-querying GitHub and sending it to every online player.
-     *
-     * Existing packs are cleared before the new pack is applied. The fetch and hash
-     * computation are performed asynchronously; players keep playing if the update fails.
-     */
-    private fun reloadResourcePackForAll() {
-        fetchResourcePackInfoAsync { info ->
-            instance.server.onlinePlayers.forEach {
-                it.clearResourcePacks()
-                it.sendResourcePacks(
-                    ResourcePackRequest
-                        .resourcePackRequest()
-                        .packs(info)
-                        .required(REQUIRED)
-                        .build(),
-                )
+                    }.exceptionally {
+                        instance.logger.warning("Failed to compute resource pack hash: ${it.message}")
+                        null
+                    }
+            } catch (ex: Exception) {
+                instance.logger.warning("Failed to resolve latest resource pack URL: ${ex.message}")
             }
-            instance.logger.info("Resource pack reloaded for ${instance.server.onlinePlayers.size} player(s)")
         }
     }
 
@@ -136,27 +106,40 @@ internal object ResourcePackMechanic : MechanicInterface {
      * Queries the GitHub API for the configured nightly release and returns a future that
      * builds a [ResourcePackInfo] from the first matching `irp_v*.zip` asset.
      *
-     * The pack hash is computed by downloading the asset via
-     * [ResourcePackInfo.Builder.computeHashAndBuild], so the client can skip
-     * re-downloading an unchanged pack.
-     *
      * @return A future that resolves to the resource pack information.
-     * @throws IllegalStateException if the release or matching asset cannot be found.
      */
     private fun fetchLatestResourcePack(): CompletableFuture<ResourcePackInfo> =
         ResourcePackInfo
             .resourcePackInfo()
-            .uri(URI.create("$RELEASE_URL${fetchAssetName()}"))
+            .uri(URI.create(fetchAssetUrl()))
             .computeHashAndBuild()
 
     /**
+     * Reloads the resource pack by re-querying GitHub and sending it to every online player.
+     */
+    private fun reloadResourcePackForAll() {
+        fetchResourcePackInfoAsync { info ->
+            val request = createRequest(info)
+
+            instance.server.onlinePlayers.forEach {
+                it.clearResourcePacks()
+                it.sendResourcePacks(request)
+            }
+
+            instance.logger.info(
+                "Resource pack reloaded for ${instance.server.onlinePlayers.size} player(s)",
+            )
+        }
+    }
+
+    /**
      * Fetches the download URL for the first matching `irp_v*.zip` asset in the
-     * `nightly_resourcepack` release.
+     * configured GitHub release.
      *
-     * @return The asset filename.
+     * @return The full asset download URL.
      * @throws IllegalStateException if the release or matching asset cannot be found.
      */
-    private fun fetchAssetName(): String {
+    private fun fetchAssetUrl(): String {
         val connection = URI.create(API_URL).toURL().openConnection() as HttpsURLConnection
 
         connection.requestMethod = "GET"
@@ -169,17 +152,22 @@ internal object ResourcePackMechanic : MechanicInterface {
 
         val response = connection.inputStream.use { it.reader().readText() }
         val release = json.parseToJsonElement(response).jsonObject
-        val assets = release["assets"]?.jsonArray ?: error("Release has no assets")
-        val asset =
-            assets
-                .map { it.jsonObject }
-                .firstOrNull { asset ->
-                    asset["name"]?.jsonPrimitive?.content?.let {
-                        it.startsWith(ASSET_PREFIX) && it.endsWith(ASSET_SUFFIX)
-                    } == true
-                }
-                ?: error("No $ASSET_PREFIX*$ASSET_SUFFIX asset found in nightly_resourcepack")
 
-        return "$RELEASE_URL${asset["name"]?.jsonPrimitive?.content ?: error("Asset name missing")}"
+        val assetName =
+            release["assets"]
+                ?.jsonArray
+                ?.map { it.jsonObject }
+                ?.firstNotNullOfOrNull { asset ->
+                    asset["name"]
+                        ?.jsonPrimitive
+                        ?.content
+                        ?.takeIf {
+                            it.startsWith(ASSET_PREFIX) &&
+                                it.endsWith(ASSET_SUFFIX)
+                        }
+                }
+                ?: error("No $ASSET_PREFIX*$ASSET_SUFFIX asset found in $RELEASE_TAG")
+
+        return "$RELEASE_URL$assetName"
     }
 }
