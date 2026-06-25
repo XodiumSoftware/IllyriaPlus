@@ -20,6 +20,7 @@ import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import org.xodium.illyriaplus.mechanics.server.ResourcePackMechanic.resourcePackInfo
 import java.net.URI
+import java.util.concurrent.CompletableFuture
 import javax.net.ssl.HttpsURLConnection
 import kotlin.time.measureTime
 
@@ -30,12 +31,13 @@ internal object ResourcePackMechanic : MechanicInterface {
     private const val API_URL = "https://api.github.com/repos/$REPOSITORY/releases/tags/$TAG"
     private const val ASSET_PREFIX = "irp_v"
     private const val ASSET_SUFFIX = ".zip"
-    private const val HASH_PATTERN = "SHA-1 Hash: ([a-f0-9]{40})"
     private const val REQUIRED = true
     private const val CONNECT_TIMEOUT_MS = 10_000
     private const val READ_TIMEOUT_MS = 10_000
 
     private val json = Json { ignoreUnknownKeys = true }
+
+    @Volatile
     private var resourcePackInfo: ResourcePackInfo? = null
 
     override val cmds: Collection<CommandData> =
@@ -84,14 +86,24 @@ internal object ResourcePackMechanic : MechanicInterface {
     /**
      * Fetches the latest resource pack information from GitHub asynchronously.
      *
-     * The result is stored in [resourcePackInfo] and logged on success or failure.
+     * The result is passed to [onResolved] on the server's main thread, and is also
+     * stored in [resourcePackInfo] and logged on success or failure.
      */
-    private fun fetchResourcePackInfoAsync() {
+    private fun fetchResourcePackInfoAsync(onResolved: ((ResourcePackInfo) -> Unit)? = null) {
         instance.server.scheduler.runTaskAsynchronously(instance) { _ ->
             runCatching { fetchLatestResourcePack() }
-                .onSuccess {
-                    resourcePackInfo = it
-                    instance.logger.info("Resource pack resolved: ${it.uri()}")
+                .onSuccess { future ->
+                    future
+                        .thenAccept { info ->
+                            instance.server.scheduler.runTask(instance) { _ ->
+                                resourcePackInfo = info
+                                instance.logger.info("Resource pack resolved: ${info.uri()}")
+                                onResolved?.invoke(info)
+                            }
+                        }.exceptionally { error ->
+                            instance.logger.warning("Failed to compute resource pack hash: ${error.message}")
+                            null
+                        }
                 }.onFailure {
                     instance.logger.warning("Failed to resolve latest resource pack URL: ${it.message}")
                 }
@@ -101,46 +113,39 @@ internal object ResourcePackMechanic : MechanicInterface {
     /**
      * Reloads the resource pack by re-querying GitHub and sending it to every online player.
      *
-     * Existing packs are cleared before the new pack is applied. The fetch is performed
-     * asynchronously; players keep playing if the update fails.
+     * Existing packs are cleared before the new pack is applied. The fetch and hash
+     * computation are performed asynchronously; players keep playing if the update fails.
      */
     private fun reloadResourcePackForAll() {
-        instance.server.scheduler.runTaskAsynchronously(instance) { _ ->
-            runCatching { fetchLatestResourcePack() }
-                .onSuccess { info ->
-                    resourcePackInfo = info
-                    instance.server.scheduler.runTask(instance) { _ ->
-                        instance.server.onlinePlayers.forEach {
-                            it.clearResourcePacks()
-                            it.sendResourcePacks(
-                                ResourcePackRequest
-                                    .resourcePackRequest()
-                                    .packs(info)
-                                    .required(REQUIRED)
-                                    .build(),
-                            )
-                        }
-                        instance.logger.info(
-                            "Resource pack reloaded for ${instance.server.onlinePlayers.size} player(s)",
-                        )
-                    }
-                }.onFailure {
-                    instance.logger.warning("Failed to reload resource pack: ${it.message}")
-                }
+        fetchResourcePackInfoAsync { info ->
+            instance.server.onlinePlayers.forEach {
+                it.clearResourcePacks()
+                it.sendResourcePacks(
+                    ResourcePackRequest
+                        .resourcePackRequest()
+                        .packs(info)
+                        .required(REQUIRED)
+                        .build(),
+                )
+            }
+            instance.logger.info(
+                "Resource pack reloaded for ${instance.server.onlinePlayers.size} player(s)",
+            )
         }
     }
 
     /**
-     * Queries the GitHub API for the configured nightly release and builds a
-     * [ResourcePackInfo] from the first matching `irp_v*.zip` asset.
+     * Queries the GitHub API for the configured nightly release and returns a future that
+     * builds a [ResourcePackInfo] from the first matching `irp_v*.zip` asset.
      *
-     * If the release body contains a SHA-1 hash in the expected format, it is included
-     * so the client can skip re-downloading an unchanged pack.
+     * The pack hash is computed by downloading the asset via
+     * [ResourcePackInfo.Builder.computeHashAndBuild], so the client can skip
+     * re-downloading an unchanged pack.
      *
-     * @return The resolved resource pack information.
+     * @return A future that resolves to the resource pack information.
      * @throws IllegalStateException if the release or matching asset cannot be found.
      */
-    private fun fetchLatestResourcePack(): ResourcePackInfo {
+    private fun fetchLatestResourcePack(): CompletableFuture<ResourcePackInfo> {
         val connection = URI.create(API_URL).toURL().openConnection() as HttpsURLConnection
         connection.requestMethod = "GET"
         connection.setRequestProperty("Accept", "application/vnd.github+json")
@@ -166,24 +171,10 @@ internal object ResourcePackMechanic : MechanicInterface {
         val url =
             asset["browser_download_url"]?.jsonPrimitive?.content
                 ?: error("Asset download URL missing")
-        val hash = release["body"]?.jsonPrimitive?.content?.let { parseHash(it) }
-        val builder = ResourcePackInfo.resourcePackInfo().uri(URI.create(url))
 
-        hash?.let { builder.hash(it) }
-
-        return builder.build()
+        return ResourcePackInfo
+            .resourcePackInfo()
+            .uri(URI.create(url))
+            .computeHashAndBuild()
     }
-
-    /**
-     * Parses a 40-character lowercase SHA-1 hash from the release body.
-     *
-     * @param body The release body text to search.
-     * @return The parsed hash, or `null` if no match is found.
-     */
-    private fun parseHash(body: String): String? =
-        Regex(HASH_PATTERN)
-            .find(body)
-            ?.groupValues
-            ?.get(1)
-            ?.lowercase()
 }

@@ -22,7 +22,6 @@ jobs:
       url: ${{ steps.create_release.outputs.url }}
     outputs:
       VERSION: ${{ steps.get_version.outputs.VERSION }}
-      SHA1: ${{ steps.calculate_sha1.outputs.SHA1 }}
     steps:
       - id: checkout
         name: Checkout
@@ -44,10 +43,6 @@ jobs:
           options: |
             pack_directory = 'resourcepack'
             output_file_path = 'irp_v${{ steps.get_version.outputs.VERSION }}.zip'
-
-      - id: calculate_sha1
-        name: Calculate SHA1
-        run: echo "SHA1=$(sha1sum "irp_v${{ steps.get_version.outputs.VERSION }}.zip" | awk '{ print $1 }')" >> $GITHUB_OUTPUT
 
       - id: update_nightly_tag
         name: Update Nightly Tag
@@ -85,9 +80,5 @@ jobs:
         with:
           prerelease: true
           files: irp_v${{ steps.get_version.outputs.VERSION }}.zip
-          body: |
-            From commit: ${{ github.sha }}
-            Generated on: ${{ github.event.head_commit.timestamp }}
-            SHA-1 Hash: ${{ steps.calculate_sha1.outputs.SHA1 }}
           tag_name: nightly_resourcepack
           name: Nightly Build Resourcepack
