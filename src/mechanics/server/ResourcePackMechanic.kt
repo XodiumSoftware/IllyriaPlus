@@ -26,9 +26,10 @@ import kotlin.time.measureTime
 
 /** Represents a mechanic that sends the IllyriaPlus resource pack to joining players. */
 internal object ResourcePackMechanic : MechanicInterface {
-    private const val REPOSITORY = "XodiumSoftware/IllyriaPlus"
-    private const val TAG = "nightly_resourcepack"
-    private const val API_URL = "https://api.github.com/repos/$REPOSITORY/releases/tags/$TAG"
+    private const val API_URL =
+        "https://api.github.com/repos/XodiumSoftware/IllyriaPlus/releases/tags/nightly_resourcepack"
+    private const val RELEASE_URL =
+        "https://github.com/XodiumSoftware/IllyriaPlus/releases/download/nightly_resourcepack/"
     private const val ASSET_PREFIX = "irp_v"
     private const val ASSET_SUFFIX = ".zip"
     private const val REQUIRED = true
@@ -47,7 +48,6 @@ internal object ResourcePackMechanic : MechanicInterface {
                     .literal("reloadresourcepack")
                     .requires { it.sender.hasPermission(perms[0]) }
                     .playerExecuted { player, _ ->
-                        instance.server.onlinePlayers.forEach { it.clearResourcePacks() }
                         player.sendActionBar(
                             MM.deserialize("<green>Reloading IllyriaPlus resource pack for all online players..."),
                         )
@@ -128,9 +128,7 @@ internal object ResourcePackMechanic : MechanicInterface {
                         .build(),
                 )
             }
-            instance.logger.info(
-                "Resource pack reloaded for ${instance.server.onlinePlayers.size} player(s)",
-            )
+            instance.logger.info("Resource pack reloaded for ${instance.server.onlinePlayers.size} player(s)")
         }
     }
 
@@ -145,12 +143,26 @@ internal object ResourcePackMechanic : MechanicInterface {
      * @return A future that resolves to the resource pack information.
      * @throws IllegalStateException if the release or matching asset cannot be found.
      */
-    private fun fetchLatestResourcePack(): CompletableFuture<ResourcePackInfo> {
+    private fun fetchLatestResourcePack(): CompletableFuture<ResourcePackInfo> =
+        ResourcePackInfo
+            .resourcePackInfo()
+            .uri(URI.create("$RELEASE_URL${fetchAssetName()}"))
+            .computeHashAndBuild()
+
+    /**
+     * Fetches the download URL for the first matching `irp_v*.zip` asset in the
+     * `nightly_resourcepack` release.
+     *
+     * @return The asset filename.
+     * @throws IllegalStateException if the release or matching asset cannot be found.
+     */
+    private fun fetchAssetName(): String {
         val connection = URI.create(API_URL).toURL().openConnection() as HttpsURLConnection
+
         connection.requestMethod = "GET"
         connection.setRequestProperty("Accept", "application/vnd.github+json")
         connection.setRequestProperty("X-GitHub-Api-Version", "2022-11-28")
-        connection.setRequestProperty("User-Agent", "IllyriaPlus/$REPOSITORY")
+        connection.setRequestProperty("User-Agent", "IllyriaPlus")
         connection.connectTimeout = CONNECT_TIMEOUT_MS
         connection.readTimeout = READ_TIMEOUT_MS
         connection.doInput = true
@@ -166,15 +178,8 @@ internal object ResourcePackMechanic : MechanicInterface {
                         it.startsWith(ASSET_PREFIX) && it.endsWith(ASSET_SUFFIX)
                     } == true
                 }
-                ?: error("No $ASSET_PREFIX*$ASSET_SUFFIX asset found in release $TAG")
+                ?: error("No $ASSET_PREFIX*$ASSET_SUFFIX asset found in nightly_resourcepack")
 
-        val url =
-            asset["browser_download_url"]?.jsonPrimitive?.content
-                ?: error("Asset download URL missing")
-
-        return ResourcePackInfo
-            .resourcePackInfo()
-            .uri(URI.create(url))
-            .computeHashAndBuild()
+        return "$RELEASE_URL${asset["name"]?.jsonPrimitive?.content ?: error("Asset name missing")}"
     }
 }
