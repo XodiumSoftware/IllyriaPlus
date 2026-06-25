@@ -100,7 +100,7 @@ internal class IllyriaPlus : JavaPlugin() {
                 ResourcePackMechanic,
             )
 
-        logger.info("Registered: ${mechanics.size} module(s) | Took ${mechanics.sumOf { it.register() }}ms")
+        logger.info("Registered: ${mechanics.size} mechanic(s) | Took ${mechanics.sumOf { it.register() }}ms")
 
         enchantments =
             listOf(

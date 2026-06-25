@@ -203,9 +203,6 @@ jobs:
           files: dist/*.jar
           tag_name: nightly_plugin
           name: Nightly Build Plugin
-          body: |
-            From commit: ${{ github.sha }}
-            Generated on: ${{ github.event.head_commit.timestamp }}
 
   docs:
     name: Documentation
