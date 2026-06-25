@@ -15,13 +15,24 @@ import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.CommandData
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import java.net.URI
-import kotlin.time.measureTime
 
 /** Represents a mechanic that sends the IllyriaPlus resource pack to joining players. */
 internal object ResourcePackMechanic : MechanicInterface {
     private const val PACK_URL =
         "https://github.com/XodiumSoftware/IllyriaPlus/releases/download/nightly_resourcepack/irp.zip"
-    private const val REQUIRED = true
+
+    private val request: ResourcePackRequest by lazy {
+        ResourcePackRequest
+            .resourcePackRequest()
+            .packs(
+                ResourcePackInfo
+                    .resourcePackInfo()
+                    .uri(URI.create(PACK_URL))
+                    .computeHashAndBuild()
+                    .join(),
+            ).required(true)
+            .build()
+    }
 
     override val cmds: Collection<CommandData> =
         listOf(
@@ -35,7 +46,7 @@ internal object ResourcePackMechanic : MechanicInterface {
                         )
                         instance.server.onlinePlayers.forEach {
                             it.clearResourcePacks()
-                            it.sendResourcePacks(createRequest())
+                            it.sendResourcePacks(request)
                         }
                     },
                 "Reloads the IllyriaPlus resource pack for all online players",
@@ -52,20 +63,13 @@ internal object ResourcePackMechanic : MechanicInterface {
             ),
         )
 
-    override fun register(): Long = super.register() + measureTime { createRequest() }.inWholeMilliseconds
+    override fun register(): Long = super.register().also { request }
 
     @Suppress("UnstableApiUsage")
     @EventHandler(priority = EventPriority.NORMAL)
     fun on(event: AsyncPlayerConnectionConfigureEvent) {
         val connection = event.connection as? Audience ?: return
 
-        connection.sendResourcePacks(createRequest())
+        connection.sendResourcePacks(request)
     }
-
-    private fun createRequest(): ResourcePackRequest =
-        ResourcePackRequest
-            .resourcePackRequest()
-            .packs(ResourcePackInfo.resourcePackInfo().uri(URI.create(PACK_URL)).computeHashAndBuild())
-            .required(REQUIRED)
-            .build()
 }
