@@ -12,7 +12,7 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
 }
 
-val mcVersion = "26.1.2"
+val mcVersion = "26.2"
 val buildNumber =
     providers
         .exec { commandLine("git", "rev-list", "--count", "HEAD") }
