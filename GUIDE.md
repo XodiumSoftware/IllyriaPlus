@@ -14,7 +14,7 @@
 
 ## Prerequisites
 
-- [Paper](https://papermc.io/) Minecraft server 26.1.2
+- [Paper](https://papermc.io/) Minecraft server 26.2
 - Java 25
 
 ## Download Nightly Build
@@ -65,7 +65,7 @@ To quickly test the plugin:
 ./gradlew runServer
 ```
 
-This automatically downloads Paper 26.1.2 and starts a local test server with the plugin.
+This automatically downloads Paper 26.2 and starts a local test server with the plugin.
 
 ## Installation
 

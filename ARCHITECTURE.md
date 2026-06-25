@@ -4,7 +4,7 @@ This file provides guidance when working with code in this repository.
 
 ## Project Overview
 
-IllyriaPlus is a single-module Paper Minecraft plugin project (26.1.2) that enhances base gameplay with custom enchantments, recipes, and mechanics.
+IllyriaPlus is a single-module Paper Minecraft plugin project that enhances base gameplay with custom enchantments, recipes, and mechanics.
 
 Built with Kotlin + Gradle, targeting Java 25. Uses the Paper API's modern lifecycle/registry APIs extensively.
 
