@@ -230,7 +230,7 @@ GitHub Actions workflows in `.github/workflows/`:
 4. Implement `@EventHandler` methods for events
 5. Register commands/permissions by overriding `cmds` and `perms` if needed
 6. In `IllyriaPlus.kt`, add `YourMechanic` to the `mechanics` list in `onEnable()`
-7. Add KDoc comments explaining the mechanic's purpose and features
+7. Add KDoc comments explaining the mechanic's purpose and features, use samples from other mechanics.
 8. Update `ARCHITECTURE.md` mechanic count and list
 
 ### Adding a Recipe
