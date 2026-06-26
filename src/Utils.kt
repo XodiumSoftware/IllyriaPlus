@@ -1,5 +1,3 @@
-@file:Suppress("Unused")
-
 package org.xodium.illyriaplus
 
 import com.mojang.brigadier.builder.ArgumentBuilder
@@ -20,6 +18,7 @@ import org.bukkit.entity.AbstractHorse
 import org.bukkit.entity.Tameable
 import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
+import kotlin.math.floor
 import kotlin.time.Duration
 
 /** General utilities. */
@@ -253,5 +252,74 @@ internal object Utils {
                     }
                 }.addPassenger(this)
         }
+    }
+
+    /** Math and noise-related utilities. */
+    object Math {
+        /**
+         * Generates a deterministic 2D gradient noise value in roughly [-1, 1].
+         *
+         * The same [seed], [x], and [y] inputs always produce the same output,
+         * making it suitable for reproducible terrain-like drift patterns.
+         */
+        fun noise2D(
+            x: Double,
+            y: Double,
+            seed: Long,
+        ): Double {
+            val floorX = floor(x).toInt()
+            val floorY = floor(y).toInt()
+
+            val g00 = gradient(floorX, floorY, seed)
+            val g10 = gradient(floorX + 1, floorY, seed)
+            val g01 = gradient(floorX, floorY + 1, seed)
+            val g11 = gradient(floorX + 1, floorY + 1, seed)
+
+            val xf = x - floorX
+            val yf = y - floorY
+            val u = smoothStep(xf)
+            val v = smoothStep(yf)
+
+            val n00 = g00.first * xf + g00.second * yf
+            val n10 = g10.first * (xf - 1) + g10.second * yf
+            val n01 = g01.first * xf + g01.second * (yf - 1)
+            val n11 = g11.first * (xf - 1) + g11.second * (yf - 1)
+
+            val nx0 = n00 * (1 - u) + n10 * u
+            val nx1 = n01 * (1 - u) + n11 * u
+
+            return (nx0 * (1 - v) + nx1 * v).coerceIn(-1.0, 1.0)
+        }
+
+        /**
+         * Returns a pseudo-random unit gradient vector from a lattice point.
+         *
+         * @param seed The seed for the noise field.
+         * @param x Lattice x coordinate.
+         * @param y Lattice y coordinate.
+         */
+        fun gradient(
+            x: Int,
+            y: Int,
+            seed: Long,
+        ): Pair<Double, Double> {
+            val hash = mix(seed, x.toLong(), y.toLong())
+            val angle = (hash and 0x7fffffff) * (2.0 * kotlin.math.PI / 0x7fffffff)
+            return Pair(kotlin.math.cos(angle), kotlin.math.sin(angle))
+        }
+
+        private fun mix(
+            seed: Long,
+            x: Long,
+            y: Long,
+        ): Long {
+            var h = seed xor (x * 374761393L)
+            h = h xor (y * 668265263L)
+            h = h xor (h ushr 13)
+            return h * 1274126177L
+        }
+
+        /** Smoothly interpolates [t] in [0, 1] using the classic 3t² - 2t³ curve. */
+        private fun smoothStep(t: Double): Double = t * t * (3 - 2 * t)
     }
 }
