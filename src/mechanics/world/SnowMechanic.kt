@@ -52,8 +52,14 @@ internal object SnowMechanic : MechanicInterface {
     /**
      * Returns a target snow-layer count for the given block column.
      *
-     * The value is deterministic for a given worldSeed and coordinate pair, but
+     * The value is deterministic for a given [worldSeed] and coordinate pair, but
      * varies smoothly across the landscape to create broad drifts.
+     *
+     * @param x The block column x coordinate.
+     * @param z The block column z coordinate.
+     * @param cap The maximum layer count allowed by physics and game rules.
+     * @param worldSeed The seed of the world, used to make drift patterns reproducible.
+     * @return The target snow layer count in the range [0, cap].
      */
     private fun snowTarget(
         x: Int,

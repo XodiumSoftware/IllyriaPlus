@@ -308,7 +308,15 @@ internal object Utils {
             return Pair(kotlin.math.cos(angle), kotlin.math.sin(angle))
         }
 
-        private fun mix(
+        /**
+         * Mixes a seed with two coordinates into a pseudo-random hash.
+         *
+         * @param seed The base seed.
+         * @param x The x coordinate.
+         * @param y The y coordinate.
+         * @return A hashed value derived from the inputs.
+         */
+        fun mix(
             seed: Long,
             x: Long,
             y: Long,
@@ -319,7 +327,12 @@ internal object Utils {
             return h * 1274126177L
         }
 
-        /** Smoothly interpolates [t] in [0, 1] using the classic 3t² - 2t³ curve. */
-        private fun smoothStep(t: Double): Double = t * t * (3 - 2 * t)
+        /**
+         * Smoothly interpolates [t] in [0, 1] using the classic 3t² - 2t³ curve.
+         *
+         * @param t The interpolation parameter.
+         * @return The smoothed value.
+         */
+        fun smoothStep(t: Double): Double = t * t * (3 - 2 * t)
     }
 }
