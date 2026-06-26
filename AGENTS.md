@@ -147,6 +147,8 @@ Within each group:
 - **`@EventHandler`** functions go above regular `public` functions
 - **`@EventHandler`** functions should always be named `on(event: <EventType>)` — Kotlin allows multiple `@EventHandler fun on(...)` as long as parameter types differ
 - **`@EventHandler`** functions should not have KDoc comments (the event type is self-documenting)
+- **`private const val`** and **`private val`** should not have KDoc comments — private constants/values are self-explanatory by their name or enforced by the compiler
+- When KDoc is used, follow Kotlin idiomatic style: document parameters with `@param`, return values with `@return`, and exceptions with `@throws` where they add value
 - **`public`** members go above **`private`** members
 
 ## Testing

@@ -7,15 +7,14 @@ import org.bukkit.event.block.BlockFormEvent
 import org.xodium.illyriaplus.Utils
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import kotlin.math.floor
-import kotlin.random.Random
 
 /** Represents a mechanic handling snow within the system. */
 internal object SnowMechanic : MechanicInterface {
     private const val NOISE_SCALE = 0.005
     private const val DETAIL_SCALE = 0.02
     private const val DETAIL_AMPLITUDE = 0.35
-
-    private val SEED_OFFSET = Random.nextLong()
+    private const val BASE_SEED_MIX = 0x5f3f_a2b7_8c1d_4e2aL
+    private const val DETAIL_SEED_MIX = 0x7d7b_e4c1_6f82_03a5L
 
     @EventHandler(ignoreCancelled = true)
     fun on(event: BlockFormEvent) {
@@ -62,12 +61,11 @@ internal object SnowMechanic : MechanicInterface {
         cap: Int,
         worldSeed: Long,
     ): Int {
-        val seed = worldSeed + SEED_OFFSET
         val nx = x.toDouble()
         val nz = z.toDouble()
 
-        val base = Utils.Math.noise2D(nx * NOISE_SCALE, nz * NOISE_SCALE, seed)
-        val detail = Utils.Math.noise2D(nx * DETAIL_SCALE, nz * DETAIL_SCALE, seed.rotateLeft(17))
+        val base = Utils.Math.noise2D(nx * NOISE_SCALE, nz * NOISE_SCALE, worldSeed + BASE_SEED_MIX)
+        val detail = Utils.Math.noise2D(nx * DETAIL_SCALE, nz * DETAIL_SCALE, worldSeed + DETAIL_SEED_MIX)
 
         val combined = base + detail * DETAIL_AMPLITUDE
         val normalized = (combined + 1.0) / (2.0 + DETAIL_AMPLITUDE)
