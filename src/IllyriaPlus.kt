@@ -98,6 +98,7 @@ internal class IllyriaPlus : JavaPlugin() {
                 TreeMechanic,
                 RulesMechanic,
                 ResourcePackMechanic,
+                SnowMechanic,
             )
 
         logger.info("Registered: ${mechanics.size} mechanic(s) | Took ${mechanics.sumOf { it.register() }}ms")
