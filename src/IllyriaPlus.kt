@@ -88,7 +88,6 @@ internal class IllyriaPlus : JavaPlugin() {
                 GriefingMechanic,
                 MotdMechanic,
                 MessagesMechanic,
-                ServerInfoMechanic,
                 TabListMechanic,
                 TreeMechanic,
                 RulesMechanic,
