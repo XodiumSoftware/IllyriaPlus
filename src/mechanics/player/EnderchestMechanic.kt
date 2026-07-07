@@ -10,7 +10,7 @@ import org.xodium.illyriaplus.mechanics.MechanicInterface
 
 /** Represents a mechanic handling ender chest access within the system. */
 internal object EnderchestMechanic : MechanicInterface {
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerInteractEvent) = openEnderchest(event)
 
     /**

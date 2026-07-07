@@ -88,7 +88,7 @@ internal object MessagesMechanic : MechanicInterface {
     @EventHandler
     fun on(event: PlayerSetSpawnEvent) = setSpawn(event)
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerBedEnterEvent) = bedEnter(event)
 
     @EventHandler

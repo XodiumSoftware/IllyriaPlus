@@ -26,7 +26,7 @@ internal object DimensionMechanic : MechanicInterface {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PlayerPortalEvent) = playerPortal(event)
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: EntityPortalEvent) = entityPortal(event)
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

@@ -37,12 +37,13 @@ internal class IllyriaPlus : JavaPlugin() {
         private set
 
     override fun onEnable() {
-        instance = this
-
         if (!server.version.contains(pluginMeta.version.substringBefore("+"))) {
             logger.severe("This plugin requires the following supported version: ${pluginMeta.version}.")
             server.pluginManager.disablePlugin(this)
+            return
         }
+
+        instance = this
 
         recipes =
             listOf(

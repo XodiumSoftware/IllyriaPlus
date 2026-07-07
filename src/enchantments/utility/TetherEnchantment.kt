@@ -23,7 +23,7 @@ internal object TetherEnchantment : EnchantmentInterface {
             .maximumCost(EnchantmentRegistryEntry.EnchantmentCost.of(75, 0))
             .activeSlots(EquipmentSlotGroup.MAINHAND)
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: BlockDropItemEvent) {
         val player = event.player
 
@@ -32,7 +32,7 @@ internal object TetherEnchantment : EnchantmentInterface {
         transferItemEntitiesToInventory(player, event.items)
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: EntityDeathEvent) {
         val player = event.entity.killer ?: return
         val itemInHand = player.inventory.itemInMainHand

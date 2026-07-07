@@ -11,7 +11,7 @@ import kotlin.random.Random
 internal object SpawnEggMechanic : MechanicInterface {
     private const val SPAWN_EGG_DROP_CHANCE: Double = 0.001
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: EntityDeathEvent) = spawnEggDrop(event)
 
     /**

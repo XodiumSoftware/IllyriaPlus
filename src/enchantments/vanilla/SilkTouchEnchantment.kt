@@ -11,7 +11,7 @@ import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 
 /** Represents an object handling silk touch enchantment implementation within the system. */
 internal object SilkTouchEnchantment : EnchantmentInterface {
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: BlockBreakEvent) {
         if (!isValidItem(event.player.inventory.itemInMainHand)) return
 

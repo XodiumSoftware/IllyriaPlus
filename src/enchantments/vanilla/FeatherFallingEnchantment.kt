@@ -11,7 +11,7 @@ import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 
 /** Represents an object handling feather falling enchantment implementation within the system. */
 internal object FeatherFallingEnchantment : EnchantmentInterface {
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerInteractEvent) {
         when {
             event.action != Action.PHYSICAL -> return

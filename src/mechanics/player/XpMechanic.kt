@@ -10,7 +10,7 @@ import org.xodium.illyriaplus.mechanics.MechanicInterface
 internal object XpMechanic : MechanicInterface {
     private const val XP_COST_TO_BOTTLE: Int = 11
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerInteractEvent) = xpToBottle(event)
 
     /**

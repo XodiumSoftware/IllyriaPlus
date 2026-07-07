@@ -19,7 +19,7 @@ internal object HuskMechanic : MechanicInterface {
     private const val CAMEL_HUSK_SAND_BASE_MAX: Int = 3
     private const val CAMEL_HUSK_SAND_LOOTING_BONUS: Int = 2
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: EntityDeathEvent) = huskDrop(event)
 
     /**
