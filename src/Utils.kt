@@ -11,13 +11,17 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.Tag
 import org.bukkit.Chunk
 import org.bukkit.Location
+import org.bukkit.NamespacedKey
+import org.bukkit.Registry
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeInstance
 import org.bukkit.block.Chest
 import org.bukkit.block.Container
 import org.bukkit.block.DoubleChest
 import org.bukkit.entity.AbstractHorse
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Tameable
+import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import kotlin.time.Duration
@@ -73,6 +77,17 @@ internal object Utils {
          */
         fun TypedKey<org.bukkit.enchantments.Enchantment>.displayName(): Component =
             MM.deserialize(value().snakeToProperCase())
+    }
+
+    /** Item-related utilities. */
+    object Item {
+        /**
+         * Creates a spawn egg [ItemStack] for this [EntityType] using the typed item registry.
+         *
+         * @return A spawn egg item stack, or `null` if this entity type has no spawn egg.
+         */
+        fun EntityType.spawnEgg(): ItemStack? =
+            Registry.ITEM.get(NamespacedKey.minecraft("${key.key}_spawn_egg"))?.createItemStack()
     }
 
     /** Schedule-related utilities. */

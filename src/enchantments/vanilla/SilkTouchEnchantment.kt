@@ -7,6 +7,7 @@ import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.inventory.ItemStack
+import org.xodium.illyriaplus.Utils.Item.spawnEgg
 import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 
 /** Represents an object handling silk touch enchantment implementation within the system. */
@@ -35,10 +36,7 @@ internal object SilkTouchEnchantment : EnchantmentInterface {
 
         if (state is CreatureSpawner) {
             event.block.world.dropItemNaturally(event.block.location, ItemStack.of(Material.SPAWNER))
-            event.block.world.dropItemNaturally(
-                event.block.location,
-                ItemStack.of(Material.matchMaterial("${state.spawnedType?.name}_SPAWN_EGG") ?: return),
-            )
+            event.block.world.dropItemNaturally(event.block.location, state.spawnedType?.spawnEgg() ?: return)
         }
     }
 

@@ -1,9 +1,8 @@
 package org.xodium.illyriaplus.mechanics.entity
 
-import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
-import org.bukkit.inventory.ItemStack
+import org.xodium.illyriaplus.Utils.Item.spawnEgg
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import kotlin.random.Random
 
@@ -20,8 +19,6 @@ internal object SpawnEggMechanic : MechanicInterface {
      * @param event The EntityDeathEvent triggered when an entity dies.
      */
     private fun spawnEggDrop(event: EntityDeathEvent) {
-        if (Random.nextDouble() <= SPAWN_EGG_DROP_CHANCE) {
-            Material.matchMaterial("${event.entityType.name}_SPAWN_EGG")?.let { event.drops.add(ItemStack.of(it)) }
-        }
+        if (Random.nextDouble() <= SPAWN_EGG_DROP_CHANCE) event.entityType.spawnEgg()?.let { event.drops.add(it) }
     }
 }
