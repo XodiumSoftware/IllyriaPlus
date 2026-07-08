@@ -1,5 +1,7 @@
 package org.xodium.illyriaplus.mechanics.player
 
+import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.datacomponent.item.ItemEnchantments
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -12,7 +14,6 @@ import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.view.AnvilView
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.mechanics.MechanicInterface
@@ -97,15 +98,10 @@ internal object DisenchantmentMechanic : MechanicInterface {
      * @param enchantments The enchantments to store on the book.
      * @return The created enchanted book.
      */
-    private fun createEnchantedBook(enchantments: Map<Enchantment, Int>): ItemStack {
-        val result = ItemStack.of(Material.ENCHANTED_BOOK)
-        val meta = result.itemMeta as EnchantmentStorageMeta
-
-        enchantments.forEach { (enchantment, level) -> meta.addStoredEnchant(enchantment, level, true) }
-        result.itemMeta = meta
-
-        return result
-    }
+    private fun createEnchantedBook(enchantments: Map<Enchantment, Int>): ItemStack =
+        ItemStack.of(Material.ENCHANTED_BOOK).apply {
+            setData(DataComponentTypes.STORED_ENCHANTMENTS, ItemEnchantments.itemEnchantments(enchantments))
+        }
 
     /**
      * Consumes one book from the provided stack.
@@ -127,20 +123,16 @@ internal object DisenchantmentMechanic : MechanicInterface {
         firstItem: ItemStack,
         secondItem: ItemStack,
     ): Map<Enchantment, Int>? {
-        if (firstItem.type.isAir || secondItem.type.isAir) return null
-        if (firstItem.type == Material.ENCHANTED_BOOK) return null
-        if (secondItem.type != Material.BOOK) return null
+        if (firstItem.type.isAir ||
+            secondItem.type.isAir ||
+            firstItem.type == Material.ENCHANTED_BOOK ||
+            secondItem.type != Material.BOOK ||
+            secondItem.hasData(DataComponentTypes.STORED_ENCHANTMENTS)
+        ) {
+            return null
+        }
 
-        val bookMeta = secondItem.itemMeta
-
-        if (bookMeta is EnchantmentStorageMeta && bookMeta.hasStoredEnchants()) return null
-
-        val enchantments =
-            firstItem.enchantments.filterKeys { it != Enchantment.BINDING_CURSE && it != Enchantment.VANISHING_CURSE }
-
-        if (enchantments.isEmpty()) return null
-
-        return enchantments
+        return firstItem.enchantments.filterKeys { !it.isCursed }.takeIf { it.isNotEmpty() }
     }
 
     /**
@@ -149,15 +141,11 @@ internal object DisenchantmentMechanic : MechanicInterface {
      * @param enchantments The enchantments being extracted.
      * @return The total XP cost in levels.
      */
-    private fun calculateCost(enchantments: Map<Enchantment, Int>): Int {
-        var total = BASE_COST
-        var multiplier = COST_MULTIPLIER
-
-        enchantments.values.sortedDescending().forEach {
-            total += it * multiplier
-            multiplier += COST_MULTIPLIER
-        }
-
-        return total.toInt()
-    }
+    private fun calculateCost(enchantments: Map<Enchantment, Int>): Int =
+        enchantments
+            .values
+            .sortedDescending()
+            .foldIndexed(BASE_COST)
+            { index, total, level -> total + level * (COST_MULTIPLIER + index * COST_MULTIPLIER) }
+            .toInt()
 }
