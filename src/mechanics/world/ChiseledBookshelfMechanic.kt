@@ -22,7 +22,7 @@ import org.bukkit.block.data.type.ChiseledBookshelf as ChiseledBookshelfData
 /** Represents a mechanic handling chiseled bookshelf interactions within the system. */
 @Suppress("UnstableApiUsage")
 internal object ChiseledBookshelfMechanic : MechanicInterface {
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerInteractEvent) = bookshelfInteraction(event)
 
     /**

@@ -11,7 +11,6 @@ import org.xodium.illyriaplus.enchantments.vanilla.FortuneEnchantment
 import org.xodium.illyriaplus.enchantments.vanilla.SilkTouchEnchantment
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import org.xodium.illyriaplus.mechanics.entity.*
-import org.xodium.illyriaplus.mechanics.entity.monster.*
 import org.xodium.illyriaplus.mechanics.player.*
 import org.xodium.illyriaplus.mechanics.server.*
 import org.xodium.illyriaplus.mechanics.world.*
@@ -38,12 +37,13 @@ internal class IllyriaPlus : JavaPlugin() {
         private set
 
     override fun onEnable() {
-        instance = this
-
         if (!server.version.contains(pluginMeta.version.substringBefore("+"))) {
             logger.severe("This plugin requires the following supported version: ${pluginMeta.version}.")
             server.pluginManager.disablePlugin(this)
+            return
         }
+
+        instance = this
 
         recipes =
             listOf(
@@ -75,11 +75,7 @@ internal class IllyriaPlus : JavaPlugin() {
                 TameableMechanic,
                 EnderchestMechanic,
                 XpMechanic,
-                MonsterMechanic,
                 HuskMechanic,
-                ZombieMechanic,
-                AbstractSkeletonMechanic,
-                CreeperMechanic,
                 SilenceMechanic,
                 HeadMechanic,
                 ChatMechanic,
@@ -93,7 +89,6 @@ internal class IllyriaPlus : JavaPlugin() {
                 GriefingMechanic,
                 MotdMechanic,
                 MessagesMechanic,
-                ServerInfoMechanic,
                 TabListMechanic,
                 TreeMechanic,
                 RulesMechanic,

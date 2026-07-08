@@ -9,7 +9,7 @@ import org.xodium.illyriaplus.mechanics.MechanicInterface
 
 /** Represents a mechanic handling tameable entities within the system. */
 internal object TameableMechanic : MechanicInterface {
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerInteractEntityEvent) = handleInteract(event)
 
     /**

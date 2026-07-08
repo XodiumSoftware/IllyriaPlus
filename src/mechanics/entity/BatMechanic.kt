@@ -17,7 +17,7 @@ internal object BatMechanic : MechanicInterface {
     private const val BAT_MEMBRANE_BASE_MAX: Int = 1
     private const val BAT_MEMBRANE_LOOTING_BONUS: Int = 1
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: EntityDeathEvent) = batDrop(event)
 
     /**

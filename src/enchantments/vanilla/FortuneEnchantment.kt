@@ -15,7 +15,7 @@ internal object FortuneEnchantment : EnchantmentInterface {
     /** Minimum Fortune level required to trigger auto-replanting of crops. */
     private const val MIN_REPLANT_LEVEL = 2
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: BlockBreakEvent) {
         if (!isValidItem(event.player.inventory.itemInMainHand)) return
 

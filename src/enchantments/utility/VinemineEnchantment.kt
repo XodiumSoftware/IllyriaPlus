@@ -37,7 +37,7 @@ internal object VinemineEnchantment : EnchantmentInterface {
             .maximumCost(EnchantmentRegistryEntry.EnchantmentCost.of(75, 10))
             .activeSlots(EquipmentSlotGroup.MAINHAND)
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: BlockBreakEvent) {
         val player = event.player
 

@@ -102,10 +102,9 @@ These items are consumed by `AlcoholRecipe` for brewing results, but can be used
 
 Mechanics are grouped by category under `src/mechanics/`:
 
-- `entity/` — Bat, Griefing, Silence, SpawnEgg, Tameable
-- `entity/monster/` — AbstractSkeleton, Creeper, Husk, Monster, Zombie (`MonsterInterface` base)
+- `entity/` — Bat, Griefing, Husk, Silence, SpawnEgg, Tameable
 - `player/` — Alcohol, Enderchest, Head, Locator, Messages, Nickname, Sit, Xp
-- `server/` — Chat, Motd, Rules, ScoreBoard, ServerInfo, TabList
+- `server/` — Chat, Motd, ResourcePack, Rules, ScoreBoard, TabList
 - `world/` — BlockPlacement, ChiseledBookshelf, Dimension, Inventory, Openable, Tree
 
 Currently **26** mechanics are registered in `IllyriaPlus.onEnable()`.
@@ -188,7 +187,7 @@ The `messageId` must have matching translations in the resource pack (`resourcep
 
 Recipe objects implement **`RecipeInterface`** and are listed in `IllyriaPlus.onEnable()`. They expose `recipes` and `potions` collections plus a `register()` function that returns elapsed time in ms.
 
-Currently **10** recipe modules are registered:
+Currently **10** recipe modules are registered (2 custom recipes + 8 vanilla-style recipes):
 
 - AlcoholRecipe
 - ChainmailRecipe
@@ -208,6 +207,7 @@ Currently **10** recipe modules are registered:
 Data classes live in `src/data/`:
 
 - `AdjacentBlockData`
+- `BannerData`
 - `BuildSetupData`
 - `CommandData`
 - `PaintingData`
@@ -219,6 +219,7 @@ General utilities are in `src/Utils.kt` as the `internal object Utils`, with nes
 
 - `Utils.MM` — MiniMessage parser with custom gradient aliases
 - `Utils.Enchantment` — enchantment display helpers
+- `Utils.Item` — item helpers (e.g. typed spawn-egg lookup)
 - `Utils.Schedule` — scheduled task helpers
 - `Utils.Command` — Brigadier command execution helpers (`executesCatching`, `playerExecuted`)
 - `Utils.Block` — block helpers
@@ -230,14 +231,13 @@ General utilities are in `src/Utils.kt` as the `internal object Utils`, with nes
 | Package | Contents |
 |---------|----------|
 | `mechanics/` | 26 mechanic singletons (organized by category) |
-| `mechanics/entity/monster/` | 6 monster-specific mechanics plus `MonsterInterface` |
-| `data/` | `AdjacentBlockData`, `BuildSetupData`, `CommandData`, `TreeStructureData` |
+| `data/` | `AdjacentBlockData`, `BannerData`, `BuildSetupData`, `CommandData`, `PaintingData`, `TreeStructureData` |
 | `enchantments/` | `EnchantmentInterface`; Embertread, Nimbus, Tether, Vinemine, FeatherFalling, Fortune, SilkTouch |
 | `enchantments/utility/` | Custom utility enchantments registered in the bootstrap |
 | `enchantments/vanilla/` | Vanilla enchantment behavior overrides |
 | `paintings/` | `PaintingInterface`; 117 Yapetto painting variants from the Portfolio datapack |
 | `damagetypes/` | `DamageTypeInterface`; custom damage types such as `AlcoholDamageType` |
-| `recipes/` | `RecipeInterface`; 2 custom recipes + 7 vanilla-style recipes |
+| `recipes/` | `RecipeInterface`; 2 custom recipes + 8 vanilla-style recipes |
 | `pdcs/` | `PlayerPDC` |
 
 ### Key Conventions

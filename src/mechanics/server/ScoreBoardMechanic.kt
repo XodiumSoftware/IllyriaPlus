@@ -20,7 +20,12 @@ internal object ScoreBoardMechanic : MechanicInterface {
                 Commands
                     .literal("leaderboard")
                     .requires { it.sender.hasPermission(perms[0]) }
-                    .playerExecuted { player, _ -> player.toggleScoreboard() },
+                    .playerExecuted { player, _ ->
+                        player.apply {
+                            scoreboardVisibility = !scoreboardVisibility
+                            configureScoreboard()
+                        }
+                    },
                 "This command allows you to open the leaderboard",
                 listOf("lb", "board"),
             ),
@@ -36,22 +41,7 @@ internal object ScoreBoardMechanic : MechanicInterface {
         )
 
     @EventHandler
-    fun on(event: PlayerJoinEvent) = handleJoin(event)
-
-    /**
-     * Configures the scoreboard for the player on join.
-     *
-     * @param event The PlayerJoinEvent triggered when a player joins.
-     */
-    private fun handleJoin(event: PlayerJoinEvent) {
-        event.player.configureScoreboard()
-    }
-
-    /** Toggles scoreboard visibility and applies the correct scoreboard. */
-    private fun Player.toggleScoreboard() {
-        scoreboardVisibility = !scoreboardVisibility
-        configureScoreboard()
-    }
+    fun on(event: PlayerJoinEvent) = event.player.configureScoreboard()
 
     /** Applies the correct scoreboard based on the player's visibility preference. */
     private fun Player.configureScoreboard() {

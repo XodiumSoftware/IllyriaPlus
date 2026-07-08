@@ -15,7 +15,7 @@ internal object BlockPlacementMechanic : MechanicInterface {
             BuildSetupData(setOf(Material.RED_MUSHROOM, Material.BROWN_MUSHROOM), Tag.LOGS),
         ).toMaterialMap()
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: BlockCanBuildEvent) {
         SETUPS[event.material]?.let {
             val (x, y, z) = it.offset

@@ -1,20 +1,17 @@
-package org.xodium.illyriaplus.mechanics.entity.monster
+package org.xodium.illyriaplus.mechanics.entity
 
 import org.bukkit.Material
-import org.bukkit.attribute.Attribute
-import org.bukkit.attribute.AttributeInstance
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Camel
 import org.bukkit.entity.Husk
-import org.bukkit.entity.Monster
 import org.bukkit.event.EventHandler
-import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
+import org.xodium.illyriaplus.mechanics.MechanicInterface
 import kotlin.random.Random
 
 /** Represents a mechanic handling husk drops within the system. */
-internal object HuskMechanic : MonsterInterface {
+internal object HuskMechanic : MechanicInterface {
     private const val HUSK_SAND_DROP_CHANCE: Double = 1.0
     private const val HUSK_SAND_BASE_MIN: Int = 0
     private const val HUSK_SAND_BASE_MAX: Int = 2
@@ -22,21 +19,7 @@ internal object HuskMechanic : MonsterInterface {
     private const val CAMEL_HUSK_SAND_BASE_MAX: Int = 3
     private const val CAMEL_HUSK_SAND_LOOTING_BONUS: Int = 2
 
-    override val attributes: Map<Attribute, (Monster, AttributeInstance) -> Unit> =
-        mapOf(
-            Attribute.ARMOR to { _, attr -> attr.baseValue = (2..4).random().toDouble() },
-            Attribute.KNOCKBACK_RESISTANCE to { _, attr -> attr.baseValue = (3..6).random() / 10.0 },
-        )
-
     @EventHandler(ignoreCancelled = true)
-    fun on(event: CreatureSpawnEvent) {
-        when {
-            event.entity.world.difficulty != difficulty -> return
-            else -> modifySpawn(event.entity as? Husk ?: return)
-        }
-    }
-
-    @EventHandler
     fun on(event: EntityDeathEvent) = huskDrop(event)
 
     /**
