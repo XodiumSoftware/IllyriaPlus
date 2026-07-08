@@ -44,7 +44,7 @@ internal object DisenchantmentMechanic : MechanicInterface {
         val firstItem = inventory.getItem(0) ?: return
         val secondItem = inventory.getItem(1) ?: return
         val enchantments = collectDisenchantableEnchantments(firstItem, secondItem) ?: return
-        val transferred = selectTransferredEnchantment(enchantments)
+        val transferred = resolveTransferredEnchantments(firstItem, enchantments)
 
         event.result = createEnchantedBook(transferred)
         view.repairCost = calculateCost(transferred)
@@ -78,7 +78,7 @@ internal object DisenchantmentMechanic : MechanicInterface {
         val firstItem = inventory.getItem(0) ?: return
         val secondItem = inventory.getItem(1) ?: return
         val enchantments = collectDisenchantableEnchantments(firstItem, secondItem) ?: return
-        val transferred = selectTransferredEnchantment(enchantments)
+        val transferred = resolveTransferredEnchantments(firstItem, enchantments)
         val cost = view.repairCost
 
         if (player.gameMode != GameMode.CREATIVE && player.level < cost) {
@@ -182,6 +182,19 @@ internal object DisenchantmentMechanic : MechanicInterface {
 
         return filtered
     }
+
+    /**
+     * Resolves which enchantments should be transferred based on the source item type.
+     *
+     * @param firstItem The source item in slot 0.
+     * @param enchantments The enchantments available on the source item.
+     * @return The enchantments to transfer to the result book.
+     */
+    private fun resolveTransferredEnchantments(
+        firstItem: ItemStack,
+        enchantments: Map<Enchantment, Int>,
+    ): Map<Enchantment, Int> =
+        if (firstItem.type == Material.ENCHANTED_BOOK) selectTransferredEnchantment(enchantments) else enchantments
 
     /**
      * Selects the enchantment to transfer when splitting an enchanted book.
