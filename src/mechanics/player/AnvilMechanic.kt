@@ -63,7 +63,7 @@ internal object AnvilMechanic : MechanicInterface {
         if (!disenchantHandled) {
             event.result?.takeIf { !it.type.isAir }?.let { result ->
                 view.renameText?.takeIf { it.isNotEmpty() }?.let { renameText ->
-                    result.editMeta { it.displayName(Utils.MM.deserialize(renameText)) }
+                    result.setData(DataComponentTypes.CUSTOM_NAME, Utils.MM.deserialize(renameText))
                     event.result = result
                 }
             }
