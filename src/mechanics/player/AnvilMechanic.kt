@@ -60,14 +60,7 @@ internal object AnvilMechanic : MechanicInterface {
 
         val disenchantHandled = prepareDisenchant(event)
 
-        if (!disenchantHandled) {
-            event.result?.takeIf { !it.type.isAir }?.let { result ->
-                view.renameText?.takeIf { it.isNotEmpty() }?.let { renameText ->
-                    result.setData(DataComponentTypes.CUSTOM_NAME, Utils.MM.deserialize(renameText))
-                    event.result = result
-                }
-            }
-        }
+        if (!disenchantHandled) applyAnvilRename(event)
 
         instance.server.scheduler.runTask(instance) { _ ->
             if (player.gameMode == GameMode.CREATIVE) return@runTask
@@ -199,6 +192,19 @@ internal object AnvilMechanic : MechanicInterface {
     private fun configureAnvil(view: AnvilView) {
         view.maximumRepairCost = Int.MAX_VALUE
         view.bypassEnchantmentLevelRestriction(true)
+    }
+
+    /**
+     * Applies the player's rename text to the anvil result using MiniMessage.
+     *
+     * @param event the prepare anvil event
+     */
+    private fun applyAnvilRename(event: PrepareAnvilEvent) {
+        val result = event.result?.takeIf { !it.type.isAir } ?: return
+        val renameText = event.view.renameText?.takeIf { it.isNotEmpty() } ?: return
+
+        result.setData(DataComponentTypes.CUSTOM_NAME, Utils.MM.deserialize(renameText))
+        event.result = result
     }
 
     /**
