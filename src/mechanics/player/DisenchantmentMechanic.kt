@@ -15,7 +15,6 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.view.AnvilView
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 
 /** Represents a mechanic handling item disenchantment within the system. */
@@ -48,11 +47,6 @@ internal object DisenchantmentMechanic : MechanicInterface {
 
         event.result = createEnchantedBook(transferred)
         view.repairCost = calculateCost(transferred)
-
-        instance.server.scheduler.runTask(
-            instance,
-            Runnable { view.repairCost = calculateCost(transferred) },
-        )
     }
 
     /**
