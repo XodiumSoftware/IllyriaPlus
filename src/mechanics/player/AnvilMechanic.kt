@@ -69,7 +69,7 @@ internal object AnvilMechanic : MechanicInterface {
             val instantBuild =
                 input2 == null || input2.type == Material.AIR || view.repairCost < view.maximumRepairCost
 
-            setInstantBuild(player, instantBuild)
+            setCreativeMode(player, instantBuild)
         }
     }
 
@@ -102,7 +102,7 @@ internal object AnvilMechanic : MechanicInterface {
     }
 
     /**
-     * Resets the player's instant-build ability when an anvil inventory closes.
+     * Resets the player's creative mode ability when an anvil inventory closes.
      *
      * @param player the player closing the inventory
      * @param inventory the inventory being closed
@@ -114,7 +114,7 @@ internal object AnvilMechanic : MechanicInterface {
         when {
             player.gameMode == GameMode.CREATIVE -> return
             inventory !is AnvilInventory -> return
-            else -> setInstantBuild(player, false)
+            else -> setCreativeMode(player, false)
         }
     }
 
@@ -129,13 +129,13 @@ internal object AnvilMechanic : MechanicInterface {
     }
 
     /**
-     * Sends a Player Abilities packet to toggle the creative-mode (instant-build) bit,
+     * Sends a Player Abilities packet to toggle the creative-mode bit,
      * allowing anvil interactions above the vanilla cost limit.
      *
      * @param player the player whose abilities should be updated
      * @param creativeMode whether instant-build should be enabled
      */
-    private fun setInstantBuild(
+    private fun setCreativeMode(
         player: Player,
         creativeMode: Boolean,
     ) {
