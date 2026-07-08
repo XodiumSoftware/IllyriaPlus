@@ -44,13 +44,14 @@ internal object DisenchantmentMechanic : MechanicInterface {
         val firstItem = inventory.getItem(0) ?: return
         val secondItem = inventory.getItem(1) ?: return
         val enchantments = collectDisenchantableEnchantments(firstItem, secondItem) ?: return
+        val transferred = selectTransferredEnchantment(enchantments)
 
-        event.result = createEnchantedBook(enchantments)
-        view.repairCost = calculateCost(enchantments)
+        event.result = createEnchantedBook(transferred)
+        view.repairCost = calculateCost(transferred)
 
         instance.server.scheduler.runTask(
             instance,
-            Runnable { view.repairCost = calculateCost(enchantments) },
+            Runnable { view.repairCost = calculateCost(transferred) },
         )
     }
 
@@ -77,6 +78,7 @@ internal object DisenchantmentMechanic : MechanicInterface {
         val firstItem = inventory.getItem(0) ?: return
         val secondItem = inventory.getItem(1) ?: return
         val enchantments = collectDisenchantableEnchantments(firstItem, secondItem) ?: return
+        val transferred = selectTransferredEnchantment(enchantments)
         val cost = view.repairCost
 
         if (player.gameMode != GameMode.CREATIVE && player.level < cost) {
@@ -85,7 +87,7 @@ internal object DisenchantmentMechanic : MechanicInterface {
         }
 
         event.isCancelled = true
-        inventory.setItem(0, firstItem.clone().apply { enchantments.keys.forEach { removeEnchantment(it) } })
+        inventory.setItem(0, removeEnchantments(firstItem, transferred.keys))
         inventory.setItem(1, consumeBook(secondItem))
         player.setItemOnCursor(result)
 
@@ -113,9 +115,46 @@ internal object DisenchantmentMechanic : MechanicInterface {
         if (book.amount > 1) book.clone().apply { amount -= 1 } else ItemStack.of(Material.AIR)
 
     /**
+     * Removes the specified enchantments from the given item or enchanted book.
+     *
+     * @param item The item to remove enchantments from.
+     * @param enchantments The enchantments to remove.
+     * @return The modified item, or air if no enchantments remain on an enchanted book.
+     */
+    private fun removeEnchantments(
+        item: ItemStack,
+        enchantments: Set<Enchantment>,
+    ): ItemStack {
+        val clone = item.clone()
+
+        when (clone.type) {
+            Material.ENCHANTED_BOOK -> {
+                val stored =
+                    clone
+                        .getData(DataComponentTypes.STORED_ENCHANTMENTS)
+                        ?.enchantments()
+                        ?.toMutableMap()
+                        ?: return clone
+
+                enchantments.forEach { stored.remove(it) }
+
+                if (stored.isEmpty()) return ItemStack.of(Material.AIR)
+
+                clone.setData(DataComponentTypes.STORED_ENCHANTMENTS, ItemEnchantments.itemEnchantments(stored))
+            }
+
+            else -> {
+                enchantments.forEach { clone.removeEnchantment(it) }
+            }
+        }
+
+        return clone
+    }
+
+    /**
      * Validates the anvil inputs and returns the enchantments that can be extracted.
      *
-     * @param firstItem The enchanted item in slot 0.
+     * @param firstItem The enchanted item or book in slot 0.
      * @param secondItem The book in slot 1.
      * @return A map of enchantments and levels, or null if the inputs are invalid.
      */
@@ -125,15 +164,33 @@ internal object DisenchantmentMechanic : MechanicInterface {
     ): Map<Enchantment, Int>? {
         if (firstItem.type.isAir ||
             secondItem.type.isAir ||
-            firstItem.type == Material.ENCHANTED_BOOK ||
             secondItem.type != Material.BOOK ||
             secondItem.hasData(DataComponentTypes.STORED_ENCHANTMENTS)
         ) {
             return null
         }
 
-        return firstItem.enchantments.filterKeys { !it.isCursed }.takeIf { it.isNotEmpty() }
+        val enchantments =
+            when (firstItem.type) {
+                Material.ENCHANTED_BOOK -> firstItem.getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()
+                else -> firstItem.enchantments
+            } ?: return null
+
+        val filtered = enchantments.filterKeys { !it.isCursed }
+
+        if (filtered.isEmpty() || filtered.size == 1) return null
+
+        return filtered
     }
+
+    /**
+     * Selects the enchantment to transfer when splitting an enchanted book.
+     *
+     * @param enchantments The enchantments available on the source item/book.
+     * @return A map containing exactly one enchantment, or null if not splitting.
+     */
+    private fun selectTransferredEnchantment(enchantments: Map<Enchantment, Int>): Map<Enchantment, Int> =
+        enchantments.entries.first().let { mapOf(it.toPair()) }
 
     /**
      * Calculates the XP cost for the disenchant operation.
@@ -145,7 +202,7 @@ internal object DisenchantmentMechanic : MechanicInterface {
         enchantments
             .values
             .sortedDescending()
-            .foldIndexed(BASE_COST)
-            { index, total, level -> total + level * (COST_MULTIPLIER + index * COST_MULTIPLIER) }
-            .toInt()
+            .foldIndexed(BASE_COST.toInt()) { index, total, level ->
+                total + (level * (COST_MULTIPLIER + index * COST_MULTIPLIER)).toInt()
+            }
 }

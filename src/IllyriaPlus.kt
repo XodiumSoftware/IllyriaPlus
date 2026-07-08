@@ -110,7 +110,7 @@ internal class IllyriaPlus : JavaPlugin() {
             )
 
         logger.info(
-            "Registered: ${enchantments.size} enchantment events | Took ${enchantments.sumOf { it.register() }}ms",
+            "Registered: ${enchantments.size} enchantment event(s) | Took ${enchantments.sumOf { it.register() }}ms",
         )
     }
 }
