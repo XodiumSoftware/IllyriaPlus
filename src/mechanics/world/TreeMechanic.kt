@@ -38,7 +38,7 @@ internal object TreeMechanic : MechanicInterface {
                 instance.server.scheduler.runTaskAsynchronously(instance) { _ -> trees.set(loadAllStructures()) }
             }.inWholeMilliseconds
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: StructureGrowEvent) = handleStructureGrowth(event)
 
     /**
