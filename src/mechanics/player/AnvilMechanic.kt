@@ -1,8 +1,8 @@
 package org.xodium.illyriaplus.mechanics.player
 
-import com.comphenix.protocol.PacketType
-import com.comphenix.protocol.ProtocolLibrary
-import com.comphenix.protocol.events.PacketContainer
+import com.github.retrooper.packetevents.PacketEvents
+import com.github.retrooper.packetevents.protocol.player.Abilities
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerAbilities
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -95,17 +95,17 @@ internal object AnvilMechanic : MechanicInterface {
         player: Player,
         instantBuild: Boolean,
     ) {
-        val packet = PacketContainer(PacketType.Play.Server.ABILITIES)
+        val abilities =
+            Abilities(
+                player.isInvulnerable,
+                player.isFlying,
+                player.allowFlight,
+                instantBuild,
+                player.flySpeed,
+                player.walkSpeed,
+            )
+        val packet = WrapperPlayServerPlayerAbilities(abilities)
 
-        packet.booleans
-            .write(0, player.isInvulnerable)
-            .write(1, player.isFlying)
-            .write(2, player.allowFlight)
-            .write(3, instantBuild)
-        packet.floats
-            .write(0, player.flySpeed / 2)
-            .write(1, player.walkSpeed / 2)
-
-        ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet)
+        PacketEvents.getAPI().playerManager.sendPacket(player, packet)
     }
 }
