@@ -80,7 +80,6 @@ internal class IllyriaPlus : JavaPlugin() {
                 HeadMechanic,
                 ChatMechanic,
                 InventoryMechanic,
-                SitMechanic,
                 ChiseledBookshelfMechanic,
                 DimensionMechanic,
                 BlockPlacementMechanic,
