@@ -109,6 +109,16 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
             )
             ctx.logger.info("Registered: ${ENCHANTMENTS.size} enchantment(s).")
 
+//            registerEventHandler(
+//                RegistryEvents.ENCHANTMENT.entryAdd().newHandler { event ->
+//                    if (event.key().key().namespace() != "minecraft") return@newHandler
+//
+//                    event.builder().apply { maxLevel(maxLevel().takeIf { it > 1 }?.times(2) ?: maxLevel()) }
+//                },
+//            )
+//
+//            ctx.logger.info("Vanilla enchantments max levels doubled.")
+
             registerEventHandler(
                 RegistryEvents.DAMAGE_TYPE.compose().newHandler { event ->
                     event.registry().apply {
