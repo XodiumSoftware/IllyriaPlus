@@ -1,5 +1,7 @@
 package org.xodium.illyriaplus
 
+import com.github.retrooper.packetevents.PacketEvents
+import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
 import org.bukkit.plugin.java.JavaPlugin
 import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 import org.xodium.illyriaplus.enchantments.utility.EmbertreadEnchantment
@@ -36,6 +38,13 @@ internal class IllyriaPlus : JavaPlugin() {
     lateinit var enchantments: List<EnchantmentInterface>
         private set
 
+    @Suppress("UnstableApiUsage")
+    override fun onLoad() {
+        PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this))
+        PacketEvents.getAPI().settings.reEncodeByDefault(false)
+        PacketEvents.getAPI().load()
+    }
+
     override fun onEnable() {
         if (!server.version.contains(pluginMeta.version.substringBefore("+"))) {
             logger.severe("This plugin requires the following supported version: ${pluginMeta.version}.")
@@ -44,6 +53,8 @@ internal class IllyriaPlus : JavaPlugin() {
         }
 
         instance = this
+
+        PacketEvents.getAPI().init()
 
         recipes =
             listOf(
@@ -68,6 +79,7 @@ internal class IllyriaPlus : JavaPlugin() {
         mechanics =
             listOf(
                 AlcoholMechanic,
+                AnvilMechanic,
                 NicknameMechanic,
                 ScoreBoardMechanic,
                 LocatorMechanic,
@@ -112,5 +124,9 @@ internal class IllyriaPlus : JavaPlugin() {
         logger.info(
             "Registered: ${enchantments.size} enchantment event(s) | Took ${enchantments.sumOf { it.register() }}ms",
         )
+    }
+
+    override fun onDisable() {
+        PacketEvents.getAPI().terminate()
     }
 }
