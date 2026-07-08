@@ -26,13 +26,15 @@ description = "Minecraft plugin that enhances the base gameplay"
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://repo.codemc.io/repository/maven-releases/")
+    maven("https://repo.codemc.io/repository/maven-snapshots/")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$mcVersion.build.+")
 
     implementation(kotlin("stdlib"))
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
+    implementation("com.github.retrooper:packetevents-spigot:2.13.0")
 }
 
 java {
@@ -62,6 +64,8 @@ tasks {
         dependsOn(processResources)
         archiveClassifier.set("")
         destinationDirectory.set(layout.projectDirectory.dir("build/libs"))
+        relocate("com.github.retrooper", "$group.libs.packetevents")
+        relocate("io.github.retrooper", "$group.libs.packetevents")
         minimize()
     }
     jar { enabled = false }
