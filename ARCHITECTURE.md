@@ -103,7 +103,7 @@ These items are consumed by `AlcoholRecipe` for brewing results, but can be used
 Mechanics are grouped by category under `src/mechanics/`:
 
 - `entity/` — Bat, Griefing, Husk, Silence, SpawnEgg, Tameable
-- `player/` — Alcohol, Enderchest, Head, Locator, Messages, Nickname, Sit, Xp
+- `player/` — Alcohol, **Disenchantment**, Enderchest, Head, Locator, Messages, Nickname, Sit, Xp
 - `server/` — Chat, Motd, ResourcePack, Rules, ScoreBoard, TabList
 - `world/` — BlockPlacement, ChiseledBookshelf, Dimension, Inventory, Openable, Tree
 

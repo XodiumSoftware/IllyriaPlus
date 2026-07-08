@@ -75,6 +75,7 @@ internal class IllyriaPlus : JavaPlugin() {
                 TameableMechanic,
                 EnderchestMechanic,
                 XpMechanic,
+                DisenchantmentMechanic,
                 HuskMechanic,
                 SilenceMechanic,
                 HeadMechanic,
