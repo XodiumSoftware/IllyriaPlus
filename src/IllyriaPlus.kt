@@ -11,6 +11,7 @@ import org.xodium.illyriaplus.enchantments.vanilla.FortuneEnchantment
 import org.xodium.illyriaplus.enchantments.vanilla.SilkTouchEnchantment
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import org.xodium.illyriaplus.mechanics.entity.*
+import org.xodium.illyriaplus.mechanics.player.AnvilMechanic
 import org.xodium.illyriaplus.mechanics.player.*
 import org.xodium.illyriaplus.mechanics.server.*
 import org.xodium.illyriaplus.mechanics.world.*
@@ -68,6 +69,7 @@ internal class IllyriaPlus : JavaPlugin() {
         mechanics =
             listOf(
                 AlcoholMechanic,
+                AnvilMechanic,
                 NicknameMechanic,
                 ScoreBoardMechanic,
                 LocatorMechanic,
