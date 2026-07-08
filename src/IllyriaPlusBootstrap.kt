@@ -15,6 +15,7 @@ import io.papermc.paper.tag.TagEntry
 import net.kyori.adventure.key.Key
 import org.xodium.illyriaplus.banners.MoxvallixBanners
 import org.xodium.illyriaplus.damagetypes.AlcoholDamageType
+import org.xodium.illyriaplus.enchantments.elementals.FrostbiteEnchantment
 import org.xodium.illyriaplus.enchantments.utility.EmbertreadEnchantment
 import org.xodium.illyriaplus.enchantments.utility.NimbusEnchantment
 import org.xodium.illyriaplus.enchantments.utility.TetherEnchantment
@@ -36,6 +37,7 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
             )
         private val ENCHANTMENTS =
             setOf(
+                FrostbiteEnchantment.key,
                 VinemineEnchantment.key,
                 TetherEnchantment.key,
                 NimbusEnchantment.key,
@@ -98,6 +100,11 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
                             NimbusEnchantment
                                 .invoke(it)
                                 .supportedItems(event.getOrCreateTag(ItemTypeTagKeys.HARNESSES))
+                        }
+                        register(FrostbiteEnchantment.key) {
+                            FrostbiteEnchantment
+                                .invoke(it)
+                                .supportedItems(event.getOrCreateTag(WEAPONS))
                         }
                         register(EmbertreadEnchantment.key) {
                             EmbertreadEnchantment

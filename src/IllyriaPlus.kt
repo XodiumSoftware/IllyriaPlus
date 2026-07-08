@@ -4,6 +4,7 @@ import com.github.retrooper.packetevents.PacketEvents
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
 import org.bukkit.plugin.java.JavaPlugin
 import org.xodium.illyriaplus.enchantments.EnchantmentInterface
+import org.xodium.illyriaplus.enchantments.elementals.FrostbiteEnchantment
 import org.xodium.illyriaplus.enchantments.utility.EmbertreadEnchantment
 import org.xodium.illyriaplus.enchantments.utility.NimbusEnchantment
 import org.xodium.illyriaplus.enchantments.utility.TetherEnchantment
@@ -114,6 +115,7 @@ internal class IllyriaPlus : JavaPlugin() {
                 EmbertreadEnchantment,
                 FeatherFallingEnchantment,
                 FortuneEnchantment,
+                FrostbiteEnchantment,
                 NimbusEnchantment,
                 SilkTouchEnchantment,
                 TetherEnchantment,
