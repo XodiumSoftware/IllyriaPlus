@@ -26,13 +26,14 @@ description = "Minecraft plugin that enhances the base gameplay"
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://repo.dmulloy2.net/repository/public/")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$mcVersion.build.+")
+    implementation("com.comphenix.protocol:ProtocolLib:5.4.0")
 
     implementation(kotlin("stdlib"))
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
 }
 
 java {
@@ -63,6 +64,7 @@ tasks {
         archiveClassifier.set("")
         destinationDirectory.set(layout.projectDirectory.dir("build/libs"))
         minimize()
+        relocate("com.comphenix.protocol", "org.xodium.illyriaplus.libs.protocol")
     }
     jar { enabled = false }
     runServer { minecraftVersion(mcVersion) }
