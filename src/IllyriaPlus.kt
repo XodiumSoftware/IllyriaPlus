@@ -79,7 +79,6 @@ internal class IllyriaPlus : JavaPlugin() {
         mechanics =
             listOf(
                 AlcoholMechanic,
-                AnvilMechanic,
                 NicknameMechanic,
                 ScoreBoardMechanic,
                 LocatorMechanic,
@@ -87,7 +86,7 @@ internal class IllyriaPlus : JavaPlugin() {
                 TameableMechanic,
                 EnderchestMechanic,
                 XpMechanic,
-                DisenchantmentMechanic,
+                AnvilMechanic,
                 HuskMechanic,
                 SilenceMechanic,
                 HeadMechanic,
