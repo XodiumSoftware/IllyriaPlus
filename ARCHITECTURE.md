@@ -105,9 +105,9 @@ Mechanics are grouped by category under `src/mechanics/`:
 - `entity/` — Bat, Griefing, Husk, Silence, SpawnEgg, Tameable
 - `player/` — Alcohol, Enderchest, Head, Locator, Messages, Nickname, Sit, Xp
 - `server/` — Chat, Motd, ResourcePack, Rules, ScoreBoard, TabList
-- `world/` — BlockPlacement, ChiseledBookshelf, Dimension, Inventory, Openable, Tree
+- `world/` — BlockPlacement, Cauldron, ChiseledBookshelf, Dimension, Inventory, Openable, Tree
 
-Currently **26** mechanics are registered in `IllyriaPlus.onEnable()`.
+Currently **27** mechanics are registered in `IllyriaPlus.onEnable()`.
 
 ### Enchantments
 
