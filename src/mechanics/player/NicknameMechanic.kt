@@ -66,7 +66,8 @@ internal object NicknameMechanic : MechanicInterface {
                                             "www.birdflop.com/resources/rgb/" +
                                             "</aqua>\n" +
                                             "2. Set <red>output</red> format to: <green>MiniMessage</green>\n" +
-                                            "3. Copy <red>output</red> from the site → paste into the <red>input</red> below.",
+                                            "3. Copy <red>output</red> from the site → paste into the " +
+                                            "<red>input</red> below.",
                                     ),
                                 ),
                             ),
