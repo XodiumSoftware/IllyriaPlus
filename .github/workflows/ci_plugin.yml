@@ -49,7 +49,6 @@ jobs:
 
   build:
     name: Build
-    needs: [lint]
     runs-on: ubuntu-latest
     environment:
       name: "${{ github.ref_name }}"
@@ -72,10 +71,6 @@ jobs:
       - id: setup_gradle
         name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6.2.0
-
-      - id: clean_gradle
-        name: Clean Build Directory
-        run: ./gradlew clean
 
       - id: build
         name: Build Plugin
@@ -141,7 +136,7 @@ jobs:
 
   nightly_release:
     name: Nightly Release
-    needs: [build]
+    needs: [lint, build]
     runs-on: ubuntu-latest
     environment:
       name: "${{ github.ref_name }}"
@@ -206,7 +201,6 @@ jobs:
 
   docs:
     name: Documentation
-    needs: [lint]
     runs-on: ubuntu-latest
     environment:
       name: github-pages
