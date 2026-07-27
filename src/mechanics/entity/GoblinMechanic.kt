@@ -24,6 +24,7 @@ import kotlin.random.Random
 /** Represents a mechanic that re-flavors zombies as cowardly cave-dwelling goblins. */
 internal object GoblinMechanic : MechanicInterface {
     private const val GOBLIN_SPEED_MULTIPLIER: Double = 1.35
+    private const val GOBLIN_SCALE_MULTIPLIER: Double = 0.60
     private const val GOBLIN_BABY_CHANCE: Double = 0.70
     private const val GOBLIN_GEAR_CHANCE: Double = 0.40
     private const val GOBLIN_DAMAGE_CHANCE: Double = 0.50
@@ -85,6 +86,9 @@ internal object GoblinMechanic : MechanicInterface {
             return
         }
 
+        zombie.getAttribute(Attribute.SCALE)?.let {
+            it.baseValue = it.value * GOBLIN_SCALE_MULTIPLIER
+        }
         zombie.getAttribute(Attribute.MOVEMENT_SPEED)?.let {
             it.baseValue = it.value * GOBLIN_SPEED_MULTIPLIER
         }
