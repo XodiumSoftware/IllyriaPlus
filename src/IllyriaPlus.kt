@@ -99,6 +99,7 @@ internal class IllyriaPlus : JavaPlugin() {
                 BatMechanic,
                 SpawnEggMechanic,
                 GriefingMechanic,
+                GoblinMechanic,
                 MotdMechanic,
                 MessagesMechanic,
                 TabListMechanic,
