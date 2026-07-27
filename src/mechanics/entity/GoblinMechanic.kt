@@ -2,7 +2,10 @@ package org.xodium.illyriaplus.mechanics.entity
 
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.Particle
+import org.bukkit.Sound
 import org.bukkit.attribute.Attribute
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Zombie
 import org.bukkit.event.EventHandler
@@ -12,6 +15,9 @@ import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
+import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import kotlin.random.Random
 
@@ -21,9 +27,23 @@ internal object GoblinMechanic : MechanicInterface {
     private const val GOBLIN_BABY_CHANCE: Double = 0.70
     private const val GOBLIN_GEAR_CHANCE: Double = 0.40
     private const val GOBLIN_DAMAGE_CHANCE: Double = 0.50
+    private const val GOBLIN_DROP_WEAPON_CHANCE: Double = 0.05
+    private const val GOBLIN_DROP_BASE_MIN: Int = 1
+    private const val GOBLIN_DROP_BASE_MAX: Int = 3
     private const val GOBLIN_FLEE_HEALTH_THRESHOLD: Double = 0.30
     private const val GOBLIN_FLEE_DURATION_TICKS: Int = 100
+    private const val GOBLIN_FLEE_SPEED_MULTIPLIER: Double = 1.75
     private const val GOBLIN_MAX_SURFACE_LIGHT: Int = 7
+
+    private val GOBLIN_DROP_MATERIALS =
+        mapOf(
+            Material.EMERALD to 0.35,
+            Material.GOLD_NUGGET to 0.45,
+            Material.IRON_NUGGET to 0.25,
+            Material.RAW_COPPER to 0.30,
+        )
+
+    private val FLEEING_GOBLINS = mutableSetOf<Int>()
 
     private val GOBLIN_WEAPONS =
         listOf(
@@ -152,11 +172,82 @@ internal object GoblinMechanic : MechanicInterface {
         item.itemMeta = meta
     }
 
+    /**
+     * Makes goblins panic and flee when their health drops below a threshold.
+     *
+     * @param event The EntityDamageEvent triggered when a goblin takes damage.
+     */
     private fun goblinFlee(event: EntityDamageEvent) {
-        // TODO: implement goblin flee logic
+        if (event.entityType != EntityType.ZOMBIE) return
+        val zombie = event.entity as? Zombie ?: return
+        val entityId = zombie.entityId
+        if (entityId in FLEEING_GOBLINS) return
+
+        val maxHealth = zombie.getAttribute(Attribute.MAX_HEALTH)?.value ?: return
+        if (zombie.health - event.finalDamage > maxHealth * GOBLIN_FLEE_HEALTH_THRESHOLD) return
+
+        FLEEING_GOBLINS.add(entityId)
+        zombie.target = null
+        zombie.getAttribute(Attribute.MOVEMENT_SPEED)?.let {
+            it.baseValue = it.value * GOBLIN_FLEE_SPEED_MULTIPLIER
+        }
+        zombie.addPotionEffect(
+            PotionEffect(
+                PotionEffectType.SPEED,
+                GOBLIN_FLEE_DURATION_TICKS,
+                1,
+                false,
+                false,
+            ),
+        )
+        zombie.world.playSound(zombie.location, Sound.ENTITY_FOX_HURT, 1.0f, 1.5f)
+        zombie.world.spawnParticle(Particle.SWEEP_ATTACK, zombie.location, 8, 0.3, 0.3, 0.3)
+
+        instance.server.scheduler.runTaskLater(
+            instance,
+            Runnable {
+                FLEEING_GOBLINS.remove(entityId)
+                if (!zombie.isDead) {
+                    zombie.getAttribute(Attribute.MOVEMENT_SPEED)?.let {
+                        it.baseValue = it.value / GOBLIN_FLEE_SPEED_MULTIPLIER
+                    }
+                }
+            },
+            GOBLIN_FLEE_DURATION_TICKS.toLong(),
+        )
     }
 
+    /**
+     * Replaces default zombie drops with goblin-themed loot.
+     *
+     * @param event The EntityDeathEvent triggered when a goblin dies.
+     */
     private fun goblinDrops(event: EntityDeathEvent) {
-        // TODO: implement goblin drop logic
+        if (event.entityType != EntityType.ZOMBIE) return
+        val killer = event.entity.killer ?: return
+        val lootingLevel = killer.inventory.itemInMainHand.getEnchantmentLevel(Enchantment.LOOTING)
+
+        event.drops.clear()
+        event.droppedExp = 8
+
+        GOBLIN_DROP_MATERIALS.forEach { (material, chance) ->
+            val adjustedChance = chance + (lootingLevel * 0.05)
+            if (Random.nextDouble() < adjustedChance) {
+                val amount = Random.nextInt(GOBLIN_DROP_BASE_MIN, GOBLIN_DROP_BASE_MAX + 1) + lootingLevel
+                event.drops.add(ItemStack.of(material, amount.coerceAtLeast(1)))
+            }
+        }
+
+        if (Random.nextDouble() < GOBLIN_DROP_WEAPON_CHANCE + (lootingLevel * 0.02)) {
+            val weapon = ItemStack.of(GOBLIN_WEAPONS.random())
+            if (Random.nextDouble() < GOBLIN_DAMAGE_CHANCE) {
+                damageItem(weapon)
+            }
+            event.drops.add(weapon)
+        }
+
+        if (Random.nextDouble() < 0.25) {
+            event.drops.add(ItemStack.of(Material.ROTTEN_FLESH, Random.nextInt(1, 3)))
+        }
     }
 }
