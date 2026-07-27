@@ -4,6 +4,7 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
+import org.bukkit.World
 import org.bukkit.attribute.Attribute
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.EntityType
@@ -26,6 +27,9 @@ internal object GoblinMechanic : MechanicInterface {
     private const val GOBLIN_SPEED_MULTIPLIER: Double = 1.35
     private const val GOBLIN_SCALE_MULTIPLIER: Double = 0.60
     private const val GOBLIN_BABY_CHANCE: Double = 0.70
+    private const val GOBLIN_GROUP_MIN_SIZE: Int = 2
+    private const val GOBLIN_GROUP_MAX_SIZE: Int = 5
+    private const val GOBLIN_GROUP_RADIUS: Double = 3.0
     private const val GOBLIN_GEAR_CHANCE: Double = 0.40
     private const val GOBLIN_DAMAGE_CHANCE: Double = 0.50
     private const val GOBLIN_DROP_WEAPON_CHANCE: Double = 0.05
@@ -86,6 +90,23 @@ internal object GoblinMechanic : MechanicInterface {
             return
         }
 
+        applyGoblinAttributes(zombie)
+
+        if (Random.nextDouble() < GOBLIN_GEAR_CHANCE) {
+            equipGoblinGear(zombie)
+        }
+
+        zombie.setCanPickupItems(true)
+
+        spawnGoblinGroup(zombie.world, zombie.location, event.spawnReason)
+    }
+
+    /**
+     * Applies goblin attribute modifiers to a zombie.
+     *
+     * @param zombie The zombie to transform.
+     */
+    private fun applyGoblinAttributes(zombie: Zombie) {
         zombie.getAttribute(Attribute.SCALE)?.let {
             it.baseValue = it.value * GOBLIN_SCALE_MULTIPLIER
         }
@@ -102,12 +123,39 @@ internal object GoblinMechanic : MechanicInterface {
         if (Random.nextDouble() < GOBLIN_BABY_CHANCE) {
             zombie.isBaby = true
         }
+    }
 
-        if (Random.nextDouble() < GOBLIN_GEAR_CHANCE) {
-            equipGoblinGear(zombie)
+    /**
+     * Spawns a group of additional goblins around the initial goblin.
+     *
+     * @param world The world to spawn in.
+     * @param location The center location to spawn around.
+     * @param reason The spawn reason to apply to the additional goblins.
+     */
+    private fun spawnGoblinGroup(
+        world: World,
+        location: Location,
+        reason: CreatureSpawnEvent.SpawnReason,
+    ) {
+        val groupSize = Random.nextInt(GOBLIN_GROUP_MIN_SIZE, GOBLIN_GROUP_MAX_SIZE)
+        repeat(groupSize - 1) {
+            val offsetX = Random.nextDouble(-GOBLIN_GROUP_RADIUS, GOBLIN_GROUP_RADIUS)
+            val offsetZ = Random.nextDouble(-GOBLIN_GROUP_RADIUS, GOBLIN_GROUP_RADIUS)
+            val spawnLocation = location.clone().add(offsetX, 0.0, offsetZ)
+            spawnLocation.y = world.getHighestBlockYAt(spawnLocation).toDouble() + 1.0
+
+            world.spawn(spawnLocation, Zombie::class.java) { goblin ->
+                if (shouldCancelSurfaceSpawn(goblin.location)) {
+                    goblin.remove()
+                    return@spawn
+                }
+                applyGoblinAttributes(goblin)
+                if (Random.nextDouble() < GOBLIN_GEAR_CHANCE) {
+                    equipGoblinGear(goblin)
+                }
+                goblin.setCanPickupItems(true)
+            }
         }
-
-        zombie.setCanPickupItems(true)
     }
 
     /**
