@@ -16,7 +16,8 @@ val mcVersion = "26.2"
 val buildNumber =
     providers
         .exec { commandLine("git", "rev-list", "--count", "HEAD") }
-        .standardOutput.asText
+        .standardOutput
+        .asText
         .map { it.trim() }
 
 group = "org.xodium.illyriaplus"
@@ -56,6 +57,15 @@ dokka {
     moduleName.set("IllyriaPlus")
     dokkaPublications.html {
         outputDirectory.set(layout.projectDirectory.dir("docs"))
+    }
+}
+
+ktlint {
+    verbose.set(true)
+    outputToConsole.set(true)
+    coloredOutput.set(true)
+    filter {
+        exclude("**/build/**")
     }
 }
 

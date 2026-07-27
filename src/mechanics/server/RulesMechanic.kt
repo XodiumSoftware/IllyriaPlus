@@ -55,7 +55,8 @@ internal object RulesMechanic : MechanicInterface {
                     .requires { it.sender.hasPermission(perms[0]) }
                     .playerExecuted { player, _ ->
                         player.openBook(
-                            Book.builder()
+                            Book
+                                .builder()
                                 .pages(RULES.map { MM.deserialize(it.joinToString("\n")) })
                                 .build(),
                         )

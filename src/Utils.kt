@@ -107,7 +107,9 @@ internal object Utils {
             duration: Long? = null,
             content: () -> Unit,
         ): BukkitTask =
-            instance.server.scheduler
+            instance
+                .server
+                .scheduler
                 .runTaskTimer(instance, content, delay, period)
                 .also { task ->
                     duration?.let {
@@ -144,7 +146,11 @@ internal object Utils {
                             MM.deserialize("<red>An error has occurred. Check server logs for details."),
                         )
                     }
-                com.mojang.brigadier.Command.SINGLE_SUCCESS
+                com
+                    .mojang
+                    .brigadier
+                    .Command
+                    .SINGLE_SUCCESS
             }
             return this
         }
