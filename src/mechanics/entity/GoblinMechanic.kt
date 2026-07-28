@@ -6,6 +6,7 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.World
 import org.bukkit.attribute.Attribute
+import org.bukkit.block.Biome
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Zombie
@@ -39,6 +40,15 @@ internal object GoblinMechanic : MechanicInterface {
     private const val GOBLIN_FLEE_DURATION_TICKS: Int = 100
     private const val GOBLIN_FLEE_SPEED_MULTIPLIER: Double = 1.75
     private const val GOBLIN_MAX_SURFACE_LIGHT: Int = 7
+
+    private val GOBLIN_BIOMES =
+        setOf(
+            Biome.DARK_FOREST,
+            Biome.SWAMP,
+            Biome.MANGROVE_SWAMP,
+            Biome.OLD_GROWTH_PINE_TAIGA,
+            Biome.OLD_GROWTH_SPRUCE_TAIGA,
+        )
 
     private val GOBLIN_DROP_MATERIALS =
         mapOf(
@@ -84,6 +94,8 @@ internal object GoblinMechanic : MechanicInterface {
     private fun goblinSpawn(event: CreatureSpawnEvent) {
         if (event.entityType != EntityType.ZOMBIE) return
         val zombie = event.entity as? Zombie ?: return
+
+        if (zombie.location.block.biome !in GOBLIN_BIOMES) return
 
         if (shouldCancelSurfaceSpawn(zombie.location)) {
             event.isCancelled = true
@@ -145,6 +157,10 @@ internal object GoblinMechanic : MechanicInterface {
             spawnLocation.y = world.getHighestBlockYAt(spawnLocation).toDouble() + 1.0
 
             world.spawn(spawnLocation, Zombie::class.java) { goblin ->
+                if (goblin.location.block.biome !in GOBLIN_BIOMES) {
+                    goblin.remove()
+                    return@spawn
+                }
                 if (shouldCancelSurfaceSpawn(goblin.location)) {
                     goblin.remove()
                     return@spawn
