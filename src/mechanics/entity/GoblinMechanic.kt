@@ -276,8 +276,9 @@ internal object GoblinMechanic : MechanicInterface {
      */
     private fun goblinDrops(event: EntityDeathEvent) {
         if (event.entityType != EntityType.ZOMBIE) return
-        val killer = event.entity.killer ?: return
-        val lootingLevel = killer.inventory.itemInMainHand.getEnchantmentLevel(Enchantment.LOOTING)
+        val killer = event.entity.killer
+        val lootingLevel =
+            killer?.inventory?.itemInMainHand?.getEnchantmentLevel(Enchantment.LOOTING) ?: 0
 
         event.drops.clear()
         event.droppedExp = 8
