@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.mechanics.entity
+IronGolempackage org.xodium.illyriaplus.mechanics.entity.custom
 
 import org.bukkit.Difficulty
 import org.bukkit.Location

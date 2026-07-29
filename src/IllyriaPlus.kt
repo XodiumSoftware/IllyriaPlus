@@ -13,6 +13,7 @@ import org.xodium.illyriaplus.enchantments.vanilla.FortuneEnchantment
 import org.xodium.illyriaplus.enchantments.vanilla.SilkTouchEnchantment
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import org.xodium.illyriaplus.mechanics.entity.*
+import org.xodium.illyriaplus.mechanics.entity.custom.*
 import org.xodium.illyriaplus.mechanics.player.*
 import org.xodium.illyriaplus.mechanics.server.*
 import org.xodium.illyriaplus.mechanics.world.*
@@ -100,6 +101,7 @@ internal class IllyriaPlus : JavaPlugin() {
                 SpawnEggMechanic,
                 GriefingMechanic,
                 GoblinMechanic,
+                TrollMechanic,
                 MotdMechanic,
                 MessagesMechanic,
                 TabListMechanic,
