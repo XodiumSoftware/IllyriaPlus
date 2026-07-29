@@ -1,4 +1,4 @@
-IronGolempackage org.xodium.illyriaplus.mechanics.entity.custom
+package org.xodium.illyriaplus.mechanics.entity.custom
 
 import org.bukkit.Difficulty
 import org.bukkit.Location
@@ -6,34 +6,44 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Particle
 import org.bukkit.Sound
-import org.bukkit.World
 import org.bukkit.attribute.Attribute
 import org.bukkit.block.Biome
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.Entity
-import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.entity.Zombie
 import org.bukkit.event.EventHandler
-import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
-import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils.Schedule.schedule
-import org.xodium.illyriaplus.mechanics.MechanicInterface
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
-import kotlin.time.measureTime
 
 /** Represents a mechanic that spawns cowardly cave-dwelling goblins as their own mob type. */
-internal object GoblinMechanic : MechanicInterface {
+internal object GoblinMechanic : CustomMobInterface<Zombie> {
+    override val tagKey: NamespacedKey = NamespacedKey(instance, "is_goblin")
+    override val spawnIntervalTicks: Long = 400L
+    override val spawnChance: Double = 0.25
+    override val spawnMinRadius: Double = 16.0
+    override val spawnMaxRadius: Double = 48.0
+    override val spawnAttempts: Int = 8
+    override val maxNearby: Int = 6
+    override val maxPlayersPerTick: Int = 3
+    override val maxSurfaceLight: Int = 7
+    override val biomes: Set<Biome> =
+        setOf(
+            Biome.DARK_FOREST,
+            Biome.SWAMP,
+            Biome.MANGROVE_SWAMP,
+            Biome.OLD_GROWTH_PINE_TAIGA,
+            Biome.OLD_GROWTH_SPRUCE_TAIGA,
+        )
+
     private const val GOBLIN_SPEED_MULTIPLIER: Double = 1.35
     private const val GOBLIN_SCALE_MULTIPLIER: Double = 0.60
     private const val GOBLIN_BABY_CHANCE: Double = 0.70
@@ -48,24 +58,6 @@ internal object GoblinMechanic : MechanicInterface {
     private const val GOBLIN_FLEE_HEALTH_THRESHOLD: Double = 0.30
     private const val GOBLIN_FLEE_DURATION_TICKS: Int = 100
     private const val GOBLIN_FLEE_SPEED_MULTIPLIER: Double = 1.75
-    private const val GOBLIN_MAX_SURFACE_LIGHT: Int = 7
-
-    private const val GOBLIN_SPAWN_INTERVAL_TICKS: Long = 400L
-    private const val GOBLIN_SPAWN_CHANCE: Double = 0.25
-    private const val GOBLIN_SPAWN_MIN_RADIUS: Double = 16.0
-    private const val GOBLIN_SPAWN_MAX_RADIUS: Double = 48.0
-    private const val GOBLIN_SPAWN_ATTEMPTS: Int = 8
-    private const val GOBLIN_MAX_NEARBY: Int = 6
-    private const val GOBLIN_MAX_PLAYERS_PER_TICK: Int = 3
-
-    private val GOBLIN_BIOMES =
-        setOf(
-            Biome.DARK_FOREST,
-            Biome.SWAMP,
-            Biome.MANGROVE_SWAMP,
-            Biome.OLD_GROWTH_PINE_TAIGA,
-            Biome.OLD_GROWTH_SPRUCE_TAIGA,
-        )
 
     private val GOBLIN_DROP_MATERIALS =
         mapOf(
@@ -94,125 +86,11 @@ internal object GoblinMechanic : MechanicInterface {
             Material.LEATHER_BOOTS,
         )
 
-    private val GOBLIN_TAG_KEY = NamespacedKey(instance, "is_goblin")
+    override fun register(): Long = super.register(GOBLIN_GROUP_MIN_SIZE..GOBLIN_GROUP_MAX_SIZE)
 
-    override fun register(): Long =
-        super.register() +
-            measureTime {
-                schedule(
-                    delay = GOBLIN_SPAWN_INTERVAL_TICKS,
-                    period = GOBLIN_SPAWN_INTERVAL_TICKS,
-                ) { attemptGoblinSpawns() }
-            }.inWholeMilliseconds
-
-    @EventHandler(ignoreCancelled = true)
-    fun on(event: EntityDamageEvent) = goblinFlee(event)
-
-    @EventHandler(ignoreCancelled = true)
-    fun on(event: EntityDeathEvent) = goblinDrops(event)
-
-    /**
-     * Attempts to spawn goblin encounters near players in goblin biomes.
-     */
-    private fun attemptGoblinSpawns() {
-        val players = instance.server.onlinePlayers
-        if (players.isEmpty()) return
-
-        players
-            .shuffled()
-            .take(GOBLIN_MAX_PLAYERS_PER_TICK)
-            .forEach { player ->
-                if (!canSpawnGoblins(player)) return@forEach
-
-                val spawnLocation = findSpawnLocation(player.location) ?: return@forEach
-                spawnGoblinEncounter(player.world, spawnLocation)
-            }
-    }
-
-    /**
-     * Checks whether goblins may attempt to spawn around this player.
-     */
-    private fun canSpawnGoblins(player: Player): Boolean {
-        val world = player.world
-        if (world.difficulty == Difficulty.PEACEFUL) return false
-        if (player.location.block.biome !in GOBLIN_BIOMES) return false
-        if (Random.nextDouble() >= GOBLIN_SPAWN_CHANCE) return false
-        if (countNearbyGoblins(player.location) >= GOBLIN_MAX_NEARBY) return false
-        return true
-    }
-
-    /**
-     * Counts goblins within the spawn radius of a location.
-     */
-    private fun countNearbyGoblins(location: Location): Int =
-        location.world
-            .getNearbyEntities(
-                location,
-                GOBLIN_SPAWN_MAX_RADIUS,
-                GOBLIN_SPAWN_MAX_RADIUS,
-                GOBLIN_SPAWN_MAX_RADIUS,
-            )
-            .filterIsInstance<Zombie>()
-            .count { isGoblin(it) }
-
-    /**
-     * Finds a valid goblin spawn location near the given center.
-     *
-     * @param center The location to spawn around.
-     * @return A valid spawn location, or null if none was found.
-     */
-    private fun findSpawnLocation(center: Location): Location? {
-        val world = center.world
-
-        repeat(GOBLIN_SPAWN_ATTEMPTS) {
-            val angle = Random.nextDouble(0.0, 2 * Math.PI)
-            val distance = Random.nextDouble(GOBLIN_SPAWN_MIN_RADIUS, GOBLIN_SPAWN_MAX_RADIUS)
-            val x = center.x + distance * cos(angle)
-            val z = center.z + distance * sin(angle)
-            val y = world.getHighestBlockYAt(x.toInt(), z.toInt()).toDouble() + 1.0
-            val location = Location(world, x, y, z)
-
-            if (location.block.biome !in GOBLIN_BIOMES) return@repeat
-            if (shouldCancelSurfaceSpawn(location)) return@repeat
-
-            val ground = location.clone().subtract(0.0, 1.0, 0.0).block
-            if (!ground.isSolid) return@repeat
-
-            val headSpace = location.clone().add(0.0, 1.0, 0.0).block
-            if (!headSpace.isEmpty) return@repeat
-
-            return location
-        }
-
-        return null
-    }
-
-    /**
-     * Spawns a goblin and a group of nearby goblins.
-     *
-     * @param world The world to spawn in.
-     * @param location The center location to spawn around.
-     */
-    private fun spawnGoblinEncounter(
-        world: World,
-        location: Location,
-    ) {
-        spawnSingleGoblin(world, location)
-        spawnGoblinGroup(world, location)
-    }
-
-    /**
-     * Spawns a single goblin at the given location.
-     *
-     * @param world The world to spawn in.
-     * @param location The location to spawn at.
-     */
-    private fun spawnSingleGoblin(
-        world: World,
-        location: Location,
-    ) {
+    override fun spawnMob(world: org.bukkit.World, location: Location) {
         world.spawn(location, Zombie::class.java) { goblin ->
-            tagGoblin(goblin)
+            tagMob(goblin)
             applyGoblinAttributes(goblin)
             if (Random.nextDouble() < GOBLIN_GEAR_CHANCE) {
                 equipGoblinGear(goblin)
@@ -221,59 +99,16 @@ internal object GoblinMechanic : MechanicInterface {
         }
     }
 
-    /**
-     * Spawns a group of additional goblins around the initial goblin.
-     *
-     * @param world The world to spawn in.
-     * @param location The center location to spawn around.
-     */
-    private fun spawnGoblinGroup(
-        world: World,
-        location: Location,
-    ) {
-        val groupSize = Random.nextInt(GOBLIN_GROUP_MIN_SIZE, GOBLIN_GROUP_MAX_SIZE)
-        repeat(groupSize - 1) {
-            val offsetX = Random.nextDouble(-GOBLIN_GROUP_RADIUS, GOBLIN_GROUP_RADIUS)
-            val offsetZ = Random.nextDouble(-GOBLIN_GROUP_RADIUS, GOBLIN_GROUP_RADIUS)
-            val spawnLocation = location.clone().add(offsetX, 0.0, offsetZ)
-            spawnLocation.y = world.getHighestBlockYAt(spawnLocation).toDouble() + 1.0
-
-            if (spawnLocation.block.biome !in GOBLIN_BIOMES) return@repeat
-            if (shouldCancelSurfaceSpawn(spawnLocation)) return@repeat
-
-            spawnSingleGoblin(world, spawnLocation)
-        }
+    override fun countNearby(location: Location): Int {
+        if (location.world.difficulty == Difficulty.PEACEFUL) return 0
+        return super.countNearby(location)
     }
 
-    /**
-     * Tags a zombie as a goblin so it can be identified later.
-     *
-     * @param zombie The zombie to tag.
-     */
-    private fun tagGoblin(zombie: Zombie) {
-        zombie.persistentDataContainer.set(GOBLIN_TAG_KEY, PersistentDataType.BOOLEAN, true)
-    }
+    @EventHandler(ignoreCancelled = true)
+    fun on(event: EntityDamageEvent) = goblinFlee(event)
 
-    /**
-     * Checks whether a zombie is a goblin.
-     *
-     * @param zombie The zombie to check.
-     * @return True if the zombie is a goblin.
-     */
-    private fun isGoblin(zombie: Zombie): Boolean =
-        zombie.persistentDataContainer.has(GOBLIN_TAG_KEY, PersistentDataType.BOOLEAN)
-
-    /**
-     * Determines whether a surface goblin spawn should be skipped due to daylight.
-     *
-     * @param location The spawn location to evaluate.
-     * @return True if the spawn should be skipped because it is too bright on the surface.
-     */
-    private fun shouldCancelSurfaceSpawn(location: Location): Boolean {
-        if (location.world.isThundering || !location.world.isDayTime) return false
-        val blockLight = location.block.lightLevel
-        return blockLight > GOBLIN_MAX_SURFACE_LIGHT && location.blockY >= location.world.seaLevel
-    }
+    @EventHandler(ignoreCancelled = true)
+    fun on(event: EntityDeathEvent) = goblinDrops(event)
 
     /**
      * Applies goblin attribute modifiers to a zombie.
@@ -360,7 +195,7 @@ internal object GoblinMechanic : MechanicInterface {
      */
     private fun goblinFlee(event: EntityDamageEvent) {
         val zombie = event.entity as? Zombie ?: return
-        if (!isGoblin(zombie)) return
+        if (!isMob(zombie)) return
         val entityId = zombie.entityId
         if (entityId in FLEEING_GOBLINS) return
 
@@ -405,7 +240,7 @@ internal object GoblinMechanic : MechanicInterface {
      */
     private fun goblinDrops(event: EntityDeathEvent) {
         val zombie = event.entity as? Zombie ?: return
-        if (!isGoblin(zombie)) return
+        if (!isMob(zombie)) return
         val killer = event.entity.killer
         val lootingLevel =
             killer?.inventory?.itemInMainHand?.getEnchantmentLevel(Enchantment.LOOTING) ?: 0
