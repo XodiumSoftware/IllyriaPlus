@@ -34,7 +34,7 @@ jobs:
 
       - id: setup_java
         name: Setup Java
-        uses: actions/setup-java@v5.6.0
+        uses: actions/setup-java@v5.7.0
         with:
           java-version: 25
           distribution: temurin
@@ -63,7 +63,7 @@ jobs:
 
       - id: setup_java
         name: Setup Java
-        uses: actions/setup-java@v5.6.0
+        uses: actions/setup-java@v5.7.0
         with:
           java-version: 25
           distribution: temurin
@@ -216,7 +216,7 @@ jobs:
 
       - id: setup_java
         name: Setup Java
-        uses: actions/setup-java@v5.6.0
+        uses: actions/setup-java@v5.7.0
         with:
           java-version: 25
           distribution: temurin
