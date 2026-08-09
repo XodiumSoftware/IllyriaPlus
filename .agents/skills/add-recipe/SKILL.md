@@ -1,11 +1,11 @@
 ---
 name: add-recipe
-description: Scaffolds a new IllyriaPlus RecipeInterface object under recipes/vanilla and registers it in IllyriaPlus.kt.
+description: Scaffolds a new RecipeInterface object under recipes/vanilla and registers it in the main plugin class.
 ---
 
 # Add a Recipe
 
-Use this skill when the user wants to add a new custom recipe to IllyriaPlus.
+Use this skill when the user wants to add a new custom recipe to the project.
 
 ## Before Writing Code
 
@@ -25,7 +25,7 @@ Use this skill when the user wants to add a new custom recipe to IllyriaPlus.
 
 ## Wiring
 
-1. Open `src/IllyriaPlus.kt`.
+1. Open the main plugin class (e.g., `src/Plugin.kt`).
 2. Import the new recipe.
 3. Add it alphabetically to the `recipes` list in `onEnable()`.
 
@@ -38,14 +38,14 @@ Use this skill when the user wants to add a new custom recipe to IllyriaPlus.
 ## Template
 
 ```kotlin
-package org.xodium.illyriaplus.recipes.vanilla
+package <project.package>.recipes.vanilla
 
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.<RecipeType>
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.recipes.RecipeInterface
+import <project.package>.Plugin.Companion.instance
+import <project.package>.recipes.RecipeInterface
 
 /** Represents an object handling <description> within the system. */
 internal object <Name>Recipe : RecipeInterface {
@@ -59,5 +59,7 @@ internal object <Name>Recipe : RecipeInterface {
         )
 }
 ```
+
+Replace `<project.package>` and `Plugin` with the actual project package and main plugin class name.
 
 After finishing, summarize the files changed and ask the user if they want to commit.

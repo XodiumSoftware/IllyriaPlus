@@ -5,7 +5,7 @@ description: Adds a new player Persistent Data Container field to PlayerPDC.kt w
 
 # Add a Player PDC Field
 
-Use this skill when the user wants to store new per-player persistent data in IllyriaPlus.
+Use this skill when the user wants to store new per-player persistent data in a Paper-based project.
 
 ## Before Writing Code
 
