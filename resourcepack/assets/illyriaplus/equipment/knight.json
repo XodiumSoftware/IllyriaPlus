@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "illyriaplus:knight"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "illyriaplus:knight"
+      }
+    ]
+  }
+}

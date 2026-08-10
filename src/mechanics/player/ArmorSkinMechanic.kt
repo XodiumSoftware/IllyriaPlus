@@ -2,6 +2,8 @@ package org.xodium.illyriaplus.mechanics.player
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.CustomModelData
+import io.papermc.paper.datacomponent.item.Equippable
+import io.papermc.paper.datacomponent.item.ItemLore
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Tag
@@ -14,6 +16,7 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.StonecutterInventory
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
+import org.xodium.illyriaplus.Utils
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 
 /**
@@ -64,6 +67,16 @@ internal object ArmorSkinMechanic : MechanicInterface {
                     DataComponentTypes.CUSTOM_MODEL_DATA,
                     CustomModelData.customModelData().addString(slot.name.lowercase()).build(),
                 )
+                setData(
+                    DataComponentTypes.EQUIPPABLE,
+                    input.getData(DataComponentTypes.EQUIPPABLE)?.toBuilder()
+                        ?.assetId(NamespacedKey(instance, skin))?.build()
+                        ?: Equippable.equippable(slot).assetId(NamespacedKey(instance, skin)).build(),
+                )
+                setData(
+                    DataComponentTypes.LORE,
+                    buildLore(this, skin),
+                )
             }
 
         val newInput = input.clone().apply { amount -= output.amount }
@@ -77,5 +90,13 @@ internal object ArmorSkinMechanic : MechanicInterface {
     private fun extractSkinKey(item: ItemStack): String? {
         val model = item.getData(DataComponentTypes.ITEM_MODEL) ?: return null
         return model.value().takeIf { it in SKINS }
+    }
+
+    /** Builds lore for a skinned armor piece, replacing any existing "Skin: ..." line and appending the new skin name. */
+    private fun buildLore(item: ItemStack, skin: String): ItemLore {
+        val prefix = "Skin: "
+        val existing = item.getData(DataComponentTypes.LORE)?.lines()?.filter { !it.toString().startsWith(prefix) } ?: emptyList()
+        val newLine = Utils.MM.deserialize("$prefix${skin.replaceFirstChar { it.uppercase() }}")
+        return ItemLore.lore(existing + newLine)
     }
 }
