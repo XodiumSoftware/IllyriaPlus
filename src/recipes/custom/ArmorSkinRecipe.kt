@@ -31,7 +31,7 @@ internal object ArmorSkinRecipe : RecipeInterface {
     /** Available cosmetic skin sets. The value is the model key fragment used in `illyriaplus:armor/<slot>/<skin>`. */
     private val SKINS =
         listOf(
-            "crusader",
+            "knight",
         )
 
     override val recipes =

@@ -33,7 +33,7 @@ internal object ArmorSkinMechanic : MechanicInterface {
     /** Available cosmetic skin sets. */
     private val SKINS =
         setOf(
-            "crusader",
+            "knight",
         )
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
