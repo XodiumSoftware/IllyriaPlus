@@ -1,6 +1,7 @@
 package org.xodium.illyriaplus.mechanics.player
 
 import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.datacomponent.item.CustomModelData
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Tag
@@ -57,7 +58,11 @@ internal object ArmorSkinMechanic : MechanicInterface {
                 amount = output.amount
                 setData(
                     DataComponentTypes.ITEM_MODEL,
-                    NamespacedKey(instance, "armor/${slot.name.lowercase()}/$skin"),
+                    NamespacedKey(instance, skin),
+                )
+                setData(
+                    DataComponentTypes.CUSTOM_MODEL_DATA,
+                    CustomModelData.customModelData().addString(slot.name.lowercase()).build(),
                 )
             }
 
@@ -71,10 +76,6 @@ internal object ArmorSkinMechanic : MechanicInterface {
     /** Extracts the skin identifier from a recipe output by reading its [DataComponentTypes.ITEM_MODEL]. */
     private fun extractSkinKey(item: ItemStack): String? {
         val model = item.getData(DataComponentTypes.ITEM_MODEL) ?: return null
-        val path = model.value()
-        if (!path.startsWith("armor/")) return null
-        val parts = path.substringAfter("armor/").split("/")
-        if (parts.size != 2) return null
-        return parts[1].takeIf { it in SKINS }
+        return model.value().takeIf { it in SKINS }
     }
 }

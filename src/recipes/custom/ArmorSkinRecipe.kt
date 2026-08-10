@@ -1,6 +1,7 @@
 package org.xodium.illyriaplus.recipes.custom
 
 import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.datacomponent.item.CustomModelData
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Tag
@@ -15,7 +16,8 @@ import org.xodium.illyriaplus.recipes.RecipeInterface
  *
  * Players can place an existing armor piece in a stonecutter to apply a cosmetic skin.
  * The output keeps the original material, durability, enchantments, and other components;
- * only the [DataComponentTypes.ITEM_MODEL] component is changed.
+ * only the [DataComponentTypes.ITEM_MODEL] and [DataComponentTypes.CUSTOM_MODEL_DATA]
+ * components are changed.
  */
 @Suppress("UnstableApiUsage")
 internal object ArmorSkinRecipe : RecipeInterface {
@@ -28,7 +30,7 @@ internal object ArmorSkinRecipe : RecipeInterface {
             Tag.ITEMS_FOOT_ARMOR to EquipmentSlot.FEET,
         )
 
-    /** Available cosmetic skin sets. The value is the model key fragment used in `illyriaplus:armor/<slot>/<skin>`. */
+    /** Available cosmetic skin sets. */
     private val SKINS =
         listOf(
             "knight",
@@ -41,14 +43,17 @@ internal object ArmorSkinRecipe : RecipeInterface {
                 tag.values.forEach { material ->
                     val materialKey = material.key.value()
                     SKINS.forEach { skin ->
-                        val skinKey = "armor/${slotKey}/${skin}"
                         val recipeId = "armor_skin_${materialKey}_${slotKey}_${skin}_stonecutting_recipe"
                         val recipeKey = NamespacedKey(instance, recipeId)
                         add(
                             StonecuttingRecipe(
                                 recipeKey,
                                 ItemStack.of(material).apply {
-                                    setData(DataComponentTypes.ITEM_MODEL, NamespacedKey(instance, skinKey))
+                                    setData(DataComponentTypes.ITEM_MODEL, NamespacedKey(instance, skin))
+                                    setData(
+                                        DataComponentTypes.CUSTOM_MODEL_DATA,
+                                        CustomModelData.customModelData().addString(slotKey).build(),
+                                    )
                                 },
                                 material,
                             ),
