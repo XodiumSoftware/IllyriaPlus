@@ -41,8 +41,8 @@ internal object ArmorSkinRecipe : RecipeInterface {
                 tag.values.forEach { material ->
                     val materialKey = material.key.value()
                     SKINS.forEach { skin ->
-                        val skinKey = "armor/$slotKey/$skin"
-                        val recipeId = "armor_skin_$materialKey_$slotKey_${skin}_stonecutting_recipe"
+                        val skinKey = "armor/${slotKey}/${skin}"
+                        val recipeId = "armor_skin_${materialKey}_${slotKey}_${skin}_stonecutting_recipe"
                         val recipeKey = NamespacedKey(instance, recipeId)
                         add(
                             StonecuttingRecipe(
