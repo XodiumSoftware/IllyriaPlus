@@ -1,7 +1,0 @@
-{
-    "parent": "illyriaplus:item/sword/greatsword",
-    "textures": {
-        "layer0": "illyriaplus:item/sword/greatsword",
-        "layer1": "illyriaplus:item/effect/copper_flames"
-    }
-}

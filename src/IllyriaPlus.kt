@@ -11,6 +11,9 @@ import org.xodium.illyriaplus.enchantments.utility.VinemineEnchantment
 import org.xodium.illyriaplus.enchantments.vanilla.FeatherFallingEnchantment
 import org.xodium.illyriaplus.enchantments.vanilla.FortuneEnchantment
 import org.xodium.illyriaplus.enchantments.vanilla.SilkTouchEnchantment
+import org.xodium.illyriaplus.items.GreatswordItem
+import org.xodium.illyriaplus.items.HalberdItem
+import org.xodium.illyriaplus.items.LongswordItem
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import org.xodium.illyriaplus.mechanics.entity.*
 import org.xodium.illyriaplus.mechanics.player.*
@@ -19,6 +22,8 @@ import org.xodium.illyriaplus.mechanics.world.*
 import org.xodium.illyriaplus.recipes.RecipeInterface
 import org.xodium.illyriaplus.recipes.custom.AlcoholRecipe
 import org.xodium.illyriaplus.recipes.custom.GreatswordRecipe
+import org.xodium.illyriaplus.recipes.custom.HalberdRecipe
+import org.xodium.illyriaplus.recipes.custom.LongswordRecipe
 import org.xodium.illyriaplus.recipes.vanilla.*
 
 /** Main class of the plugin. */
@@ -62,7 +67,9 @@ internal class IllyriaPlus : JavaPlugin() {
                 ChainmailRecipe,
                 DiamondRecycleRecipe,
                 GreatswordRecipe,
+                HalberdRecipe,
                 IceBreakdownRecipe,
+                LongswordRecipe,
                 NetherWartBlockRecipe,
                 PaintingRecipe,
                 RottenFleshRecipe,
