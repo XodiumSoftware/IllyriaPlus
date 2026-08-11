@@ -2,6 +2,6 @@
     "parent": "illyriaplus:item/weapon/halberd",
     "textures": {
         "layer0": "illyriaplus:item/weapon/halberd",
-        "layer1": "illyriaplus:item/effect/spear/spear_flames"
+        "layer1": "illyriaplus:item/effect/spear/spear_soul_flames_in_hand"
     }
 }

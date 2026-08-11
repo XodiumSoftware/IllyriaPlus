@@ -12,8 +12,26 @@
             }
         ],
         "on_true": {
-            "type": "minecraft:model",
-            "model": "illyriaplus:item/weapon/halberd_flaming_soul"
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+                {
+                    "when": [
+                        "gui",
+                        "ground",
+                        "fixed",
+                        "on_shelf"
+                    ],
+                    "model": {
+                        "type": "minecraft:model",
+                        "model": "illyriaplus:item/weapon/halberd_flaming_soul"
+                    }
+                }
+            ],
+            "fallback": {
+                "type": "minecraft:model",
+                "model": "illyriaplus:item/weapon/halberd_flaming_soul_in_hand"
+            }
         },
         "on_false": {
             "type": "minecraft:condition",
@@ -29,8 +47,26 @@
                 }
             ],
             "on_true": {
-                "type": "minecraft:model",
-                "model": "illyriaplus:item/weapon/halberd_flaming_copper"
+                "type": "minecraft:select",
+                "property": "minecraft:display_context",
+                "cases": [
+                    {
+                        "when": [
+                            "gui",
+                            "ground",
+                            "fixed",
+                            "on_shelf"
+                        ],
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "illyriaplus:item/weapon/halberd_flaming_copper"
+                        }
+                    }
+                ],
+                "fallback": {
+                    "type": "minecraft:model",
+                    "model": "illyriaplus:item/weapon/halberd_flaming_copper_in_hand"
+                }
             },
             "on_false": {
                 "type": "minecraft:condition",
@@ -46,8 +82,26 @@
                     }
                 ],
                 "on_true": {
-                    "type": "minecraft:model",
-                    "model": "illyriaplus:item/weapon/halberd_flaming"
+                    "type": "minecraft:select",
+                    "property": "minecraft:display_context",
+                    "cases": [
+                        {
+                            "when": [
+                                "gui",
+                                "ground",
+                                "fixed",
+                                "on_shelf"
+                            ],
+                            "model": {
+                                "type": "minecraft:model",
+                                "model": "illyriaplus:item/weapon/halberd_flaming"
+                            }
+                        }
+                    ],
+                    "fallback": {
+                        "type": "minecraft:model",
+                        "model": "illyriaplus:item/weapon/halberd_flaming_in_hand"
+                    }
                 },
                 "on_false": {
                     "type": "minecraft:model",

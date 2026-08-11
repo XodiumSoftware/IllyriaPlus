@@ -2,6 +2,6 @@
     "parent": "illyriaplus:item/weapon/longsword",
     "textures": {
         "layer0": "illyriaplus:item/weapon/longsword",
-        "layer1": "illyriaplus:item/effect/soul_flames"
+        "layer1": "illyriaplus:item/effect/sword/soul_flames"
     }
 }
