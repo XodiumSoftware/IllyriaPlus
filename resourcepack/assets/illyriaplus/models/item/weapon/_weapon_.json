@@ -1,8 +1,5 @@
 {
     "parent": "minecraft:item/handheld",
-    "textures": {
-        "layer0": "illyriaplus:item/sword/greatsword"
-    },
     "display": {
         "firstperson_lefthand": {
             "rotation": [0, 90, -25],
