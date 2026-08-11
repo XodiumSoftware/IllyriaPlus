@@ -51,7 +51,7 @@
                 },
                 "on_false": {
                     "type": "minecraft:model",
-                    "model": "illyriaplus:item/weapon/longsword_plain"
+                    "model": "illyriaplus:item/weapon/longsword"
                 }
             }
         }

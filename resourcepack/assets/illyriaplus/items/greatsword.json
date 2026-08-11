@@ -51,7 +51,7 @@
                 },
                 "on_false": {
                     "type": "minecraft:model",
-                    "model": "illyriaplus:item/weapon/greatsword_plain"
+                    "model": "illyriaplus:item/weapon/greatsword"
                 }
             }
         }
