@@ -1,6 +1,59 @@
 {
     "model": {
-        "type": "minecraft:model",
-        "model": "illyriaplus:item/weapon/halberd"
+        "type": "minecraft:condition",
+        "property": "minecraft:component",
+        "predicate": "minecraft:enchantments",
+        "value": [
+            {
+                "enchantments": "minecraft:fire_aspect",
+                "levels": {
+                    "min": 3
+                }
+            }
+        ],
+        "on_true": {
+            "type": "minecraft:model",
+            "model": "illyriaplus:item/weapon/halberd_flaming_soul"
+        },
+        "on_false": {
+            "type": "minecraft:condition",
+            "property": "minecraft:component",
+            "predicate": "minecraft:enchantments",
+            "value": [
+                {
+                    "enchantments": "minecraft:fire_aspect",
+                    "levels": {
+                        "min": 2,
+                        "max": 2
+                    }
+                }
+            ],
+            "on_true": {
+                "type": "minecraft:model",
+                "model": "illyriaplus:item/weapon/halberd_flaming_copper"
+            },
+            "on_false": {
+                "type": "minecraft:condition",
+                "property": "minecraft:component",
+                "predicate": "minecraft:enchantments",
+                "value": [
+                    {
+                        "enchantments": "minecraft:fire_aspect",
+                        "levels": {
+                            "min": 1,
+                            "max": 1
+                        }
+                    }
+                ],
+                "on_true": {
+                    "type": "minecraft:model",
+                    "model": "illyriaplus:item/weapon/halberd_flaming"
+                },
+                "on_false": {
+                    "type": "minecraft:model",
+                    "model": "illyriaplus:item/weapon/halberd"
+                }
+            }
+        }
     }
 }

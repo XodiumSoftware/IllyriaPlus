@@ -1,0 +1,7 @@
+{
+    "parent": "illyriaplus:item/weapon/halberd",
+    "textures": {
+        "layer0": "illyriaplus:item/weapon/halberd",
+        "layer1": "illyriaplus:item/effect/copper_flames"
+    }
+}
