@@ -1,7 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "illyriaplus:item/armor/knight_helmet",
-    "layer1": "illyriaplus:item/armor/knight_helmet_overlay"
-  }
-}
