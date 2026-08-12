@@ -49,7 +49,9 @@ internal class IllyriaPlus : JavaPlugin() {
 
     override fun onEnable() {
         if (!server.version.contains(pluginMeta.version.substringBefore("+"))) {
-            logger.severe("This plugin requires the following supported version: ${pluginMeta.version}.")
+            logger.severe(
+                "This plugin requires the following supported version: ${pluginMeta.version}.",
+            )
             server.pluginManager.disablePlugin(this)
             return
         }
@@ -109,9 +111,12 @@ internal class IllyriaPlus : JavaPlugin() {
                 TreeMechanic,
                 RulesMechanic,
                 ResourcePackMechanic,
+                WeightMechanic,
             )
 
-        logger.info("Registered: ${mechanics.size} mechanic(s) | Took ${mechanics.sumOf { it.register() }}ms")
+        logger.info(
+            "Registered: ${mechanics.size} mechanic(s) | Took ${mechanics.sumOf { it.register() }}ms",
+        )
 
         enchantments =
             listOf(

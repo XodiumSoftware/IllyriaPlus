@@ -99,6 +99,14 @@ internal object MessagesMechanic : MechanicInterface {
 
 Enhances base gameplay with custom enchantments, items, and mechanics.
 
+### Mechanics
+
+Custom gameplay mechanics:
+
+| Mechanic | Description |
+|----------|-------------|
+| Weight   | Inventory contents impose carrying weight, applying Slowness, Jump Boost, Mining Fatigue, and Weakness as load increases |
+
 ### Enchantments
 
 Custom enchantments are divided into two groups:
