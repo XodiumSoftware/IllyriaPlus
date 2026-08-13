@@ -83,6 +83,30 @@ internal object TrollMechanic : CustomMobInterface<IronGolem> {
         }
     }
 
+    /**
+     * Applies troll attribute modifiers to an iron golem.
+     *
+     * @param troll The iron golem to transform.
+     */
+    private fun applyTrollAttributes(troll: IronGolem) {
+        troll.getAttribute(Attribute.MAX_HEALTH)?.let {
+            it.baseValue = it.value * TROLL_HEALTH_MULTIPLIER
+        }
+        troll.getAttribute(Attribute.SCALE)?.let {
+            it.baseValue = it.value * TROLL_SCALE_MULTIPLIER
+        }
+        troll.getAttribute(Attribute.ATTACK_DAMAGE)?.let {
+            it.baseValue = it.value * TROLL_DAMAGE_MULTIPLIER
+        }
+        troll.getAttribute(Attribute.MOVEMENT_SPEED)?.let {
+            it.baseValue = it.value * TROLL_SPEED_MULTIPLIER
+        }
+        troll.getAttribute(Attribute.KNOCKBACK_RESISTANCE)?.let {
+            it.baseValue = TROLL_KNOCKBACK_RESISTANCE
+        }
+        troll.health = troll.getAttribute(Attribute.MAX_HEALTH)?.value ?: troll.health
+    }
+
     @EventHandler(ignoreCancelled = true)
     fun on(event: EntityDamageEvent) = trollRegenTrigger(event)
 
