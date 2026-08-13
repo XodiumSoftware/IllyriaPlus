@@ -13,7 +13,7 @@
         ],
         "on_true": {
             "type": "minecraft:model",
-            "model": "illyriaplus:item/sword/greatsword_flaming_soul"
+            "model": "illyriaplus:item/weapon/greatsword_flaming_soul"
         },
         "on_false": {
             "type": "minecraft:condition",
@@ -30,7 +30,7 @@
             ],
             "on_true": {
                 "type": "minecraft:model",
-                "model": "illyriaplus:item/sword/greatsword_flaming_copper"
+                "model": "illyriaplus:item/weapon/greatsword_flaming_copper"
             },
             "on_false": {
                 "type": "minecraft:condition",
@@ -47,11 +47,11 @@
                 ],
                 "on_true": {
                     "type": "minecraft:model",
-                    "model": "illyriaplus:item/sword/greatsword_flaming"
+                    "model": "illyriaplus:item/weapon/greatsword_flaming"
                 },
                 "on_false": {
                     "type": "minecraft:model",
-                    "model": "illyriaplus:item/sword/greatsword_plain"
+                    "model": "illyriaplus:item/weapon/greatsword"
                 }
             }
         }

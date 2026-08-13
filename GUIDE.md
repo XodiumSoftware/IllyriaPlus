@@ -14,7 +14,7 @@
 
 ## Prerequisites
 
-- [Paper](https://papermc.io/) Minecraft server 26.1.2
+- [Paper](https://papermc.io/) Minecraft server 26.2
 - Java 25
 
 ## Download Nightly Build
@@ -65,7 +65,7 @@ To quickly test the plugin:
 ./gradlew runServer
 ```
 
-This automatically downloads Paper 26.1.2 and starts a local test server with the plugin.
+This automatically downloads Paper 26.2 and starts a local test server with the plugin.
 
 ## Installation
 
@@ -105,20 +105,20 @@ Custom enchantments are divided into two groups:
 
 **Custom utility enchantments** (registered in Paper's registry):
 
-| Enchantment | Slot      | Description                                  |
-|-------------|-----------|----------------------------------------------|
-| Vinemine    | Main Hand | Pickaxe special ability                      |
-| Tether      | Main Hand | Applies to tools and weapons                 |
-| Nimbus      | Saddle    | Happy Ghast harness enhancement              |
-| Embertread  | Feet      | Foot armor enhancement                       |
+| Enchantment | Slot      | Description                     |
+|-------------|-----------|---------------------------------|
+| Vinemine    | Main Hand | Pickaxe special ability         |
+| Tether      | Main Hand | Applies to tools and weapons    |
+| Nimbus      | Saddle    | Happy Ghast harness enhancement |
+| Embertread  | Feet      | Foot armor enhancement          |
 
 **Vanilla behavior overrides** (event listeners, not registered as custom enchantments):
 
-| Enchantment     | Slot      | Description                              |
-|-----------------|-----------|------------------------------------------|
+| Enchantment     | Slot      | Description                                 |
+|-----------------|-----------|---------------------------------------------|
 | Silk Touch      | Main Hand | Allows mining spawners and budding amethyst |
-| Feather Falling | Feet      | Prevents farmland from being trampled    |
-| Fortune         | Main Hand | Hoes with Fortune II+ auto-replant crops |
+| Feather Falling | Feet      | Prevents farmland from being trampled       |
+| Fortune         | Main Hand | Hoes with Fortune II+ auto-replant crops    |
 
 #### Recipes
 

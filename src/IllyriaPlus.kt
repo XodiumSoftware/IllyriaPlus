@@ -1,5 +1,7 @@
 package org.xodium.illyriaplus
 
+import com.github.retrooper.packetevents.PacketEvents
+import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
 import org.bukkit.plugin.java.JavaPlugin
 import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 import org.xodium.illyriaplus.enchantments.utility.EmbertreadEnchantment
@@ -17,6 +19,8 @@ import org.xodium.illyriaplus.mechanics.world.*
 import org.xodium.illyriaplus.recipes.RecipeInterface
 import org.xodium.illyriaplus.recipes.custom.AlcoholRecipe
 import org.xodium.illyriaplus.recipes.custom.GreatswordRecipe
+import org.xodium.illyriaplus.recipes.custom.HalberdRecipe
+import org.xodium.illyriaplus.recipes.custom.LongswordRecipe
 import org.xodium.illyriaplus.recipes.vanilla.*
 
 /** Main class of the plugin. */
@@ -36,6 +40,13 @@ internal class IllyriaPlus : JavaPlugin() {
     lateinit var enchantments: List<EnchantmentInterface>
         private set
 
+    @Suppress("UnstableApiUsage")
+    override fun onLoad() {
+        PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this))
+        PacketEvents.getAPI().settings.reEncodeByDefault(false)
+        PacketEvents.getAPI().load()
+    }
+
     override fun onEnable() {
         if (!server.version.contains(pluginMeta.version.substringBefore("+"))) {
             logger.severe("This plugin requires the following supported version: ${pluginMeta.version}.")
@@ -45,13 +56,17 @@ internal class IllyriaPlus : JavaPlugin() {
 
         instance = this
 
+        PacketEvents.getAPI().init()
+
         recipes =
             listOf(
                 AlcoholRecipe,
                 ChainmailRecipe,
                 DiamondRecycleRecipe,
                 GreatswordRecipe,
+                HalberdRecipe,
                 IceBreakdownRecipe,
+                LongswordRecipe,
                 NetherWartBlockRecipe,
                 PaintingRecipe,
                 RottenFleshRecipe,
@@ -75,6 +90,7 @@ internal class IllyriaPlus : JavaPlugin() {
                 TameableMechanic,
                 EnderchestMechanic,
                 XpMechanic,
+                AnvilMechanic,
                 HuskMechanic,
                 SilenceMechanic,
                 HeadMechanic,
@@ -108,7 +124,11 @@ internal class IllyriaPlus : JavaPlugin() {
             )
 
         logger.info(
-            "Registered: ${enchantments.size} enchantment events | Took ${enchantments.sumOf { it.register() }}ms",
+            "Registered: ${enchantments.size} enchantment event(s) | Took ${enchantments.sumOf { it.register() }}ms",
         )
+    }
+
+    override fun onDisable() {
+        PacketEvents.getAPI().terminate()
     }
 }

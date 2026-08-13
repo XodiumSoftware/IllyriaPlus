@@ -181,16 +181,11 @@ Within each group:
 
 **Always update documentation when code changes:**
 
-1. **ARCHITECTURE.md** — Update if you:
-    - Add/remove enchantments, mechanics, recipes, or managers
-    - Change the mechanic system or interfaces
-    - Change project structure or conventions
-
-2. **GUIDE.md** — Update if you:
+1. **GUIDE.md** — Update if you:
     - Change build commands or installation steps
     - Add/remove major features
 
-3. **KDoc comments** — Add/update if you:
+2. **KDoc comments** — Add/update if you:
     - Add new public APIs (interfaces, managers, utils)
     - Change existing function signatures or behavior
     - Add complex logic that needs explanation
@@ -218,9 +213,8 @@ GitHub Actions workflows in `.github/workflows/`:
     - Add supported items to appropriate `ItemTag` if needed
 5. In `IllyriaPlus.kt`:
     - Add `YournameEnchantment` to the `enchantments` list
-6. Update `ARCHITECTURE.md` enchantment table
-7. Add KDoc comments to explain the enchantment's behavior
-8. Run `./gradlew dokkaGenerateHtml` to regenerate documentation
+6. Add KDoc comments to explain the enchantment's behavior
+7. Run `./gradlew dokkaGenerateHtml` to regenerate documentation
 
 ### Adding a Mechanic
 
@@ -231,7 +225,6 @@ GitHub Actions workflows in `.github/workflows/`:
 5. Register commands/permissions by overriding `cmds` and `perms` if needed
 6. In `IllyriaPlus.kt`, add `YourMechanic` to the `mechanics` list in `onEnable()`
 7. Add KDoc comments explaining the mechanic's purpose and features
-8. Update `ARCHITECTURE.md` mechanic count and list
 
 ### Adding a Recipe
 
@@ -241,7 +234,6 @@ GitHub Actions workflows in `.github/workflows/`:
 4. Use naming pattern `{descriptive_name}_{recipe_type}` for `NamespacedKey`
 5. In `IllyriaPlus.kt`, add `YourRecipe` to the `recipes` list in `onEnable()`
 6. Add KDoc comments describing the recipe
-7. Update `ARCHITECTURE.md` recipe list
 
 ### Adding a PDC (Persistent Data Container)
 
@@ -249,7 +241,6 @@ GitHub Actions workflows in `.github/workflows/`:
 2. Add a new property delegate using `by` with `NamespacedKey(instance, "key_name")`
 3. Use primitive `PersistentDataType` values or custom serializers for complex data
 4. Access via `player.yourField`, etc. directly in code
-5. Document the new PDC field in `ARCHITECTURE.md` if significant
 
 ### Adding a Data Class
 

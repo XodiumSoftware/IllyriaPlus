@@ -5,6 +5,7 @@ import io.papermc.paper.dialog.Dialog
 import io.papermc.paper.registry.data.dialog.ActionButton
 import io.papermc.paper.registry.data.dialog.DialogBase
 import io.papermc.paper.registry.data.dialog.action.DialogAction
+import io.papermc.paper.registry.data.dialog.body.DialogBody
 import io.papermc.paper.registry.data.dialog.input.DialogInput
 import io.papermc.paper.registry.data.dialog.type.DialogType
 import net.kyori.adventure.text.event.ClickCallback
@@ -56,6 +57,21 @@ internal object NicknameMechanic : MechanicInterface {
                 .base(
                     DialogBase
                         .builder(MM.deserialize("<firewatch>Nickname</gradient>"))
+                        .body(
+                            listOf(
+                                DialogBody.plainMessage(
+                                    MM.deserialize(
+                                        "<yellow>1. Configure your nickname at: " +
+                                            "<aqua><click:copy_to_clipboard:www.birdflop.com/resources/rgb/>" +
+                                            "www.birdflop.com/resources/rgb/" +
+                                            "</aqua>\n" +
+                                            "2. Set <red>output</red> format to: <green>MiniMessage</green>\n" +
+                                            "3. Copy <red>output</red> from the site → paste into the " +
+                                            "<red>input</red> below.",
+                                    ),
+                                ),
+                            ),
+                        )
                         .inputs(
                             listOf(
                                 DialogInput
