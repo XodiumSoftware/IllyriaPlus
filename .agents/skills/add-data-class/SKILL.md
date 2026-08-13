@@ -1,11 +1,12 @@
 ---
 name: add-data-class
-description: Scaffolds a new IllyriaPlus data class in src/data/ for structured immutable data used across mechanics.
+description: Scaffolds a new data class in src/data/ for structured immutable data used across the project.
 ---
 
 # Add a Data Class
 
-Use this skill when the user needs a new structured data type shared across mechanics, enchantments, recipes, or utilities.
+Use this skill when the user needs a new structured data type shared across the project (mechanics, enchantments, recipes, utilities, database tables, etc.).
+Use this skill when the user needs a new structured data type shared across the project (mechanics, enchantments, recipes, utilities, database tables, etc.).
 
 ## Before Writing Code
 
@@ -27,7 +28,7 @@ Use this skill when the user needs a new structured data type shared across mech
 ## Conventions
 
 - Use `val` only — no mutable `var` properties in data classes unless there is a strong reason.
-- Prefer primitive or existing Bukkit/Paper types.
+- Prefer primitive or existing platform/API types.
 - If the data class is used for lookups, consider adding a helper that converts a collection into a map (see `BuildSetupData.toMaterialMap()`).
 
 ## Documentation
@@ -39,7 +40,7 @@ Use this skill when the user needs a new structured data type shared across mech
 ## Template
 
 ```kotlin
-package org.xodium.illyriaplus.data
+package <project.package>.data
 
 /**
  * Represents <description>.
@@ -51,5 +52,9 @@ internal data class <Name>(
     val <property2>: <Type2>,
 )
 ```
+
+Replace `<project.package>` with the actual project package (e.g., `org.xodium.illyriaplus`).
+
+Replace `<project.package>` with the actual project package (e.g., `org.xodium.illyriaplus` or `org.xodium.illyriakingdoms`).
 
 After finishing, summarize the files changed and ask the user if they want to commit.

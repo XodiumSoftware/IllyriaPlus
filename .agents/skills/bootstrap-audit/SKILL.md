@@ -1,6 +1,6 @@
 ---
 name: bootstrap-audit
-description: Audits IllyriaPlus registration wiring to ensure all utility enchantments, mechanics, recipes, and enchantment listeners are correctly registered.
+description: Audits plugin registration wiring to ensure all utility enchantments, mechanics, recipes, and enchantment listeners are correctly registered.
 ---
 
 # Bootstrap Audit
@@ -16,12 +16,12 @@ Use this skill when the user wants to verify that the plugin's registration wiri
 
 ## Steps
 
-1. Read `src/IllyriaPlus.kt` and extract:
+1. Read the main plugin class (e.g., `src/Plugin.kt`) and extract:
    - The `recipes` list
    - The `mechanics` list
    - The `enchantments` (event listeners) list
 
-2. Read `src/IllyriaPlusBootstrap.kt` and extract:
+2. Read the plugin bootstrap class (e.g., `src/PluginBootstrap.kt`) and extract:
    - The item tags created in `LifecycleEvents.TAGS.preFlatten`
    - The enchantments registered in `RegistryEvents.ENCHANTMENT`
    - The enchantments added to `TRADEABLE`, `NON_TREASURE`, and `IN_ENCHANTING_TABLE` tags in `LifecycleEvents.TAGS.postFlatten`

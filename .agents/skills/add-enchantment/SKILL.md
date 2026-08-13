@@ -1,11 +1,11 @@
 ---
 name: add-enchantment
-description: Scaffolds a new IllyriaPlus enchantment object, places it in the correct utility/ or vanilla/ package, and wires it into IllyriaPlusBootstrap and IllyriaPlus.kt when needed.
+description: Scaffolds a new Paper custom enchantment object and wires it into the plugin bootstrap and main class when needed.
 ---
 
 # Add an Enchantment
 
-Use this skill when the user wants to add a new enchantment to IllyriaPlus.
+Use this skill when the user wants to add a new enchantment to a Paper-based Minecraft plugin.
 
 ## Before Writing Code
 
@@ -35,18 +35,18 @@ Use this skill when the user wants to add a new enchantment to IllyriaPlus.
 
 ## Wiring
 
-### Utility enchantments only
+### Custom registry enchantments only
 
-1. Open `src/IllyriaPlusBootstrap.kt`.
+1. Open the plugin bootstrap class (e.g., `src/PluginBootstrap.kt`).
 2. In the `RegistryEvents.ENCHANTMENT` handler, add a new `register(<Name>Enchantment.key) { <Name>Enchantment.invoke(it).supportedItems(event.getOrCreateTag(<TAG>)) }` call.
 3. Add `<Name>Enchantment.key` to the `enchants` set used for `TRADEABLE`, `NON_TREASURE`, and `IN_ENCHANTING_TABLE` tags.
 4. If the enchantment needs a new item tag, add it in the `LifecycleEvents.TAGS.preFlatten` handler.
 
 ### All enchantments
 
-1. Open `src/IllyriaPlus.kt`.
+1. Open the main plugin class (e.g., `src/Plugin.kt`).
 2. Import the new enchantment.
-3. Add it alphabetically to the `enchantments` list in `onEnable()`.
+3. Add it alphabetically to the `enchantments` listener list in `onEnable()`.
 
 ## Documentation
 
@@ -60,14 +60,14 @@ Use this skill when the user wants to add a new enchantment to IllyriaPlus.
 ## Template
 
 ```kotlin
-package org.xodium.illyriaplus.enchantments.{utility|vanilla}
+package <project.package>.enchantments.{utility|vanilla}
 
 import io.papermc.paper.registry.data.EnchantmentRegistryEntry
 import org.bukkit.event.EventHandler
 import org.bukkit.event.<EventType>
 import org.bukkit.inventory.EquipmentSlotGroup
-import org.xodium.illyriaplus.Utils.Enchantment.displayName
-import org.xodium.illyriaplus.enchantments.EnchantmentInterface
+import <project.package>.Utils.Enchantment.displayName
+import <project.package>.enchantments.EnchantmentInterface
 
 /** Represents an object handling <description> within the system. */
 @Suppress("UnstableApiUsage")
@@ -86,5 +86,7 @@ internal object <Name>Enchantment : EnchantmentInterface {
     }
 }
 ```
+
+Replace `<project.package>` with the actual project package.
 
 After finishing, summarize the files changed and ask the user if they want to commit.

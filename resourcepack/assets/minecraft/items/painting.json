@@ -400,6 +400,13 @@
                         }
                     },
                     {
+                        "when": "illyriaplus:aurorae",
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "illyriaplus:item/painting/aurorae"
+                        }
+                    },
+                    {
                         "when": "illyriaplus:awful_housing",
                         "model": {
                             "type": "minecraft:model",
@@ -540,10 +547,24 @@
                         }
                     },
                     {
+                        "when": "illyriaplus:disturbance",
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "illyriaplus:item/painting/disturbance"
+                        }
+                    },
+                    {
                         "when": "illyriaplus:drippy",
                         "model": {
                             "type": "minecraft:model",
                             "model": "illyriaplus:item/painting/drippy"
+                        }
+                    },
+                    {
+                        "when": "illyriaplus:ecotonal_pareidolia",
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "illyriaplus:item/painting/ecotonal_pareidolia"
                         }
                     },
                     {
@@ -617,6 +638,13 @@
                         }
                     },
                     {
+                        "when": "illyriaplus:fra_lippo_lippi",
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "illyriaplus:item/painting/fra_lippo_lippi"
+                        }
+                    },
+                    {
                         "when": "illyriaplus:frost",
                         "model": {
                             "type": "minecraft:model",
@@ -652,6 +680,13 @@
                         }
                     },
                     {
+                        "when": "illyriaplus:grisaille",
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "illyriaplus:item/painting/grisaille"
+                        }
+                    },
+                    {
                         "when": "illyriaplus:gulls",
                         "model": {
                             "type": "minecraft:model",
@@ -673,6 +708,13 @@
                         }
                     },
                     {
+                        "when": "illyriaplus:hearth_rug",
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "illyriaplus:item/painting/hearth_rug"
+                        }
+                    },
+                    {
                         "when": "illyriaplus:heavens_ladder",
                         "model": {
                             "type": "minecraft:model",
@@ -687,6 +729,13 @@
                         }
                     },
                     {
+                        "when": "illyriaplus:horn_gates_of",
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "illyriaplus:item/painting/horn_gates_of"
+                        }
+                    },
+                    {
                         "when": "illyriaplus:ichor",
                         "model": {
                             "type": "minecraft:model",
@@ -698,6 +747,34 @@
                         "model": {
                             "type": "minecraft:model",
                             "model": "illyriaplus:item/painting/iconography"
+                        }
+                    },
+                    {
+                        "when": "illyriaplus:in_situ",
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "illyriaplus:item/painting/in_situ"
+                        }
+                    },
+                    {
+                        "when": "illyriaplus:interstice",
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "illyriaplus:item/painting/interstice"
+                        }
+                    },
+                    {
+                        "when": "illyriaplus:ivory_gates_of",
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "illyriaplus:item/painting/ivory_gates_of"
+                        }
+                    },
+                    {
+                        "when": "illyriaplus:java",
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "illyriaplus:item/painting/java"
                         }
                     },
                     {
@@ -729,6 +806,13 @@
                         }
                     },
                     {
+                        "when": "illyriaplus:keeping_up",
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "illyriaplus:item/painting/keeping_up"
+                        }
+                    },
+                    {
                         "when": "illyriaplus:life",
                         "model": {
                             "type": "minecraft:model",
@@ -747,6 +831,13 @@
                         "model": {
                             "type": "minecraft:model",
                             "model": "illyriaplus:item/painting/light"
+                        }
+                    },
+                    {
+                        "when": "illyriaplus:lost_wax",
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "illyriaplus:item/painting/lost_wax"
                         }
                     },
                     {
@@ -960,6 +1051,13 @@
                         }
                     },
                     {
+                        "when": "illyriaplus:rich_topsoil",
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "illyriaplus:item/painting/rich_topsoil"
+                        }
+                    },
+                    {
                         "when": "illyriaplus:rising_sun_and_fading_death",
                         "model": {
                             "type": "minecraft:model",
@@ -1079,6 +1177,13 @@
                         }
                     },
                     {
+                        "when": "illyriaplus:the_foils",
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "illyriaplus:item/painting/the_foils"
+                        }
+                    },
+                    {
                         "when": "illyriaplus:the_painting_at_end_of_catalogue",
                         "model": {
                             "type": "minecraft:model",
@@ -1114,10 +1219,31 @@
                         }
                     },
                     {
+                        "when": "illyriaplus:underworld_2",
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "illyriaplus:item/painting/underworld_2"
+                        }
+                    },
+                    {
                         "when": "illyriaplus:unwrap",
                         "model": {
                             "type": "minecraft:model",
                             "model": "illyriaplus:item/painting/unwrap"
+                        }
+                    },
+                    {
+                        "when": "illyriaplus:verdigris",
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "illyriaplus:item/painting/verdigris"
+                        }
+                    },
+                    {
+                        "when": "illyriaplus:vernal",
+                        "model": {
+                            "type": "minecraft:model",
+                            "model": "illyriaplus:item/painting/vernal"
                         }
                     },
                     {

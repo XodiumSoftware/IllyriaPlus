@@ -1,11 +1,11 @@
 ---
 name: update-plugin-docs
-description: Updates IllyriaPlus GUIDE.md and regenerates Dokka docs to match current code changes.
+description: Updates the project GUIDE.md and regenerates Dokka docs to match current code changes.
 ---
 
 # Update Plugin Docs
 
-Use this skill after making code changes that affect mechanics, enchantments, recipes, PDCs, data classes, utilities, or build instructions.
+Use this skill after making code changes that affect mechanics, enchantments, recipes, PDCs, data classes, utilities, tables, or build instructions.
 
 ## When to Use
 
@@ -18,11 +18,11 @@ Load this skill when the user says something like:
 ## Steps
 
 1. Inspect the current codebase to determine what has changed:
-   - Read `src/IllyriaPlus.kt` for the lists of `recipes`, `mechanics`, and `enchantments`.
-   - Read `src/IllyriaPlusBootstrap.kt` for registered enchantments and tags.
-   - List `src/mechanics/` subdirectories, `src/enchantments/utility/`, `src/enchantments/vanilla/`, `src/recipes/vanilla/`, `src/data/`, and `src/pdcs/`.
+   - Read the main plugin class (e.g., `src/Plugin.kt`) for the lists of `recipes`, `mechanics`, and `enchantments`.
+   - Read the plugin bootstrap class (e.g., `src/PluginBootstrap.kt`) for registered enchantments and tags.
+   - List relevant source directories (`src/mechanics/`, `src/enchantments/`, `src/recipes/`, `src/data/`, `src/pdcs/`, `src/tables/`).
 
-2. Update `GUIDE.md`:
+2. Update `GUIDE.md` or the project's main documentation file.
    - Update feature lists (enchantments, recipes).
    - Update version numbers to match `build.gradle.kts`.
    - Ensure the Configuration section reflects compile-time constants, not config files.

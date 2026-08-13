@@ -1,11 +1,11 @@
 ---
 name: add-mechanic
-description: Scaffolds a new IllyriaPlus mechanic object in the correct mechanics/{category} package and registers it in IllyriaPlus.kt.
+description: Scaffolds a new gameplay mechanic object in the correct mechanics/{category} package and registers it in the main plugin class.
 ---
 
 # Add a Mechanic
 
-Use this skill when the user wants to add a new gameplay mechanic to IllyriaPlus.
+Use this skill when the user wants to add a new gameplay mechanic to the project.
 
 ## Before Writing Code
 
@@ -28,7 +28,7 @@ Use this skill when the user wants to add a new gameplay mechanic to IllyriaPlus
 
 ## Wiring
 
-1. Open `src/IllyriaPlus.kt`.
+1. Open the main plugin class (e.g., `src/Plugin.kt`).
 2. Import the new mechanic.
 3. Add it alphabetically to the `mechanics` list in `onEnable()`.
 
@@ -43,11 +43,11 @@ Use this skill when the user wants to add a new gameplay mechanic to IllyriaPlus
 ## Template
 
 ```kotlin
-package org.xodium.illyriaplus.mechanics.{category}
+package <project.package>.mechanics.{category}
 
 import org.bukkit.event.EventHandler
 import org.bukkit.event.<EventType>
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import <project.package>.mechanics.MechanicInterface
 
 /** Represents a mechanic handling <description> within the system. */
 internal object <Name>Mechanic : MechanicInterface {
@@ -59,5 +59,7 @@ internal object <Name>Mechanic : MechanicInterface {
     }
 }
 ```
+
+Replace `<project.package>` with the actual project package (e.g., `org.xodium.illyriaplus`).
 
 After finishing, summarize the files changed and ask the user if they want to commit.

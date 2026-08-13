@@ -1,11 +1,11 @@
 ---
 name: add-utils
-description: Adds a new IllyriaPlus utility function or nested utility object inside src/Utils.kt following existing conventions.
+description: Adds a new utility function or nested utility object inside src/Utils.kt following existing conventions.
 ---
 
 # Add Utilities
 
-Use this skill when the user needs a new helper function or group of helpers for IllyriaPlus.
+Use this skill when the user needs a new helper function or group of helpers for the project.
 
 ## Before Writing Code
 
@@ -22,7 +22,7 @@ Use this skill when the user needs a new helper function or group of helpers for
    - If it extends an existing type (e.g. `Player`, `Block`, `String`), prefer a top-level extension function.
    - If it is a group of related helpers, add a new nested `object` inside `Utils`.
 3. Keep visibility `internal`.
-4. Use `Utils.MM` for any MiniMessage formatting.
+4. Use the project's text formatting helper (e.g., `Utils.MM`) for any MiniMessage formatting.
 5. Follow the project's member ordering: `const val`, `val`, `var`, `fun`.
 6. Add `@Suppress("UnstableApiUsage")` if using experimental Paper APIs.
 
