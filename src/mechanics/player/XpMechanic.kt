@@ -33,7 +33,8 @@ internal object XpMechanic : MechanicInterface {
 
         player.giveExp(-XP_COST_TO_BOTTLE)
         event.item?.subtract(1)
-        player.inventory
+        player
+            .inventory
             .addItem(ItemStack.of(Material.EXPERIENCE_BOTTLE, 1))
             .values
             .forEach { player.world.dropItemNaturally(player.location, it) }

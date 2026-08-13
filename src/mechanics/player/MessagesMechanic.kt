@@ -168,7 +168,8 @@ internal object MessagesMechanic : MechanicInterface {
      */
     private fun handleJoin(player: Player): Component? =
         MM.deserialize(
-            PlayerMessages.JOIN
+            PlayerMessages
+                .JOIN
                 .takeIf { it.isNotEmpty() } ?: return null,
             Placeholder.component("player", player.displayName()),
         )
@@ -181,7 +182,8 @@ internal object MessagesMechanic : MechanicInterface {
      */
     private fun handleQuit(player: Player): Component? =
         MM.deserialize(
-            PlayerMessages.QUIT
+            PlayerMessages
+                .QUIT
                 .takeIf { it.isNotEmpty() } ?: return null,
             Placeholder.component("player", player.displayName()),
         )
@@ -198,7 +200,8 @@ internal object MessagesMechanic : MechanicInterface {
         killer: Player?,
     ): Component? =
         MM.deserialize(
-            PlayerMessages.DEATH_BY_PLAYER
+            PlayerMessages
+                .DEATH_BY_PLAYER
                 .takeIf { it.isNotEmpty() } ?: return null,
             Placeholder.component("player", player.displayName()),
             Placeholder.component("killer", (killer ?: return null).displayName()),
@@ -216,7 +219,8 @@ internal object MessagesMechanic : MechanicInterface {
         cause: Component?,
     ): Component? =
         MM.deserialize(
-            PlayerMessages.DEATH
+            PlayerMessages
+                .DEATH
                 .takeIf { it.isNotEmpty() } ?: return null,
             Placeholder.component("player", player.displayName()),
             Placeholder.component("cause", cause ?: return null),
@@ -229,7 +233,8 @@ internal object MessagesMechanic : MechanicInterface {
      */
     private fun handleDeathScreen(): Component? =
         MM.deserialize(
-            PlayerMessages.DEATH_SCREEN
+            PlayerMessages
+                .DEATH_SCREEN
                 .takeIf { it.isNotEmpty() } ?: return null,
         )
 
@@ -264,7 +269,8 @@ internal object MessagesMechanic : MechanicInterface {
      */
     private fun handleServerFull(): Component? =
         MM.deserialize(
-            LoginMessages.FULL
+            LoginMessages
+                .FULL
                 .takeIf { it.isNotEmpty() } ?: return null,
         )
 
@@ -275,7 +281,8 @@ internal object MessagesMechanic : MechanicInterface {
      */
     private fun handleLoginDenied(): Component? =
         MM.deserialize(
-            LoginMessages.DENIED
+            LoginMessages
+                .DENIED
                 .takeIf { it.isNotEmpty() } ?: return null,
         )
 
@@ -291,7 +298,8 @@ internal object MessagesMechanic : MechanicInterface {
         reason: Component,
     ): Component? =
         MM.deserialize(
-            PlayerMessages.KICK
+            PlayerMessages
+                .KICK
                 .takeIf { it.isNotEmpty() } ?: return null,
             Placeholder.component("player", player.displayName()),
             Placeholder.component("reason", reason),
@@ -323,7 +331,8 @@ internal object MessagesMechanic : MechanicInterface {
      */
     private fun handleSetSpawn(notification: Component): Component? =
         MM.deserialize(
-            PlayerMessages.SET_SPAWN
+            PlayerMessages
+                .SET_SPAWN
                 .takeIf { it.isNotEmpty() } ?: return null,
             Placeholder.component("notification", notification),
         )
@@ -335,7 +344,8 @@ internal object MessagesMechanic : MechanicInterface {
      */
     private fun handleUnknownCommand(): Component? =
         MM.deserialize(
-            ServerMessages.UNKNOWN_COMMAND
+            ServerMessages
+                .UNKNOWN_COMMAND
                 .takeIf { it.isNotEmpty() } ?: return null,
         )
 }

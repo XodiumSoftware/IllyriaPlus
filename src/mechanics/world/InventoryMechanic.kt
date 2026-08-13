@@ -122,13 +122,15 @@ internal object InventoryMechanic : MechanicInterface {
 
         Utils.Schedule.schedule(duration = 200L) {
             containers.forEach {
-                Particle.TRAIL
+                Particle
+                    .TRAIL
                     .builder()
                     .location(player.location)
                     .data(Particle.Trail(it.block.center(), Color.MAROON, 40))
                     .receivers(player)
                     .spawn()
-                Particle.DUST
+                Particle
+                    .DUST
                     .builder()
                     .location(it.block.center())
                     .count(10)
@@ -172,7 +174,9 @@ internal object InventoryMechanic : MechanicInterface {
                 containers
                     .filter { it.inventory.contains(remaining.type) }
                     .sortedByDescending { container ->
-                        container.inventory.storageContents
+                        container
+                            .inventory
+                            .storageContents
                             .filterNotNull()
                             .filter { it.type == remaining.type }
                             .sumOf { it.amount }
@@ -202,7 +206,8 @@ internal object InventoryMechanic : MechanicInterface {
 
         Utils.Schedule.schedule(duration = 40L) {
             usedContainers.forEach {
-                Particle.CRIT
+                Particle
+                    .CRIT
                     .builder()
                     .location(it.block.center())
                     .count(10)

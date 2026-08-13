@@ -177,7 +177,10 @@ internal object TreeMechanic : MechanicInterface {
     private fun loadAllStructures(): Map<TreeType, List<TreeStructureData>> =
         runCatching {
             val jarFileUri =
-                IllyriaPlus::class.java.protectionDomain.codeSource.location
+                IllyriaPlus::class.java
+                    .protectionDomain
+                    .codeSource
+                    .location
                     .toURI()
             val jarUri = URI.create("jar:$jarFileUri")
             val (fs, shouldClose) =
