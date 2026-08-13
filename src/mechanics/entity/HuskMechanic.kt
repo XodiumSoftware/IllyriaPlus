@@ -33,7 +33,9 @@ internal object HuskMechanic : MechanicInterface {
 
         val isCamelHusk = event.entity.vehicle is Camel
         val lootingLevel =
-            event.entity.killer
+            event
+                .entity
+                .killer
                 ?.inventory
                 ?.itemInMainHand
                 ?.getEnchantmentLevel(Enchantment.LOOTING) ?: 0

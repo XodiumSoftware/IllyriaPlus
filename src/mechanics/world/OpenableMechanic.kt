@@ -133,7 +133,8 @@ internal object OpenableMechanic : MechanicInterface {
      * @param block The [Block] where the knock sound originates.
      */
     private fun playKnockSound(block: Block) {
-        block.world
+        block
+            .world
             .getNearbyPlayers(block.location, KNOCK_SOUND_RADIUS)
             .forEach { it.playSound(KNOCK_SOUND) }
     }

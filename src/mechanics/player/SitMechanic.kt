@@ -130,7 +130,8 @@ internal object SitMechanic : MechanicInterface {
         sittingPlayers.entries.removeIf { (_, armorStand) ->
             (armorStand.blockLocation() == brokenBlockLocation).also { matches ->
                 if (matches) {
-                    armorStand.passengers
+                    armorStand
+                        .passengers
                         .filterIsInstance<Player>()
                         .forEach(armorStand::removePassenger)
 
@@ -173,7 +174,8 @@ internal object SitMechanic : MechanicInterface {
         location
             .clone()
             .subtract(blockCenterOffset)
-            .block.location
+            .block
+            .location
 
     /** Removes this [ArmorStand] and clears it from [occupiedBlocks]. */
     private fun ArmorStand.removeSeat() {
