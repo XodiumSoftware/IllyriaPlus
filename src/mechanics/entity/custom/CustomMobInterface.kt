@@ -47,11 +47,13 @@ internal interface CustomMobInterface<T : LivingEntity> : MechanicInterface {
     val biomes: Set<Biome>
 
     /** Spawns a single custom mob at the given location. */
-    fun spawnMob(world: World, location: Location)
+    fun spawnMob(
+        world: World,
+        location: Location,
+    )
 
     /** Checks whether the given entity is this type of custom mob. */
-    fun isMob(entity: T): Boolean =
-        entity.persistentDataContainer.has(tagKey, PersistentDataType.BOOLEAN)
+    fun isMob(entity: T): Boolean = entity.persistentDataContainer.has(tagKey, PersistentDataType.BOOLEAN)
 
     /** Tags an entity as this custom mob type. */
     fun tagMob(entity: T) {
@@ -67,15 +69,12 @@ internal interface CustomMobInterface<T : LivingEntity> : MechanicInterface {
         val players = instance.server.onlinePlayers
         if (players.isEmpty()) return
 
-        players
-            .shuffled()
-            .take(maxPlayersPerTick)
-            .forEach { player ->
-                if (!canSpawn(player)) return@forEach
+        players.shuffled().take(maxPlayersPerTick).forEach { player ->
+            if (!canSpawn(player)) return@forEach
 
-                val spawnLocation = findSpawnLocation(player.location) ?: return@forEach
-                spawnEncounter(player.world, spawnLocation, groupSize)
-            }
+            val spawnLocation = findSpawnLocation(player.location) ?: return@forEach
+            spawnEncounter(player.world, spawnLocation, groupSize)
+        }
     }
 
     /**
@@ -101,14 +100,14 @@ internal interface CustomMobInterface<T : LivingEntity> : MechanicInterface {
      */
     @Suppress("UNCHECKED_CAST")
     fun countNearby(location: Location): Int =
-        location.world
+        location
+            .world
             .getNearbyEntities(
                 location,
                 spawnMaxRadius,
                 spawnMaxRadius,
                 spawnMaxRadius,
-            )
-            .filterIsInstance<LivingEntity>()
+            ).filterIsInstance<LivingEntity>()
             .filter { isMob(it as T) }
             .count()
 

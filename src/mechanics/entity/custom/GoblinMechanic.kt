@@ -9,7 +9,6 @@ import org.bukkit.Sound
 import org.bukkit.attribute.Attribute
 import org.bukkit.block.Biome
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.Player
 import org.bukkit.entity.Zombie
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageEvent
@@ -20,8 +19,6 @@ import org.bukkit.inventory.meta.Damageable
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import kotlin.math.cos
-import kotlin.math.sin
 import kotlin.random.Random
 
 /** Represents a mechanic that spawns cowardly cave-dwelling goblins as their own mob type. */
@@ -88,7 +85,10 @@ internal object GoblinMechanic : CustomMobInterface<Zombie> {
 
     override fun register(): Long = super.register(GOBLIN_GROUP_MIN_SIZE..GOBLIN_GROUP_MAX_SIZE)
 
-    override fun spawnMob(world: org.bukkit.World, location: Location) {
+    override fun spawnMob(
+        world: org.bukkit.World,
+        location: Location,
+    ) {
         world.spawn(location, Zombie::class.java) { goblin ->
             tagMob(goblin)
             applyGoblinAttributes(goblin)
@@ -125,9 +125,7 @@ internal object GoblinMechanic : CustomMobInterface<Zombie> {
         zombie.getAttribute(Attribute.ATTACK_SPEED)?.let {
             it.baseValue = it.value * GOBLIN_SPEED_MULTIPLIER
         }
-        zombie.getAttribute(Attribute.FOLLOW_RANGE)?.let {
-            it.baseValue = it.value * 0.75
-        }
+        zombie.getAttribute(Attribute.FOLLOW_RANGE)?.let { it.baseValue = it.value * 0.75 }
 
         if (Random.nextDouble() < GOBLIN_BABY_CHANCE) {
             zombie.isBaby = true
@@ -251,7 +249,9 @@ internal object GoblinMechanic : CustomMobInterface<Zombie> {
         GOBLIN_DROP_MATERIALS.forEach { (material, chance) ->
             val adjustedChance = chance + (lootingLevel * 0.05)
             if (Random.nextDouble() < adjustedChance) {
-                val amount = Random.nextInt(GOBLIN_DROP_BASE_MIN, GOBLIN_DROP_BASE_MAX + 1) + lootingLevel
+                val amount =
+                    Random.nextInt(GOBLIN_DROP_BASE_MIN, GOBLIN_DROP_BASE_MAX + 1) +
+                        lootingLevel
                 event.drops.add(ItemStack.of(material, amount.coerceAtLeast(1)))
             }
         }

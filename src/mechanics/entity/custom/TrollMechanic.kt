@@ -9,7 +9,6 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.block.Biome
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.IronGolem
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDeathEvent
@@ -17,10 +16,11 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils.Schedule.schedule
 import kotlin.random.Random
 
-/** Represents a mechanic that spawns slow, tanky cave trolls in mountain and spruce forest biomes. */
+/**
+ * Represents a mechanic that spawns slow, tanky cave trolls in mountain and spruce forest biomes.
+ */
 internal object TrollMechanic : CustomMobInterface<IronGolem> {
     override val tagKey: NamespacedKey = NamespacedKey(instance, "is_troll")
     override val spawnIntervalTicks: Long = 600L
@@ -72,7 +72,10 @@ internal object TrollMechanic : CustomMobInterface<IronGolem> {
 
     override fun register(): Long = super.register(TROLL_GROUP_MIN_SIZE..TROLL_GROUP_MAX_SIZE)
 
-    override fun spawnMob(world: org.bukkit.World, location: Location) {
+    override fun spawnMob(
+        world: org.bukkit.World,
+        location: Location,
+    ) {
         world.spawn(location, IronGolem::class.java) { troll ->
             tagMob(troll)
             applyTrollAttributes(troll)
@@ -86,15 +89,15 @@ internal object TrollMechanic : CustomMobInterface<IronGolem> {
     @EventHandler(ignoreCancelled = true)
     fun on(event: EntityDeathEvent) = trollDrops(event)
 
-    /**
-     * Attempts to regenerate trolls that are below the health threshold.
-     */
+    /** Attempts to regenerate trolls that are below the health threshold. */
     private fun attemptTrollRegen() {
         val iterator = REGENERATING_TROLLS.iterator()
         while (iterator.hasNext()) {
             val entityId = iterator.next()
             val troll =
-                instance.server.worlds
+                instance
+                    .server
+                    .worlds
                     .asSequence()
                     .flatMap { it.entities.asSequence() }
                     .filterIsInstance<IronGolem>()
@@ -166,7 +169,8 @@ internal object TrollMechanic : CustomMobInterface<IronGolem> {
         TROLL_DROP_MATERIALS.forEach { (material, chance) ->
             val adjustedChance = chance + (lootingLevel * 0.05)
             if (Random.nextDouble() < adjustedChance) {
-                val amount = Random.nextInt(TROLL_DROP_BASE_MIN, TROLL_DROP_BASE_MAX + 1) + lootingLevel
+                val amount =
+                    Random.nextInt(TROLL_DROP_BASE_MIN, TROLL_DROP_BASE_MAX + 1) + lootingLevel
                 event.drops.add(ItemStack.of(material, amount.coerceAtLeast(1)))
             }
         }
