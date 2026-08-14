@@ -11,7 +11,6 @@ import org.bukkit.Tag
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -93,23 +92,16 @@ internal object ArmoredElytraMechanic : MechanicInterface {
      */
     private fun handleGrindstoneClick(event: InventoryClickEvent) {
         val inventory = event.inventory as? GrindstoneInventory ?: return
+
         if (event.rawSlot != 2) return
         if (event.currentItem == null) return
 
         val upper = inventory.upperItem ?: return
         if (!upper.isArmored()) return
 
-        val player = event.whoClicked as? Player ?: return
-        val chestplate = reconstructChestplate(upper)
         val elytra = stripArmorData(upper)
 
-        event.isCancelled = true
-        inventory.clear()
-
-        player.itemOnCursor = chestplate
-        player.inventory.addItem(elytra).values.forEach { drop ->
-            player.world.dropItemNaturally(player.location, drop)
-        }
+        instance.server.scheduler.runTask(instance) { _ -> inventory.setItem(0, elytra) }
     }
 
     /**
