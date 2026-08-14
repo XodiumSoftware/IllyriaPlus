@@ -4,34 +4,42 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemAttributeModifiers
 import io.papermc.paper.datacomponent.item.ItemLore
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Tag
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.event.inventory.PrepareGrindstoneEvent
 import org.bukkit.inventory.EquipmentSlotGroup
+import org.bukkit.inventory.GrindstoneInventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
+import org.xodium.illyriaplus.Utils
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 
 /**
  * Combines an elytra with a chestplate in an anvil and separates it again in a grindstone.
  */
 internal object ArmoredElytraMechanic : MechanicInterface {
-    private val ARMORED_TAG = NamespacedKey(instance, "armored_elytra")
+    private val ARMORED_KEY = NamespacedKey(instance, "armored_elytra")
+    private val CHESTPLATE_MATERIAL_TAG = NamespacedKey(instance, "armored_elytra_chestplate_material")
 
     @EventHandler(priority = EventPriority.HIGHEST)
     fun on(event: PrepareAnvilEvent) = prepareArmoredElytra(event)
 
     @EventHandler(priority = EventPriority.HIGHEST)
     fun on(event: PrepareGrindstoneEvent) = prepareGrindstoneSeparation(event)
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    fun on(event: InventoryClickEvent) = handleGrindstoneClick(event)
 
     /**
      * Handles a PrepareAnvilEvent by validating inputs and setting the armored elytra result.
@@ -49,17 +57,21 @@ internal object ArmoredElytraMechanic : MechanicInterface {
 
         val armor = chestplate.armorValue()
         val repairCost = armor.toInt() + (chestplate.getData(DataComponentTypes.REPAIR_COST) ?: 0)
-        val result = createArmoredElytra(elytra, chestplate)
+        val result =
+            createArmoredElytra(elytra, chestplate)
+                .apply {
+                    setData(DataComponentTypes.REPAIR_COST, repairCost)
+                    editPersistentDataContainer {
+                        it.set(CHESTPLATE_MATERIAL_TAG, PersistentDataType.STRING, chestplate.type.name)
+                    }
+                }
 
         event.view.repairCost = repairCost
         event.result = result
     }
 
     /**
-     * Handles a PrepareGrindstoneEvent by separating an armored elytra into its original pieces.
-     *
-     * The chestplate becomes the grindstone result, and the cleaned elytra is placed back into
-     * the upper input slot.
+     * Handles a PrepareGrindstoneEvent by showing the reconstructed chestplate as the result.
      *
      * @param event the prepare grindstone event
      */
@@ -71,39 +83,49 @@ internal object ArmoredElytraMechanic : MechanicInterface {
         if (!upper.isArmored()) return
         if (lower != null && lower.type != Material.AIR) return
 
-        val elytra = stripArmorData(upper)
-        val chestplate = reconstructChestplate(upper)
-
-        inventory.upperItem = elytra
-        event.result = chestplate
+        event.result = reconstructChestplate(upper)
     }
 
     /**
-     * Reconstructs a chestplate from an armored elytra's lore line.
+     * Handles taking the separated chestplate from a grindstone, giving the cleaned elytra back.
+     *
+     * @param event the inventory click event
+     */
+    private fun handleGrindstoneClick(event: InventoryClickEvent) {
+        val inventory = event.inventory as? GrindstoneInventory ?: return
+        if (event.rawSlot != 2) return
+        if (event.currentItem == null) return
+
+        val upper = inventory.upperItem ?: return
+        if (!upper.isArmored()) return
+
+        val player = event.whoClicked as? Player ?: return
+        val chestplate = reconstructChestplate(upper)
+        val elytra = stripArmorData(upper)
+
+        event.isCancelled = true
+        inventory.clear()
+
+        player.itemOnCursor = chestplate
+        player.inventory.addItem(elytra).values.forEach { drop ->
+            player.world.dropItemNaturally(player.location, drop)
+        }
+    }
+
+    /**
+     * Reconstructs a chestplate from the material stored on the armored elytra.
      *
      * @param armoredElytra the armored elytra to reconstruct from
      * @return the reconstructed chestplate, or a chainmail chestplate if the material cannot be determined
      */
     private fun reconstructChestplate(armoredElytra: ItemStack): ItemStack {
-        val lore = armoredElytra.getData(DataComponentTypes.LORE)?.lines() ?: emptyList()
-        val chestplateName =
-            lore
-                .firstOrNull { it.toString().startsWith("+ ") }
-                ?.toString()
-                ?.removePrefix("+ ")
         val material =
-            chestplateName?.let { name ->
-                Material.entries.firstOrNull { material ->
-                    Tag.ITEMS_CHEST_ARMOR.isTagged(material) &&
-                        name.contains(
-                            material.key.key
-                                .split("_")
-                                .dropLast(1)
-                                .joinToString(" "),
-                            ignoreCase = true,
-                        )
-                }
-            } ?: Material.CHAINMAIL_CHESTPLATE
+            armoredElytra
+                .persistentDataContainer
+                .get(CHESTPLATE_MATERIAL_TAG, PersistentDataType.STRING)
+                ?.let { Material.matchMaterial(it) }
+                ?.takeIf { Tag.ITEMS_CHEST_ARMOR.isTagged(it) }
+                ?: Material.CHAINMAIL_CHESTPLATE
 
         return ItemStack.of(material)
     }
@@ -117,13 +139,13 @@ internal object ArmoredElytraMechanic : MechanicInterface {
     private fun stripArmorData(armoredElytra: ItemStack): ItemStack {
         val result = armoredElytra.clone()
 
-        result.editPersistentDataContainer { it.remove(ARMORED_TAG) }
+        result.editPersistentDataContainer { it.remove(ARMORED_KEY) }
 
         result.getData(DataComponentTypes.ATTRIBUTE_MODIFIERS)?.let { existing ->
             val filtered =
                 existing.modifiers().filter {
-                    it.modifier().key.namespace != ARMORED_TAG.namespace ||
-                        it.modifier().key.key != ARMORED_TAG.key
+                    it.modifier().key.namespace != ARMORED_KEY.namespace ||
+                        it.modifier().key.key != ARMORED_KEY.key
                 }
             val builder = ItemAttributeModifiers.itemAttributes()
             filtered.forEach { builder.addModifier(it.attribute(), it.modifier(), it.group) }
@@ -159,7 +181,7 @@ internal object ArmoredElytraMechanic : MechanicInterface {
         val toughness = chestplate.armorToughnessValue()
         val result = elytra.clone()
 
-        result.editPersistentDataContainer { it.set(ARMORED_TAG, PersistentDataType.BYTE, 1.toByte()) }
+        result.editPersistentDataContainer { it.set(ARMORED_KEY, PersistentDataType.BYTE, 1.toByte()) }
 
         val existing = result.getData(DataComponentTypes.ATTRIBUTE_MODIFIERS)
         val builder =
@@ -174,7 +196,7 @@ internal object ArmoredElytraMechanic : MechanicInterface {
         builder.addModifier(
             Attribute.ARMOR,
             AttributeModifier(
-                NamespacedKey(ARMORED_TAG.namespace, ARMORED_TAG.key),
+                NamespacedKey(ARMORED_KEY.namespace, ARMORED_KEY.key),
                 armor,
                 AttributeModifier.Operation.ADD_NUMBER,
             ),
@@ -183,7 +205,7 @@ internal object ArmoredElytraMechanic : MechanicInterface {
         builder.addModifier(
             Attribute.ARMOR_TOUGHNESS,
             AttributeModifier(
-                NamespacedKey(ARMORED_TAG.namespace, "${ARMORED_TAG.key}_toughness"),
+                NamespacedKey(ARMORED_KEY.namespace, "${ARMORED_KEY.key}_toughness"),
                 toughness,
                 AttributeModifier.Operation.ADD_NUMBER,
             ),
@@ -193,7 +215,7 @@ internal object ArmoredElytraMechanic : MechanicInterface {
         result.setData(DataComponentTypes.ATTRIBUTE_MODIFIERS, builder.build())
 
         val chestplateName = chestplate.chestplateDisplayName()
-        val loreLine = Component.text("+ ", NamedTextColor.GOLD).append(chestplateName)
+        val loreLine = Utils.MM.deserialize("<gold>+ <name></gold>", Placeholder.component("name", chestplateName))
         val lore = listOf(loreLine) + (result.getData(DataComponentTypes.LORE)?.lines() ?: emptyList())
         result.setData(DataComponentTypes.LORE, ItemLore.lore(lore))
 
@@ -245,7 +267,7 @@ internal object ArmoredElytraMechanic : MechanicInterface {
     private fun ItemStack.isChestplate(): Boolean = Tag.ITEMS_CHEST_ARMOR.isTagged(type)
 
     /** Checks whether this elytra has already been combined with a chestplate. */
-    private fun ItemStack.isArmored(): Boolean = persistentDataContainer.has(ARMORED_TAG)
+    private fun ItemStack.isArmored(): Boolean = persistentDataContainer.has(ARMORED_KEY)
 
     /** Gets the total armor value provided by this chestplate type. */
     private fun ItemStack.armorValue(): Double = baseAttributeValue(Attribute.ARMOR)
