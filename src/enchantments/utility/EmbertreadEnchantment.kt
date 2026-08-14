@@ -1,11 +1,9 @@
 package org.xodium.illyriaplus.enchantments.utility
 
 import io.papermc.paper.registry.data.EnchantmentRegistryEntry
-import org.bukkit.Material
 import org.bukkit.Tag
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.entity.EntityDamageByBlockEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
@@ -25,24 +23,14 @@ internal object EmbertreadEnchantment : EnchantmentInterface {
             .activeSlots(EquipmentSlotGroup.FEET)
 
     @EventHandler
-    fun on(event: EntityDamageByBlockEvent) {
-        // todo: replace with DamageCause.CONTACT
-        val player = event.entity as? Player ?: return
-
-        if (!isValidItem(player.inventory.boots)) return
-
-        if (event.damager?.type == Material.MAGMA_BLOCK) {
-            event.isCancelled = true
-        }
-    }
-
-    @EventHandler
     fun on(event: EntityDamageEvent) {
         val player = event.entity as? Player ?: return
 
         if (!isValidItem(player.inventory.boots)) return
 
-        if (event.cause == EntityDamageEvent.DamageCause.FIRE) {
+        if (event.cause == EntityDamageEvent.DamageCause.CONTACT ||
+            event.cause == EntityDamageEvent.DamageCause.FIRE
+        ) {
             event.isCancelled = true
         }
     }
