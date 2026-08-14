@@ -50,7 +50,9 @@ internal class IllyriaPlus : JavaPlugin() {
 
     override fun onEnable() {
         if (!server.version.contains(pluginMeta.version.substringBefore("+"))) {
-            logger.severe("This plugin requires the following supported version: ${pluginMeta.version}.")
+            logger.severe(
+                "This plugin requires the following supported version: ${pluginMeta.version}.",
+            )
             server.pluginManager.disablePlugin(this)
             return
         }
@@ -104,8 +106,6 @@ internal class IllyriaPlus : JavaPlugin() {
                 BatMechanic,
                 SpawnEggMechanic,
                 GriefingMechanic,
-                GoblinMechanic,
-                TrollMechanic,
                 MotdMechanic,
                 MessagesMechanic,
                 TabListMechanic,
@@ -114,7 +114,9 @@ internal class IllyriaPlus : JavaPlugin() {
                 ResourcePackMechanic,
             )
 
-        logger.info("Registered: ${mechanics.size} mechanic(s) | Took ${mechanics.sumOf { it.register() }}ms")
+        logger.info(
+            "Registered: ${mechanics.size} mechanic(s) | Took ${mechanics.sumOf { it.register() }}ms",
+        )
 
         enchantments =
             listOf(
@@ -128,7 +130,9 @@ internal class IllyriaPlus : JavaPlugin() {
             )
 
         logger.info(
-            "Registered: ${enchantments.size} enchantment event(s) | Took ${enchantments.sumOf { it.register() }}ms",
+            "Registered: ${enchantments.size} enchantment event(s) | Took ${enchantments.sumOf {
+                it.register()
+            }}ms",
         )
     }
 
