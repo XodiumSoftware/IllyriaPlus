@@ -20,7 +20,6 @@ import org.xodium.illyriaplus.Utils
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 
 /** Represents a mechanic handling custom anvil operations, including disenchantment and cost-limit bypass. */
-@Suppress("UnstableApiUsage")
 internal object AnvilMechanic : MechanicInterface {
     private const val BASE_COST: Double = 2.0
     private const val COST_MULTIPLIER: Double = 1.0
@@ -161,6 +160,7 @@ internal object AnvilMechanic : MechanicInterface {
         event.isCancelled = true
         inventory.setItem(0, removeEnchantments(firstItem, transferred.keys))
         inventory.setItem(1, consumeBook(secondItem))
+        @Suppress("UsePropertyAccessSyntax")
         player.setItemOnCursor(result)
 
         if (player.gameMode != GameMode.CREATIVE) player.giveExpLevels(-cost)
