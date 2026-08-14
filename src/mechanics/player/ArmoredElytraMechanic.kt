@@ -96,9 +96,7 @@ internal object ArmoredElytraMechanic : MechanicInterface {
                 Material.entries.firstOrNull { material ->
                     Tag.ITEMS_CHEST_ARMOR.isTagged(material) &&
                         name.contains(
-                            material
-                                .key
-                                .key
+                            material.key.key
                                 .split("_")
                                 .dropLast(1)
                                 .joinToString(" "),
