@@ -5,7 +5,7 @@ import org.xodium.illyriaplus.data.PaintingData
 /** Aggregates all Orthodox icon painting variants into a single collection. */
 internal object OrthoPaintings : PaintingInterface {
     /** Shared namespace/author key for Orthodox icon painting assets. */
-    private const val ORTHO = "illyrius"
+    private const val ORTHO = "Illyrius"
 
     /** The complete list of Orthodox icon painting variants and their block sizes. */
     override val paintings: List<PaintingData> =

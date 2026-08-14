@@ -41,8 +41,8 @@ internal interface PaintingInterface {
                 assetId(Key.key(IllyriaPlus.ID, name))
                 width(size.first)
                 height(size.second)
-                title(MM.deserialize(title))
-                author(MM.deserialize(author))
+                title(MM.deserialize("<yellow>$title"))
+                author(MM.deserialize("<gray>$author"))
             }
         }
 
