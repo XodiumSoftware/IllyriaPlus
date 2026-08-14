@@ -19,6 +19,7 @@ import org.xodium.illyriaplus.enchantments.utility.EmbertreadEnchantment
 import org.xodium.illyriaplus.enchantments.utility.NimbusEnchantment
 import org.xodium.illyriaplus.enchantments.utility.TetherEnchantment
 import org.xodium.illyriaplus.enchantments.utility.VinemineEnchantment
+import org.xodium.illyriaplus.paintings.OrthoPaintings
 import org.xodium.illyriaplus.paintings.YapettoPaintings
 
 /** Main bootstrap class of the plugin. */
@@ -41,7 +42,9 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
                 NimbusEnchantment.key,
                 EmbertreadEnchantment.key,
             )
-        private val PAINTINGS = YapettoPaintings.paintings
+        private val YAPETTO_PAINTINGS = YapettoPaintings.paintings
+        private val ORTHO_PAINTINGS = OrthoPaintings.paintings
+        private val PAINTINGS = YAPETTO_PAINTINGS + ORTHO_PAINTINGS
     }
 
     override fun bootstrap(ctx: BootstrapContext) {
@@ -132,8 +135,11 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
             registerEventHandler(
                 RegistryEvents.PAINTING_VARIANT.compose().newHandler { event ->
                     event.registry().apply {
-                        PAINTINGS.forEach { painting ->
+                        YAPETTO_PAINTINGS.forEach { painting ->
                             register(YapettoPaintings.key(painting.name)) { YapettoPaintings.invoke(painting.name, it) }
+                        }
+                        ORTHO_PAINTINGS.forEach { painting ->
+                            register(OrthoPaintings.key(painting.name)) { OrthoPaintings.invoke(painting.name, it) }
                         }
                     }
                 },
@@ -162,7 +168,8 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
             registerEventHandler(LifecycleEvents.TAGS.postFlatten(RegistryKey.PAINTING_VARIANT)) { event ->
                 event.registrar().addToTag(
                     PaintingVariantTagKeys.PLACEABLE,
-                    PAINTINGS.map { YapettoPaintings.key(it.name) },
+                    YAPETTO_PAINTINGS.map { YapettoPaintings.key(it.name) } +
+                        ORTHO_PAINTINGS.map { OrthoPaintings.key(it.name) },
                 )
             }
 
