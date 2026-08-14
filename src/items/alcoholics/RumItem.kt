@@ -8,7 +8,6 @@ import org.xodium.illyriaplus.Utils.toTicks
 import kotlin.time.Duration.Companion.seconds
 
 /** Represents a bottle of Rum. */
-@Suppress("UnstableApiUsage")
 internal object RumItem : AlcoholItemInterface {
     override val name: String = "<!i><#8B4513>Rum"
     override val alcoholStrength: Int = 3

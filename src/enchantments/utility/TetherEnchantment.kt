@@ -11,7 +11,6 @@ import org.xodium.illyriaplus.Utils.Enchantment.displayName
 import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 
 /** Represents an object handling tether enchantment implementation within the system. */
-@Suppress("UnstableApiUsage")
 internal object TetherEnchantment : EnchantmentInterface {
     override fun invoke(builder: EnchantmentRegistryEntry.Builder): EnchantmentRegistryEntry.Builder =
         builder

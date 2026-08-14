@@ -11,7 +11,6 @@ import org.xodium.illyriaplus.items.ItemInterface
 import org.xodium.illyriaplus.mechanics.player.AlcoholMechanic.ALCOHOL_STRENGTH_KEY
 
 /** Represents a contract for reusable item builders within the system. */
-@Suppress("UnstableApiUsage")
 internal interface AlcoholItemInterface : ItemInterface {
     override val key: NamespacedKey get() = ALCOHOL_STRENGTH_KEY
 

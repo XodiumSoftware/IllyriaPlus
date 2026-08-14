@@ -10,7 +10,6 @@ import org.xodium.illyriaplus.IllyriaPlus
 import org.xodium.illyriaplus.Utils.toRegistryKeyFragment
 
 /** Represents a contract for custom damage types within the system. */
-@Suppress("UnstableApiUsage")
 internal interface DamageTypeInterface {
     /**
      * The unique typed key identifying this damage type in the registry.

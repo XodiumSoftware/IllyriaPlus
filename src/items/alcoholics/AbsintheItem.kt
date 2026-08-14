@@ -8,7 +8,6 @@ import org.xodium.illyriaplus.Utils.toTicks
 import kotlin.time.Duration.Companion.seconds
 
 /** Represents a bottle of Absinthe. */
-@Suppress("UnstableApiUsage")
 internal object AbsintheItem : AlcoholItemInterface {
     override val name: String = "<!i><#9ACD32>Absinthe"
     override val alcoholStrength: Int = 4

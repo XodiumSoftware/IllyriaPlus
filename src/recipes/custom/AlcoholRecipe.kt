@@ -115,7 +115,6 @@ internal object AlcoholRecipe : RecipeInterface {
      * @param type The base [PotionType] to set on the input bottle.
      * @return An [ItemStack] representing the brewing input.
      */
-    @Suppress("UnstableApiUsage")
     private fun input(type: PotionType): ItemStack =
         ItemStack.of(Material.POTION).apply {
             setData(

@@ -72,7 +72,6 @@ internal object MessagesMechanic : MechanicInterface {
     @EventHandler(priority = EventPriority.HIGH)
     fun on(event: PlayerServerFullCheckEvent) = serverFullCheck(event)
 
-    @Suppress("UnstableApiUsage")
     @EventHandler(priority = EventPriority.HIGH)
     fun on(event: PlayerConnectionValidateLoginEvent) = loginDenied(event)
 
@@ -112,7 +111,6 @@ internal object MessagesMechanic : MechanicInterface {
     }
 
     /** Handles the login denied event by setting a custom kick message if not allowed. */
-    @Suppress("UnstableApiUsage")
     private fun loginDenied(event: PlayerConnectionValidateLoginEvent) {
         if (event.isAllowed) return
 
@@ -150,7 +148,6 @@ internal object MessagesMechanic : MechanicInterface {
     }
 
     /** Handles the player bed enter event by sending a custom message based on the enter problem. */
-    @Suppress("UnstableApiUsage")
     private fun bedEnter(event: PlayerBedEnterEvent) {
         event.player.sendMessage(handleBedEnter(event.enterAction().problem() ?: return) ?: return)
     }
@@ -311,7 +308,6 @@ internal object MessagesMechanic : MechanicInterface {
      * @param problem The problem preventing the player from sleeping.
      * @return The formatted bed enter message component, or null if no message is set for this problem.
      */
-    @Suppress("UnstableApiUsage")
     private fun handleBedEnter(problem: BedEnterProblem): Component? =
         MM.deserialize(
             when (problem) {

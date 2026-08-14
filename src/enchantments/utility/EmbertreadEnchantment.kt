@@ -13,7 +13,6 @@ import org.xodium.illyriaplus.Utils.Enchantment.displayName
 import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 
 /** Represents an object handling embertread enchantment implementation within the system. */
-@Suppress("UnstableApiUsage")
 internal object EmbertreadEnchantment : EnchantmentInterface {
     override fun invoke(builder: EnchantmentRegistryEntry.Builder): EnchantmentRegistryEntry.Builder =
         builder
@@ -27,6 +26,7 @@ internal object EmbertreadEnchantment : EnchantmentInterface {
 
     @EventHandler
     fun on(event: EntityDamageByBlockEvent) {
+        // todo: replace with DamageCause.CONTACT
         val player = event.entity as? Player ?: return
 
         if (!isValidItem(player.inventory.boots)) return

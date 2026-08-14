@@ -65,7 +65,6 @@ internal object ResourcePackMechanic : MechanicInterface {
 
     override fun register(): Long = super.register().also { request }
 
-    @Suppress("UnstableApiUsage")
     @EventHandler(priority = EventPriority.NORMAL)
     fun on(event: AsyncPlayerConnectionConfigureEvent) {
         val connection = event.connection as? Audience ?: return

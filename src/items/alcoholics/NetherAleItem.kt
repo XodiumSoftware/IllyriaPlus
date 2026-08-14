@@ -8,7 +8,6 @@ import org.xodium.illyriaplus.Utils.toTicks
 import kotlin.time.Duration.Companion.seconds
 
 /** Represents a bottle of Nether Ale. */
-@Suppress("UnstableApiUsage")
 internal object NetherAleItem : AlcoholItemInterface {
     override val name: String = "<!i><#8B0000>Nether Ale"
     override val alcoholStrength: Int = 3

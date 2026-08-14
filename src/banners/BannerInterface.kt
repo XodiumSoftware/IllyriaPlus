@@ -10,7 +10,6 @@ import org.xodium.illyriaplus.IllyriaPlus
 import org.xodium.illyriaplus.data.BannerData
 
 /** Represents a collection of registerable banner patterns within the system. */
-@Suppress("UnstableApiUsage")
 internal interface BannerInterface {
     /** The complete list of banner patterns in this collection. */
     val banners: List<BannerData>

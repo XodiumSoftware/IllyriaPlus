@@ -6,7 +6,6 @@ import org.bukkit.damage.DamageScaling
 import org.bukkit.damage.DeathMessageType
 
 /** Represents an object handling alcohol damage implementation within the system. */
-@Suppress("UnstableApiUsage")
 internal object AlcoholDamageType : DamageTypeInterface {
     override fun invoke(builder: DamageTypeRegistryEntry.Builder): DamageTypeRegistryEntry.Builder =
         builder
