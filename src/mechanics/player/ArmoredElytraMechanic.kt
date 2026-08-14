@@ -118,17 +118,15 @@ internal object ArmoredElytraMechanic : MechanicInterface {
      * @param armoredElytra the armored elytra to reconstruct from
      * @return the reconstructed chestplate, or a chainmail chestplate if the material cannot be determined
      */
-    private fun reconstructChestplate(armoredElytra: ItemStack): ItemStack {
-        val material =
+    private fun reconstructChestplate(armoredElytra: ItemStack): ItemStack =
+        ItemStack.of(
             armoredElytra
                 .persistentDataContainer
                 .get(CHESTPLATE_MATERIAL_TAG, PersistentDataType.STRING)
                 ?.let { Material.matchMaterial(it) }
                 ?.takeIf { Tag.ITEMS_CHEST_ARMOR.isTagged(it) }
-                ?: Material.CHAINMAIL_CHESTPLATE
-
-        return ItemStack.of(material)
-    }
+                ?: Material.CHAINMAIL_CHESTPLATE,
+        )
 
     /**
      * Removes armor data from an armored elytra, returning it to a plain elytra.
