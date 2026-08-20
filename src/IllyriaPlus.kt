@@ -17,7 +17,6 @@ import org.xodium.illyriaplus.mechanics.player.*
 import org.xodium.illyriaplus.mechanics.server.*
 import org.xodium.illyriaplus.mechanics.world.*
 import org.xodium.illyriaplus.recipes.RecipeInterface
-import org.xodium.illyriaplus.recipes.custom.AlcoholRecipe
 import org.xodium.illyriaplus.recipes.custom.GreatswordRecipe
 import org.xodium.illyriaplus.recipes.custom.HalberdRecipe
 import org.xodium.illyriaplus.recipes.custom.LongswordRecipe
@@ -62,7 +61,6 @@ internal class IllyriaPlus : JavaPlugin() {
 
         recipes =
             listOf(
-                AlcoholRecipe,
                 ChainmailRecipe,
                 DiamondRecycleRecipe,
                 GreatswordRecipe,
@@ -84,7 +82,6 @@ internal class IllyriaPlus : JavaPlugin() {
 
         mechanics =
             listOf(
-                AlcoholMechanic,
                 NicknameMechanic,
                 ScoreBoardMechanic,
                 LocatorMechanic,
