@@ -1,0 +1,1 @@
+{"model":{"models":[{"on_false":{"model":"cnk:block/stove_off","type":"minecraft:model"},"on_true":{"model":"cnk:block/stove_on","type":"minecraft:model"},"property":"minecraft:custom_model_data","type":"minecraft:condition"}],"type":"minecraft:composite"}}

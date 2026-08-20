@@ -1,0 +1,1 @@
+{"model":{"cases":[{"model":{"model":"cnk:item/roseate_recipe","type":"minecraft:model"},"when":["firstperson_lefthand","firstperson_righthand","fixed"]}],"fallback":{"model":"cnk:item/recipe_item","type":"minecraft:model"},"property":"minecraft:display_context","type":"minecraft:select"}}

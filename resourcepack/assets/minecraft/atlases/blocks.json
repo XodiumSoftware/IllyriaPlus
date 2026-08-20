@@ -4,6 +4,11 @@
             "type": "single",
             "resource": "error/missing_block_or_item_sprite",
             "sprite": "missingno"
+        },
+        {
+            "prefix": "entity/",
+            "source": "cnk_entity",
+            "type": "directory"
         }
     ]
 }
