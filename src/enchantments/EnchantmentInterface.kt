@@ -13,7 +13,6 @@ import org.xodium.illyriaplus.Utils.toRegistryKeyFragment
 import kotlin.time.measureTime
 
 /** Represents a contract for enchantments within the system. */
-@Suppress("UnstableApiUsage")
 internal interface EnchantmentInterface : Listener {
     /**
      * The unique typed key identifies this enchantment in the registry.

@@ -1,0 +1,1 @@
+{"model":{"cases":[{"model":{"model":"cnk:item/basin","type":"minecraft:model"},"when":["gui"]}],"fallback":{"model":"cnk:block/basin_2","tints":[{"default":4224483,"type":"custom_model_data"}],"type":"minecraft:model"},"property":"minecraft:display_context","type":"minecraft:select"}}

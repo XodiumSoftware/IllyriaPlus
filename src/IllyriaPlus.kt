@@ -17,7 +17,6 @@ import org.xodium.illyriaplus.mechanics.player.*
 import org.xodium.illyriaplus.mechanics.server.*
 import org.xodium.illyriaplus.mechanics.world.*
 import org.xodium.illyriaplus.recipes.RecipeInterface
-import org.xodium.illyriaplus.recipes.custom.AlcoholRecipe
 import org.xodium.illyriaplus.recipes.custom.GreatswordRecipe
 import org.xodium.illyriaplus.recipes.custom.HalberdRecipe
 import org.xodium.illyriaplus.recipes.custom.LongswordRecipe
@@ -49,7 +48,9 @@ internal class IllyriaPlus : JavaPlugin() {
 
     override fun onEnable() {
         if (!server.version.contains(pluginMeta.version.substringBefore("+"))) {
-            logger.severe("This plugin requires the following supported version: ${pluginMeta.version}.")
+            logger.severe(
+                "This plugin requires the following supported version: ${pluginMeta.version}.",
+            )
             server.pluginManager.disablePlugin(this)
             return
         }
@@ -60,7 +61,6 @@ internal class IllyriaPlus : JavaPlugin() {
 
         recipes =
             listOf(
-                AlcoholRecipe,
                 ChainmailRecipe,
                 DiamondRecycleRecipe,
                 GreatswordRecipe,
@@ -82,7 +82,6 @@ internal class IllyriaPlus : JavaPlugin() {
 
         mechanics =
             listOf(
-                AlcoholMechanic,
                 NicknameMechanic,
                 ScoreBoardMechanic,
                 LocatorMechanic,
@@ -97,7 +96,6 @@ internal class IllyriaPlus : JavaPlugin() {
                 ChatMechanic,
                 InventoryMechanic,
                 ChiseledBookshelfMechanic,
-                DimensionMechanic,
                 BlockPlacementMechanic,
                 BatMechanic,
                 SpawnEggMechanic,
@@ -110,7 +108,9 @@ internal class IllyriaPlus : JavaPlugin() {
                 ResourcePackMechanic,
             )
 
-        logger.info("Registered: ${mechanics.size} mechanic(s) | Took ${mechanics.sumOf { it.register() }}ms")
+        logger.info(
+            "Registered: ${mechanics.size} mechanic(s) | Took ${mechanics.sumOf { it.register() }}ms",
+        )
 
         enchantments =
             listOf(
@@ -124,7 +124,11 @@ internal class IllyriaPlus : JavaPlugin() {
             )
 
         logger.info(
-            "Registered: ${enchantments.size} enchantment event(s) | Took ${enchantments.sumOf { it.register() }}ms",
+            "Registered: ${enchantments.size} enchantment event(s) | Took ${
+                enchantments.sumOf {
+                    it.register()
+                }
+            }ms",
         )
     }
 

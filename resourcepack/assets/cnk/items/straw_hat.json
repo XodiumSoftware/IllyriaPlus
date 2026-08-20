@@ -1,0 +1,1 @@
+{"model":{"cases":[{"model":{"model":"cnk:item/straw_hat","type":"minecraft:model"},"when":["head"]}],"fallback":{"model":"cnk:item/straw_hat_item","type":"minecraft:model"},"property":"minecraft:display_context","type":"minecraft:select"}}

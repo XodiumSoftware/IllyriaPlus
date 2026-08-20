@@ -194,5 +194,12 @@
     "subtitles.item.totem.use": "Crucifix of Resurrection activates",
     "advancements.adventure.totem_of_undying.description": "Use an Crucifix of Resurrection to cheat death",
 
-    "biome.minecraft.the_end": "The End"
+    "biome.minecraft.the_end": "The End",
+
+    "event.minecraft.raid": "\uE903",
+    "entity.minecraft.wither": "\uE901",
+    "entity.minecraft.ender_dragon": "\uE902",
+    "event.minecraft.raid.raiders_remaining": "",
+    "event.minecraft.raid.victory": "",
+    "event.minecraft.raid.defeat": ""
 }

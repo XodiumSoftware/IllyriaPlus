@@ -1,0 +1,1 @@
+{"model":{"models":[{"on_false":{"model":"cnk:entity/booze_bottle","type":"minecraft:model"},"on_true":{"model":"cnk:entity/booze_bottle_hurt","type":"minecraft:model"},"property":"minecraft:custom_model_data","type":"minecraft:condition"}],"type":"minecraft:composite"}}

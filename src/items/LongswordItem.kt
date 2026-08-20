@@ -13,7 +13,6 @@ import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils
 
 /** Represents a Longsword. */
-@Suppress("UnstableApiUsage")
 internal object LongswordItem : ItemInterface {
     override val key: NamespacedKey = NamespacedKey(instance, "longsword")
 

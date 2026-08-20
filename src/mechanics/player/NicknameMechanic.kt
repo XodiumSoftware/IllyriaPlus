@@ -49,7 +49,6 @@ internal object NicknameMechanic : MechanicInterface {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun on(event: PlayerJoinEvent) = handleJoin(event)
 
-    @Suppress("UnstableApiUsage")
     private fun nicknameDialog(player: Player): Dialog =
         Dialog.create {
             it
@@ -71,8 +70,7 @@ internal object NicknameMechanic : MechanicInterface {
                                     ),
                                 ),
                             ),
-                        )
-                        .inputs(
+                        ).inputs(
                             listOf(
                                 DialogInput
                                     .text("nickname", MM.deserialize("<gray>Enter nickname</gray>"))
@@ -90,7 +88,8 @@ internal object NicknameMechanic : MechanicInterface {
                             .action(
                                 DialogAction.customClick(
                                     { _, _ -> },
-                                    ClickCallback.Options
+                                    ClickCallback
+                                        .Options
                                         .builder()
                                         .uses(ClickCallback.UNLIMITED_USES)
                                         .build(),
@@ -101,7 +100,8 @@ internal object NicknameMechanic : MechanicInterface {
                             .action(
                                 DialogAction.customClick(
                                     { response, _ -> player.nickname(response.getText("nickname") ?: "") },
-                                    ClickCallback.Options
+                                    ClickCallback
+                                        .Options
                                         .builder()
                                         .uses(ClickCallback.UNLIMITED_USES)
                                         .build(),

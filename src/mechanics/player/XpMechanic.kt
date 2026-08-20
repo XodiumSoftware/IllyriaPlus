@@ -21,11 +21,12 @@ internal object XpMechanic : MechanicInterface {
      */
     private fun xpToBottle(event: PlayerInteractEvent) {
         if (event.clickedBlock?.type != Material.ENCHANTING_TABLE ||
-            event.item?.type != Material.GLASS_BOTTLE ||
-            !event.player.isSneaking
+            event.item?.type != Material.GLASS_BOTTLE
         ) {
             return
         }
+
+        event.isCancelled = true
 
         val player = event.player
 
@@ -33,7 +34,8 @@ internal object XpMechanic : MechanicInterface {
 
         player.giveExp(-XP_COST_TO_BOTTLE)
         event.item?.subtract(1)
-        player.inventory
+        player
+            .inventory
             .addItem(ItemStack.of(Material.EXPERIENCE_BOTTLE, 1))
             .values
             .forEach { player.world.dropItemNaturally(player.location, it) }

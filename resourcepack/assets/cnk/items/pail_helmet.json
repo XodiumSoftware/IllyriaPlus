@@ -1,0 +1,1 @@
+{"model":{"cases":[{"model":{"model":"cnk:block/pail/base","type":"minecraft:model"},"when":["head"]}],"fallback":{"model":"cnk:item/pail_helmet","type":"minecraft:model"},"property":"minecraft:display_context","type":"minecraft:select"}}

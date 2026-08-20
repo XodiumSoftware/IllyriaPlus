@@ -1,0 +1,1 @@
+{"model":{"cases":[{"model":{"model":"cnk:block/pan","type":"minecraft:model"},"when":["head","firstperson_lefthand","firstperson_righthand","thirdperson_lefthand","thirdperson_righthand"]}],"fallback":{"model":"cnk:item/pan","type":"minecraft:model"},"property":"minecraft:display_context","type":"minecraft:select"}}

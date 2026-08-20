@@ -20,7 +20,6 @@ import org.xodium.illyriaplus.mechanics.MechanicInterface
 import org.bukkit.block.data.type.ChiseledBookshelf as ChiseledBookshelfData
 
 /** Represents a mechanic handling chiseled bookshelf interactions within the system. */
-@Suppress("UnstableApiUsage")
 internal object ChiseledBookshelfMechanic : MechanicInterface {
     @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerInteractEvent) = bookshelfInteraction(event)
