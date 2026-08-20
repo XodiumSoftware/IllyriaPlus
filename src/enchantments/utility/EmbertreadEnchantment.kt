@@ -11,7 +11,6 @@ import org.xodium.illyriaplus.Utils.Enchantment.displayName
 import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 
 /** Represents an object handling embertread enchantment implementation within the system. */
-@Suppress("UnstableApiUsage")
 internal object EmbertreadEnchantment : EnchantmentInterface {
     override fun invoke(builder: EnchantmentRegistryEntry.Builder): EnchantmentRegistryEntry.Builder =
         builder
@@ -29,10 +28,10 @@ internal object EmbertreadEnchantment : EnchantmentInterface {
 
         if (!isValidItem(player.inventory.boots)) return
 
-        when (event.cause) {
-            EntityDamageEvent.DamageCause.HOT_FLOOR -> event.isCancelled = true
-            EntityDamageEvent.DamageCause.FIRE -> event.isCancelled = true
-            else -> return
+        if (event.cause == EntityDamageEvent.DamageCause.CONTACT ||
+            event.cause == EntityDamageEvent.DamageCause.FIRE
+        ) {
+            event.isCancelled = true
         }
     }
 

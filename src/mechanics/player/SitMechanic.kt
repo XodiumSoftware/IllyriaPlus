@@ -21,12 +21,10 @@ import org.bukkit.util.Vector
 import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.mechanics.MechanicInterface
 import org.xodium.illyriaplus.mechanics.player.SitMechanic.occupiedBlocks
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import kotlin.uuid.toKotlinUuid
 
 /** Represents a mechanic handling player sitting within the system. */
-@OptIn(ExperimentalUuidApi::class)
 internal object SitMechanic : MechanicInterface {
     private val sittingPlayers = mutableMapOf<Uuid, ArmorStand>()
     private val occupiedBlocks = mutableMapOf<Location, Uuid>()

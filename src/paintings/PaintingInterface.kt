@@ -11,7 +11,6 @@ import org.xodium.illyriaplus.Utils.MM
 import org.xodium.illyriaplus.data.PaintingData
 
 /** Represents a collection of registerable painting variants within the system. */
-@Suppress("UnstableApiUsage")
 internal interface PaintingInterface {
     /** The complete list of painting variants in this collection. */
     val paintings: List<PaintingData>
@@ -41,8 +40,8 @@ internal interface PaintingInterface {
                 assetId(Key.key(IllyriaPlus.ID, name))
                 width(size.first)
                 height(size.second)
-                title(MM.deserialize(title))
-                author(MM.deserialize(author))
+                title(MM.deserialize("<yellow>$title"))
+                author(MM.deserialize("<gray>$author"))
             }
         }
 

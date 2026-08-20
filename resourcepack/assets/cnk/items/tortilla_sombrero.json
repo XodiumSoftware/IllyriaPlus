@@ -1,0 +1,1 @@
+{"model":{"cases":[{"model":{"model":"cnk:item/tortilla_sombrero","type":"minecraft:model"},"when":["head"]}],"fallback":{"model":"cnk:item/tortilla_sombrero_item","type":"minecraft:model"},"property":"minecraft:display_context","type":"minecraft:select"}}

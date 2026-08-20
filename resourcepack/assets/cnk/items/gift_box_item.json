@@ -1,0 +1,1 @@
+{"model":{"models":[{"model":"cnk:item/gift_box","tints":[{"default":-1,"type":"minecraft:dye"}],"type":"minecraft:model"},{"model":"cnk:item/gift_box_bow","tints":[{"default":16777215,"index":0,"type":"custom_model_data"}],"type":"minecraft:model"}],"type":"minecraft:composite"}}

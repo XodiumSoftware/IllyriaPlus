@@ -1,0 +1,1 @@
+{"model":{"cases":[{"model":{"model":"cnk:item/coffee_cherries","type":"minecraft:model"},"when":["gui"]}],"fallback":{"model":"cnk:block/coffee/6","type":"minecraft:model"},"property":"minecraft:display_context","type":"minecraft:select"}}

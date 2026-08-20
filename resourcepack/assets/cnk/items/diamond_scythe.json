@@ -1,0 +1,1 @@
+{"model":{"component":"minecraft:damage_resistant","on_false":{"model":"cnk:item/diamond_scythe","type":"minecraft:model"},"on_true":{"model":"cnk:item/netherite_scythe","type":"minecraft:model"},"property":"minecraft:has_component","type":"minecraft:condition"}}

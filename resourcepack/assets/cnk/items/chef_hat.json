@@ -1,0 +1,1 @@
+{"model":{"cases":[{"model":{"model":"cnk:item/chef_hat","tints":[{"default":-1,"type":"minecraft:dye"}],"type":"minecraft:model"},"when":["head"]}],"fallback":{"model":"cnk:item/chef_hat_item","tints":[{"default":-1,"type":"minecraft:dye"}],"type":"minecraft:model"},"property":"minecraft:display_context","type":"minecraft:select"}}

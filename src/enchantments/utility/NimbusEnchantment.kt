@@ -11,7 +11,6 @@ import org.xodium.illyriaplus.Utils.Enchantment.displayName
 import org.xodium.illyriaplus.enchantments.EnchantmentInterface
 
 /** Represents an object handling nimbus enchantment implementation within the system. */
-@Suppress("UnstableApiUsage")
 internal object NimbusEnchantment : EnchantmentInterface {
     private const val DEFAULT_FLY_SPEED = 0.05
 

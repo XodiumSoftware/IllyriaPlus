@@ -17,7 +17,6 @@ import org.xodium.illyriaplus.mechanics.player.*
 import org.xodium.illyriaplus.mechanics.server.*
 import org.xodium.illyriaplus.mechanics.world.*
 import org.xodium.illyriaplus.recipes.RecipeInterface
-import org.xodium.illyriaplus.recipes.custom.AlcoholRecipe
 import org.xodium.illyriaplus.recipes.custom.GreatswordRecipe
 import org.xodium.illyriaplus.recipes.custom.HalberdRecipe
 import org.xodium.illyriaplus.recipes.custom.LongswordRecipe
@@ -62,7 +61,6 @@ internal class IllyriaPlus : JavaPlugin() {
 
         recipes =
             listOf(
-                AlcoholRecipe,
                 ChainmailRecipe,
                 DiamondRecycleRecipe,
                 GreatswordRecipe,
@@ -84,7 +82,6 @@ internal class IllyriaPlus : JavaPlugin() {
 
         mechanics =
             listOf(
-                AlcoholMechanic,
                 ArmoredElytraMechanic,
                 NicknameMechanic,
                 ScoreBoardMechanic,
@@ -101,7 +98,6 @@ internal class IllyriaPlus : JavaPlugin() {
                 InventoryMechanic,
                 SitMechanic,
                 ChiseledBookshelfMechanic,
-                DimensionMechanic,
                 BlockPlacementMechanic,
                 BatMechanic,
                 SpawnEggMechanic,
@@ -131,7 +127,9 @@ internal class IllyriaPlus : JavaPlugin() {
 
         logger.info(
             "Registered: ${enchantments.size} enchantment event(s) | Took ${
-                enchantments.sumOf { it.register() }
+                enchantments.sumOf {
+                    it.register()
+                }
             }ms",
         )
     }

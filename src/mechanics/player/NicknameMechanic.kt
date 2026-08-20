@@ -49,7 +49,6 @@ internal object NicknameMechanic : MechanicInterface {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun on(event: PlayerJoinEvent) = handleJoin(event)
 
-    @Suppress("UnstableApiUsage")
     private fun nicknameDialog(player: Player): Dialog =
         Dialog.create {
             it

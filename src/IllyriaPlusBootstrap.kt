@@ -14,11 +14,11 @@ import io.papermc.paper.registry.tag.TagKey
 import io.papermc.paper.tag.TagEntry
 import net.kyori.adventure.key.Key
 import org.xodium.illyriaplus.banners.MoxvallixBanners
-import org.xodium.illyriaplus.damagetypes.AlcoholDamageType
 import org.xodium.illyriaplus.enchantments.utility.EmbertreadEnchantment
 import org.xodium.illyriaplus.enchantments.utility.NimbusEnchantment
 import org.xodium.illyriaplus.enchantments.utility.TetherEnchantment
 import org.xodium.illyriaplus.enchantments.utility.VinemineEnchantment
+import org.xodium.illyriaplus.paintings.OrthoPaintings
 import org.xodium.illyriaplus.paintings.YapettoPaintings
 
 /** Main bootstrap class of the plugin. */
@@ -30,10 +30,6 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
         val TETHER_ITEMS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaPlus.ID, "tether_items"))
 
         private val BANNERS = MoxvallixBanners.banners
-        private val DAMAGE_TYPES =
-            setOf(
-                AlcoholDamageType.key,
-            )
         private val ENCHANTMENTS =
             setOf(
                 VinemineEnchantment.key,
@@ -41,7 +37,9 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
                 NimbusEnchantment.key,
                 EmbertreadEnchantment.key,
             )
-        private val PAINTINGS = YapettoPaintings.paintings
+        private val YAPETTO_PAINTINGS = YapettoPaintings.paintings
+        private val ORTHO_PAINTINGS = OrthoPaintings.paintings
+        private val PAINTINGS = YAPETTO_PAINTINGS + ORTHO_PAINTINGS
     }
 
     override fun bootstrap(ctx: BootstrapContext) {
@@ -119,21 +117,13 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
             ctx.logger.info("Vanilla enchantments max levels doubled.")
 
             registerEventHandler(
-                RegistryEvents.DAMAGE_TYPE.compose().newHandler { event ->
-                    event.registry().apply {
-                        DAMAGE_TYPES.forEach { damageType ->
-                            register(damageType) { AlcoholDamageType.invoke(it) }
-                        }
-                    }
-                },
-            )
-            ctx.logger.info("Registered: ${DAMAGE_TYPES.size} damage type(s).")
-
-            registerEventHandler(
                 RegistryEvents.PAINTING_VARIANT.compose().newHandler { event ->
                     event.registry().apply {
-                        PAINTINGS.forEach { painting ->
+                        YAPETTO_PAINTINGS.forEach { painting ->
                             register(YapettoPaintings.key(painting.name)) { YapettoPaintings.invoke(painting.name, it) }
+                        }
+                        ORTHO_PAINTINGS.forEach { painting ->
+                            register(OrthoPaintings.key(painting.name)) { OrthoPaintings.invoke(painting.name, it) }
                         }
                     }
                 },
@@ -162,7 +152,8 @@ internal class IllyriaPlusBootstrap : PluginBootstrap {
             registerEventHandler(LifecycleEvents.TAGS.postFlatten(RegistryKey.PAINTING_VARIANT)) { event ->
                 event.registrar().addToTag(
                     PaintingVariantTagKeys.PLACEABLE,
-                    PAINTINGS.map { YapettoPaintings.key(it.name) },
+                    YAPETTO_PAINTINGS.map { YapettoPaintings.key(it.name) } +
+                        ORTHO_PAINTINGS.map { OrthoPaintings.key(it.name) },
                 )
             }
 

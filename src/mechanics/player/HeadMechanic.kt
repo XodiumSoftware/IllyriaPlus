@@ -34,7 +34,6 @@ internal object HeadMechanic : MechanicInterface {
      *
      * @return The head ItemStack.
      */
-    @Suppress("UnstableApiUsage")
     private fun Player.head(): ItemStack =
         ItemStack.of(Material.PLAYER_HEAD).apply {
             setData(

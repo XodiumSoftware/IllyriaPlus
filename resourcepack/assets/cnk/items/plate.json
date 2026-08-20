@@ -1,0 +1,1 @@
+{"model":{"cases":[{"model":{"model":"cnk:item/plate","type":"minecraft:model"},"when":["gui"]}],"fallback":{"model":"cnk:block/plate","type":"minecraft:model"},"property":"minecraft:display_context","type":"minecraft:select"}}

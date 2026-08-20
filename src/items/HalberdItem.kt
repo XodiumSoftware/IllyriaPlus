@@ -14,7 +14,6 @@ import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
 import org.xodium.illyriaplus.Utils
 
 /** Represents a Halberd. */
-@Suppress("UnstableApiUsage")
 internal object HalberdItem : ItemInterface {
     override val key: NamespacedKey = NamespacedKey(instance, "halberd")
 

@@ -1,0 +1,1 @@
+{"model":{"cases":[{"model":{"model":"cnk:item/candy_bowl","type":"minecraft:model"},"when":["gui"]}],"fallback":{"model":"cnk:block/candy_bowl/4","type":"minecraft:model"},"property":"minecraft:display_context","type":"minecraft:select"}}
