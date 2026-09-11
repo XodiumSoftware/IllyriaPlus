@@ -16,10 +16,9 @@ import xyz.xenondevs.invui.window.Window
 /** Builds and opens the kingdom overview GUI. */
 @OptIn(ExperimentalDslApi::class)
 internal object KingdomGui {
-    private const val TITLE = "<gold>Kingdom Overview"
     private const val NO_KINGDOM_MSG = "<red>You are not in a kingdom."
 
-    private val BORDER = Item.simple(ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true))
+    private val BORDER = Item.simple(ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).hideTooltip(true))
 
     private val openWindows = mutableSetOf<Window>()
 
@@ -48,13 +47,10 @@ internal object KingdomGui {
     ): Window {
         val window =
             window(player) {
-                title by MM.deserialize(TITLE)
+                title by kingdom.name
                 upperGui by
                     gui(
-                        "# # # # # # # # #",
-                        "# . N . . . . . #",
-                        "# . . . . . . . #",
-                        "# # # # # # # # #",
+                        "# # N # #",
                     ) {
                         '#' by BORDER
                         'N' by

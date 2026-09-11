@@ -38,6 +38,20 @@ internal data class KingdomData(
             }.firstOrNull()
 
         /**
+         * Retrieves all [KingdomData] from the database.
+         *
+         * @return a list of all kingdoms.
+         */
+        fun getKingdoms(): List<KingdomData> =
+            DatabaseManager.query("SELECT * FROM kingdoms") { rs ->
+                KingdomData(
+                    id = UUID.fromString(rs.getString("id")),
+                    name = GsonComponentSerializer.gson().deserialize(rs.getString("name")),
+                    owner = UUID.fromString(rs.getString("owner")),
+                )
+            }
+
+        /**
          * Persists a [KingdomData] to the database.
          *
          * @param kingdomData the kingdom data to save.
@@ -49,6 +63,15 @@ internal data class KingdomData(
                 GsonComponentSerializer.gson().serialize(kingdomData.name),
                 kingdomData.owner.toString(),
             )
+        }
+
+        /**
+         * Deletes the [KingdomData] associated with the given owner from the database.
+         *
+         * @param owner the UUID of the kingdom owner.
+         */
+        fun deleteKingdom(owner: UUID) {
+            DatabaseManager.execute("DELETE FROM kingdoms WHERE owner = ?", owner.toString())
         }
     }
 }

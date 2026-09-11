@@ -76,7 +76,20 @@ tasks {
         minimize()
     }
     jar { enabled = false }
-    runServer { minecraftVersion(mcVersion) }
+    runServer {
+        dependsOn(":IllyriaBridge:shadowJar", ":IllyriaKingdoms:shadowJar", "copyPluginJars")
+        minecraftVersion(mcVersion)
+        runDirectory = rootProject.layout.projectDirectory.dir(".server")
+    }
+
+    val copyPluginJars by registering(Copy::class) {
+        dependsOn(":IllyriaBridge:shadowJar", ":IllyriaKingdoms:shadowJar")
+        from(
+            rootProject.layout.projectDirectory.dir("IllyriaBridge/build/libs"),
+            rootProject.layout.projectDirectory.dir("IllyriaKingdoms/build/libs"),
+        )
+        into(rootProject.layout.projectDirectory.dir(".server/plugins"))
+    }
     withType<JavaCompile> { options.encoding = "UTF-8" }
     withType(AbstractRun::class) { jvmArgs("-XX:+AllowEnhancedClassRedefinition") }
 }

@@ -16,6 +16,7 @@ Thumbs.db
 
 # Server files
 run/
+.server/
 
 # IDE specific files
 .idea
