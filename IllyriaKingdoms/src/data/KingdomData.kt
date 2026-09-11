@@ -11,15 +11,16 @@ import java.util.UUID
  * @property name the display name of the kingdom.
  * @property owner the unique identifier of the kingdom's owner.
  * @property members the set of member UUIDs belonging to the kingdom.
+ * @property npcs the set of NPC UUIDs belonging to the kingdom.
  */
 internal data class KingdomData(
     val id: UUID = UUID.randomUUID(),
     val name: Component,
     val owner: UUID,
     val members: Set<UUID> = emptySet(),
+    val npcs: Set<UUID> = emptySet(),
 ) {
     companion object {
-
         /**
          * Retrieves a [KingdomData] by its owner from the database.
          *
@@ -35,6 +36,8 @@ internal data class KingdomData(
                     id = UUID.fromString(rs.getString("id")),
                     name = MM.deserialize(rs.getString("name")),
                     owner = UUID.fromString(rs.getString("owner")),
+                    members = rs.getString("members")?.let { parseUuidSet(it) } ?: emptySet(),
+                    npcs = rs.getString("npcs")?.let { parseUuidSet(it) } ?: emptySet(),
                 )
             }.firstOrNull()
 
@@ -49,6 +52,8 @@ internal data class KingdomData(
                     id = UUID.fromString(rs.getString("id")),
                     name = MM.deserialize(rs.getString("name")),
                     owner = UUID.fromString(rs.getString("owner")),
+                    members = rs.getString("members")?.let { parseUuidSet(it) } ?: emptySet(),
+                    npcs = rs.getString("npcs")?.let { parseUuidSet(it) } ?: emptySet(),
                 )
             }
 
@@ -59,10 +64,12 @@ internal data class KingdomData(
          */
         fun saveKingdom(kingdomData: KingdomData) {
             DatabaseManager.execute(
-                "INSERT INTO kingdoms (id, name, owner) VALUES (?, ?, ?)",
+                "INSERT INTO kingdoms (id, name, owner, members, npcs) VALUES (?, ?, ?, ?, ?)",
                 kingdomData.id.toString(),
                 MM.serialize(kingdomData.name),
                 kingdomData.owner.toString(),
+                formatUuidSet(kingdomData.members),
+                formatUuidSet(kingdomData.npcs),
             )
         }
 
@@ -74,6 +81,33 @@ internal data class KingdomData(
         fun deleteKingdom(owner: UUID) {
             DatabaseManager.execute("DELETE FROM kingdoms WHERE owner = ?", owner.toString())
         }
+
+        /**
+         * Removes a member from a kingdom.
+         *
+         * @param owner the UUID of the kingdom owner.
+         * @param member the UUID of the member to remove.
+         */
+        fun kickMember(owner: UUID, member: UUID) {
+            val kingdom = getKingdom(owner) ?: return
+            val updated = kingdom.members - member
+            DatabaseManager.execute(
+                "UPDATE kingdoms SET members = ? WHERE owner = ?",
+                formatUuidSet(updated),
+                owner.toString(),
+            )
+        }
+
+        /**
+         * Serializes a set of UUIDs to a comma-separated string for database storage.
+         */
+        private fun formatUuidSet(set: Set<UUID>): String = set.joinToString(",") { it.toString() }
+
+        /**
+         * Deserializes a comma-separated string of UUIDs from the database into a set.
+         */
+        private fun parseUuidSet(string: String): Set<UUID> =
+            string.split(",").mapNotNull { runCatching { UUID.fromString(it) }.getOrNull() }.toSet()
 
         /**
          * Updates the name of an existing [KingdomData] in the database.
