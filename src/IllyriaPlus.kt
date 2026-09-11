@@ -20,6 +20,8 @@ import org.xodium.illyriaplus.recipes.RecipeInterface
 import org.xodium.illyriaplus.recipes.custom.GreatswordRecipe
 import org.xodium.illyriaplus.recipes.custom.HalberdRecipe
 import org.xodium.illyriaplus.recipes.custom.LongswordRecipe
+import org.xodium.illyriaplus.recipes.custom.PaintingRecipe
+import org.xodium.illyriaplus.recipes.custom.PotRecipe
 import org.xodium.illyriaplus.recipes.vanilla.*
 
 /** Main class of the plugin. */
@@ -69,6 +71,7 @@ internal class IllyriaPlus : JavaPlugin() {
                 LongswordRecipe,
                 NetherWartBlockRecipe,
                 PaintingRecipe,
+                PotRecipe,
                 RottenFleshRecipe,
                 WoodLogRecipe,
                 WoolToStringRecipe,
