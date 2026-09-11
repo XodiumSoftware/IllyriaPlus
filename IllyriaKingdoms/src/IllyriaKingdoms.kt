@@ -1,6 +1,7 @@
 package org.xodium.illyriakingdoms
 
 import org.bukkit.plugin.java.JavaPlugin
+import org.xodium.illyriakingdoms.data.DatabaseManager
 
 /** Main class of the plugin. */
 internal class IllyriaKingdoms : JavaPlugin() {
@@ -22,5 +23,10 @@ internal class IllyriaKingdoms : JavaPlugin() {
         }
 
         instance = this
+        DatabaseManager.init(this)
+    }
+
+    override fun onDisable() {
+        DatabaseManager.close()
     }
 }
