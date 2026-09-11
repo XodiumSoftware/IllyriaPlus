@@ -221,19 +221,12 @@ jobs:
 
       - id: packsquash
         name: Create Zip & Optimize with Packsquash
-        uses: ComunidadAylas/PackSquash-action@c5784c113a6548a7a74c26e8a1c5c76fe4bca3fa
+        uses: ComunidadAylas/PackSquash-action@v4
         with:
-          packsquash_version: latest-unstable
+          packsquash_version: v0.4.1
+          artifact_name: IllyriaResourcePack
           options: |
             pack_directory = 'IllyriaResourcePack'
-            output_file_path = 'irp.zip'
-
-      - id: upload_artifact
-        name: Upload Artifact
-        uses: actions/upload-artifact@v7.0.1
-        with:
-          name: IllyriaResourcePack
-          path: irp.zip
 
   pr_comment:
     name: PR Comment
