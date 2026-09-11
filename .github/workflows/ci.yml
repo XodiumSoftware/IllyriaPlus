@@ -279,17 +279,27 @@ jobs:
               });
             }
 
-  nightly_plugin_release:
-    name: Nightly Plugin Release
-    needs: [changes, lint, build_core, build_kingdoms, build_bridge]
+  nightly_release:
+    name: Nightly Release
+    needs:
+      [
+        changes,
+        lint,
+        build_core,
+        build_kingdoms,
+        build_bridge,
+        build_resourcepack,
+      ]
     runs-on: ubuntu-latest
     environment:
       name: "${{ github.ref_name }}"
+      url: "${{ steps.create_release.outputs.url }}"
     if: |
       always() && github.ref == 'refs/heads/main' &&
       (needs.build_core.result == 'success' ||
        needs.build_kingdoms.result == 'success' ||
-       needs.build_bridge.result == 'success')
+       needs.build_bridge.result == 'success' ||
+       needs.build_resourcepack.result == 'success')
     permissions:
       contents: write
     steps:
@@ -323,61 +333,6 @@ jobs:
           name: IllyriaBridge
           path: dist/
 
-      - id: update_nightly_tag
-        name: Update Nightly Tag
-        run: |
-          gh api repos/${{ github.repository }}/git/refs/tags/nightly_plugin \
-            --method PATCH \
-            --field sha=${{ github.sha }} \
-            --field force=true 2>/dev/null || \
-          gh api repos/${{ github.repository }}/git/refs \
-            --method POST \
-            --field ref=refs/tags/nightly_plugin \
-            --field sha=${{ github.sha }}
-        env:
-          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-
-      - id: remove_old_assets
-        name: Remove Old Assets
-        run: |
-          RELEASE_ID=$(gh release view nightly_plugin --json id -q ".id")
-          gh api "repos/${{ github.repository }}/releases/$RELEASE_ID/assets" \
-            -q ".[] | select(.name | endswith(\".jar\")) | .id" \
-            | xargs -r -I {} gh api "repos/${{ github.repository }}/releases/assets/{}" --method DELETE
-        env:
-          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-
-      - id: amend_nightly_release
-        name: Amend Nightly Release
-        uses: svenstaro/upload-release-action@master
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          file: dist/*.jar
-          file_glob: true
-          tag: nightly_plugin
-          overwrite: true
-
-  nightly_resourcepack_release:
-    name: Nightly Resourcepack Release
-    needs: [changes, build_resourcepack]
-    runs-on: ubuntu-latest
-    environment:
-      name: "${{ github.ref_name }}"
-      url: "${{ steps.create_release.outputs.url }}"
-    if: |
-      always() && github.ref == 'refs/heads/main' &&
-      needs.build_resourcepack.result == 'success'
-    permissions:
-      contents: write
-    steps:
-      - id: checkout
-        name: Checkout
-        uses: actions/checkout@v7.0.1
-        with:
-          fetch-depth: 0
-
       - id: download_resourcepack
         name: Download IllyriaResourcePack Artifact
         if: needs.build_resourcepack.result == 'success'
@@ -389,13 +344,13 @@ jobs:
       - id: update_nightly_tag
         name: Update Nightly Tag
         run: |
-          gh api repos/${{ github.repository }}/git/refs/tags/nightly_resourcepack \
+          gh api repos/${{ github.repository }}/git/refs/tags/nightly \
             --method PATCH \
             --field sha=${{ github.sha }} \
             --field force=true 2>/dev/null || \
           gh api repos/${{ github.repository }}/git/refs \
             --method POST \
-            --field ref=refs/tags/nightly_resourcepack \
+            --field ref=refs/tags/nightly \
             --field sha=${{ github.sha }}
         env:
           GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
@@ -403,7 +358,7 @@ jobs:
       - id: delete_old_release_assets
         name: Delete Old Release Assets
         run: |
-          release_id=$(gh api repos/${{ github.repository }}/releases/tags/nightly_resourcepack --jq '.id' 2>/dev/null || echo "")
+          release_id=$(gh api repos/${{ github.repository }}/releases/tags/nightly --jq '.id' 2>/dev/null || echo "")
           if [ -n "$release_id" ]; then
             asset_ids=$(gh api repos/${{ github.repository }}/releases/$release_id/assets --jq '.[].id' 2>/dev/null || echo "")
             for asset_id in $asset_ids; do
@@ -421,6 +376,6 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           prerelease: true
-          files: dist/irp.zip
-          tag_name: nightly_resourcepack
-          name: Nightly Build Resourcepack
+          files: dist/*
+          tag_name: nightly
+          name: Nightly Build
