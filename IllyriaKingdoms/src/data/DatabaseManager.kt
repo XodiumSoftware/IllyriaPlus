@@ -20,7 +20,12 @@ internal object DatabaseManager {
         if (!plugin.dataFolder.exists()) {
             plugin.dataFolder.mkdirs()
         }
-        val databasePath = plugin.dataFolder.toPath().resolve("kingdoms.db").toString()
+        val databasePath =
+            plugin
+                .dataFolder
+                .toPath()
+                .resolve("kingdoms.db")
+                .toString()
         connection = DriverManager.getConnection("jdbc:sqlite:$databasePath")
         connection.autoCommit = true
         execute(
@@ -49,7 +54,10 @@ internal object DatabaseManager {
      * @param sql the SQL statement to execute.
      * @param params optional parameters to bind into the statement.
      */
-    fun execute(sql: String, vararg params: Any) {
+    fun execute(
+        sql: String,
+        vararg params: Any,
+    ) {
         connection.prepareStatement(sql).use { stmt ->
             params.forEachIndexed { i, param -> stmt.setObject(i + 1, param) }
             stmt.executeUpdate()
@@ -64,7 +72,11 @@ internal object DatabaseManager {
      * @param mapper mapping function that transforms the [ResultSet] into the result type [T].
      * @return a list of mapped results.
      */
-    fun <T> query(sql: String, vararg params: Any, mapper: (ResultSet) -> T): List<T> {
+    fun <T> query(
+        sql: String,
+        vararg params: Any,
+        mapper: (ResultSet) -> T,
+    ): List<T> {
         val results = mutableListOf<T>()
         connection.prepareStatement(sql).use { stmt ->
             params.forEachIndexed { i, param -> stmt.setObject(i + 1, param) }

@@ -8,7 +8,6 @@ import io.papermc.paper.registry.data.dialog.body.DialogBody
 import io.papermc.paper.registry.data.dialog.input.DialogInput
 import io.papermc.paper.registry.data.dialog.type.DialogType
 import net.kyori.adventure.text.event.ClickCallback
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
 import org.bukkit.entity.Player
 import org.xodium.illyriakingdoms.Utils.MM
 import org.xodium.illyriakingdoms.data.KingdomData
@@ -22,7 +21,11 @@ internal object RenameKingdomDialog {
      * @param kingdom The kingdom being renamed.
      * @param onComplete Called after the dialog is dismissed (regardless of action), to reopen the GUI.
      */
-    fun show(player: Player, kingdom: KingdomData, onComplete: (Player) -> Unit) {
+    fun show(
+        player: Player,
+        kingdom: KingdomData,
+        onComplete: (Player) -> Unit,
+    ) {
         player.showDialog(
             Dialog.create {
                 it

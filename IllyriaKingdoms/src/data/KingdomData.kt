@@ -1,7 +1,7 @@
 package org.xodium.illyriakingdoms.data
 
-import org.xodium.illyriakingdoms.Utils.MM
 import net.kyori.adventure.text.Component
+import org.xodium.illyriakingdoms.Utils.MM
 import java.util.UUID
 
 /**
@@ -28,18 +28,19 @@ internal data class KingdomData(
          * @return the [KingdomData] if found, or `null`.
          */
         fun getKingdom(owner: UUID): KingdomData? =
-            DatabaseManager.query(
-                "SELECT * FROM kingdoms WHERE owner = ?",
-                owner.toString(),
-            ) { rs ->
-                KingdomData(
-                    id = UUID.fromString(rs.getString("id")),
-                    name = MM.deserialize(rs.getString("name")),
-                    owner = UUID.fromString(rs.getString("owner")),
-                    members = rs.getString("members")?.let { parseUuidSet(it) } ?: emptySet(),
-                    npcs = rs.getString("npcs")?.let { parseUuidSet(it) } ?: emptySet(),
-                )
-            }.firstOrNull()
+            DatabaseManager
+                .query(
+                    "SELECT * FROM kingdoms WHERE owner = ?",
+                    owner.toString(),
+                ) { rs ->
+                    KingdomData(
+                        id = UUID.fromString(rs.getString("id")),
+                        name = MM.deserialize(rs.getString("name")),
+                        owner = UUID.fromString(rs.getString("owner")),
+                        members = rs.getString("members")?.let { parseUuidSet(it) } ?: emptySet(),
+                        npcs = rs.getString("npcs")?.let { parseUuidSet(it) } ?: emptySet(),
+                    )
+                }.firstOrNull()
 
         /**
          * Retrieves all [KingdomData] from the database.
@@ -88,7 +89,10 @@ internal data class KingdomData(
          * @param owner the UUID of the kingdom owner.
          * @param member the UUID of the member to add.
          */
-        fun addMember(owner: UUID, member: UUID) {
+        fun addMember(
+            owner: UUID,
+            member: UUID,
+        ) {
             val kingdom = getKingdom(owner) ?: return
             val updated = kingdom.members + member
             DatabaseManager.execute(
@@ -104,7 +108,10 @@ internal data class KingdomData(
          * @param owner the UUID of the kingdom owner.
          * @param npc the UUID of the NPC to add.
          */
-        fun addNpc(owner: UUID, npc: UUID) {
+        fun addNpc(
+            owner: UUID,
+            npc: UUID,
+        ) {
             val kingdom = getKingdom(owner) ?: return
             val updated = kingdom.npcs + npc
             DatabaseManager.execute(
@@ -120,7 +127,10 @@ internal data class KingdomData(
          * @param owner the UUID of the kingdom owner.
          * @param member the UUID of the member to remove.
          */
-        fun kickMember(owner: UUID, member: UUID) {
+        fun kickMember(
+            owner: UUID,
+            member: UUID,
+        ) {
             val kingdom = getKingdom(owner) ?: return
             val updated = kingdom.members - member
             DatabaseManager.execute(
@@ -136,7 +146,10 @@ internal data class KingdomData(
          * @param owner the UUID of the kingdom owner.
          * @param npc the UUID of the NPC to remove.
          */
-        fun kickNpc(owner: UUID, npc: UUID) {
+        fun kickNpc(
+            owner: UUID,
+            npc: UUID,
+        ) {
             val kingdom = getKingdom(owner) ?: return
             val updated = kingdom.npcs - npc
             DatabaseManager.execute(
@@ -163,7 +176,10 @@ internal data class KingdomData(
          * @param owner the UUID of the kingdom owner.
          * @param name the new display name of the kingdom.
          */
-        fun renameKingdom(owner: UUID, name: Component) {
+        fun renameKingdom(
+            owner: UUID,
+            name: Component,
+        ) {
             DatabaseManager.execute(
                 "UPDATE kingdoms SET name = ? WHERE owner = ?",
                 MM.serialize(name),
