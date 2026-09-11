@@ -35,7 +35,7 @@ internal object MemberGui {
     private const val NO_NPCS_MSG = "<red>There are no NPCs."
     private const val CALL_HINT = "<gray>Left click to call"
     private const val KICK_HINT = "<gray>Right click to kick"
-    private const val HINTS = "$CALL_HINT\n$KICK_HINT"
+    private const val OWNER_LORE = "<mango>Owner"
 
     private val BORDER = Item.simple(ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).hideTooltip(true))
 
@@ -132,16 +132,19 @@ internal object MemberGui {
         val ownerStack = playerHead(
             instance.server.getOfflinePlayer(ownerUuid).playerProfile,
             ownerName,
-            "<mango>Owner"
+            listOf(OWNER_LORE)
         )
         val isOwner = viewer.uniqueId == ownerUuid
-        val lore = if (isOwner) HINTS else null
         val memberItems = kingdom.members
             .sortedBy { instance.server.getOfflinePlayer(it).name ?: "" }
             .map { memberUuid ->
                 val memberName =
                     instance.server.getOfflinePlayer(memberUuid).name ?: memberUuid.toString().substring(0, 8)
-                val stack = playerHead(instance.server.getOfflinePlayer(memberUuid).playerProfile, memberName, lore)
+                val stack = playerHead(
+                    instance.server.getOfflinePlayer(memberUuid).playerProfile,
+                    memberName,
+                    if (isOwner) listOf(CALL_HINT, KICK_HINT) else null,
+                )
                 if (isOwner) {
                     item {
                         itemProvider by provider { ItemBuilder(stack) }
@@ -190,7 +193,7 @@ internal object MemberGui {
             .sortedBy { instance.server.getOfflinePlayer(it).name ?: "" }
             .map { npcUuid ->
                 val name = instance.server.getEntity(npcUuid)?.name ?: npcUuid.toString().substring(0, 8)
-                val stack = npcHead(name, if (isOwner) HINTS else null)
+                val stack = npcHead(name, if (isOwner) listOf(CALL_HINT, KICK_HINT) else null)
                 if (isOwner) {
                     item {
                         itemProvider by provider { ItemBuilder(stack) }
@@ -214,32 +217,32 @@ internal object MemberGui {
      * Creates a villager-themed [ItemStack] for NPCs.
      *
      * @param name the display name for the NPC.
-     * @param lore optional MiniMessage lore line to display under the name.
+     * @param lore optional list of MiniMessage lore lines to display under the name.
      * @return the configured ItemStack.
      */
-    private fun npcHead(name: String, lore: String?): ItemStack =
+    private fun npcHead(name: String, lore: List<String>?): ItemStack =
         ItemStack.of(Material.VILLAGER_SPAWN_EGG).apply {
             setData(DataComponentTypes.CUSTOM_NAME, MM.deserialize("<reset>$name"))
             if (lore != null) {
                 setData(
                     DataComponentTypes.LORE,
-                    ItemLore.lore(listOf(MM.deserialize(lore).decoration(TextDecoration.ITALIC, false)))
+                    ItemLore.lore(lore.map { MM.deserialize(it).decoration(TextDecoration.ITALIC, false) })
                 )
             }
         }
 
     /**
-     * Creates a player head item stack with the given profile, display name, and optional lore.
+     * Creates a player head item stack with the given profile, display name, and optional lore lines.
      *
      * @param profile the player profile to use for the skin.
      * @param name the display name for the head.
-     * @param lore optional MiniMessage lore line to display under the name.
+     * @param lore optional list of MiniMessage lore lines to display under the name.
      * @return the configured player head ItemStack.
      */
     private fun playerHead(
         profile: PlayerProfile,
         name: String,
-        lore: String?,
+        lore: List<String>?,
     ): ItemStack =
         ItemStack.of(Material.PLAYER_HEAD).apply {
             setData(DataComponentTypes.PROFILE, ResolvableProfile.resolvableProfile(profile))
@@ -247,7 +250,7 @@ internal object MemberGui {
             if (lore != null) {
                 setData(
                     DataComponentTypes.LORE,
-                    ItemLore.lore(listOf(MM.deserialize(lore).decoration(TextDecoration.ITALIC, false)))
+                    ItemLore.lore(lore.map { MM.deserialize(it).decoration(TextDecoration.ITALIC, false) })
                 )
             }
         }
