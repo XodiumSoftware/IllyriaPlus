@@ -94,7 +94,7 @@ jobs:
         run: ./gradlew ktlintCheck
 
   build_core:
-    name: Build IllyriaPlus
+    name: Build IllyriaCore
     needs: [changes]
     if: needs.changes.outputs.core == 'true' || needs.changes.outputs.all == 'true'
     runs-on: ubuntu-latest
