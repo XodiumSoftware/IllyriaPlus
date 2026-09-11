@@ -1,8 +1,8 @@
 package org.xodium.illyriakingdoms.gui
 
-import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.bukkit.event.inventory.InventoryCloseEvent
 import org.xodium.illyriakingdoms.Utils.MM
 import org.xodium.illyriakingdoms.data.KingdomData
 import xyz.xenondevs.invui.dsl.ExperimentalDslApi
@@ -50,19 +50,18 @@ internal object KingdomGui {
                 title by kingdom.name
                 upperGui by
                     gui(
-                        "# # N # #",
+                        "# # # # R",
                     ) {
                         '#' by BORDER
-                        'N' by
+                        'R' by
                             item {
                                 itemProvider by
-                                    ItemBuilder(Material.BEACON)
-                                        .setName(MM.deserialize("<gold>Name"))
-                                        .addLoreLines(
-                                            kingdom.name
-                                                .color(null)
-                                                .decoration(TextDecoration.ITALIC, false),
-                                        )
+                                    ItemBuilder(Material.ANVIL)
+                                        .setName(MM.deserialize("<red>Rename Kingdom"))
+                                onClick {
+                                    player.closeInventory(InventoryCloseEvent.Reason.PLUGIN)
+                                    RenameKingdomDialog.show(player, kingdom) { open(it) }
+                                }
                             }
                     }
             }

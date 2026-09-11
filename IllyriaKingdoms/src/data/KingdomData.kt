@@ -73,5 +73,19 @@ internal data class KingdomData(
         fun deleteKingdom(owner: UUID) {
             DatabaseManager.execute("DELETE FROM kingdoms WHERE owner = ?", owner.toString())
         }
+
+        /**
+         * Updates the name of an existing [KingdomData] in the database.
+         *
+         * @param owner the UUID of the kingdom owner.
+         * @param name the new display name of the kingdom.
+         */
+        fun renameKingdom(owner: UUID, name: Component) {
+            DatabaseManager.execute(
+                "UPDATE kingdoms SET name = ? WHERE owner = ?",
+                GsonComponentSerializer.gson().serialize(name),
+                owner.toString(),
+            )
+        }
     }
 }
