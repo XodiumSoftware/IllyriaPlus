@@ -29,7 +29,7 @@ import xyz.xenondevs.invui.window.Window
 internal object MemberGui {
     private const val PREVIOUS_PAGE_NAME = "<gray>Previous page"
     private const val NEXT_PAGE_NAME = "<gray>Next page"
-    private const val MEMBERS_TAB = "<green>Members"
+    private const val PLAYERS_TAB = "<green>Players"
     private const val NPCS_TAB = "<aqua>NPCs"
     private const val NO_NPCS_MSG = "<red>There are no NPCs."
 
@@ -75,9 +75,9 @@ internal object MemberGui {
         val npcItems = buildNpcItems(kingdom)
         val contentProvider = mutableProvider(memberItems)
 
-        val membersTab =
+        val playersTab =
             item {
-                itemProvider by provider { ItemBuilder(Material.PLAYER_HEAD).setName(MM.deserialize(MEMBERS_TAB)) }
+                itemProvider by provider { ItemBuilder(Material.PLAYER_HEAD).setName(MM.deserialize(PLAYERS_TAB)) }
                 onClick {
                     contentProvider.set(memberItems)
                 }
@@ -108,7 +108,7 @@ internal object MemberGui {
                 ) {
                     '#' by BORDER
                     'x' by Markers.CONTENT_LIST_SLOT_HORIZONTAL
-                    'm' by membersTab
+                    'm' by playersTab
                     'n' by npcsTab
                     '<' by back
                     '>' by forward
@@ -158,11 +158,19 @@ internal object MemberGui {
     }
 
     /**
-     * Builds NPC head items. Currently returns empty since there are no NPCs yet.
+     * Builds NPC head items. Shows players from npcs set (excluding the owner).
      *
      * @param kingdom The kingdom to list NPCs for.
      */
-    private fun buildNpcItems(kingdom: KingdomData): List<Item> = emptyList()
+    private fun buildNpcItems(kingdom: KingdomData): List<Item> =
+        kingdom.npcs
+            .filter { it != kingdom.owner }
+            .sortedBy { instance.server.getOfflinePlayer(it).name ?: "" }
+            .map {
+                val name = instance.server.getOfflinePlayer(it).name ?: it.toString().substring(0, 8)
+                playerHead(instance.server.getOfflinePlayer(it).playerProfile, name, "<gradient:#FFE259:#FFA751>NPC")
+            }
+            .map { Item.simple(it) }
 
     /**
      * Creates a [ItemStack] player head with the given profile, display name, and optional lore.
