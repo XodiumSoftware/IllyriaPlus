@@ -24,9 +24,10 @@ Download pre-built JARs from GitHub releases.
 ### Setup
 
 1. Download the latest release:
-   ```bash
-   curl -L -o IllyriaPlus.jar https://github.com/XodiumSoftware/IllyriaPlus/releases/download/nightly/IllyriaPlus.jar
-   ```
+
+    ```bash
+    curl -L -o IllyriaPlus.jar https://github.com/XodiumSoftware/IllyriaPlus/releases/download/nightly/IllyriaPlus.jar
+    ```
 
 2. Place the JAR in your server's `plugins/` directory
 
@@ -42,27 +43,38 @@ Build the plugins using Gradle.
 ### Setup
 
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/XodiumSoftware/IllyriaPlus.git
-   cd IllyriaPlus
-   ```
 
-2. Build the plugin:
-   ```bash
-   ./gradlew shadowJar
-   ```
+    ```bash
+    git clone https://github.com/XodiumSoftware/IllyriaPlus.git
+    cd IllyriaPlus
+    ```
 
-3. The output JAR is at:
-   ```
-   build/libs/IllyriaPlus-*.jar
-   ```
+2. Build the plugins:
+
+    ```bash
+    ./gradlew shadowJar
+    ```
+
+    To build a single plugin:
+
+    ```bash
+    ./gradlew :IllyriaCore:shadowJar
+    ./gradlew :IllyriaKingdoms:shadowJar
+    ```
+
+3. The output JARs are at:
+    ```
+    IllyriaCore/build/libs/IllyriaPlus-*.jar
+    IllyriaKingdoms/build/libs/IllyriaKingdoms-*.jar
+    ```
 
 ### Run a Test Server
 
-To quickly test the plugin:
+To quickly test a plugin:
 
 ```bash
-./gradlew runServer
+./gradlew :IllyriaCore:runServer
+./gradlew :IllyriaKingdoms:runServer
 ```
 
 This automatically downloads Paper 26.2 and starts a local test server with the plugin.
@@ -88,7 +100,7 @@ To customize behavior, you must:
 Each mechanic stores its settings as `private const val` or `private val` properties directly in its `object`, for example:
 
 ```kotlin
-// In src/mechanics/player/MessagesMechanic.kt
+// In IllyriaCore/src/mechanics/player/MessagesMechanic.kt
 internal object MessagesMechanic : MechanicInterface {
     private const val JOIN_MSG = "<green>➕ <player> joined!</green>"
     // ...
@@ -110,7 +122,7 @@ Custom enchantments are divided into two groups:
 **Custom utility enchantments** (registered in Paper's registry):
 
 | Enchantment | Slot      | Description                     |
-|-------------|-----------|---------------------------------|
+| ----------- | --------- | ------------------------------- |
 | Vinemine    | Main Hand | Pickaxe special ability         |
 | Tether      | Main Hand | Applies to tools and weapons    |
 | Nimbus      | Saddle    | Happy Ghast harness enhancement |
@@ -119,7 +131,7 @@ Custom enchantments are divided into two groups:
 **Vanilla behavior overrides** (event listeners, not registered as custom enchantments):
 
 | Enchantment     | Slot      | Description                                 |
-|-----------------|-----------|---------------------------------------------|
+| --------------- | --------- | ------------------------------------------- |
 | Silk Touch      | Main Hand | Allows mining spawners and budding amethyst |
 | Feather Falling | Feet      | Prevents farmland from being trampled       |
 | Fortune         | Main Hand | Hoes with Fortune II+ auto-replant crops    |
@@ -154,15 +166,15 @@ Custom crafting, smelting, stonecutting, and shapeless recipes:
 ### Build fails
 
 - Verify Java 25 is installed and active:
-  ```bash
-  java -version
-  ```
+    ```bash
+    java -version
+    ```
 - Make sure `JAVA_HOME` is set correctly
 - Try cleaning the build:
-  ```bash
-  ./gradlew clean
-  ./gradlew shadowJar
-  ```
+    ```bash
+    ./gradlew clean
+    ./gradlew shadowJar
+    ```
 
 ### Ktlint errors
 

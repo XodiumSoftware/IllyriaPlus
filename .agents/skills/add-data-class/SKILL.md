@@ -1,6 +1,6 @@
 ---
 name: add-data-class
-description: Scaffolds a new data class in src/data/ for structured immutable data used across the project.
+description: Scaffolds a new data class in IllyriaCore/src/data/ for structured immutable data used across the project.
 ---
 
 # Add a Data Class
@@ -19,7 +19,7 @@ Use this skill when the user needs a new structured data type shared across the 
 
 ## Creating the Data Class
 
-1. Create `src/data/<Name>.kt`.
+1. Create `IllyriaCore/src/data/<Name>.kt`.
 2. Define `internal data class <Name>(...)` with immutable `val` properties.
 3. Keep the class focused on one responsibility.
 4. Add a concise KDoc comment explaining the purpose of the data class.

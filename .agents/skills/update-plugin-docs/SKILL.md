@@ -17,9 +17,9 @@ Load this skill when the user says something like:
 ## Steps
 
 1. Inspect the current codebase to determine what has changed:
-   - Read the main plugin class (e.g., `src/Plugin.kt`) for the lists of `recipes`, `mechanics`, and `enchantments`.
-   - Read the plugin bootstrap class (e.g., `src/PluginBootstrap.kt`) for registered enchantments and tags.
-   - List relevant source directories (`src/mechanics/`, `src/enchantments/`, `src/recipes/`, `src/data/`, `src/pdcs/`, `src/tables/`).
+   - Read the main plugin class (e.g., `IllyriaCore/src/Plugin.kt`) for the lists of `recipes`, `mechanics`, and `enchantments`.
+   - Read the plugin bootstrap class (e.g., `IllyriaCore/src/PluginBootstrap.kt`) for registered enchantments and tags.
+   - List relevant source directories (`IllyriaCore/src/mechanics/`, `IllyriaCore/src/enchantments/`, `IllyriaCore/src/recipes/`, `IllyriaCore/src/data/`, `IllyriaCore/src/pdcs/`, `IllyriaCore/src/tables/`).
 
 2. Update `GUIDE.md` or the project's main documentation file.
    - Update feature lists (enchantments, recipes).
