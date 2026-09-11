@@ -1,6 +1,6 @@
 ---
 name: add-utils
-description: Adds a new utility function or nested utility object inside src/Utils.kt following existing conventions.
+description: Adds a new utility function or nested utility object inside IllyriaCore/src/Utils.kt following existing conventions.
 ---
 
 # Add Utilities
@@ -17,7 +17,7 @@ Use this skill when the user needs a new helper function or group of helpers for
 
 ## Adding the Utility
 
-1. Open `src/Utils.kt`.
+1. Open `IllyriaCore/src/Utils.kt`.
 2. Decide where the utility belongs:
    - If it extends an existing type (e.g. `Player`, `Block`, `String`), prefer a top-level extension function.
    - If it is a group of related helpers, add a new nested `object` inside `Utils`.

@@ -9,9 +9,9 @@ Use this skill when the user wants to add a new custom bossbar icon for a vanill
 
 ## What this skill covers
 
-- Adding a bitmap font provider to `resourcepack/assets/minecraft/font/default.json`
-- Placing the source PNG texture into `resourcepack/assets/illyriaplus/textures/font/`
-- Updating `resourcepack/assets/minecraft/lang/en_us.json` with the appropriate translation override
+- Adding a bitmap font provider to `IllyriaResourcePack/assets/minecraft/font/default.json`
+- Placing the source PNG texture into `IllyriaResourcePack/assets/illyriaplus/textures/font/`
+- Updating `IllyriaResourcePack/assets/minecraft/lang/en_us.json` with the appropriate translation override
 
 ## Steps
 
@@ -21,9 +21,9 @@ Use this skill when the user wants to add a new custom bossbar icon for a vanill
    - The Unicode private-use character to assign (e.g., `\uE901`)
    - The desired `ascent` and `height` values (optional; use reasonable defaults)
 
-2. Place the texture at `resourcepack/assets/illyriaplus/textures/font/{name}.png`.
+2. Place the texture at `IllyriaResourcePack/assets/illyriaplus/textures/font/{name}.png`.
 
-3. Open `resourcepack/assets/minecraft/font/default.json` and append a new bitmap provider:
+3. Open `IllyriaResourcePack/assets/minecraft/font/default.json` and append a new bitmap provider:
 
    ```json
    {
@@ -37,7 +37,7 @@ Use this skill when the user wants to add a new custom bossbar icon for a vanill
 
    Use a unique Unicode private-use code point for each icon.
 
-4. Open `resourcepack/assets/minecraft/lang/en_us.json` and add the translation override:
+4. Open `IllyriaResourcePack/assets/minecraft/lang/en_us.json` and add the translation override:
    - For a boss entity: `"entity.minecraft.{name}": "\uE9XX"`
    - For a raid event: `"event.minecraft.raid": "\uE9XX"`
    - Also add empty strings for raid sub-keys if needed (`raid.raiders_remaining`, `raid.victory`, `raid.defeat`)

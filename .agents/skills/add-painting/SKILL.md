@@ -17,7 +17,7 @@ Use this skill when the user wants to add a new custom painting variant to a Pap
 
 ## Adding the Painting
 
-1. Open the project's paintings registry file (e.g., `src/paintings/ProjectPaintings.kt`).
+1. Open the project's paintings registry file (e.g., `IllyriaCore/src/paintings/ProjectPaintings.kt`).
 2. Add a new `PaintingData("<key>", Pair(<width>, <height>), <NAMESPACE>)` entry to the `paintings` list.
 3. Keep entries in alphabetical order by registry key.
 

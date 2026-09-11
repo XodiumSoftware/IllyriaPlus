@@ -9,7 +9,7 @@ Use this skill when the user needs to add, change, or remove the language overri
 
 ## What this skill covers
 
-- Editing `resourcepack/assets/minecraft/lang/en_us.json`
+- Editing `IllyriaResourcePack/assets/minecraft/lang/en_us.json`
 - Mapping vanilla boss/event translation keys to custom font Unicode characters
 
 ## Steps
@@ -19,9 +19,9 @@ Use this skill when the user needs to add, change, or remove the language overri
    - Ender Dragon: `entity.minecraft.ender_dragon`
    - Raid: `event.minecraft.raid` (plus `event.minecraft.raid.raiders_remaining`, `event.minecraft.raid.victory`, `event.minecraft.raid.defeat`)
 
-2. Find the corresponding Unicode code point from `resourcepack/assets/minecraft/font/default.json`.
+2. Find the corresponding Unicode code point from `IllyriaResourcePack/assets/minecraft/font/default.json`.
 
-3. Add or update the entry in `resourcepack/assets/minecraft/lang/en_us.json`:
+3. Add or update the entry in `IllyriaResourcePack/assets/minecraft/lang/en_us.json`:
 
    ```json
    "entity.minecraft.wither": "\uE901"

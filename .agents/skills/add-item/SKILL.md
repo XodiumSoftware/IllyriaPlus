@@ -1,6 +1,6 @@
 ---
 name: add-item
-description: Scaffolds a new reusable item builder in src/items/{group}/ following the ItemInterface pattern.
+description: Scaffolds a new reusable item builder in IllyriaCore/src/items/{group}/ following the ItemInterface pattern.
 ---
 
 # Add an Item
@@ -11,7 +11,7 @@ Use this skill when the user wants to add a new reusable item builder to the pro
 
 1. Ask the user:
    - What is the item name?
-   - Which group/category folder under `src/items/` should it live in? (e.g. `alcoholics`, create a new one if needed)
+   - Which group/category folder under `IllyriaCore/src/items/` should it live in? (e.g. `alcoholics`, create a new one if needed)
    - What `Material` should it use?
    - Does it need any custom data components (name, color, lore, potion contents, food, etc.)?
    - Should it set `alcoholStrength`? Only for alcoholic items consumed by the relevant mechanic.
@@ -19,7 +19,7 @@ Use this skill when the user wants to add a new reusable item builder to the pro
 
 ## Creating the Item File
 
-1. Create `src/items/{group}/<Name>Item.kt` using the template below.
+1. Create `IllyriaCore/src/items/{group}/<Name>Item.kt` using the template below.
 2. The object must be `internal object <Name>Item : ItemInterface`.
 3. Override `alcoholStrength` only for alcoholic items.
 4. Implement `operator fun invoke(): ItemStack` returning a configured stack built with `ItemStack.of(Material.<...>)`.

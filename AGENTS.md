@@ -3,26 +3,27 @@
 ## Project at a Glance
 
 - **Name:** IllyriaPlus
-- **Type:** Single-module Minecraft Paper plugin project (server-side only)
+- **Type:** Multi-module Minecraft Paper plugin monorepo (server-side only)
+- **Modules:** `IllyriaCore` (core plugin, published as `IllyriaPlus`), `IllyriaKingdoms` (kingdoms plugin)
 - **MC Version:** 26.2
 - **Language:** Kotlin (JVM 25)
 - **Build Tool:** Gradle with Kotlin DSL
 
 ## APIs & Tools
 
-| Category            | Technology                              | Purpose                            |
-|---------------------|-----------------------------------------|------------------------------------|
-| **Core API**        | [Paper API](https://papermc.io/) 26.2   | Minecraft server plugin API        |
-| **Language**        | Kotlin 2.4.0                            | JVM language                       |
-| **Build Tool**      | Gradle (Kotlin DSL)                     | Build automation                   |
-| **Gradle Plugins**  | Shadow 9.4.2                            | Fat JAR creation                   |
-|                     | run-paper 3.0.2                         | Local test server                  |
-|                     | resource-factory 1.3.1                  | `paper-plugin.yml` generation      |
-|                     | foojay-resolver 1.0.0                   | Auto-download JVM toolchains       |
-|                     | ktlint 12.3.0                           | Kotlin linting                     |
-| **Text Formatting** | MiniMessage                             | Adventure API component-based text |
+| Category            | Technology                                       | Purpose                            |
+| ------------------- | ------------------------------------------------ | ---------------------------------- |
+| **Core API**        | [Paper API](https://papermc.io/) 26.2            | Minecraft server plugin API        |
+| **Language**        | Kotlin 2.4.20                                    | JVM language                       |
+| **Build Tool**      | Gradle (Kotlin DSL)                              | Build automation                   |
+| **Gradle Plugins**  | Shadow 9.6.1                                     | Fat JAR creation                   |
+|                     | run-paper 3.1.0                                  | Local test server                  |
+|                     | resource-factory 1.3.1                           | `paper-plugin.yml` generation      |
+|                     | foojay-resolver 1.0.0                            | Auto-download JVM toolchains       |
+|                     | ktlint 12.3.0                                    | Kotlin linting                     |
+| **Text Formatting** | MiniMessage                                      | Adventure API component-based text |
 | **GUI Framework**   | [InvUI](https://docs.xenondevs.xyz/invui/) 2.3.2 | Inventory window GUIs              |
-| **Code Style**      | ktlint                                  | Kotlin linting (IDE plugin)        |
+| **Code Style**      | ktlint                                           | Kotlin linting (IDE plugin)        |
 
 ### Paper API Resources
 
@@ -40,11 +41,12 @@
 ## Quick Commands
 
 ```bash
-# Build the plugin
+# Build all plugin JARs (outputs in <module>/build/libs/)
 ./gradlew shadowJar
 
-# Run local test server (auto-downloads Paper 26.2)
-./gradlew runServer
+# Run a module's local test server (auto-downloads Paper 26.2)
+./gradlew :IllyriaCore:runServer
+./gradlew :IllyriaKingdoms:runServer
 
 # Run linting
 ./gradlew ktlintCheck
@@ -56,21 +58,29 @@
 ## Project Structure
 
 ```
-IllyriaPlus/
-├── build.gradle.kts          # Build configuration
-├── settings.gradle.kts         # Project settings
-├── src/                        # Source directory
-│   ├── IllyriaPlus.kt          # Main plugin class
-│   ├── IllyriaPlusBootstrap.kt # Bootstrap class
-│   ├── Utils.kt                # Utility functions
-│   ├── mechanics/              # Feature mechanics (entity, player, server, world subfolders)
-│   ├── enchantments/           # Enchantment implementations
-│   │   ├── utility/            # Custom utility enchantments (registered in bootstrap)
-│   │   └── vanilla/            # Vanilla enchantment behavior overrides
-│   ├── recipes/                # Recipe implementations
-│   │   └── vanilla/            # Vanilla-style custom recipes
-│   ├── data/                   # Data classes
-│   └── pdcs/                   # PlayerPDC
+IllyriaPlus/                    # Repo root (Gradle aggregator, no code)
+├── build.gradle.kts          # Aggregator only
+├── settings.gradle.kts         # Includes IllyriaCore + IllyriaKingdoms + IllyriaBridge
+├── IllyriaResourcePack/      # Custom resource pack (released via ci_resourcepack.yml, served by ResourcePackMechanic)
+├── IllyriaCore/                # Core plugin module (published plugin: IllyriaPlus)
+│   ├── build.gradle.kts        # Module build configuration
+│   ├── src/                    # Source directory
+│   │   ├── IllyriaPlus.kt          # Main plugin class
+│   │   ├── IllyriaPlusBootstrap.kt # Bootstrap class
+│   │   ├── Utils.kt                # Utility functions
+│   │   ├── mechanics/              # Feature mechanics (entity, player, server, world subfolders)
+│   │   ├── enchantments/           # Enchantment implementations
+│   │   │   ├── utility/            # Custom utility enchantments (registered in bootstrap)
+│   │   │   └── vanilla/            # Vanilla enchantment behavior overrides
+│   │   ├── recipes/                # Recipe implementations
+│   │   │   └── vanilla/            # Vanilla-style custom recipes
+│   │   ├── data/                   # Data classes
+│   │   └── pdcs/                   # PlayerPDC
+│   └── resources/              # Bundled resources (structures)
+└── IllyriaKingdoms/            # Kingdoms plugin module
+    ├── build.gradle.kts        # Module build configuration
+    └── src/                    # Source directory
+        └── IllyriaKingdoms.kt  # Main plugin class
 ```
 
 ## Architecture
@@ -98,7 +108,7 @@ Custom enchantments implement `EnchantmentInterface` with:
 - `get()` to retrieve live `Enchantment` instance from registry
 - Event handling via `@EventHandler fun on(event: <EventType>)` methods
 
-Only utility enchantments in `src/enchantments/utility/` are registered in `IllyriaPlusBootstrap`. Enchantments in `src/enchantments/vanilla/` listen to events and check for vanilla enchantments on items instead.
+Only utility enchantments in `IllyriaCore/src/enchantments/utility/` are registered in `IllyriaPlusBootstrap`. Enchantments in `IllyriaCore/src/enchantments/vanilla/` listen to events and check for vanilla enchantments on items instead.
 
 ### Key Conventions
 
@@ -189,7 +199,7 @@ GitHub Actions workflows in `.github/workflows/`:
 
 ### Adding an Enchantment
 
-1. Create new file in `src/enchantments/utility/YournameEnchantment.kt` for custom registry enchantments, or `src/enchantments/vanilla/YournameEnchantment.kt` for vanilla behavior overrides
+1. Create new file in `IllyriaCore/src/enchantments/utility/YournameEnchantment.kt` for custom registry enchantments, or `IllyriaCore/src/enchantments/vanilla/YournameEnchantment.kt` for vanilla behavior overrides
 2. Implement `EnchantmentInterface` as an `object`
 3. In `invoke(builder)`, configure: `description()`, `anvilCost()`, `maxLevel()`, `weight()`, `activeSlots()`, and optionally `supportedItems()`
 4. In `IllyriaPlusBootstrap.kt` (only for `utility/` enchantments):
@@ -202,7 +212,7 @@ GitHub Actions workflows in `.github/workflows/`:
 
 ### Adding a Mechanic
 
-1. Create new file in `src/mechanics/{category}/YourMechanic.kt` (e.g., `src/mechanics/player/YourMechanic.kt`)
+1. Create new file in `IllyriaCore/src/mechanics/{category}/YourMechanic.kt` (e.g., `IllyriaCore/src/mechanics/player/YourMechanic.kt`)
 2. Implement `MechanicInterface` as an `object`
 3. Hardcode settings as `private const val` / `private val` properties directly in the object (no nested `Config` object)
 4. Implement `@EventHandler` methods for events
@@ -212,7 +222,7 @@ GitHub Actions workflows in `.github/workflows/`:
 
 ### Adding a Recipe
 
-1. Create new file in `src/recipes/vanilla/YourRecipe.kt`
+1. Create new file in `IllyriaCore/src/recipes/vanilla/YourRecipe.kt`
 2. Implement `RecipeInterface` as an `object`
 3. Define `recipes` list for crafting/smelting recipes, or `potions` list for brewing recipes
 4. Use naming pattern `{descriptive_name}_{recipe_type}` for `NamespacedKey`
@@ -221,14 +231,14 @@ GitHub Actions workflows in `.github/workflows/`:
 
 ### Adding a PDC (Persistent Data Container)
 
-1. For player data: edit `src/pdcs/PlayerPDC.kt`
+1. For player data: edit `IllyriaCore/src/pdcs/PlayerPDC.kt`
 2. Add a new property delegate using `by` with `NamespacedKey(instance, "key_name")`
 3. Use primitive `PersistentDataType` values or custom serializers for complex data
 4. Access via `player.yourField`, etc. directly in code
 
 ### Adding a Data Class
 
-1. Create new file in `src/data/YourData.kt`
+1. Create new file in `IllyriaCore/src/data/YourData.kt`
 2. Define `data class` with properties for structured data
 3. Keep data classes immutable (`val` properties)
 4. Add appropriate helper methods or companion object factory functions
@@ -236,7 +246,7 @@ GitHub Actions workflows in `.github/workflows/`:
 
 ### Adding Utilities
 
-1. Edit `src/Utils.kt` or add a nested object inside `Utils`
+1. Edit `IllyriaCore/src/Utils.kt` or add a nested object inside `Utils`
 2. Keep utility functions `internal` visibility
 3. Prefer extension functions on existing types
 4. Use `Utils.MM` for MiniMessage formatting

@@ -17,7 +17,7 @@ Use this skill when the user wants to store new per-player persistent data in a 
 
 ## Adding the Field
 
-1. Open `src/pdcs/PlayerPDC.kt`.
+1. Open `IllyriaCore/src/pdcs/PlayerPDC.kt`.
 2. Add a new private `NamespacedKey` using `NamespacedKey(instance, "snake_case_key_name")`.
 3. Add a `var Player.<propertyName>` extension property using `persistentDataContainer` and the appropriate `PersistentDataType`.
 4. Keep the visibility `internal` and match the style of existing properties (`nickname`, `scoreboardVisibility`).

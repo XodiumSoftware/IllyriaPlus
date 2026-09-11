@@ -17,7 +17,7 @@ Use this skill when the user wants to add a new custom recipe to the project.
 
 ## Creating the Recipe File
 
-1. Create `src/recipes/vanilla/<Name>Recipe.kt` using the template below.
+1. Create `IllyriaCore/src/recipes/vanilla/<Name>Recipe.kt` using the template below.
 2. The object must be `internal object <Name>Recipe : RecipeInterface`.
 3. Override `val recipes: Collection<Recipe>` for crafting/smelting recipes, or `val potions: Collection<PotionMix>` for brewing recipes.
 4. Use `ItemStack.of(Material.<...>)` for results.
@@ -25,7 +25,7 @@ Use this skill when the user wants to add a new custom recipe to the project.
 
 ## Wiring
 
-1. Open the main plugin class (e.g., `src/Plugin.kt`).
+1. Open the main plugin class (e.g., `IllyriaCore/src/Plugin.kt`).
 2. Import the new recipe.
 3. Add it alphabetically to the `recipes` list in `onEnable()`.
 

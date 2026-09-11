@@ -7,7 +7,7 @@ import org.xodium.illyriaplus.data.BannerData
  * into a single IllyriaPlus collection.
  *
  * The asset paths and translation keys use the `illyriaplus` namespace so that
- * the bundled resource pack under `resourcepack/assets/illyriaplus` is loaded
+ * the bundled resource pack under `IllyriaResourcePack/assets/illyriaplus` is loaded
  * automatically.
  */
 internal object MoxvallixBanners : BannerInterface {
