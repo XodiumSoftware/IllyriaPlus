@@ -5,8 +5,8 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemLore
 import io.papermc.paper.datacomponent.item.ResolvableProfile
 import net.kyori.adventure.text.format.TextDecoration
+import net.kyori.adventure.title.Title
 import org.bukkit.Material
-import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.inventory.ItemStack
@@ -33,7 +33,9 @@ internal object MemberGui {
     private const val PLAYERS_TAB = "<green>Players"
     private const val NPCS_TAB = "<aqua>NPCs"
     private const val NO_NPCS_MSG = "<red>There are no NPCs."
+    private const val CALL_HINT = "<gray>Left click to call"
     private const val KICK_HINT = "<gray>Right click to kick"
+    private const val HINTS = "$CALL_HINT\n$KICK_HINT"
 
     private val BORDER = Item.simple(ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).hideTooltip(true))
 
@@ -80,13 +82,7 @@ internal object MemberGui {
         val playersTab =
             item {
                 itemProvider by provider { ItemBuilder(Material.PLAYER_HEAD).setName(MM.deserialize(PLAYERS_TAB)) }
-<<<<<<< HEAD
-                onClick {
-                    contentProvider.set(memberItems)
-                }
-=======
                 onClick { contentProvider.set(memberItems) }
->>>>>>> eb5f20ac (Populate NPC tab in member GUI and rename Members tab to Players)
             }
 
         val npcsTab =
@@ -136,25 +132,41 @@ internal object MemberGui {
         val ownerStack = playerHead(
             instance.server.getOfflinePlayer(ownerUuid).playerProfile,
             ownerName,
-            "<gradient:#FFE259:#FFA751>Owner"
+            "<mango>Owner"
         )
         val isOwner = viewer.uniqueId == ownerUuid
+        val lore = if (isOwner) HINTS else null
         val memberItems = kingdom.members
             .sortedBy { instance.server.getOfflinePlayer(it).name ?: "" }
             .map { memberUuid ->
                 val memberName =
                     instance.server.getOfflinePlayer(memberUuid).name ?: memberUuid.toString().substring(0, 8)
-                val lore = if (isOwner) KICK_HINT else null
                 val stack = playerHead(instance.server.getOfflinePlayer(memberUuid).playerProfile, memberName, lore)
                 if (isOwner) {
                     item {
                         itemProvider by provider { ItemBuilder(stack) }
                         onClick {
+                            val kingdomName = MM.serialize(kingdom.name)
                             if (clickType == ClickType.RIGHT) {
                                 KingdomData.kickMember(kingdom.owner, memberUuid)
-                                viewer.sendActionBar(MM.deserialize("<red>$memberName has been kicked."))
-                                viewer.closeInventory()
+                                instance.server.broadcast(
+                                    MM.deserialize("<firewatch>[$kingdomName]</gradient> <red>$memberName has been kicked.")
+                                )
                                 this@MemberGui.open(viewer, kingdom)
+                            } else if (clickType == ClickType.LEFT) {
+                                val target = instance.server.getPlayer(memberUuid)
+                                if (target != null) {
+                                    target.showTitle(
+                                        Title.title(
+                                            kingdom.name,
+                                            MM.deserialize("<firewatch>The King has called upon you")
+                                                .decoration(TextDecoration.ITALIC, false),
+                                        ),
+                                    )
+                                    instance.server.broadcast(
+                                        MM.deserialize("<firewatch>[$kingdomName]</gradient> <green>$memberName has been notified.")
+                                    )
+                                }
                             }
                         }
                     }
@@ -166,47 +178,28 @@ internal object MemberGui {
     }
 
     /**
-<<<<<<< HEAD
-     * Builds NPC head items. Shows players from npcs set (excluding the owner).
-=======
      * Builds NPC head items. Owner is excluded from the NPC list. Owner-viewing players can right-click to kick NPCs.
->>>>>>> eb5f20ac (Populate NPC tab in member GUI and rename Members tab to Players)
      *
      * @param kingdom The kingdom to list NPCs for.
      * @param viewer The player viewing the GUI.
      */
-<<<<<<< HEAD
-<<<<<<< HEAD
-    private fun buildNpcItems(kingdom: KingdomData): List<Item> =
-        kingdom.npcs
-            .filter { it != kingdom.owner }
-            .sortedBy { instance.server.getOfflinePlayer(it).name ?: "" }
-            .map {
-                val name = instance.server.getOfflinePlayer(it).name ?: it.toString().substring(0, 8)
-                playerHead(instance.server.getOfflinePlayer(it).playerProfile, name, "<gradient:#FFE259:#FFA751>NPC")
-            }
-            .map { Item.simple(it) }
-=======
-    private fun buildNpcItems(kingdom: KingdomData, viewer: Player): List<Item> =
-        kingdom.npcs
-=======
     private fun buildNpcItems(kingdom: KingdomData, viewer: Player): List<Item> {
         val isOwner = viewer.uniqueId == kingdom.owner
         return kingdom.npcs
->>>>>>> 976988f3 (feat(kingdoms): add invite flow with timed right-click, and kickNpc support)
             .filter { it != kingdom.owner }
             .sortedBy { instance.server.getOfflinePlayer(it).name ?: "" }
             .map { npcUuid ->
                 val name = instance.server.getEntity(npcUuid)?.name ?: npcUuid.toString().substring(0, 8)
-                val stack = npcHead(name, if (isOwner) KICK_HINT else null)
+                val stack = npcHead(name, if (isOwner) HINTS else null)
                 if (isOwner) {
                     item {
                         itemProvider by provider { ItemBuilder(stack) }
                         onClick {
                             if (clickType == ClickType.RIGHT) {
                                 KingdomData.kickNpc(kingdom.owner, npcUuid)
-                                viewer.sendActionBar(MM.deserialize("<red>$name has been kicked."))
-                                viewer.closeInventory()
+                                instance.server.broadcast(
+                                    MM.deserialize("<firewatch>[${MM.serialize(kingdom.name)}]</gradient> <red>$name has been kicked.")
+                                )
                                 this@MemberGui.open(viewer, kingdom)
                             }
                         }
@@ -215,11 +208,7 @@ internal object MemberGui {
                     Item.simple(stack)
                 }
             }
-<<<<<<< HEAD
->>>>>>> eb5f20ac (Populate NPC tab in member GUI and rename Members tab to Players)
-=======
     }
->>>>>>> 976988f3 (feat(kingdoms): add invite flow with timed right-click, and kickNpc support)
 
     /**
      * Creates a villager-themed [ItemStack] for NPCs.
