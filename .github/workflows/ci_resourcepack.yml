@@ -3,7 +3,7 @@ name: Xodium CI/CD - Release Resourcepack
 on:
   push:
     branches: [main]
-    paths: ["resourcepack/**"]
+    paths: ["IllyriaResourcePack/**"]
   workflow_dispatch:
 
 permissions:
@@ -33,7 +33,7 @@ jobs:
         with:
           packsquash_version: latest-unstable
           options: |
-            pack_directory = 'resourcepack'
+            pack_directory = 'IllyriaResourcePack'
             output_file_path = 'irp.zip'
 
       - id: update_nightly_tag

@@ -59,8 +59,9 @@
 
 ```
 IllyriaPlus/                    # Repo root (Gradle aggregator, no code)
-├── build.gradle.kts            # Aggregator only
-├── settings.gradle.kts         # Includes IllyriaCore + IllyriaKingdoms
+├── build.gradle.kts          # Aggregator only
+├── settings.gradle.kts         # Includes IllyriaCore + IllyriaKingdoms + IllyriaBridge
+├── IllyriaResourcePack/      # Custom resource pack (released via ci_resourcepack.yml, served by ResourcePackMechanic)
 ├── IllyriaCore/                # Core plugin module (published plugin: IllyriaPlus)
 │   ├── build.gradle.kts        # Module build configuration
 │   ├── src/                    # Source directory
