@@ -4,7 +4,6 @@ import com.mojang.brigadier.arguments.StringArgumentType
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver
-import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.entity.Player
 import org.bukkit.entity.Villager
 import org.bukkit.event.EventHandler
@@ -28,9 +27,13 @@ internal object KingdomMechanic : MechanicInterface {
     override val cmds: Collection<CommandData> =
         listOf(
             CommandData(
-                Commands.literal("kingdom")
-                    .requires { it.sender.hasPermission("${instance.javaClass.simpleName}.command.kingdom".lowercase()) }
-                    .executes { ctx ->
+                Commands
+                    .literal("kingdom")
+                    .requires {
+                        it.sender.hasPermission(
+                            "${instance.javaClass.simpleName}.command.kingdom".lowercase(),
+                        )
+                    }.executes { ctx ->
                         val player = ctx.source.sender as? Player
                         if (player == null) {
                             ctx.source.sender.sendActionBar(
@@ -40,12 +43,16 @@ internal object KingdomMechanic : MechanicInterface {
                         }
                         KingdomGui.open(player)
                         1
-                    }
-                    .then(
-                        Commands.literal("create")
-                            .requires { it.sender.hasPermission("${instance.javaClass.simpleName}.command.kingdom.admin".lowercase()) }
-                            .then(
-                                Commands.argument("owner", ArgumentTypes.player())
+                    }.then(
+                        Commands
+                            .literal("create")
+                            .requires {
+                                it.sender.hasPermission(
+                                    "${instance.javaClass.simpleName}.command.kingdom.admin".lowercase(),
+                                )
+                            }.then(
+                                Commands
+                                    .argument("owner", ArgumentTypes.player())
                                     .executes { ctx ->
                                         val resolver =
                                             ctx.getArgument("owner", PlayerSelectorArgumentResolver::class.java)
@@ -56,10 +63,11 @@ internal object KingdomMechanic : MechanicInterface {
                                             )
                                             return@executes 0
                                         }
-                                        val kingdomData = KingdomData(
-                                            name = player.displayName().append(Utils.MM.deserialize("'s Kingdom")),
-                                            owner = player.uniqueId,
-                                        )
+                                        val kingdomData =
+                                            KingdomData(
+                                                name = player.displayName().append(Utils.MM.deserialize("'s Kingdom")),
+                                                owner = player.uniqueId,
+                                            )
                                         KingdomData.saveKingdom(kingdomData)
                                         ctx.source.sender.sendActionBar(
                                             Utils.MM.deserialize("<green>Kingdom created for ${player.name}."),
@@ -67,20 +75,24 @@ internal object KingdomMechanic : MechanicInterface {
                                         1
                                     },
                             ),
-                    )
-                    .then(
-                        Commands.literal("delete")
-                            .requires { it.sender.hasPermission("${instance.javaClass.simpleName}.command.kingdom.admin".lowercase()) }
-                            .then(
-                                Commands.argument("owner", StringArgumentType.string())
+                    ).then(
+                        Commands
+                            .literal("delete")
+                            .requires {
+                                it.sender.hasPermission(
+                                    "${instance.javaClass.simpleName}.command.kingdom.admin".lowercase(),
+                                )
+                            }.then(
+                                Commands
+                                    .argument("owner", StringArgumentType.string())
                                     .suggests { ctx, builder ->
-                                        KingdomData.getKingdoms()
+                                        KingdomData
+                                            .getKingdoms()
                                             .map { it.owner.toString() }
                                             .filter { it.startsWith(builder.remaining, ignoreCase = true) }
                                             .forEach { builder.suggest(it) }
                                         builder.buildFuture()
-                                    }
-                                    .executes { ctx ->
+                                    }.executes { ctx ->
                                         val input = ctx.getArgument("owner", String::class.java)
                                         val owner = runCatching { UUID.fromString(input) }.getOrNull()
                                         if (owner == null) {
@@ -102,11 +114,14 @@ internal object KingdomMechanic : MechanicInterface {
                                         1
                                     },
                             ),
-                    )
-                    .then(
-                        Commands.literal("invite")
-                            .requires { it.sender.hasPermission("${instance.javaClass.simpleName}.command.kingdom".lowercase()) }
-                            .executes { ctx ->
+                    ).then(
+                        Commands
+                            .literal("invite")
+                            .requires {
+                                it.sender.hasPermission(
+                                    "${instance.javaClass.simpleName}.command.kingdom".lowercase(),
+                                )
+                            }.executes { ctx ->
                                 val player = ctx.source.sender as? Player
                                 if (player == null) {
                                     ctx.source.sender.sendActionBar(

@@ -67,7 +67,10 @@ internal object MemberGui {
      * @param player The player viewing the GUI.
      * @param kingdom The kingdom to list members for.
      */
-    fun open(player: Player, kingdom: KingdomData) {
+    fun open(
+        player: Player,
+        kingdom: KingdomData,
+    ) {
         buildWindow(player, kingdom).open()
     }
 
@@ -126,57 +129,70 @@ internal object MemberGui {
      * @param kingdom The kingdom to list members for.
      * @param viewer The player viewing the GUI.
      */
-    private fun buildMemberItems(kingdom: KingdomData, viewer: Player): List<Item> {
+    private fun buildMemberItems(
+        kingdom: KingdomData,
+        viewer: Player,
+    ): List<Item> {
         val ownerUuid = kingdom.owner
         val ownerName = instance.server.getOfflinePlayer(ownerUuid).name ?: ownerUuid.toString().substring(0, 8)
-        val ownerStack = playerHead(
-            instance.server.getOfflinePlayer(ownerUuid).playerProfile,
-            ownerName,
-            listOf(OWNER_LORE)
-        )
+        val ownerStack =
+            playerHead(
+                instance.server.getOfflinePlayer(ownerUuid).playerProfile,
+                ownerName,
+                listOf(OWNER_LORE),
+            )
         val isOwner = viewer.uniqueId == ownerUuid
-        val memberItems = kingdom.members
-            .sortedBy { instance.server.getOfflinePlayer(it).name ?: "" }
-            .map { memberUuid ->
-                val memberName =
-                    instance.server.getOfflinePlayer(memberUuid).name ?: memberUuid.toString().substring(0, 8)
-                val stack = playerHead(
-                    instance.server.getOfflinePlayer(memberUuid).playerProfile,
-                    memberName,
-                    if (isOwner) listOf(CALL_HINT, KICK_HINT) else null,
-                )
-                if (isOwner) {
-                    item {
-                        itemProvider by provider { ItemBuilder(stack) }
-                        onClick {
-                            val kingdomName = MM.serialize(kingdom.name)
-                            if (clickType == ClickType.RIGHT) {
-                                KingdomData.kickMember(kingdom.owner, memberUuid)
-                                instance.server.broadcast(
-                                    MM.deserialize("<firewatch>[$kingdomName]</gradient> <red>$memberName has been kicked.")
-                                )
-                                this@MemberGui.open(viewer, kingdom)
-                            } else if (clickType == ClickType.LEFT) {
-                                val target = instance.server.getPlayer(memberUuid)
-                                if (target != null) {
-                                    target.showTitle(
-                                        Title.title(
-                                            kingdom.name,
-                                            MM.deserialize("<firewatch>The King has called upon you")
-                                                .decoration(TextDecoration.ITALIC, false),
+        val memberItems =
+            kingdom
+                .members
+                .sortedBy { instance.server.getOfflinePlayer(it).name ?: "" }
+                .map { memberUuid ->
+                    val memberName =
+                        instance.server.getOfflinePlayer(memberUuid).name ?: memberUuid.toString().substring(0, 8)
+                    val stack =
+                        playerHead(
+                            instance.server.getOfflinePlayer(memberUuid).playerProfile,
+                            memberName,
+                            if (isOwner) listOf(CALL_HINT, KICK_HINT) else null,
+                        )
+                    if (isOwner) {
+                        item {
+                            itemProvider by provider { ItemBuilder(stack) }
+                            onClick {
+                                val kingdomName = MM.serialize(kingdom.name)
+                                if (clickType == ClickType.RIGHT) {
+                                    KingdomData.kickMember(kingdom.owner, memberUuid)
+                                    instance.server.broadcast(
+                                        MM.deserialize(
+                                            "<firewatch>[$kingdomName]</gradient> <red>$memberName has been kicked.",
                                         ),
                                     )
-                                    instance.server.broadcast(
-                                        MM.deserialize("<firewatch>[$kingdomName]</gradient> <green>$memberName has been notified.")
-                                    )
+                                    this@MemberGui.open(viewer, kingdom)
+                                } else if (clickType == ClickType.LEFT) {
+                                    val target = instance.server.getPlayer(memberUuid)
+                                    if (target != null) {
+                                        target.showTitle(
+                                            Title.title(
+                                                kingdom.name,
+                                                MM
+                                                    .deserialize("<firewatch>The King has called upon you")
+                                                    .decoration(TextDecoration.ITALIC, false),
+                                            ),
+                                        )
+                                        instance.server.broadcast(
+                                            MM.deserialize(
+                                                "<firewatch>[$kingdomName]</gradient> " +
+                                                    "<green>$memberName has been notified.",
+                                            ),
+                                        )
+                                    }
                                 }
                             }
                         }
+                    } else {
+                        Item.simple(stack)
                     }
-                } else {
-                    Item.simple(stack)
                 }
-            }
         return listOf(Item.simple(ownerStack)) + memberItems
     }
 
@@ -186,9 +202,13 @@ internal object MemberGui {
      * @param kingdom The kingdom to list NPCs for.
      * @param viewer The player viewing the GUI.
      */
-    private fun buildNpcItems(kingdom: KingdomData, viewer: Player): List<Item> {
+    private fun buildNpcItems(
+        kingdom: KingdomData,
+        viewer: Player,
+    ): List<Item> {
         val isOwner = viewer.uniqueId == kingdom.owner
-        return kingdom.npcs
+        return kingdom
+            .npcs
             .filter { it != kingdom.owner }
             .sortedBy { instance.server.getOfflinePlayer(it).name ?: "" }
             .map { npcUuid ->
@@ -201,7 +221,13 @@ internal object MemberGui {
                             if (clickType == ClickType.RIGHT) {
                                 KingdomData.kickNpc(kingdom.owner, npcUuid)
                                 instance.server.broadcast(
-                                    MM.deserialize("<firewatch>[${MM.serialize(kingdom.name)}]</gradient> <red>$name has been kicked.")
+                                    MM.deserialize(
+                                        "<firewatch>[${
+                                            MM.serialize(
+                                                kingdom.name,
+                                            )
+                                        }]</gradient> <red>$name has been kicked.",
+                                    ),
                                 )
                                 this@MemberGui.open(viewer, kingdom)
                             }
@@ -220,13 +246,16 @@ internal object MemberGui {
      * @param lore optional list of MiniMessage lore lines to display under the name.
      * @return the configured ItemStack.
      */
-    private fun npcHead(name: String, lore: List<String>?): ItemStack =
+    private fun npcHead(
+        name: String,
+        lore: List<String>?,
+    ): ItemStack =
         ItemStack.of(Material.VILLAGER_SPAWN_EGG).apply {
             setData(DataComponentTypes.CUSTOM_NAME, MM.deserialize("<reset>$name"))
             if (lore != null) {
                 setData(
                     DataComponentTypes.LORE,
-                    ItemLore.lore(lore.map { MM.deserialize(it).decoration(TextDecoration.ITALIC, false) })
+                    ItemLore.lore(lore.map { MM.deserialize(it).decoration(TextDecoration.ITALIC, false) }),
                 )
             }
         }
@@ -250,7 +279,7 @@ internal object MemberGui {
             if (lore != null) {
                 setData(
                     DataComponentTypes.LORE,
-                    ItemLore.lore(lore.map { MM.deserialize(it).decoration(TextDecoration.ITALIC, false) })
+                    ItemLore.lore(lore.map { MM.deserialize(it).decoration(TextDecoration.ITALIC, false) }),
                 )
             }
         }
