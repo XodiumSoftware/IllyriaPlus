@@ -90,7 +90,8 @@ internal data class FabricRecipeSyncPayload(
     companion object {
         /** Stream codec for encoding/decoding FabricRecipeSyncPayload instances */
         val CODEC: StreamCodec<RegistryFriendlyByteBuf, FabricRecipeSyncPayload> =
-            Entry.CODEC
+            Entry
+                .CODEC
                 .apply(ByteBufCodecs.list())
                 .map(
                     { FabricRecipeSyncPayload(it) },

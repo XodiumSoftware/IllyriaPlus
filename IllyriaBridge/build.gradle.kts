@@ -6,8 +6,8 @@ plugins {
     kotlin("jvm") version "2.4.20"
 
     id("com.gradleup.shadow") version "9.6.1"
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.21"
-    id("xyz.jpenilla.run-paper") version "3.1.0"
+    id("io.papermc.paperweight.userdev")
+    id("xyz.jpenilla.run-paper")
     id("xyz.jpenilla.resource-factory-paper-convention") version "1.3.1"
     id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
 }
