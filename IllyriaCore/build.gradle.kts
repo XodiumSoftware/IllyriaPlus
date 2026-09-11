@@ -67,7 +67,7 @@ ktlint {
 tasks {
     shadowJar {
         dependsOn(processResources)
-        archiveBaseName.set("IllyriaPlus")
+        archiveBaseName.set("IllyriaCore")
         archiveClassifier.set("")
         relocate("com.github.retrooper", "${project.group}.libs.packetevents")
         relocate("io.github.retrooper", "${project.group}.libs.packetevents")
