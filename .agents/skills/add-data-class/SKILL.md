@@ -33,8 +33,7 @@ Use this skill when the user needs a new structured data type shared across the 
 
 ## Documentation
 
-1. Add the new data class to the Data Classes section of `ARCHITECTURE.md`.
-2. If it is used across multiple mechanics, mention which ones.
+If the data class is used across multiple mechanics, note them in its KDoc.
 ## Template
 
 ```kotlin

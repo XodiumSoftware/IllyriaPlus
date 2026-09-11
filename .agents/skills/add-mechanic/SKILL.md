@@ -34,10 +34,7 @@ Use this skill when the user wants to add a new gameplay mechanic to the project
 
 ## Documentation
 
-1. Update `ARCHITECTURE.md`:
-   - Add the mechanic to the correct category list.
-   - Increment the mechanic count if it is being enabled.
-2. Add a concise KDoc comment to the object explaining its purpose.
+Add a concise KDoc comment to the object explaining its purpose.
 ## Template
 
 ```kotlin

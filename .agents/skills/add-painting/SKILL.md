@@ -33,10 +33,7 @@ If the project does not have that plumbing yet, add it:
 
 ## Documentation
 
-1. Update `ARCHITECTURE.md`:
-   - Adjust the painting count if listed.
-   - Ensure the painting section describes the current paintings list structure.
-2. No per-painting KDoc is required; the list is self-documenting.
+No per-painting KDoc is required; the list is self-documenting.
 
 ## Template
 

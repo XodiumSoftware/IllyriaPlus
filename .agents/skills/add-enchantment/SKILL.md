@@ -50,11 +50,7 @@ Use this skill when the user wants to add a new enchantment to a Paper-based Min
 
 ## Documentation
 
-1. Update `ARCHITECTURE.md`:
-   - Add the enchantment to the appropriate table.
-   - If it is a utility enchantment, add it to the bootstrap-registered table.
-   - If it is a vanilla override, add it to the event-handlers list.
-2. Add a concise KDoc comment to the object explaining its behavior.
+Add a concise KDoc comment to the object explaining its behavior.
 ## Template
 
 ```kotlin
