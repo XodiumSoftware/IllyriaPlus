@@ -6,6 +6,7 @@ import io.papermc.paper.datacomponent.item.ItemLore
 import io.papermc.paper.datacomponent.item.ResolvableProfile
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.inventory.ItemStack
@@ -32,6 +33,7 @@ internal object MemberGui {
     private const val PLAYERS_TAB = "<green>Players"
     private const val NPCS_TAB = "<aqua>NPCs"
     private const val NO_NPCS_MSG = "<red>There are no NPCs."
+    private const val KICK_HINT = "<gray>Right click to kick"
 
     private val BORDER = Item.simple(ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).hideTooltip(true))
 
@@ -136,13 +138,15 @@ internal object MemberGui {
             ownerName,
             "<gradient:#FFE259:#FFA751>Owner"
         )
+        val isOwner = viewer.uniqueId == ownerUuid
         val memberItems = kingdom.members
             .sortedBy { instance.server.getOfflinePlayer(it).name ?: "" }
             .map { memberUuid ->
                 val memberName =
                     instance.server.getOfflinePlayer(memberUuid).name ?: memberUuid.toString().substring(0, 8)
-                val stack = playerHead(instance.server.getOfflinePlayer(memberUuid).playerProfile, memberName, null)
-                if (viewer.uniqueId == ownerUuid) {
+                val lore = if (isOwner) KICK_HINT else null
+                val stack = playerHead(instance.server.getOfflinePlayer(memberUuid).playerProfile, memberName, lore)
+                if (isOwner) {
                     item {
                         itemProvider by provider { ItemBuilder(stack) }
                         onClick {
@@ -172,6 +176,7 @@ internal object MemberGui {
      * @param viewer The player viewing the GUI.
      */
 <<<<<<< HEAD
+<<<<<<< HEAD
     private fun buildNpcItems(kingdom: KingdomData): List<Item> =
         kingdom.npcs
             .filter { it != kingdom.owner }
@@ -184,13 +189,17 @@ internal object MemberGui {
 =======
     private fun buildNpcItems(kingdom: KingdomData, viewer: Player): List<Item> =
         kingdom.npcs
+=======
+    private fun buildNpcItems(kingdom: KingdomData, viewer: Player): List<Item> {
+        val isOwner = viewer.uniqueId == kingdom.owner
+        return kingdom.npcs
+>>>>>>> 976988f3 (feat(kingdoms): add invite flow with timed right-click, and kickNpc support)
             .filter { it != kingdom.owner }
             .sortedBy { instance.server.getOfflinePlayer(it).name ?: "" }
             .map { npcUuid ->
-                val name = instance.server.getOfflinePlayer(npcUuid).name ?: npcUuid.toString().substring(0, 8)
-                val stack =
-                    playerHead(instance.server.getOfflinePlayer(npcUuid).playerProfile, name, "<gray>NPC")
-                if (viewer.uniqueId == kingdom.owner) {
+                val name = instance.server.getEntity(npcUuid)?.name ?: npcUuid.toString().substring(0, 8)
+                val stack = npcHead(name, if (isOwner) KICK_HINT else null)
+                if (isOwner) {
                     item {
                         itemProvider by provider { ItemBuilder(stack) }
                         onClick {
@@ -206,10 +215,32 @@ internal object MemberGui {
                     Item.simple(stack)
                 }
             }
+<<<<<<< HEAD
 >>>>>>> eb5f20ac (Populate NPC tab in member GUI and rename Members tab to Players)
+=======
+    }
+>>>>>>> 976988f3 (feat(kingdoms): add invite flow with timed right-click, and kickNpc support)
 
     /**
-     * Creates a [ItemStack] player head with the given profile, display name, and optional lore.
+     * Creates a villager-themed [ItemStack] for NPCs.
+     *
+     * @param name the display name for the NPC.
+     * @param lore optional MiniMessage lore line to display under the name.
+     * @return the configured ItemStack.
+     */
+    private fun npcHead(name: String, lore: String?): ItemStack =
+        ItemStack.of(Material.VILLAGER_SPAWN_EGG).apply {
+            setData(DataComponentTypes.CUSTOM_NAME, MM.deserialize("<reset>$name"))
+            if (lore != null) {
+                setData(
+                    DataComponentTypes.LORE,
+                    ItemLore.lore(listOf(MM.deserialize(lore).decoration(TextDecoration.ITALIC, false)))
+                )
+            }
+        }
+
+    /**
+     * Creates a player head item stack with the given profile, display name, and optional lore.
      *
      * @param profile the player profile to use for the skin.
      * @param name the display name for the head.
