@@ -80,7 +80,6 @@ jobs:
       name: "${{ github.ref_name }}"
     steps:
       - id: checkout
-        name: Checkout
         uses: actions/checkout@v7.0.1
 
       - id: setup_java
@@ -103,6 +102,8 @@ jobs:
     needs: [changes]
     if: needs.changes.outputs.core == 'true' || needs.changes.outputs.all == 'true'
     runs-on: ubuntu-latest
+    environment:
+      name: "${{ github.ref_name }}"
     steps:
       - id: checkout
         name: Checkout
@@ -137,6 +138,8 @@ jobs:
     needs: [changes]
     if: needs.changes.outputs.kingdoms == 'true' || needs.changes.outputs.all == 'true'
     runs-on: ubuntu-latest
+    environment:
+      name: "${{ github.ref_name }}"
     steps:
       - id: checkout
         name: Checkout
@@ -171,6 +174,8 @@ jobs:
     needs: [changes]
     if: needs.changes.outputs.bridge == 'true' || needs.changes.outputs.all == 'true'
     runs-on: ubuntu-latest
+    environment:
+      name: "${{ github.ref_name }}"
     steps:
       - id: checkout
         name: Checkout
@@ -205,6 +210,8 @@ jobs:
     needs: [changes]
     if: needs.changes.outputs.resourcepack == 'true' || needs.changes.outputs.all == 'true'
     runs-on: ubuntu-latest
+    environment:
+      name: "${{ github.ref_name }}"
     steps:
       - id: checkout
         name: Checkout
