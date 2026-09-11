@@ -31,8 +31,7 @@ Use this skill when the user wants to add a new custom recipe to the project.
 
 ## Documentation
 
-1. Update `ARCHITECTURE.md` recipe list.
-2. Add a concise KDoc comment to the object describing what it adds.
+Add a concise KDoc comment to the object describing what it adds.
 ## Template
 
 ```kotlin

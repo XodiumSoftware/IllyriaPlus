@@ -36,10 +36,7 @@ Use this skill when the user wants to add a new reusable item builder to the pro
 
 ## Documentation
 
-1. Add a concise KDoc comment to the object describing the item.
-2. Update `ARCHITECTURE.md`:
-   - Add the item to the relevant group list under the Items section.
-   - If a new group folder is created, mention it in the project structure and items sections.
+Add a concise KDoc comment to the object describing the item.
 ## Template
 
 ```kotlin

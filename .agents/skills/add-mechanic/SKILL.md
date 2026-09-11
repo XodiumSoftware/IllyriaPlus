@@ -23,8 +23,9 @@ Use this skill when the user wants to add a new gameplay mechanic to the project
 2. The object must be `internal object <Name>Mechanic : MechanicInterface` (or `MonsterInterface` for monster-specific mechanics).
 3. Hardcode all settings as `private const val` / `private val` properties directly in the object. Do **not** create a nested `Config` object.
 4. Add `@EventHandler fun on(event: <EventType>)` methods named `on(event: ...)` per project convention.
-5. If commands are needed, override `val cmds: Collection<CommandData>` and `val perms: List<Permission>`.
-6. Keep `internal` visibility for all helper functions.
+5. **Extract event bodies into private handler functions** — the `on(event)` function should be a thin delegate: `fun on(event: X) = handler(event)`. The private handler carries the full implementation and a KDoc explaining the behavior.
+6. If commands are needed, override `val cmds: Collection<CommandData>` and `val perms: List<Permission>`.
+7. Keep `internal` visibility for all helper functions.
 
 ## Wiring
 
@@ -34,10 +35,8 @@ Use this skill when the user wants to add a new gameplay mechanic to the project
 
 ## Documentation
 
-1. Update `ARCHITECTURE.md`:
-   - Add the mechanic to the correct category list.
-   - Increment the mechanic count if it is being enabled.
-2. Add a concise KDoc comment to the object explaining its purpose.
+Add a concise KDoc comment to the object explaining its purpose.
+
 ## Template
 
 ```kotlin
@@ -51,8 +50,15 @@ import <project.package>.mechanics.MechanicInterface
 internal object <Name>Mechanic : MechanicInterface {
     // private const val / private val settings here
 
-    @EventHandler
-    fun on(event: <EventType>) {
+    @EventHandler(ignoreCancelled = true)
+    fun on(event: <EventType>) = handleThing(event)
+
+    /**
+     * Handles <description of what the handler does>.
+     *
+     * @param event The [<EventType>] triggered when <when>.
+     */
+    private fun handleThing(event: <EventType>) {
         // implementation
     }
 }

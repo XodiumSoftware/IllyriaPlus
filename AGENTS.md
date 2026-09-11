@@ -142,6 +142,7 @@ Within each group:
 - **`@EventHandler`** functions go above regular `public` functions
 - **`@EventHandler`** functions should always be named `on(event: <EventType>)` — Kotlin allows multiple `@EventHandler fun on(...)` as long as parameter types differ
 - **`@EventHandler`** functions should not have KDoc comments (the event type is self-documenting)
+- **`@EventHandler` bodies should be thin delegates** — extract the implementation into a `private fun handlerName(event: <EventType>)` and write `fun on(event: <EventType>) = handlerName(event)`. The private handler carries the KDoc explaining the behavior.
 - **`public`** members go above **`private`** members
 
 ## Testing

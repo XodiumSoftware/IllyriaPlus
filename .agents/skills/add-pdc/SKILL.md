@@ -25,8 +25,7 @@ Use this skill when the user wants to store new per-player persistent data in a 
 
 ## Documentation
 
-1. Add KDoc to the new property explaining its purpose and default behavior.
-2. If the field is used by multiple mechanics or commands, document it in `ARCHITECTURE.md` under the PDC section.
+Add KDoc to the new property explaining its purpose and default behavior.
 
 ## Example
 
