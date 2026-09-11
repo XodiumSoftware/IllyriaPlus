@@ -1,4 +1,4 @@
-name: Xodium CI/CD - Release Plugin
+name: Xodium CI/CD
 
 on:
   push:
@@ -7,9 +7,10 @@ on:
       - "IllyriaCore/**"
       - "IllyriaKingdoms/**"
       - "IllyriaBridge/**"
+      - "IllyriaResourcePack/**"
       - "settings.gradle.kts"
       - "gradle.properties"
-      - ".github/workflows/ci_plugin.yml"
+      - ".github/workflows/ci.yml"
       - "!IllyriaCore/src/**"
   pull_request:
     branches: [main, dev]
@@ -17,9 +18,10 @@ on:
       - "IllyriaCore/**"
       - "IllyriaKingdoms/**"
       - "IllyriaBridge/**"
+      - "IllyriaResourcePack/**"
       - "settings.gradle.kts"
       - "gradle.properties"
-      - ".github/workflows/ci_plugin.yml"
+      - ".github/workflows/ci.yml"
       - "!IllyriaCore/src/**"
   workflow_dispatch:
 
@@ -39,6 +41,7 @@ jobs:
       core: ${{ steps.filter.outputs.core }}
       kingdoms: ${{ steps.filter.outputs.kingdoms }}
       bridge: ${{ steps.filter.outputs.bridge }}
+      resourcepack: ${{ steps.filter.outputs.resourcepack }}
       all: ${{ steps.filter.outputs.all }}
     steps:
       - id: checkout
@@ -57,10 +60,12 @@ jobs:
               - "IllyriaKingdoms/**"
             bridge:
               - "IllyriaBridge/**"
+            resourcepack:
+              - "IllyriaResourcePack/**"
             all:
               - "settings.gradle.kts"
               - "gradle.properties"
-              - ".github/workflows/ci_plugin.yml"
+              - ".github/workflows/ci.yml"
 
   lint:
     name: Lint
@@ -195,14 +200,43 @@ jobs:
           name: IllyriaBridge
           path: IllyriaBridge/build/libs/*.jar
 
+  build_resourcepack:
+    name: Build IllyriaResourcePack
+    needs: [changes]
+    if: needs.changes.outputs.resourcepack == 'true' || needs.changes.outputs.all == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+
+      - id: packsquash
+        name: Create Zip & Optimize with Packsquash
+        uses: ComunidadAylas/PackSquash-action@c5784c113a6548a7a74c26e8a1c5c76fe4bca3fa
+        with:
+          packsquash_version: latest-unstable
+          options: |
+            pack_directory = 'IllyriaResourcePack'
+            output_file_path = 'irp.zip'
+
+      - id: upload_artifact
+        name: Upload Artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: IllyriaResourcePack
+          path: irp.zip
+
   pr_comment:
     name: PR Comment
-    needs: [changes, build_core, build_kingdoms, build_bridge]
+    needs: [changes, build_core, build_kingdoms, build_bridge, build_resourcepack]
     if: |
       always() && github.event_name == 'pull_request' &&
       (needs.build_core.result == 'success' ||
        needs.build_kingdoms.result == 'success' ||
-       needs.build_bridge.result == 'success')
+       needs.build_bridge.result == 'success' ||
+       needs.build_resourcepack.result == 'success')
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -244,8 +278,8 @@ jobs:
               });
             }
 
-  nightly_release:
-    name: Nightly Release
+  nightly_plugin_release:
+    name: Nightly Plugin Release
     needs: [changes, lint, build_core, build_kingdoms, build_bridge]
     runs-on: ubuntu-latest
     environment:
@@ -323,3 +357,69 @@ jobs:
           file_glob: true
           tag: nightly_plugin
           overwrite: true
+
+  nightly_resourcepack_release:
+    name: Nightly Resourcepack Release
+    needs: [changes, build_resourcepack]
+    runs-on: ubuntu-latest
+    environment:
+      name: "${{ github.ref_name }}"
+      url: "${{ steps.create_release.outputs.url }}"
+    if: |
+      always() && github.ref == 'refs/heads/main' &&
+      needs.build_resourcepack.result == 'success'
+    permissions:
+      contents: write
+    steps:
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+
+      - id: download_resourcepack
+        name: Download IllyriaResourcePack Artifact
+        if: needs.build_resourcepack.result == 'success'
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: IllyriaResourcePack
+          path: dist/
+
+      - id: update_nightly_tag
+        name: Update Nightly Tag
+        run: |
+          gh api repos/${{ github.repository }}/git/refs/tags/nightly_resourcepack \
+            --method PATCH \
+            --field sha=${{ github.sha }} \
+            --field force=true 2>/dev/null || \
+          gh api repos/${{ github.repository }}/git/refs \
+            --method POST \
+            --field ref=refs/tags/nightly_resourcepack \
+            --field sha=${{ github.sha }}
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - id: delete_old_release_assets
+        name: Delete Old Release Assets
+        run: |
+          release_id=$(gh api repos/${{ github.repository }}/releases/tags/nightly_resourcepack --jq '.id' 2>/dev/null || echo "")
+          if [ -n "$release_id" ]; then
+            asset_ids=$(gh api repos/${{ github.repository }}/releases/$release_id/assets --jq '.[].id' 2>/dev/null || echo "")
+            for asset_id in $asset_ids; do
+              echo "Deleting asset $asset_id"
+              gh api repos/${{ github.repository }}/releases/assets/$asset_id --method DELETE
+            done
+          fi
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - id: create_release
+        name: Create Nightly Release
+        uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          prerelease: true
+          files: dist/irp.zip
+          tag_name: nightly_resourcepack
+          name: Nightly Build Resourcepack
