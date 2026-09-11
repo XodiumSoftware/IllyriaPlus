@@ -302,6 +302,16 @@ jobs:
         env:
           GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
+      - id: remove_old_assets
+        name: Remove Old Assets
+        run: |
+          RELEASE_ID=$(gh release view nightly_plugin --json id -q ".id")
+          gh api "repos/${{ github.repository }}/releases/$RELEASE_ID/assets" \
+            -q ".[] | select(.name | endswith(\".jar\")) | .id" \
+            | xargs -r -I {} gh api "repos/${{ github.repository }}/releases/assets/{}" --method DELETE
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
       - id: amend_nightly_release
         name: Amend Nightly Release
         uses: svenstaro/upload-release-action@master
