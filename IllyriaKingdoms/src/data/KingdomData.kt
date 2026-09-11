@@ -83,6 +83,38 @@ internal data class KingdomData(
         }
 
         /**
+         * Adds a member to a kingdom owned by the given owner.
+         *
+         * @param owner the UUID of the kingdom owner.
+         * @param member the UUID of the member to add.
+         */
+        fun addMember(owner: UUID, member: UUID) {
+            val kingdom = getKingdom(owner) ?: return
+            val updated = kingdom.members + member
+            DatabaseManager.execute(
+                "UPDATE kingdoms SET members = ? WHERE owner = ?",
+                formatUuidSet(updated),
+                owner.toString(),
+            )
+        }
+
+        /**
+         * Adds an NPC to a kingdom owned by the given owner.
+         *
+         * @param owner the UUID of the kingdom owner.
+         * @param npc the UUID of the NPC to add.
+         */
+        fun addNpc(owner: UUID, npc: UUID) {
+            val kingdom = getKingdom(owner) ?: return
+            val updated = kingdom.npcs + npc
+            DatabaseManager.execute(
+                "UPDATE kingdoms SET npcs = ? WHERE owner = ?",
+                formatUuidSet(updated),
+                owner.toString(),
+            )
+        }
+
+        /**
          * Removes a member from a kingdom.
          *
          * @param owner the UUID of the kingdom owner.
@@ -93,6 +125,22 @@ internal data class KingdomData(
             val updated = kingdom.members - member
             DatabaseManager.execute(
                 "UPDATE kingdoms SET members = ? WHERE owner = ?",
+                formatUuidSet(updated),
+                owner.toString(),
+            )
+        }
+
+        /**
+         * Removes an NPC from a kingdom.
+         *
+         * @param owner the UUID of the kingdom owner.
+         * @param npc the UUID of the NPC to remove.
+         */
+        fun kickNpc(owner: UUID, npc: UUID) {
+            val kingdom = getKingdom(owner) ?: return
+            val updated = kingdom.npcs - npc
+            DatabaseManager.execute(
+                "UPDATE kingdoms SET npcs = ? WHERE owner = ?",
                 formatUuidSet(updated),
                 owner.toString(),
             )

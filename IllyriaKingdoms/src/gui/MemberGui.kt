@@ -72,15 +72,19 @@ internal object MemberGui {
         kingdom: KingdomData,
     ): Window {
         val memberItems = buildMemberItems(kingdom, player)
-        val npcItems = buildNpcItems(kingdom)
+        val npcItems = buildNpcItems(kingdom, player)
         val contentProvider = mutableProvider(memberItems)
 
         val playersTab =
             item {
                 itemProvider by provider { ItemBuilder(Material.PLAYER_HEAD).setName(MM.deserialize(PLAYERS_TAB)) }
+<<<<<<< HEAD
                 onClick {
                     contentProvider.set(memberItems)
                 }
+=======
+                onClick { contentProvider.set(memberItems) }
+>>>>>>> eb5f20ac (Populate NPC tab in member GUI and rename Members tab to Players)
             }
 
         val npcsTab =
@@ -119,7 +123,7 @@ internal object MemberGui {
 
     /**
      * Builds member head items with the owner first and the rest sorted alphabetically.
-     * Owner is shown with mango gradient lore. Owner-viewing players get clickable heads to kick members.
+     * Owner is permanently shown with mango gradient lore. Owner-viewing players get right-click kick on members.
      *
      * @param kingdom The kingdom to list members for.
      * @param viewer The player viewing the GUI.
@@ -158,10 +162,16 @@ internal object MemberGui {
     }
 
     /**
+<<<<<<< HEAD
      * Builds NPC head items. Shows players from npcs set (excluding the owner).
+=======
+     * Builds NPC head items. Owner is excluded from the NPC list. Owner-viewing players can right-click to kick NPCs.
+>>>>>>> eb5f20ac (Populate NPC tab in member GUI and rename Members tab to Players)
      *
      * @param kingdom The kingdom to list NPCs for.
+     * @param viewer The player viewing the GUI.
      */
+<<<<<<< HEAD
     private fun buildNpcItems(kingdom: KingdomData): List<Item> =
         kingdom.npcs
             .filter { it != kingdom.owner }
@@ -171,6 +181,32 @@ internal object MemberGui {
                 playerHead(instance.server.getOfflinePlayer(it).playerProfile, name, "<gradient:#FFE259:#FFA751>NPC")
             }
             .map { Item.simple(it) }
+=======
+    private fun buildNpcItems(kingdom: KingdomData, viewer: Player): List<Item> =
+        kingdom.npcs
+            .filter { it != kingdom.owner }
+            .sortedBy { instance.server.getOfflinePlayer(it).name ?: "" }
+            .map { npcUuid ->
+                val name = instance.server.getOfflinePlayer(npcUuid).name ?: npcUuid.toString().substring(0, 8)
+                val stack =
+                    playerHead(instance.server.getOfflinePlayer(npcUuid).playerProfile, name, "<gray>NPC")
+                if (viewer.uniqueId == kingdom.owner) {
+                    item {
+                        itemProvider by provider { ItemBuilder(stack) }
+                        onClick {
+                            if (clickType == ClickType.RIGHT) {
+                                KingdomData.kickNpc(kingdom.owner, npcUuid)
+                                viewer.sendActionBar(MM.deserialize("<red>$name has been kicked."))
+                                viewer.closeInventory()
+                                this@MemberGui.open(viewer, kingdom)
+                            }
+                        }
+                    }
+                } else {
+                    Item.simple(stack)
+                }
+            }
+>>>>>>> eb5f20ac (Populate NPC tab in member GUI and rename Members tab to Players)
 
     /**
      * Creates a [ItemStack] player head with the given profile, display name, and optional lore.

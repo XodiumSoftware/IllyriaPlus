@@ -4,9 +4,14 @@ import com.mojang.brigadier.arguments.StringArgumentType
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver
+import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.entity.Player
+import org.bukkit.entity.Villager
+import org.bukkit.event.EventHandler
+import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
+import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriakingdoms.IllyriaKingdoms.Companion.instance
 import org.xodium.illyriakingdoms.Utils
 import org.xodium.illyriakingdoms.data.CommandData
@@ -17,6 +22,9 @@ import java.util.UUID
 
 /** Represents a mechanic handling kingdom management within the system. */
 internal object KingdomMechanic : MechanicInterface {
+    /** Maps player UUID to their invite-mode task; non-null means the player is in invite mode. */
+    private val inviteMode = mutableMapOf<UUID, BukkitTask>()
+
     override val cmds: Collection<CommandData> =
         listOf(
             CommandData(
@@ -94,6 +102,27 @@ internal object KingdomMechanic : MechanicInterface {
                                         1
                                     },
                             ),
+                    )
+                    .then(
+                        Commands.literal("invite")
+                            .requires { it.sender.hasPermission("${instance.javaClass.simpleName}.command.kingdom".lowercase()) }
+                            .executes { ctx ->
+                                val player = ctx.source.sender as? Player
+                                if (player == null) {
+                                    ctx.source.sender.sendActionBar(
+                                        Utils.MM.deserialize("<red>This command can only be used by players."),
+                                    )
+                                    return@executes 0
+                                }
+                                if (KingdomData.getKingdom(player.uniqueId) == null) {
+                                    ctx.source.sender.sendActionBar(
+                                        Utils.MM.deserialize("<red>You are not in a kingdom."),
+                                    )
+                                    return@executes 0
+                                }
+                                startInviteMode(player)
+                                1
+                            },
                     ),
                 "Kingdom management command.",
                 listOf("k"),
@@ -113,4 +142,76 @@ internal object KingdomMechanic : MechanicInterface {
                 PermissionDefault.OP,
             ),
         )
+
+    @EventHandler(ignoreCancelled = true)
+    fun on(event: PlayerInteractEntityEvent) {
+        val player = event.player
+        if (player.uniqueId !in inviteMode) return
+
+        inviteModeRemove(player.uniqueId)
+
+        val uuid = event.rightClicked.uniqueId
+        val owner = player.uniqueId
+
+        when (val target = event.rightClicked) {
+            is Player -> {
+                KingdomData.addMember(owner, uuid)
+                player.sendActionBar(
+                    Utils.MM.deserialize("<green>${target.displayName()} joined your kingdom."),
+                )
+            }
+
+            is Villager -> {
+                KingdomData.addNpc(owner, uuid)
+                player.sendActionBar(
+                    Utils.MM.deserialize("<green>${target.name} joined your kingdom."),
+                )
+            }
+
+            else -> return
+        }
+        event.isCancelled = true
+    }
+
+    /**
+     * Starts invite mode for a player — for a limited time, right-clicking a player or villager adds them to the player's kingdom.
+     *
+     * @param player The player to start invite mode for.
+     */
+    private fun startInviteMode(player: Player) {
+        inviteModeCancel(player.uniqueId)
+        player.sendActionBar(
+            Utils.MM.deserialize("<yellow>Invite mode active. Right-click a player or villager to invite them."),
+        )
+        inviteMode[player.uniqueId] =
+            instance.server.scheduler.runTaskLater(
+                instance,
+                Runnable {
+                    inviteModeRemove(player.uniqueId)
+                    player.sendActionBar(
+                        Utils.MM.deserialize("<red>Invite mode expired."),
+                    )
+                },
+                200L,
+            )
+    }
+
+    /**
+     * Removes a player from invite mode and cancels their task.
+     */
+    private fun inviteModeRemove(uuid: UUID) {
+        inviteMode.remove(uuid)?.cancel()
+    }
+
+    /**
+     * Cancels an existing invite-mode task if one is running.
+     */
+    private fun inviteModeCancel(uuid: UUID) {
+        inviteMode[uuid]?.cancel()
+    }
+
+    override fun onDisable() {
+        inviteMode.values.forEach { it.cancel() }
+        inviteMode.clear()
+    }
 }
