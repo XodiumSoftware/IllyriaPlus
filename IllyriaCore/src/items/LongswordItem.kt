@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.items
+package org.xodium.illyriacore.items
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemAttributeModifiers
@@ -9,8 +9,8 @@ import org.bukkit.attribute.AttributeModifier
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils
+import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.xodium.illyriacore.Utils
 
 /** Represents a Longsword. */
 internal object LongswordItem : ItemInterface {

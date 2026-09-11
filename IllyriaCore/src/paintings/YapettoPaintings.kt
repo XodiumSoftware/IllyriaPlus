@@ -1,6 +1,6 @@
-package org.xodium.illyriaplus.paintings
+package org.xodium.illyriacore.paintings
 
-import org.xodium.illyriaplus.data.PaintingData
+import org.xodium.illyriacore.data.PaintingData
 
 /** Aggregates all Yapetto painting variants into a single collection. */
 internal object YapettoPaintings : PaintingInterface {

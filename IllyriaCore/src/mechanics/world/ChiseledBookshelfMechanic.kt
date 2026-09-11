@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.mechanics.world
+package org.xodium.illyriacore.mechanics.world
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemEnchantments
@@ -15,8 +15,8 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.util.Vector
-import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriacore.Utils.MM
+import org.xodium.illyriacore.mechanics.MechanicInterface
 import org.bukkit.block.data.type.ChiseledBookshelf as ChiseledBookshelfData
 
 /** Represents a mechanic handling chiseled bookshelf interactions within the system. */

@@ -1,10 +1,10 @@
-package org.xodium.illyriaplus.mechanics.player
+package org.xodium.illyriacore.mechanics.player
 
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriacore.mechanics.MechanicInterface
 
 /** Represents a mechanic handling XP conversion within the system. */
 internal object XpMechanic : MechanicInterface {

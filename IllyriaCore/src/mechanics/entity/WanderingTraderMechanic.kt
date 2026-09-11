@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.mechanics.entity
+package org.xodium.illyriacore.mechanics.entity
 
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
@@ -11,11 +11,11 @@ import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitTask
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.WanderingTraderItemData
-import org.xodium.illyriaplus.gui.WanderingTraderGui
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.xodium.illyriacore.Utils.MM
+import org.xodium.illyriacore.data.WanderingTraderItemData
+import org.xodium.illyriacore.gui.WanderingTraderGui
+import org.xodium.illyriacore.mechanics.MechanicInterface
 import java.io.File
 import java.nio.file.AtomicMoveNotSupportedException
 import java.nio.file.Files

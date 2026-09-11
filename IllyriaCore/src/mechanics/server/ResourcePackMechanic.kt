@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.mechanics.server
+package org.xodium.illyriacore.mechanics.server
 
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.event.connection.configuration.AsyncPlayerConnectionConfigureEvent
@@ -9,17 +9,17 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils.Command.playerExecuted
-import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.CommandData
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.xodium.illyriacore.Utils.Command.playerExecuted
+import org.xodium.illyriacore.Utils.MM
+import org.xodium.illyriacore.data.CommandData
+import org.xodium.illyriacore.mechanics.MechanicInterface
 import java.net.URI
 
-/** Represents a mechanic that sends the IllyriaPlus resource pack to joining players. */
+/** Represents a mechanic that sends the IllyriaCore resource pack to joining players. */
 internal object ResourcePackMechanic : MechanicInterface {
     private const val PACK_URL =
-        "https://github.com/XodiumSoftware/IllyriaPlus/releases/download/nightly_resourcepack/irp.zip"
+        "https://github.com/XodiumSoftware/IllyriaCore/releases/download/nightly_resourcepack/irp.zip"
 
     private val request: ResourcePackRequest by lazy {
         ResourcePackRequest
@@ -42,14 +42,14 @@ internal object ResourcePackMechanic : MechanicInterface {
                     .requires { it.sender.hasPermission(perms[0]) }
                     .playerExecuted { player, _ ->
                         player.sendActionBar(
-                            MM.deserialize("<green>Reloading IllyriaPlus resource pack for all online players..."),
+                            MM.deserialize("<green>Reloading IllyriaCore resource pack for all online players..."),
                         )
                         instance.server.onlinePlayers.forEach {
                             it.clearResourcePacks()
                             it.sendResourcePacks(request)
                         }
                     },
-                "Reloads the IllyriaPlus resource pack for all online players",
+                "Reloads the IllyriaCore resource pack for all online players",
                 listOf("rrp"),
             ),
         )
@@ -58,7 +58,7 @@ internal object ResourcePackMechanic : MechanicInterface {
         listOf(
             Permission(
                 "${instance.javaClass.simpleName}.reloadresourcepack".lowercase(),
-                "Allows reloading the IllyriaPlus resource pack",
+                "Allows reloading the IllyriaCore resource pack",
                 PermissionDefault.OP,
             ),
         )

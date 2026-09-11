@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus
+package org.xodium.illyriacore
 
 import io.papermc.paper.plugin.bootstrap.BootstrapContext
 import io.papermc.paper.plugin.bootstrap.PluginBootstrap
@@ -13,21 +13,21 @@ import io.papermc.paper.registry.keys.tags.PaintingVariantTagKeys
 import io.papermc.paper.registry.tag.TagKey
 import io.papermc.paper.tag.TagEntry
 import net.kyori.adventure.key.Key
-import org.xodium.illyriaplus.banners.MoxvallixBanners
-import org.xodium.illyriaplus.enchantments.utility.EmbertreadEnchantment
-import org.xodium.illyriaplus.enchantments.utility.NimbusEnchantment
-import org.xodium.illyriaplus.enchantments.utility.TetherEnchantment
-import org.xodium.illyriaplus.enchantments.utility.VinemineEnchantment
-import org.xodium.illyriaplus.paintings.OrthoPaintings
-import org.xodium.illyriaplus.paintings.YapettoPaintings
+import org.xodium.illyriacore.banners.MoxvallixBanners
+import org.xodium.illyriacore.enchantments.utility.EmbertreadEnchantment
+import org.xodium.illyriacore.enchantments.utility.NimbusEnchantment
+import org.xodium.illyriacore.enchantments.utility.TetherEnchantment
+import org.xodium.illyriacore.enchantments.utility.VinemineEnchantment
+import org.xodium.illyriacore.paintings.OrthoPaintings
+import org.xodium.illyriacore.paintings.YapettoPaintings
 
 /** Main bootstrap class of the plugin. */
 @Suppress("UnstableApiUsage", "Unused")
-internal class IllyriaPlusBootstrap : PluginBootstrap {
+internal class IllyriaCoreBootstrap : PluginBootstrap {
     companion object {
-        val TOOLS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaPlus.ID, "tools"))
-        val WEAPONS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaPlus.ID, "weapons"))
-        val TETHER_ITEMS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaPlus.ID, "tether_items"))
+        val TOOLS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaCore.ID, "tools"))
+        val WEAPONS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaCore.ID, "weapons"))
+        val TETHER_ITEMS = TagKey.create(RegistryKey.ITEM, Key.key(IllyriaCore.ID, "tether_items"))
 
         private val BANNERS = MoxvallixBanners.banners
         private val ENCHANTMENTS =

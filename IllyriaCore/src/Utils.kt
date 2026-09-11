@@ -1,6 +1,6 @@
 @file:Suppress("Unused")
 
-package org.xodium.illyriaplus
+package org.xodium.illyriacore
 
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
@@ -23,7 +23,7 @@ import org.bukkit.entity.EntityType
 import org.bukkit.entity.Tameable
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitTask
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
+import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import kotlin.time.Duration
 
 /** General utilities. */

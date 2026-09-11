@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.enchantments.utility
+package org.xodium.illyriacore.enchantments.utility
 
 import io.papermc.paper.event.entity.EntityEquipmentChangedEvent
 import io.papermc.paper.registry.data.EnchantmentRegistryEntry
@@ -7,8 +7,8 @@ import org.bukkit.entity.HappyGhast
 import org.bukkit.event.EventHandler
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.EquipmentSlotGroup
-import org.xodium.illyriaplus.Utils.Enchantment.displayName
-import org.xodium.illyriaplus.enchantments.EnchantmentInterface
+import org.xodium.illyriacore.Utils.Enchantment.displayName
+import org.xodium.illyriacore.enchantments.EnchantmentInterface
 
 /** Represents an object handling nimbus enchantment implementation within the system. */
 internal object NimbusEnchantment : EnchantmentInterface {

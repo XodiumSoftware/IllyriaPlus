@@ -1,11 +1,11 @@
-package org.xodium.illyriaplus.recipes.vanilla
+package org.xodium.illyriacore.recipes.vanilla
 
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.ShapelessRecipe
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.recipes.RecipeInterface
+import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.xodium.illyriacore.recipes.RecipeInterface
 
 /** Represents an object handling wood-log recipe implementation within the system. */
 internal object WoodLogRecipe : RecipeInterface {

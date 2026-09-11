@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.gui
+package org.xodium.illyriacore.gui
 
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
@@ -6,9 +6,9 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.WanderingTraderItemData
+import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.xodium.illyriacore.Utils.MM
+import org.xodium.illyriacore.data.WanderingTraderItemData
 import xyz.xenondevs.commons.provider.mutableProvider
 import xyz.xenondevs.commons.provider.provider
 import xyz.xenondevs.invui.dsl.ExperimentalDslApi

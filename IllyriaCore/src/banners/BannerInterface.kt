@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.banners
+package org.xodium.illyriacore.banners
 
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
@@ -6,8 +6,8 @@ import io.papermc.paper.registry.TypedKey
 import io.papermc.paper.registry.data.BannerPatternRegistryEntry
 import net.kyori.adventure.key.Key
 import org.bukkit.block.banner.PatternType
-import org.xodium.illyriaplus.IllyriaPlus
-import org.xodium.illyriaplus.data.BannerData
+import org.xodium.illyriacore.IllyriaCore
+import org.xodium.illyriacore.data.BannerData
 
 /** Represents a collection of registerable banner patterns within the system. */
 internal interface BannerInterface {
@@ -22,7 +22,7 @@ internal interface BannerInterface {
      * @see io.papermc.paper.registry.RegistryKey.BANNER_PATTERN
      */
     fun key(name: String): TypedKey<PatternType> =
-        TypedKey.create(RegistryKey.BANNER_PATTERN, Key.key(IllyriaPlus.ID, name))
+        TypedKey.create(RegistryKey.BANNER_PATTERN, Key.key(IllyriaCore.ID, name))
 
     /**
      * Configures the properties of a named banner pattern using the provided builder.
@@ -37,7 +37,7 @@ internal interface BannerInterface {
     ): BannerPatternRegistryEntry.Builder =
         banners.first { it.name == name }.let { banner ->
             builder.apply {
-                assetId(Key.key(IllyriaPlus.ID, banner.name))
+                assetId(Key.key(IllyriaCore.ID, banner.name))
                 translationKey(banner.translationKey)
             }
         }

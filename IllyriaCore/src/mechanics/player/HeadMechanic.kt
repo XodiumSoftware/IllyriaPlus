@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.mechanics.player
+package org.xodium.illyriacore.mechanics.player
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ResolvableProfile
@@ -8,7 +8,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.inventory.ItemStack
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriacore.mechanics.MechanicInterface
 import kotlin.random.Random
 
 /** Represents a mechanic handling player head drops within the system. */

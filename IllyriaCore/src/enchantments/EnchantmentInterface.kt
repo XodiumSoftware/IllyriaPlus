@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.enchantments
+package org.xodium.illyriacore.enchantments
 
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
@@ -7,9 +7,9 @@ import io.papermc.paper.registry.data.EnchantmentRegistryEntry
 import net.kyori.adventure.key.Key
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.Listener
-import org.xodium.illyriaplus.IllyriaPlus
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils.toRegistryKeyFragment
+import org.xodium.illyriacore.IllyriaCore
+import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.xodium.illyriacore.Utils.toRegistryKeyFragment
 import kotlin.time.measureTime
 
 /** Represents a contract for enchantments within the system. */
@@ -24,7 +24,7 @@ internal interface EnchantmentInterface : Listener {
         get() =
             TypedKey.create(
                 RegistryKey.ENCHANTMENT,
-                Key.key(IllyriaPlus.ID, javaClass.toRegistryKeyFragment<Enchantment>()),
+                Key.key(IllyriaCore.ID, javaClass.toRegistryKeyFragment<Enchantment>()),
             )
 
     /**

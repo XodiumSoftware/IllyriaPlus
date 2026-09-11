@@ -1,12 +1,12 @@
-package org.xodium.illyriaplus.mechanics.server
+package org.xodium.illyriacore.mechanics.server
 
 import io.papermc.paper.event.player.PlayerClientLoadedWorldEvent
 import net.kyori.adventure.audience.Audience
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.PlayerJoinEvent
-import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriacore.Utils.MM
+import org.xodium.illyriacore.mechanics.MechanicInterface
 
 /** Represents a mechanic handling tab list updates within the system. */
 internal object TabListMechanic : MechanicInterface {

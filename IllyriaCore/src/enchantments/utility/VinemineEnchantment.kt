@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.enchantments.utility
+package org.xodium.illyriacore.enchantments.utility
 
 import com.destroystokyo.paper.MaterialTags
 import io.papermc.paper.datacomponent.DataComponentTypes
@@ -10,8 +10,8 @@ import org.bukkit.block.BlockFace
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.inventory.EquipmentSlotGroup
-import org.xodium.illyriaplus.Utils.Enchantment.displayName
-import org.xodium.illyriaplus.enchantments.EnchantmentInterface
+import org.xodium.illyriacore.Utils.Enchantment.displayName
+import org.xodium.illyriacore.enchantments.EnchantmentInterface
 
 /** Represents an object handling vinemine enchantment implementation within the system. */
 internal object VinemineEnchantment : EnchantmentInterface {

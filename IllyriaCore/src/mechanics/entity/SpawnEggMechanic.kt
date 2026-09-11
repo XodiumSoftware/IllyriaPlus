@@ -1,9 +1,9 @@
-package org.xodium.illyriaplus.mechanics.entity
+package org.xodium.illyriacore.mechanics.entity
 
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
-import org.xodium.illyriaplus.Utils.Item.spawnEgg
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriacore.Utils.Item.spawnEgg
+import org.xodium.illyriacore.mechanics.MechanicInterface
 import kotlin.random.Random
 
 /** Represents a mechanic handling spawn egg drops within the system. */

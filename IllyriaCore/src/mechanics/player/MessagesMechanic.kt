@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.mechanics.player
+package org.xodium.illyriacore.mechanics.player
 
 import com.destroystokyo.paper.event.player.PlayerSetSpawnEvent
 import io.papermc.paper.advancement.AdvancementDisplay
@@ -14,8 +14,8 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.command.UnknownCommandEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.*
-import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriacore.Utils.MM
+import org.xodium.illyriacore.mechanics.MechanicInterface
 
 /** Represents a mechanic handling player messages within the system. */
 internal object MessagesMechanic : MechanicInterface {

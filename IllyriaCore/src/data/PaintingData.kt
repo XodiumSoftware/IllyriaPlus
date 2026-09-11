@@ -1,6 +1,6 @@
-package org.xodium.illyriaplus.data
+package org.xodium.illyriacore.data
 
-import org.xodium.illyriaplus.Utils.snakeToProperCase
+import org.xodium.illyriacore.Utils.snakeToProperCase
 
 /**
  * Holds the metadata for a single painting variant.

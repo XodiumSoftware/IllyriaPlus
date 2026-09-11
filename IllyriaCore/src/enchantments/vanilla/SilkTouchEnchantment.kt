@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.enchantments.vanilla
+package org.xodium.illyriacore.enchantments.vanilla
 
 import org.bukkit.Material
 import org.bukkit.Tag
@@ -7,8 +7,8 @@ import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.inventory.ItemStack
-import org.xodium.illyriaplus.Utils.Item.spawnEgg
-import org.xodium.illyriaplus.enchantments.EnchantmentInterface
+import org.xodium.illyriacore.Utils.Item.spawnEgg
+import org.xodium.illyriacore.enchantments.EnchantmentInterface
 
 /** Represents an object handling silk touch enchantment implementation within the system. */
 internal object SilkTouchEnchantment : EnchantmentInterface {

@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.mechanics.player
+package org.xodium.illyriacore.mechanics.player
 
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.dialog.Dialog
@@ -15,13 +15,13 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils.Command.playerExecuted
-import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.CommandData
-import org.xodium.illyriaplus.mechanics.MechanicInterface
-import org.xodium.illyriaplus.mechanics.server.TabListMechanic.tablist
-import org.xodium.illyriaplus.pdcs.PlayerPDC.nickname
+import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.xodium.illyriacore.Utils.Command.playerExecuted
+import org.xodium.illyriacore.Utils.MM
+import org.xodium.illyriacore.data.CommandData
+import org.xodium.illyriacore.mechanics.MechanicInterface
+import org.xodium.illyriacore.mechanics.server.TabListMechanic.tablist
+import org.xodium.illyriacore.pdcs.PlayerPDC.nickname
 
 /** Represents a mechanic handling player nicknames within the system. */
 internal object NicknameMechanic : MechanicInterface {

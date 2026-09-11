@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.data
+package org.xodium.illyriacore.data
 
 import org.bukkit.inventory.ItemStack
 

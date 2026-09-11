@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.mechanics.entity
+package org.xodium.illyriacore.mechanics.entity
 
 import org.bukkit.Color
 import org.bukkit.GameMode
@@ -9,7 +9,7 @@ import org.bukkit.entity.Monster
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerInteractEntityEvent
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriacore.mechanics.MechanicInterface
 
 /** Represents a mechanic that allows silencing mobs using an amethyst shard. */
 internal object SilenceMechanic : MechanicInterface {

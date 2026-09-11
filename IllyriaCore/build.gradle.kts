@@ -19,7 +19,7 @@ val buildNumber =
         .asText
         .map { it.trim() }
 
-group = "org.xodium.illyriaplus"
+group = "org.xodium.illyriacore"
 version = "$mcVersion+build.${buildNumber.get()}"
 description = "Minecraft plugin that enhances the base gameplay"
 
@@ -82,10 +82,10 @@ tasks {
 }
 
 paperPluginYaml {
-    main.set("org.xodium.illyriaplus.IllyriaPlus")
-    name.set("IllyriaPlus")
+    main.set("org.xodium.illyriacore.IllyriaCore")
+    name.set("IllyriaCore")
     website.set("https://github.com/XodiumSoftware/IllyriaPlus")
     authors.add("Xodium")
     apiVersion.set(mcVersion)
-    bootstrapper.set("org.xodium.illyriaplus.IllyriaPlusBootstrap")
+    bootstrapper.set("org.xodium.illyriacore.IllyriaCoreBootstrap")
 }

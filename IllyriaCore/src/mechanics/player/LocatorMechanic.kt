@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.mechanics.player
+package org.xodium.illyriacore.mechanics.player
 
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes
@@ -9,11 +9,11 @@ import org.bukkit.Color
 import org.bukkit.entity.Player
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils.Command.playerExecuted
-import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.CommandData
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.xodium.illyriacore.Utils.Command.playerExecuted
+import org.xodium.illyriacore.Utils.MM
+import org.xodium.illyriacore.data.CommandData
+import org.xodium.illyriacore.mechanics.MechanicInterface
 
 /** Represents a mechanic handling locator functionality within the system. */
 internal object LocatorMechanic : MechanicInterface {

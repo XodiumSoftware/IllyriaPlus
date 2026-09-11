@@ -1,12 +1,12 @@
-package org.xodium.illyriaplus.mechanics.world
+package org.xodium.illyriacore.mechanics.world
 
 import org.bukkit.Material
 import org.bukkit.Tag
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockCanBuildEvent
-import org.xodium.illyriaplus.data.BuildSetupData
-import org.xodium.illyriaplus.data.BuildSetupData.Companion.toMaterialMap
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriacore.data.BuildSetupData
+import org.xodium.illyriacore.data.BuildSetupData.Companion.toMaterialMap
+import org.xodium.illyriacore.mechanics.MechanicInterface
 
 /** Represents a mechanic handling custom block placement rules within the system. */
 internal object BlockPlacementMechanic : MechanicInterface {

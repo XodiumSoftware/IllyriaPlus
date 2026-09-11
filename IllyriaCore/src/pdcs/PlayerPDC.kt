@@ -1,9 +1,9 @@
-package org.xodium.illyriaplus.pdcs
+package org.xodium.illyriacore.pdcs
 
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
 import org.bukkit.persistence.PersistentDataType
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
+import org.xodium.illyriacore.IllyriaCore.Companion.instance
 
 /** Provides access to [Player]-specific persistent data including nicknames and scoreboard preferences. */
 @Suppress("Unused")

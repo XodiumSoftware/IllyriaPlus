@@ -1,35 +1,35 @@
-package org.xodium.illyriaplus
+package org.xodium.illyriacore
 
 import com.github.retrooper.packetevents.PacketEvents
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
 import org.bukkit.plugin.java.JavaPlugin
-import org.xodium.illyriaplus.enchantments.EnchantmentInterface
-import org.xodium.illyriaplus.enchantments.utility.EmbertreadEnchantment
-import org.xodium.illyriaplus.enchantments.utility.NimbusEnchantment
-import org.xodium.illyriaplus.enchantments.utility.TetherEnchantment
-import org.xodium.illyriaplus.enchantments.utility.VinemineEnchantment
-import org.xodium.illyriaplus.enchantments.vanilla.FeatherFallingEnchantment
-import org.xodium.illyriaplus.enchantments.vanilla.FortuneEnchantment
-import org.xodium.illyriaplus.enchantments.vanilla.SilkTouchEnchantment
-import org.xodium.illyriaplus.mechanics.MechanicInterface
-import org.xodium.illyriaplus.mechanics.entity.*
-import org.xodium.illyriaplus.mechanics.player.*
-import org.xodium.illyriaplus.mechanics.server.*
-import org.xodium.illyriaplus.mechanics.world.*
-import org.xodium.illyriaplus.recipes.RecipeInterface
-import org.xodium.illyriaplus.recipes.custom.GreatswordRecipe
-import org.xodium.illyriaplus.recipes.custom.HalberdRecipe
-import org.xodium.illyriaplus.recipes.custom.LongswordRecipe
-import org.xodium.illyriaplus.recipes.vanilla.*
+import org.xodium.illyriacore.enchantments.EnchantmentInterface
+import org.xodium.illyriacore.enchantments.utility.EmbertreadEnchantment
+import org.xodium.illyriacore.enchantments.utility.NimbusEnchantment
+import org.xodium.illyriacore.enchantments.utility.TetherEnchantment
+import org.xodium.illyriacore.enchantments.utility.VinemineEnchantment
+import org.xodium.illyriacore.enchantments.vanilla.FeatherFallingEnchantment
+import org.xodium.illyriacore.enchantments.vanilla.FortuneEnchantment
+import org.xodium.illyriacore.enchantments.vanilla.SilkTouchEnchantment
+import org.xodium.illyriacore.mechanics.MechanicInterface
+import org.xodium.illyriacore.mechanics.entity.*
+import org.xodium.illyriacore.mechanics.player.*
+import org.xodium.illyriacore.mechanics.server.*
+import org.xodium.illyriacore.mechanics.world.*
+import org.xodium.illyriacore.recipes.RecipeInterface
+import org.xodium.illyriacore.recipes.custom.GreatswordRecipe
+import org.xodium.illyriacore.recipes.custom.HalberdRecipe
+import org.xodium.illyriacore.recipes.custom.LongswordRecipe
+import org.xodium.illyriacore.recipes.vanilla.*
 
 /** Main class of the plugin. */
-internal class IllyriaPlus : JavaPlugin() {
+internal class IllyriaCore : JavaPlugin() {
     companion object {
-        lateinit var instance: IllyriaPlus
+        lateinit var instance: IllyriaCore
             private set
 
         /** The ID of the main class */
-        val ID = IllyriaPlus::class.java.simpleName.lowercase()
+        val ID = IllyriaCore::class.java.simpleName.lowercase()
     }
 
     lateinit var recipes: List<RecipeInterface>

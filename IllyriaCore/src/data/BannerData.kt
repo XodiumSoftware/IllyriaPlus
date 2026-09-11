@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.data
+package org.xodium.illyriacore.data
 
 /**
  * Holds the metadata for a single custom banner pattern.
@@ -8,5 +8,5 @@ package org.xodium.illyriaplus.data
  */
 internal data class BannerData(
     val name: String,
-    val translationKey: String = "block.minecraft.banner.illyriaplus.$name",
+    val translationKey: String = "block.minecraft.banner.illyriacore.$name",
 )

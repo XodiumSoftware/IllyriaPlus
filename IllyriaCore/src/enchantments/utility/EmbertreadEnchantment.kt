@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.enchantments.utility
+package org.xodium.illyriacore.enchantments.utility
 
 import io.papermc.paper.registry.data.EnchantmentRegistryEntry
 import org.bukkit.Tag
@@ -7,8 +7,8 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
-import org.xodium.illyriaplus.Utils.Enchantment.displayName
-import org.xodium.illyriaplus.enchantments.EnchantmentInterface
+import org.xodium.illyriacore.Utils.Enchantment.displayName
+import org.xodium.illyriacore.enchantments.EnchantmentInterface
 
 /** Represents an object handling embertread enchantment implementation within the system. */
 internal object EmbertreadEnchantment : EnchantmentInterface {

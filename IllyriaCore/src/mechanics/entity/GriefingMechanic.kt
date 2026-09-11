@@ -1,10 +1,10 @@
-package org.xodium.illyriaplus.mechanics.entity
+package org.xodium.illyriacore.mechanics.entity
 
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityChangeBlockEvent
 import org.bukkit.event.entity.EntityExplodeEvent
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriacore.mechanics.MechanicInterface
 
 /** Represents a mechanic handling mob griefing prevention within the system. */
 internal object GriefingMechanic : MechanicInterface {

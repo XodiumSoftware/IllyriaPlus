@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.mechanics.player
+package org.xodium.illyriacore.mechanics.player
 
 import com.github.retrooper.packetevents.PacketEvents
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerAbilities
@@ -15,9 +15,9 @@ import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.view.AnvilView
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.xodium.illyriacore.Utils
+import org.xodium.illyriacore.mechanics.MechanicInterface
 
 /** Represents a mechanic handling custom anvil operations, including disenchantment and cost-limit bypass. */
 internal object AnvilMechanic : MechanicInterface {

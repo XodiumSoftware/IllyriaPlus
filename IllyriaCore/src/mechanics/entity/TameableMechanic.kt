@@ -1,11 +1,11 @@
-package org.xodium.illyriaplus.mechanics.entity
+package org.xodium.illyriacore.mechanics.entity
 
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerInteractEntityEvent
-import org.xodium.illyriaplus.Utils.Player.getLeashedEntity
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriacore.Utils.Player.getLeashedEntity
+import org.xodium.illyriacore.mechanics.MechanicInterface
 
 /** Represents a mechanic handling tameable entities within the system. */
 internal object TameableMechanic : MechanicInterface {

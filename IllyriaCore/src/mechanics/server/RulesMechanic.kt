@@ -1,14 +1,14 @@
-package org.xodium.illyriaplus.mechanics.server
+package org.xodium.illyriacore.mechanics.server
 
 import io.papermc.paper.command.brigadier.Commands
 import net.kyori.adventure.inventory.Book
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils.Command.playerExecuted
-import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.CommandData
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.xodium.illyriacore.Utils.Command.playerExecuted
+import org.xodium.illyriacore.Utils.MM
+import org.xodium.illyriacore.data.CommandData
+import org.xodium.illyriacore.mechanics.MechanicInterface
 
 /** Represents a mechanic handling rules functionality within the system. */
 internal object RulesMechanic : MechanicInterface {

@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.mechanics.server
+package org.xodium.illyriacore.mechanics.server
 
 import com.mojang.brigadier.arguments.StringArgumentType
 import io.papermc.paper.chat.ChatRenderer
@@ -23,11 +23,11 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils.Command.playerExecuted
-import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.CommandData
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.xodium.illyriacore.Utils.Command.playerExecuted
+import org.xodium.illyriacore.Utils.MM
+import org.xodium.illyriacore.data.CommandData
+import org.xodium.illyriacore.mechanics.MechanicInterface
 
 /** Represents a mechanic handling chat formatting within the system. */
 internal object ChatMechanic : MechanicInterface {

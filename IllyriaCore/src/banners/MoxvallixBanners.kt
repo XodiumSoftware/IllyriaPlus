@@ -1,13 +1,13 @@
-package org.xodium.illyriaplus.banners
+package org.xodium.illyriacore.banners
 
-import org.xodium.illyriaplus.data.BannerData
+import org.xodium.illyriacore.data.BannerData
 
 /**
  * Aggregates all banner patterns from Moxvallix's "Many More Banners" pack
- * into a single IllyriaPlus collection.
+ * into a single IllyriaCore collection.
  *
- * The asset paths and translation keys use the `illyriaplus` namespace so that
- * the bundled resource pack under `IllyriaResourcePack/assets/illyriaplus` is loaded
+ * The asset paths and translation keys use the `illyriacore` namespace so that
+ * the bundled resource pack under `IllyriaResourcePack/assets/illyriacore` is loaded
  * automatically.
  */
 internal object MoxvallixBanners : BannerInterface {

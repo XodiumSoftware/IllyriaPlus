@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.mechanics.entity
+package org.xodium.illyriacore.mechanics.entity
 
 import org.bukkit.GameRules
 import org.bukkit.Material
@@ -7,7 +7,7 @@ import org.bukkit.entity.Bat
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriacore.mechanics.MechanicInterface
 import kotlin.random.Random
 
 /** Represents a mechanic handling bat drops within the system. */

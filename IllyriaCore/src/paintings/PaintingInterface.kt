@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.paintings
+package org.xodium.illyriacore.paintings
 
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
@@ -6,9 +6,9 @@ import io.papermc.paper.registry.TypedKey
 import io.papermc.paper.registry.data.PaintingVariantRegistryEntry
 import net.kyori.adventure.key.Key
 import org.bukkit.Art
-import org.xodium.illyriaplus.IllyriaPlus
-import org.xodium.illyriaplus.Utils.MM
-import org.xodium.illyriaplus.data.PaintingData
+import org.xodium.illyriacore.IllyriaCore
+import org.xodium.illyriacore.Utils.MM
+import org.xodium.illyriacore.data.PaintingData
 
 /** Represents a collection of registerable painting variants within the system. */
 internal interface PaintingInterface {
@@ -22,7 +22,7 @@ internal interface PaintingInterface {
      * @see io.papermc.paper.registry.TypedKey
      * @see io.papermc.paper.registry.RegistryKey.PAINTING_VARIANT
      */
-    fun key(name: String): TypedKey<Art> = TypedKey.create(RegistryKey.PAINTING_VARIANT, Key.key(IllyriaPlus.ID, name))
+    fun key(name: String): TypedKey<Art> = TypedKey.create(RegistryKey.PAINTING_VARIANT, Key.key(IllyriaCore.ID, name))
 
     /**
      * Configures the properties of a named painting variant using the provided builder.
@@ -37,7 +37,7 @@ internal interface PaintingInterface {
     ): PaintingVariantRegistryEntry.Builder =
         paintings.first { it.name == name }.let { (name, size, author, title) ->
             builder.apply {
-                assetId(Key.key(IllyriaPlus.ID, name))
+                assetId(Key.key(IllyriaCore.ID, name))
                 width(size.first)
                 height(size.second)
                 title(MM.deserialize("<yellow>$title"))

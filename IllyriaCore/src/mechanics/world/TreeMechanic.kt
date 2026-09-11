@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.mechanics.world
+package org.xodium.illyriacore.mechanics.world
 
 import org.bukkit.Material
 import org.bukkit.TreeType
@@ -11,10 +11,10 @@ import org.bukkit.generator.LimitedRegion
 import org.bukkit.structure.Structure
 import org.bukkit.util.BlockTransformer
 import org.bukkit.util.Vector
-import org.xodium.illyriaplus.IllyriaPlus
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.data.TreeStructureData
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriacore.IllyriaCore
+import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.xodium.illyriacore.data.TreeStructureData
+import org.xodium.illyriacore.mechanics.MechanicInterface
 import java.io.ByteArrayInputStream
 import java.net.URI
 import java.nio.file.FileSystem
@@ -177,7 +177,7 @@ internal object TreeMechanic : MechanicInterface {
     private fun loadAllStructures(): Map<TreeType, List<TreeStructureData>> =
         runCatching {
             val jarFileUri =
-                IllyriaPlus::class.java
+                IllyriaCore::class.java
                     .protectionDomain
                     .codeSource
                     .location

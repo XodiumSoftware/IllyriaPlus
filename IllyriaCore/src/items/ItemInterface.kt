@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.items
+package org.xodium.illyriacore.items
 
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack

@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.mechanics.server
+package org.xodium.illyriacore.mechanics.server
 
 import io.papermc.paper.command.brigadier.Commands
 import org.bukkit.entity.Player
@@ -6,11 +6,11 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.Utils.Command.playerExecuted
-import org.xodium.illyriaplus.data.CommandData
-import org.xodium.illyriaplus.mechanics.MechanicInterface
-import org.xodium.illyriaplus.pdcs.PlayerPDC.scoreboardVisibility
+import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.xodium.illyriacore.Utils.Command.playerExecuted
+import org.xodium.illyriacore.data.CommandData
+import org.xodium.illyriacore.mechanics.MechanicInterface
+import org.xodium.illyriacore.pdcs.PlayerPDC.scoreboardVisibility
 
 /** Represents a mechanic handling scoreboard display within the system. */
 internal object ScoreBoardMechanic : MechanicInterface {

@@ -1,4 +1,4 @@
-package org.xodium.illyriaplus.mechanics.world
+package org.xodium.illyriacore.mechanics.world
 
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
@@ -17,9 +17,9 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
-import org.xodium.illyriaplus.IllyriaPlus.Companion.instance
-import org.xodium.illyriaplus.data.AdjacentBlockData
-import org.xodium.illyriaplus.mechanics.MechanicInterface
+import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.xodium.illyriacore.data.AdjacentBlockData
+import org.xodium.illyriacore.mechanics.MechanicInterface
 
 /** Represents a mechanic handling openable blocks within the system. */
 internal object OpenableMechanic : MechanicInterface {
