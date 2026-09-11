@@ -26,6 +26,7 @@ description = "Minecraft plugin that adds a kingdom system"
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://repo.xenondevs.xyz/releases")
 }
 
 dependencies {
@@ -33,6 +34,8 @@ dependencies {
 
     implementation(kotlin("stdlib"))
     compileOnly("org.xerial:sqlite-jdbc:3.49.1.0")
+    implementation("xyz.xenondevs.invui:invui:2.3.2")
+    implementation("xyz.xenondevs.invui:invui-kotlin:2.3.2")
 }
 
 java {
@@ -61,6 +64,8 @@ ktlint {
 tasks {
     shadowJar {
         archiveClassifier.set("")
+        relocate("xyz.xenondevs.commons", "${project.group}.libs.commons")
+        relocate("xyz.xenondevs.invui", "${project.group}.libs.invui")
         minimize()
     }
     jar { enabled = false }

@@ -23,6 +23,7 @@ internal object DatabaseManager {
         val databasePath = plugin.dataFolder.toPath().resolve("kingdoms.db").toString()
         connection = DriverManager.getConnection("jdbc:sqlite:$databasePath")
         connection.autoCommit = true
+        execute("CREATE TABLE IF NOT EXISTS kingdoms (id TEXT PRIMARY KEY, name TEXT NOT NULL, owner TEXT NOT NULL)")
     }
 
     /** Closes the database connection if it is open. */
