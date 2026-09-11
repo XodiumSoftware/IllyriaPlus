@@ -50,9 +50,19 @@ internal object KingdomGui {
                 title by kingdom.name
                 upperGui by
                     gui(
-                        "# # # # R",
+                        "# # M # R",
                     ) {
                         '#' by BORDER
+                        'M' by
+                            item {
+                                itemProvider by
+                                    ItemBuilder(Material.PLAYER_HEAD)
+                                        .setName(MM.deserialize("<aqua>Members"))
+                                onClick {
+                                    player.closeInventory(InventoryCloseEvent.Reason.PLUGIN)
+                                    MemberGui.open(player, kingdom)
+                                }
+                            }
                         'R' by
                             item {
                                 itemProvider by

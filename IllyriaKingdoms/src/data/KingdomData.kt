@@ -1,7 +1,7 @@
 package org.xodium.illyriakingdoms.data
 
+import org.xodium.illyriakingdoms.Utils.MM
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
 import java.util.UUID
 
 /**
@@ -19,6 +19,7 @@ internal data class KingdomData(
     val members: Set<UUID> = emptySet(),
 ) {
     companion object {
+
         /**
          * Retrieves a [KingdomData] by its owner from the database.
          *
@@ -32,7 +33,7 @@ internal data class KingdomData(
             ) { rs ->
                 KingdomData(
                     id = UUID.fromString(rs.getString("id")),
-                    name = GsonComponentSerializer.gson().deserialize(rs.getString("name")),
+                    name = MM.deserialize(rs.getString("name")),
                     owner = UUID.fromString(rs.getString("owner")),
                 )
             }.firstOrNull()
@@ -46,7 +47,7 @@ internal data class KingdomData(
             DatabaseManager.query("SELECT * FROM kingdoms") { rs ->
                 KingdomData(
                     id = UUID.fromString(rs.getString("id")),
-                    name = GsonComponentSerializer.gson().deserialize(rs.getString("name")),
+                    name = MM.deserialize(rs.getString("name")),
                     owner = UUID.fromString(rs.getString("owner")),
                 )
             }
@@ -60,7 +61,7 @@ internal data class KingdomData(
             DatabaseManager.execute(
                 "INSERT INTO kingdoms (id, name, owner) VALUES (?, ?, ?)",
                 kingdomData.id.toString(),
-                GsonComponentSerializer.gson().serialize(kingdomData.name),
+                MM.serialize(kingdomData.name),
                 kingdomData.owner.toString(),
             )
         }
@@ -83,7 +84,7 @@ internal data class KingdomData(
         fun renameKingdom(owner: UUID, name: Component) {
             DatabaseManager.execute(
                 "UPDATE kingdoms SET name = ? WHERE owner = ?",
-                GsonComponentSerializer.gson().serialize(name),
+                MM.serialize(name),
                 owner.toString(),
             )
         }
