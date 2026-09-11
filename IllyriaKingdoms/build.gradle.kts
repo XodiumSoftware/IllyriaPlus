@@ -33,7 +33,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:$mcVersion.build.+")
 
     implementation(kotlin("stdlib"))
-    compileOnly("org.xerial:sqlite-jdbc:3.49.1.0")
+    compileOnly("org.xerial:sqlite-jdbc:3.53.4.0")
     implementation("xyz.xenondevs.invui:invui:2.3.2")
     implementation("xyz.xenondevs.invui:invui-kotlin:2.3.2")
 }
