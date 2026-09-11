@@ -19,7 +19,7 @@ import java.net.URI
 /** Represents a mechanic that sends the IllyriaCore resource pack to joining players. */
 internal object ResourcePackMechanic : MechanicInterface {
     private const val PACK_URL =
-        "https://github.com/XodiumSoftware/IllyriaCore/releases/download/nightly_resourcepack/irp.zip"
+        "https://github.com/XodiumSoftware/IllyriaPlus/releases/download/nightly/pack.zip"
 
     private val request: ResourcePackRequest by lazy {
         ResourcePackRequest
