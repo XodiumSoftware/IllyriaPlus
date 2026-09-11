@@ -76,7 +76,7 @@ jobs:
 
       - id: get_version
         name: Get Version
-        run: echo "VERSION=$(./gradlew properties --quiet --console=plain -q version 2>/dev/null | cut -d' ' -f2)" >> $GITHUB_OUTPUT
+        run: echo "VERSION=$(./gradlew :IllyriaCore:properties --quiet --console=plain -q version 2>/dev/null | cut -d' ' -f2 | head -n1)" >> $GITHUB_OUTPUT
         shell: bash
 
       - id: upload_artifact
@@ -85,7 +85,7 @@ jobs:
         uses: actions/upload-artifact@v7.0.1
         with:
           name: IllyriaPlus
-          path: build/libs/*.jar
+          path: IllyriaCore/build/libs/*.jar
 
   pr_comment:
     name: PR Comment

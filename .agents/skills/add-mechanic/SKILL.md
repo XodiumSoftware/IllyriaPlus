@@ -19,7 +19,7 @@ Use this skill when the user wants to add a new gameplay mechanic to the project
 
 ## Creating the Mechanic File
 
-1. Create `src/mechanics/{category}/<Name>Mechanic.kt` using the template below.
+1. Create `IllyriaCore/src/mechanics/{category}/<Name>Mechanic.kt` using the template below.
 2. The object must be `internal object <Name>Mechanic : MechanicInterface` (or `MonsterInterface` for monster-specific mechanics).
 3. Hardcode all settings as `private const val` / `private val` properties directly in the object. Do **not** create a nested `Config` object.
 4. Add `@EventHandler fun on(event: <EventType>)` methods named `on(event: ...)` per project convention.
@@ -28,7 +28,7 @@ Use this skill when the user wants to add a new gameplay mechanic to the project
 
 ## Wiring
 
-1. Open the main plugin class (e.g., `src/Plugin.kt`).
+1. Open the main plugin class (e.g., `IllyriaCore/src/Plugin.kt`).
 2. Import the new mechanic.
 3. Add it alphabetically to the `mechanics` list in `onEnable()`.
 

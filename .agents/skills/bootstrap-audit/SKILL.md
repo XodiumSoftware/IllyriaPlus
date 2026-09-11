@@ -16,21 +16,21 @@ Use this skill when the user wants to verify that the plugin's registration wiri
 
 ## Steps
 
-1. Read the main plugin class (e.g., `src/Plugin.kt`) and extract:
+1. Read the main plugin class (e.g., `IllyriaCore/src/Plugin.kt`) and extract:
    - The `recipes` list
    - The `mechanics` list
    - The `enchantments` (event listeners) list
 
-2. Read the plugin bootstrap class (e.g., `src/PluginBootstrap.kt`) and extract:
+2. Read the plugin bootstrap class (e.g., `IllyriaCore/src/PluginBootstrap.kt`) and extract:
    - The item tags created in `LifecycleEvents.TAGS.preFlatten`
    - The enchantments registered in `RegistryEvents.ENCHANTMENT`
    - The enchantments added to `TRADEABLE`, `NON_TREASURE`, and `IN_ENCHANTING_TABLE` tags in `LifecycleEvents.TAGS.postFlatten`
 
 3. Compare the source directories against the registration lists:
-   - Every file in `src/enchantments/utility/` should be registered in the bootstrap registry AND tagged.
-   - Every file in `src/enchantments/vanilla/` should be in the `enchantments` listener list in `IllyriaPlus.kt` (unless intentionally unused).
-   - Every file in `src/mechanics/` (including subdirectories) should be in the `mechanics` list.
-   - Every file in `src/recipes/vanilla/` should be in the `recipes` list.
+   - Every file in `IllyriaCore/src/enchantments/utility/` should be registered in the bootstrap registry AND tagged.
+   - Every file in `IllyriaCore/src/enchantments/vanilla/` should be in the `enchantments` listener list in `IllyriaPlus.kt` (unless intentionally unused).
+   - Every file in `IllyriaCore/src/mechanics/` (including subdirectories) should be in the `mechanics` list.
+   - Every file in `IllyriaCore/src/recipes/vanilla/` should be in the `recipes` list.
 
 4. Report findings:
    - Missing registrations (file exists but not listed)
