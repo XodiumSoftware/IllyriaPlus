@@ -304,7 +304,7 @@ jobs:
 
       - id: amend_nightly_release
         name: Amend Nightly Release
-        uses: svenstaro/upload-release-action@047ed15b4e710a79e6b672a3befa4c03354b4c1b
+        uses: svenstaro/upload-release-action@master
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
