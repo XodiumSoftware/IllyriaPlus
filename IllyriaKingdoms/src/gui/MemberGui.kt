@@ -7,9 +7,11 @@ import io.papermc.paper.datacomponent.item.ResolvableProfile
 import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.title.Title
 import org.bukkit.Material
+import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.inventory.ItemStack
+import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriakingdoms.IllyriaKingdoms.Companion.instance
 import org.xodium.illyriakingdoms.Utils.MM
 import org.xodium.illyriakingdoms.data.KingdomData
@@ -24,6 +26,7 @@ import xyz.xenondevs.invui.item.BoundItem
 import xyz.xenondevs.invui.item.Item
 import xyz.xenondevs.invui.item.ItemBuilder
 import xyz.xenondevs.invui.window.Window
+import java.util.UUID
 
 /** Builds and opens the kingdom members GUI. */
 @OptIn(ExperimentalDslApi::class)
@@ -36,8 +39,13 @@ internal object MemberGui {
     private const val CALL_HINT = "<gray>Left click to call"
     private const val KICK_HINT = "<gray>Right click to kick"
     private const val OWNER_LORE = "<mango>Owner"
+    private const val CALL_INTERVAL = 20L
+    private const val CALL_MAX_TICKS = 300L
+    private const val CALL_ARRIVE_RANGE = 2.0
 
     private val BORDER = Item.simple(ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).hideTooltip(true))
+
+    private val callTasks = mutableMapOf<UUID, BukkitTask>()
 
     private val back =
         BoundItem
@@ -218,18 +226,10 @@ internal object MemberGui {
                     item {
                         itemProvider by provider { ItemBuilder(stack) }
                         onClick {
-                            if (clickType == ClickType.RIGHT) {
-                                KingdomData.kickNpc(kingdom.owner, npcUuid)
-                                instance.server.broadcast(
-                                    MM.deserialize(
-                                        "<firewatch>[${
-                                            MM.serialize(
-                                                kingdom.name,
-                                            )
-                                        }]</gradient> <red>$name has been kicked.",
-                                    ),
-                                )
-                                this@MemberGui.open(viewer, kingdom)
+                            when (clickType) {
+                                ClickType.LEFT -> callNpc(kingdom, npcUuid, name)
+                                ClickType.RIGHT -> kickNpc(kingdom, npcUuid, name, viewer)
+                                else -> {}
                             }
                         }
                     }
@@ -237,6 +237,88 @@ internal object MemberGui {
                     Item.simple(stack)
                 }
             }
+    }
+
+    /**
+     * Commands a villager NPC to pathfind toward the kingdom owner.
+     * The villager re-pathfinds every [CALL_INTERVAL] ticks to track a moving
+     * player until it arrives within [CALL_ARRIVE_RANGE] blocks or [CALL_MAX_TICKS] expires.
+     *
+     * @param kingdom the kingdom the NPC belongs to.
+     * @param npcUuid the UUID of the NPC villager.
+     * @param name the display name of the NPC.
+     */
+    private fun callNpc(
+        kingdom: KingdomData,
+        npcUuid: UUID,
+        name: String,
+    ) {
+        val kingdomName = MM.serialize(kingdom.name)
+        val owner = instance.server.getPlayer(kingdom.owner)
+        val entity = instance.server.getEntity(npcUuid)
+
+        if (owner == null || !owner.isOnline) return
+
+        val villager = entity as? Mob ?: return
+
+        callTasks.remove(npcUuid)?.cancel()
+
+        villager.pathfinder.moveTo(owner)
+        var ticksRemaining = CALL_MAX_TICKS
+
+        instance.server.broadcast(
+            MM.deserialize("<firewatch>[$kingdomName]</gradient> <green>$name is on its way."),
+        )
+
+        callTasks[npcUuid] =
+            instance.server.scheduler.runTaskTimer(
+                instance,
+                Runnable {
+                    if (!villager.isValid || !owner.isOnline || ticksRemaining <= 0) {
+                        callTasks.remove(npcUuid)?.cancel()
+                        return@Runnable
+                    }
+                    if (villager.location.distanceSquared(owner.location) <= CALL_ARRIVE_RANGE * CALL_ARRIVE_RANGE) {
+                        callTasks.remove(npcUuid)?.cancel()
+                        return@Runnable
+                    }
+                    villager.pathfinder.moveTo(owner)
+                    ticksRemaining -= CALL_INTERVAL
+                },
+                0L,
+                CALL_INTERVAL,
+            )
+    }
+
+    /** Cancels all active call tasks. */
+    fun cancelCallTasks() {
+        callTasks.values.forEach { it.cancel() }
+        callTasks.clear()
+    }
+
+    /**
+     * Kicks an NPC from a kingdom.
+     *
+     * @param kingdom the kingdom to kick the NPC from.
+     * @param npcUuid the UUID of the NPC to kick.
+     * @param name the display name of the NPC.
+     * @param viewer the player viewing the GUI (used to close/reopen).
+     */
+    private fun kickNpc(
+        kingdom: KingdomData,
+        npcUuid: UUID,
+        name: String,
+        viewer: Player,
+    ) {
+        KingdomData.kickNpc(kingdom.owner, npcUuid)
+        instance.server.broadcast(
+            MM.deserialize(
+                "<firewatch>[${
+                    MM.serialize(kingdom.name)
+                }]</gradient> <red>$name has been kicked.",
+            ),
+        )
+        this@MemberGui.open(viewer, kingdom)
     }
 
     /**

@@ -3,6 +3,7 @@ package org.xodium.illyriakingdoms
 import org.bukkit.plugin.java.JavaPlugin
 import org.xodium.illyriakingdoms.data.DatabaseManager
 import org.xodium.illyriakingdoms.gui.KingdomGui
+import org.xodium.illyriakingdoms.gui.MemberGui
 import org.xodium.illyriakingdoms.mechanics.MechanicInterface
 import org.xodium.illyriakingdoms.mechanics.server.KingdomMechanic
 
@@ -52,5 +53,6 @@ internal class IllyriaKingdoms : JavaPlugin() {
         }
         DatabaseManager.close()
         KingdomGui.closeAll()
+        MemberGui.cancelCallTasks()
     }
 }
