@@ -4,9 +4,12 @@ import com.mojang.brigadier.arguments.StringArgumentType
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver
+import org.bukkit.Location
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.entity.Villager
 import org.bukkit.event.EventHandler
+import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
@@ -23,6 +26,9 @@ import java.util.UUID
 internal object KingdomMechanic : MechanicInterface {
     /** Maps player UUID to their invite-mode task; non-null means the player is in invite mode. */
     private val inviteMode = mutableMapOf<UUID, BukkitTask>()
+
+    /** Maps dead NPC UUID to their death location; entry removed on resurrection or kick. */
+    val deadNpcs = mutableMapOf<UUID, Location>()
 
     override val cmds: Collection<CommandData> =
         listOf(
@@ -188,6 +194,15 @@ internal object KingdomMechanic : MechanicInterface {
         event.isCancelled = true
     }
 
+    @EventHandler
+    fun on(event: EntityDeathEvent) {
+        if (event.entityType != EntityType.VILLAGER) return
+        val uuid = event.entity.uniqueId
+        if (KingdomData.getKingdoms().any { it.npcs.contains(uuid) }) {
+            deadNpcs[uuid] = event.entity.location
+        }
+    }
+
     /**
      * Starts invite mode for a player — for a limited time, right-clicking a player or villager adds them to the player's kingdom.
      *
@@ -228,5 +243,6 @@ internal object KingdomMechanic : MechanicInterface {
     override fun onDisable() {
         inviteMode.values.forEach { it.cancel() }
         inviteMode.clear()
+        deadNpcs.clear()
     }
 }

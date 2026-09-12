@@ -7,6 +7,7 @@ import io.papermc.paper.datacomponent.item.ResolvableProfile
 import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.title.Title
 import org.bukkit.Material
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
@@ -15,6 +16,7 @@ import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriakingdoms.IllyriaKingdoms.Companion.instance
 import org.xodium.illyriakingdoms.Utils.MM
 import org.xodium.illyriakingdoms.data.KingdomData
+import org.xodium.illyriakingdoms.mechanics.server.KingdomMechanic
 import xyz.xenondevs.commons.provider.mutableProvider
 import xyz.xenondevs.commons.provider.provider
 import xyz.xenondevs.invui.dsl.ExperimentalDslApi
@@ -38,7 +40,9 @@ internal object MemberGui {
     private const val NO_NPCS_MSG = "<red>There are no NPCs."
     private const val CALL_HINT = "<gray>Left click to call"
     private const val KICK_HINT = "<gray>Right click to kick"
+    private const val RESURRECT_HINT = "<yellow>Left click to resurrect <gray>(32 emeralds)"
     private const val OWNER_LORE = "<mango>Owner"
+    private const val RESURRECT_COST = 32
     private const val CALL_INTERVAL = 20L
     private const val CALL_MAX_TICKS = 300L
     private const val CALL_ARRIVE_RANGE = 2.0
@@ -220,14 +224,27 @@ internal object MemberGui {
             .filter { it != kingdom.owner }
             .sortedBy { instance.server.getOfflinePlayer(it).name ?: "" }
             .map { npcUuid ->
-                val name = instance.server.getEntity(npcUuid)?.name ?: npcUuid.toString().substring(0, 8)
-                val stack = npcHead(name, if (isOwner) listOf(CALL_HINT, KICK_HINT) else null)
+                val isDead = npcUuid in KingdomMechanic.deadNpcs
+                val entity = instance.server.getEntity(npcUuid)
+                val name = entity?.name ?: npcUuid.toString().substring(0, 8)
+                val stack =
+                    if (isDead) {
+                        npcSkull(name, if (isOwner) listOf(RESURRECT_HINT) else null)
+                    } else {
+                        npcHead(name, if (isOwner) listOf(CALL_HINT, KICK_HINT) else null)
+                    }
                 if (isOwner) {
                     item {
                         itemProvider by provider { ItemBuilder(stack) }
                         onClick {
                             when (clickType) {
-                                ClickType.LEFT -> callNpc(kingdom, npcUuid, name)
+                                ClickType.LEFT ->
+                                    if (isDead) {
+                                        resurrectNpc(kingdom, npcUuid, name, viewer)
+                                    } else {
+                                        callNpc(kingdom, npcUuid, name)
+                                    }
+
                                 ClickType.RIGHT -> kickNpc(kingdom, npcUuid, name, viewer)
                                 else -> {}
                             }
@@ -311,6 +328,7 @@ internal object MemberGui {
         viewer: Player,
     ) {
         KingdomData.kickNpc(kingdom.owner, npcUuid)
+        KingdomMechanic.deadNpcs.remove(npcUuid)
         instance.server.broadcast(
             MM.deserialize(
                 "<firewatch>[${
@@ -320,6 +338,68 @@ internal object MemberGui {
         )
         this@MemberGui.open(viewer, kingdom)
     }
+
+    /**
+     * Resurrects a dead villager NPC at its death location, consuming emeralds from the owner's inventory.
+     *
+     * @param kingdom the kingdom the NPC belongs to.
+     * @param npcUuid the UUID of the dead NPC.
+     * @param name the display name of the NPC.
+     * @param viewer the player viewing the GUI (used to consume emeralds and reopen the GUI).
+     */
+    private fun resurrectNpc(
+        kingdom: KingdomData,
+        npcUuid: UUID,
+        name: String,
+        viewer: Player,
+    ) {
+        val deathLoc = KingdomMechanic.deadNpcs[npcUuid]
+        val kingdomName = MM.serialize(kingdom.name)
+        val emerald = ItemStack.of(Material.EMERALD, RESURRECT_COST)
+
+        if (deathLoc == null) return
+        if (!viewer.inventory.containsAtLeast(emerald, RESURRECT_COST)) {
+            viewer.sendActionBar(
+                MM.deserialize("<red>You need $RESURRECT_COST emeralds to resurrect $name."),
+            )
+            return
+        }
+
+        viewer.inventory.removeItem(emerald)
+        KingdomMechanic.deadNpcs.remove(npcUuid)
+
+        deathLoc.world.spawnEntity(deathLoc, EntityType.VILLAGER).let { villager ->
+            villager.customName(MM.deserialize(name))
+            KingdomData.kickNpc(kingdom.owner, npcUuid)
+            KingdomData.addNpc(kingdom.owner, villager.uniqueId)
+        }
+
+        instance.server.broadcast(
+            MM.deserialize("<firewatch>[$kingdomName]</gradient> <green>$name has been resurrected!"),
+        )
+        this@MemberGui.open(viewer, kingdom)
+    }
+
+    /**
+     * Creates a villager-themed [ItemStack] for dead NPCs.
+     *
+     * @param name the display name for the NPC.
+     * @param lore optional list of MiniMessage lore lines to display under the name.
+     * @return the configured ItemStack.
+     */
+    private fun npcSkull(
+        name: String,
+        lore: List<String>?,
+    ): ItemStack =
+        ItemStack.of(Material.SKELETON_SKULL).apply {
+            setData(DataComponentTypes.CUSTOM_NAME, MM.deserialize("<reset><red>$name"))
+            if (lore != null) {
+                setData(
+                    DataComponentTypes.LORE,
+                    ItemLore.lore(lore.map { MM.deserialize(it).decoration(TextDecoration.ITALIC, false) }),
+                )
+            }
+        }
 
     /**
      * Creates a villager-themed [ItemStack] for NPCs.
