@@ -27,8 +27,23 @@ internal object KingdomMechanic : MechanicInterface {
     /** Maps player UUID to their invite-mode task; non-null means the player is in invite mode. */
     private val inviteMode = mutableMapOf<UUID, BukkitTask>()
 
-    /** Maps dead NPC UUID to their death location; entry removed on resurrection or kick. */
-    val deadNpcs = mutableMapOf<UUID, Location>()
+    /** Maps dead NPC UUID to their death data; entry removed on resurrection or kick. */
+    val deadNpcs = mutableMapOf<UUID, DeadNpcData>()
+
+    /**
+     * Data captured from a villager NPC at the moment of death, used to restore it on resurrection.
+     *
+     * @property location the location where the villager died.
+     * @property profession the villager's profession.
+     * @property type the villager's biome type.
+     * @property level the villager's experience level (1–5).
+     */
+    data class DeadNpcData(
+        val location: Location,
+        val profession: Villager.Profession,
+        val type: Villager.Type,
+        val level: Int,
+    )
 
     override val cmds: Collection<CommandData> =
         listOf(
@@ -197,9 +212,16 @@ internal object KingdomMechanic : MechanicInterface {
     @EventHandler
     fun on(event: EntityDeathEvent) {
         if (event.entityType != EntityType.VILLAGER) return
+        val villager = event.entity as Villager
         val uuid = event.entity.uniqueId
         if (KingdomData.getKingdoms().any { it.npcs.contains(uuid) }) {
-            deadNpcs[uuid] = event.entity.location
+            deadNpcs[uuid] =
+                DeadNpcData(
+                    location = event.entity.location,
+                    profession = villager.profession,
+                    type = villager.villagerType,
+                    level = villager.villagerLevel,
+                )
         }
     }
 

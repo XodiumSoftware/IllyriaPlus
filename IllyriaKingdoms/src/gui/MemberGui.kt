@@ -10,6 +10,7 @@ import org.bukkit.Material
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
+import org.bukkit.entity.Villager
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitTask
@@ -353,11 +354,11 @@ internal object MemberGui {
         name: String,
         viewer: Player,
     ) {
-        val deathLoc = KingdomMechanic.deadNpcs[npcUuid]
+        val deadData = KingdomMechanic.deadNpcs[npcUuid]
         val kingdomName = MM.serialize(kingdom.name)
         val emerald = ItemStack.of(Material.EMERALD, RESURRECT_COST)
 
-        if (deathLoc == null) return
+        if (deadData == null) return
         if (!viewer.inventory.containsAtLeast(emerald, RESURRECT_COST)) {
             viewer.sendActionBar(
                 MM.deserialize("<red>You need $RESURRECT_COST emeralds to resurrect $name."),
@@ -368,7 +369,11 @@ internal object MemberGui {
         viewer.inventory.removeItem(emerald)
         KingdomMechanic.deadNpcs.remove(npcUuid)
 
-        deathLoc.world.spawnEntity(deathLoc, EntityType.VILLAGER).let { villager ->
+        deadData.location.world.spawnEntity(deadData.location, EntityType.VILLAGER).let { entity ->
+            val villager = entity as Villager
+            villager.profession = deadData.profession
+            villager.villagerType = deadData.type
+            villager.villagerLevel = deadData.level
             villager.customName(MM.deserialize(name))
             KingdomData.kickNpc(kingdom.owner, npcUuid)
             KingdomData.addNpc(kingdom.owner, villager.uniqueId)
