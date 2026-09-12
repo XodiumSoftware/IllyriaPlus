@@ -4,8 +4,8 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.xodium.illyriakingdoms.data.DatabaseManager
 import org.xodium.illyriakingdoms.gui.KingdomGui
 import org.xodium.illyriakingdoms.gui.MemberGui
+import org.xodium.illyriakingdoms.mechanics.KingdomMechanic
 import org.xodium.illyriakingdoms.mechanics.MechanicInterface
-import org.xodium.illyriakingdoms.mechanics.server.KingdomMechanic
 
 /** Main class of the plugin. */
 internal class IllyriaKingdoms : JavaPlugin() {
@@ -31,6 +31,7 @@ internal class IllyriaKingdoms : JavaPlugin() {
 
         instance = this
         DatabaseManager.init(this)
+        KingdomMechanic.onEnable()
 
         mechanics =
             listOf(

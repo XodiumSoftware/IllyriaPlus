@@ -1,10 +1,9 @@
-package org.xodium.illyriakingdoms.mechanics.server
+package org.xodium.illyriakingdoms.mechanics
 
 import com.mojang.brigadier.arguments.StringArgumentType
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver
-import org.bukkit.Location
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.entity.Villager
@@ -17,33 +16,15 @@ import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriakingdoms.IllyriaKingdoms.Companion.instance
 import org.xodium.illyriakingdoms.Utils
 import org.xodium.illyriakingdoms.data.CommandData
+import org.xodium.illyriakingdoms.data.DeadNpcData
 import org.xodium.illyriakingdoms.data.KingdomData
 import org.xodium.illyriakingdoms.gui.KingdomGui
-import org.xodium.illyriakingdoms.mechanics.MechanicInterface
 import java.util.UUID
 
 /** Represents a mechanic handling kingdom management within the system. */
 internal object KingdomMechanic : MechanicInterface {
     /** Maps player UUID to their invite-mode task; non-null means the player is in invite mode. */
     private val inviteMode = mutableMapOf<UUID, BukkitTask>()
-
-    /** Maps dead NPC UUID to their death data; entry removed on resurrection or kick. */
-    val deadNpcs = mutableMapOf<UUID, DeadNpcData>()
-
-    /**
-     * Data captured from a villager NPC at the moment of death, used to restore it on resurrection.
-     *
-     * @property location the location where the villager died.
-     * @property profession the villager's profession.
-     * @property type the villager's biome type.
-     * @property level the villager's experience level (1–5).
-     */
-    data class DeadNpcData(
-        val location: Location,
-        val profession: Villager.Profession,
-        val type: Villager.Type,
-        val level: Int,
-    )
 
     override val cmds: Collection<CommandData> =
         listOf(
@@ -215,13 +196,16 @@ internal object KingdomMechanic : MechanicInterface {
         val villager = event.entity as Villager
         val uuid = event.entity.uniqueId
         if (KingdomData.getKingdoms().any { it.npcs.contains(uuid) }) {
-            deadNpcs[uuid] =
-                DeadNpcData(
-                    location = event.entity.location,
-                    profession = villager.profession,
-                    type = villager.villagerType,
-                    level = villager.villagerLevel,
-                )
+            DeadNpcData(
+                uuid = uuid,
+                location = event.entity.location,
+                profession = villager.profession,
+                type = villager.villagerType,
+                level = villager.villagerLevel,
+            ).also {
+                DeadNpcData.registry[uuid] = it
+                DeadNpcData.save(it)
+            }
         }
     }
 
@@ -255,6 +239,11 @@ internal object KingdomMechanic : MechanicInterface {
         inviteMode.remove(uuid)?.cancel()
     }
 
+    /** Loads dead NPC state from the database into memory. */
+    fun onEnable() {
+        DeadNpcData.loadAll()
+    }
+
     /**
      * Cancels an existing invite-mode task if one is running.
      */
@@ -265,6 +254,5 @@ internal object KingdomMechanic : MechanicInterface {
     override fun onDisable() {
         inviteMode.values.forEach { it.cancel() }
         inviteMode.clear()
-        deadNpcs.clear()
     }
 }

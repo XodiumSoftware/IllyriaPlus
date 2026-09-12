@@ -39,6 +39,20 @@ internal object DatabaseManager {
             )
             """.trimIndent(),
         )
+        execute(
+            """
+            CREATE TABLE IF NOT EXISTS dead_npcs (
+                uuid       TEXT PRIMARY KEY,
+                world      TEXT NOT NULL,
+                x          REAL NOT NULL,
+                y          REAL NOT NULL,
+                z          REAL NOT NULL,
+                profession TEXT NOT NULL,
+                type       TEXT NOT NULL,
+                level      INTEGER NOT NULL
+            )
+            """.trimIndent(),
+        )
     }
 
     /** Closes the database connection if it is open. */

@@ -16,8 +16,8 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriakingdoms.IllyriaKingdoms.Companion.instance
 import org.xodium.illyriakingdoms.Utils.MM
+import org.xodium.illyriakingdoms.data.DeadNpcData
 import org.xodium.illyriakingdoms.data.KingdomData
-import org.xodium.illyriakingdoms.mechanics.server.KingdomMechanic
 import xyz.xenondevs.commons.provider.mutableProvider
 import xyz.xenondevs.commons.provider.provider
 import xyz.xenondevs.invui.dsl.ExperimentalDslApi
@@ -225,7 +225,7 @@ internal object MemberGui {
             .filter { it != kingdom.owner }
             .sortedBy { instance.server.getOfflinePlayer(it).name ?: "" }
             .map { npcUuid ->
-                val isDead = npcUuid in KingdomMechanic.deadNpcs
+                val isDead = npcUuid in DeadNpcData.registry
                 val entity = instance.server.getEntity(npcUuid)
                 val name = entity?.name ?: npcUuid.toString().substring(0, 8)
                 val stack =
@@ -329,7 +329,8 @@ internal object MemberGui {
         viewer: Player,
     ) {
         KingdomData.kickNpc(kingdom.owner, npcUuid)
-        KingdomMechanic.deadNpcs.remove(npcUuid)
+        DeadNpcData.registry.remove(npcUuid)
+        DeadNpcData.delete(npcUuid)
         instance.server.broadcast(
             MM.deserialize(
                 "<firewatch>[${
@@ -354,7 +355,7 @@ internal object MemberGui {
         name: String,
         viewer: Player,
     ) {
-        val deadData = KingdomMechanic.deadNpcs[npcUuid]
+        val deadData = DeadNpcData.registry[npcUuid]
         val kingdomName = MM.serialize(kingdom.name)
         val emerald = ItemStack.of(Material.EMERALD, RESURRECT_COST)
 
@@ -367,7 +368,8 @@ internal object MemberGui {
         }
 
         viewer.inventory.removeItem(emerald)
-        KingdomMechanic.deadNpcs.remove(npcUuid)
+        DeadNpcData.registry.remove(npcUuid)
+        DeadNpcData.delete(npcUuid)
 
         deadData.location.world.spawnEntity(deadData.location, EntityType.VILLAGER).let { entity ->
             val villager = entity as Villager
