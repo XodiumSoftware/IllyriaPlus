@@ -22,7 +22,6 @@
 
 ## Table of Contents
 
-- [Architecture][architecture_url]
 - [Guide](GUIDE.md)
 - [Built With](#built-with)
 - [Code of Conduct][code_of_conduct_url]
@@ -46,8 +45,6 @@
 </div>
 
 <p align="right"><a href="#readme-top">▲</a></p>
-
-[architecture_url]: https://github.com/XodiumSoftware/IllyriaPlus/blob/main/ARCHITECTURE.md
 
 [built_with_shield_url]: https://skillicons.dev/icons?i=kotlin,gradle,github,githubactions
 
