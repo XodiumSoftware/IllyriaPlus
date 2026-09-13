@@ -243,7 +243,7 @@ internal object MemberGui {
                                     if (isDead) {
                                         resurrectNpc(kingdom, npcUuid, name, viewer)
                                     } else {
-                                        callNpc(kingdom, npcUuid, name)
+                                        callNpc(kingdom, npcUuid, name, viewer)
                                     }
 
                                 ClickType.RIGHT -> kickNpc(kingdom, npcUuid, name, viewer)
@@ -265,13 +265,14 @@ internal object MemberGui {
      * @param kingdom the kingdom the NPC belongs to.
      * @param npcUuid the UUID of the NPC villager.
      * @param name the display name of the NPC.
+     * @param viewer the player who called the NPC.
      */
     private fun callNpc(
         kingdom: KingdomData,
         npcUuid: UUID,
         name: String,
+        viewer: Player,
     ) {
-        val kingdomName = MM.serialize(kingdom.name)
         val owner = instance.server.getPlayer(kingdom.owner)
         val entity = instance.server.getEntity(npcUuid)
 
@@ -284,8 +285,8 @@ internal object MemberGui {
         villager.pathfinder.moveTo(owner)
         var ticksRemaining = CALL_MAX_TICKS
 
-        instance.server.broadcast(
-            MM.deserialize("<firewatch>[$kingdomName]</gradient> <green>$name is on its way."),
+        viewer.sendActionBar(
+            MM.deserialize("<green>$name is on its way."),
         )
 
         callTasks[npcUuid] =
