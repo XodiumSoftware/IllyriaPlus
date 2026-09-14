@@ -2,6 +2,7 @@ package org.xodium.illyriakingdoms.data
 
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Villager
@@ -29,62 +30,112 @@ internal data class DeadNpcData(
         /** In-memory registry of dead NPCs, keyed by their original villager UUID. */
         val registry = mutableMapOf<UUID, DeadNpcData>()
 
-        /** Loads all dead NPC entries from the database into [registry]. */
+        /** Raw row data from the database, used to defer [Location] construction to the main thread. */
+        private data class RawEntry(
+            val uuid: UUID,
+            val worldName: String,
+            val x: Double,
+            val y: Double,
+            val z: Double,
+            val professionKey: String,
+            val typeKey: String,
+            val level: Int,
+        )
+
+        /** Loads all dead NPC entries from the database into [registry] asynchronously. */
         fun loadAll() {
-            DatabaseManager.query("SELECT * FROM dead_npcs") { rs ->
-                val world = instance.server.getWorld(rs.getString("world"))
-                if (world != null) {
-                    DeadNpcData(
-                        uuid = UUID.fromString(rs.getString("uuid")),
-                        location =
-                            Location(
-                                world,
-                                rs.getDouble("x"),
-                                rs.getDouble("y"),
-                                rs.getDouble("z"),
-                            ),
-                        profession =
-                            RegistryAccess
-                                .registryAccess()
-                                .getRegistry(RegistryKey.VILLAGER_PROFESSION)
-                                .getOrThrow(NamespacedKey.minecraft(rs.getString("profession"))),
-                        type =
-                            RegistryAccess
-                                .registryAccess()
-                                .getRegistry(RegistryKey.VILLAGER_TYPE)
-                                .getOrThrow(NamespacedKey.minecraft(rs.getString("type"))),
-                        level = rs.getInt("level"),
-                    ).also { registry[it.uuid] = it }
-                }
-            }
+            Bukkit.getScheduler().runTaskAsynchronously(
+                instance,
+                Runnable {
+                    val rows =
+                        DatabaseManager.query("SELECT * FROM dead_npcs") { rs ->
+                            RawEntry(
+                                uuid = UUID.fromString(rs.getString("uuid")),
+                                worldName = rs.getString("world"),
+                                x = rs.getDouble("x"),
+                                y = rs.getDouble("y"),
+                                z = rs.getDouble("z"),
+                                professionKey = rs.getString("profession"),
+                                typeKey = rs.getString("type"),
+                                level = rs.getInt("level"),
+                            )
+                        }
+                    Bukkit.getScheduler().runTask(
+                        instance,
+                        Runnable {
+                            rows.forEach { row ->
+                                val world = instance.server.getWorld(row.worldName) ?: return@forEach
+                                DeadNpcData(
+                                    uuid = row.uuid,
+                                    location = Location(world, row.x, row.y, row.z),
+                                    profession =
+                                        RegistryAccess
+                                            .registryAccess()
+                                            .getRegistry(RegistryKey.VILLAGER_PROFESSION)
+                                            .getOrThrow(NamespacedKey.minecraft(row.professionKey)),
+                                    type =
+                                        RegistryAccess
+                                            .registryAccess()
+                                            .getRegistry(RegistryKey.VILLAGER_TYPE)
+                                            .getOrThrow(NamespacedKey.minecraft(row.typeKey)),
+                                    level = row.level,
+                                ).also { registry[it.uuid] = it }
+                            }
+                        },
+                    )
+                },
+            )
         }
 
-        /** Persists a single [DeadNpcData] entry to the database. */
+        /** Persists a single [DeadNpcData] entry to the database asynchronously. */
         fun save(entry: DeadNpcData) {
-            DatabaseManager.execute(
-                "INSERT INTO dead_npcs (uuid, world, x, y, z, profession, type, level) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                entry.uuid.toString(),
-                entry.location.world.name,
-                entry.location.x,
-                entry.location.y,
-                entry.location.z,
+            val uuidString = entry.uuid.toString()
+            val worldName = entry.location.world.name
+            val x = entry.location.x
+            val y = entry.location.y
+            val z = entry.location.z
+            val professionKey =
                 RegistryAccess
                     .registryAccess()
                     .getRegistry(RegistryKey.VILLAGER_PROFESSION)
                     .getKey(entry.profession)
-                    ?.value() ?: "NONE",
+                    ?.value() ?: "NONE"
+            val typeKey =
                 RegistryAccess
                     .registryAccess()
                     .getRegistry(RegistryKey.VILLAGER_TYPE)
                     .getKey(entry.type)
-                    ?.value() ?: "PLAINS",
-                entry.level,
+                    ?.value() ?: "PLAINS"
+            val level = entry.level
+            val sql =
+                "INSERT INTO dead_npcs (uuid, world, x, y, z, profession, type, level) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+            Bukkit.getScheduler().runTaskAsynchronously(
+                instance,
+                Runnable {
+                    DatabaseManager.execute(
+                        sql,
+                        uuidString,
+                        worldName,
+                        x,
+                        y,
+                        z,
+                        professionKey,
+                        typeKey,
+                        level,
+                    )
+                },
             )
         }
 
-        /** Removes a single dead NPC entry from the database. */
+        /** Removes a single dead NPC entry from the database asynchronously. */
         fun delete(uuid: UUID) {
-            DatabaseManager.execute("DELETE FROM dead_npcs WHERE uuid = ?", uuid.toString())
+            Bukkit.getScheduler().runTaskAsynchronously(
+                instance,
+                Runnable {
+                    DatabaseManager.execute("DELETE FROM dead_npcs WHERE uuid = ?", uuid.toString())
+                },
+            )
         }
     }
 }

@@ -70,10 +70,11 @@ internal object KingdomMechanic : MechanicInterface {
                                                 name = player.displayName().append(Utils.MM.deserialize("'s Kingdom")),
                                                 owner = player.uniqueId,
                                             )
-                                        KingdomData.saveKingdom(kingdomData)
-                                        ctx.source.sender.sendActionBar(
-                                            Utils.MM.deserialize("<green>Kingdom created for ${player.name}."),
-                                        )
+                                        KingdomData.saveKingdom(kingdomData) {
+                                            ctx.source.sender.sendActionBar(
+                                                Utils.MM.deserialize("<green>Kingdom created for ${player.name}."),
+                                            )
+                                        }
                                         1
                                     },
                             ),
@@ -88,11 +89,12 @@ internal object KingdomMechanic : MechanicInterface {
                                 Commands
                                     .argument("owner", StringArgumentType.string())
                                     .suggests { ctx, builder ->
-                                        KingdomData
-                                            .getKingdoms()
-                                            .map { it.owner.toString() }
-                                            .filter { it.startsWith(builder.remaining, ignoreCase = true) }
-                                            .forEach { builder.suggest(it) }
+                                        KingdomData.getKingdoms { kingdoms ->
+                                            kingdoms
+                                                .map { it.owner.toString() }
+                                                .filter { it.startsWith(builder.remaining, ignoreCase = true) }
+                                                .forEach { builder.suggest(it) }
+                                        }
                                         builder.buildFuture()
                                     }.executes { ctx ->
                                         val input = ctx.getArgument("owner", String::class.java)
@@ -103,16 +105,19 @@ internal object KingdomMechanic : MechanicInterface {
                                             )
                                             return@executes 0
                                         }
-                                        if (KingdomData.getKingdom(owner) == null) {
-                                            ctx.source.sender.sendActionBar(
-                                                Utils.MM.deserialize("<red>No kingdom found for this owner."),
-                                            )
-                                            return@executes 0
+                                        KingdomData.getKingdom(owner) { existing ->
+                                            if (existing == null) {
+                                                ctx.source.sender.sendActionBar(
+                                                    Utils.MM.deserialize("<red>No kingdom found for this owner."),
+                                                )
+                                                return@getKingdom
+                                            }
+                                            KingdomData.deleteKingdom(owner) {
+                                                ctx.source.sender.sendActionBar(
+                                                    Utils.MM.deserialize("<red>Kingdom deleted."),
+                                                )
+                                            }
                                         }
-                                        KingdomData.deleteKingdom(owner)
-                                        ctx.source.sender.sendActionBar(
-                                            Utils.MM.deserialize("<red>Kingdom deleted."),
-                                        )
                                         1
                                     },
                             ),
@@ -131,13 +136,15 @@ internal object KingdomMechanic : MechanicInterface {
                                     )
                                     return@executes 0
                                 }
-                                if (KingdomData.getKingdom(player.uniqueId) == null) {
-                                    ctx.source.sender.sendActionBar(
-                                        Utils.MM.deserialize("<red>You are not in a kingdom."),
-                                    )
-                                    return@executes 0
+                                KingdomData.getKingdom(player.uniqueId) { kingdom ->
+                                    if (kingdom == null) {
+                                        ctx.source.sender.sendActionBar(
+                                            Utils.MM.deserialize("<red>You are not in a kingdom."),
+                                        )
+                                        return@getKingdom
+                                    }
+                                    startInviteMode(player)
                                 }
-                                startInviteMode(player)
                                 1
                             },
                     ),
@@ -195,16 +202,22 @@ internal object KingdomMechanic : MechanicInterface {
         if (event.entityType != EntityType.VILLAGER) return
         val villager = event.entity as Villager
         val uuid = event.entity.uniqueId
-        if (KingdomData.getKingdoms().any { it.npcs.contains(uuid) }) {
-            DeadNpcData(
-                uuid = uuid,
-                location = event.entity.location,
-                profession = villager.profession,
-                type = villager.villagerType,
-                level = villager.villagerLevel,
-            ).also {
-                DeadNpcData.registry[uuid] = it
-                DeadNpcData.save(it)
+        val location = event.entity.location
+        val profession = villager.profession
+        val type = villager.villagerType
+        val level = villager.villagerLevel
+        KingdomData.getKingdoms { kingdoms ->
+            if (kingdoms.any { it.npcs.contains(uuid) }) {
+                DeadNpcData(
+                    uuid = uuid,
+                    location = location,
+                    profession = profession,
+                    type = type,
+                    level = level,
+                ).also {
+                    DeadNpcData.registry[uuid] = it
+                    DeadNpcData.save(it)
+                }
             }
         }
     }

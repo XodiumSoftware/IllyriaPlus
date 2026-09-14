@@ -71,12 +71,15 @@ internal object RenameKingdomDialog {
                                         { response, _ ->
                                             val newName = response.getText("name")
                                             if (!newName.isNullOrBlank()) {
-                                                KingdomData.renameKingdom(kingdom.owner, MM.deserialize(newName))
-                                                player.sendActionBar(
-                                                    MM.deserialize("<green>Kingdom renamed."),
-                                                )
+                                                KingdomData.renameKingdom(kingdom.owner, MM.deserialize(newName)) {
+                                                    player.sendActionBar(
+                                                        MM.deserialize("<green>Kingdom renamed."),
+                                                    )
+                                                    onComplete(player)
+                                                }
+                                            } else {
+                                                onComplete(player)
                                             }
-                                            onComplete(player)
                                         },
                                         ClickCallback
                                             .Options

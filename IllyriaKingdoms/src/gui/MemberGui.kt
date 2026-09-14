@@ -174,13 +174,12 @@ internal object MemberGui {
                             onClick {
                                 val kingdomName = MM.serialize(kingdom.name)
                                 if (clickType == ClickType.RIGHT) {
-                                    KingdomData.kickMember(kingdom.owner, memberUuid)
-                                    instance.server.broadcast(
-                                        MM.deserialize(
-                                            "<firewatch>[$kingdomName]</gradient> <red>$memberName has been kicked.",
-                                        ),
-                                    )
-                                    this@MemberGui.open(viewer, kingdom)
+                                    val kickMsg =
+                                        "<firewatch>[$kingdomName]</gradient> <red>$memberName has been kicked."
+                                    KingdomData.kickMember(kingdom.owner, memberUuid) {
+                                        instance.server.broadcast(MM.deserialize(kickMsg))
+                                        refresh(viewer, kingdom.owner)
+                                    }
                                 } else if (clickType == ClickType.LEFT) {
                                     val target = instance.server.getPlayer(memberUuid)
                                     if (target != null) {
@@ -329,17 +328,18 @@ internal object MemberGui {
         name: String,
         viewer: Player,
     ) {
-        KingdomData.kickNpc(kingdom.owner, npcUuid)
         DeadNpcData.registry.remove(npcUuid)
         DeadNpcData.delete(npcUuid)
-        instance.server.broadcast(
-            MM.deserialize(
-                "<firewatch>[${
-                    MM.serialize(kingdom.name)
-                }]</gradient> <red>$name has been kicked.",
-            ),
-        )
-        this@MemberGui.open(viewer, kingdom)
+        KingdomData.kickNpc(kingdom.owner, npcUuid) {
+            instance.server.broadcast(
+                MM.deserialize(
+                    "<firewatch>[${
+                        MM.serialize(kingdom.name)
+                    }]</gradient> <red>$name has been kicked.",
+                ),
+            )
+            refresh(viewer, kingdom.owner)
+        }
     }
 
     /**
@@ -378,14 +378,29 @@ internal object MemberGui {
             villager.villagerType = deadData.type
             villager.villagerLevel = deadData.level
             villager.customName(MM.deserialize(name))
-            KingdomData.kickNpc(kingdom.owner, npcUuid)
-            KingdomData.addNpc(kingdom.owner, villager.uniqueId)
+            KingdomData.kickNpc(kingdom.owner, npcUuid) {
+                KingdomData.addNpc(kingdom.owner, villager.uniqueId) {
+                    instance.server.broadcast(
+                        MM.deserialize("<firewatch>[$kingdomName]</gradient> <green>$name has been resurrected!"),
+                    )
+                    refresh(viewer, kingdom.owner)
+                }
+            }
         }
+    }
 
-        instance.server.broadcast(
-            MM.deserialize("<firewatch>[$kingdomName]</gradient> <green>$name has been resurrected!"),
-        )
-        this@MemberGui.open(viewer, kingdom)
+    /**
+     * Re-fetches the kingdom owned by [owner] from the database and reopens the GUI with fresh data.
+     */
+    private fun refresh(
+        viewer: Player,
+        owner: UUID,
+    ) {
+        KingdomData.getKingdom(owner) { fresh ->
+            if (fresh != null) {
+                open(viewer, fresh)
+            }
+        }
     }
 
     /**

@@ -28,12 +28,13 @@ internal object KingdomGui {
      * @param player The player viewing the GUI.
      */
     fun open(player: Player) {
-        val kingdom = KingdomData.getKingdom(player.uniqueId)
-        if (kingdom == null) {
-            player.sendActionBar(MM.deserialize(NO_KINGDOM_MSG))
-            return
+        KingdomData.getKingdom(player.uniqueId) { kingdom ->
+            if (kingdom == null) {
+                player.sendActionBar(MM.deserialize(NO_KINGDOM_MSG))
+                return@getKingdom
+            }
+            buildWindow(player, kingdom).open()
         }
-        buildWindow(player, kingdom).open()
     }
 
     /** Closes every open kingdom window. */
