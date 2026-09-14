@@ -30,15 +30,24 @@ internal data class KingdomData(
         fun getKingdom(owner: UUID): KingdomData? =
             DatabaseManager
                 .query(
-                    "SELECT * FROM kingdoms WHERE owner = ?",
+                    """
+                    SELECT k.*,
+                           GROUP_CONCAT(DISTINCT km.member_uuid) as member_uuids,
+                           GROUP_CONCAT(DISTINCT kn.npc_uuid) as npc_uuids
+                    FROM kingdoms k
+                    LEFT JOIN kingdom_members km ON k.id = km.kingdom_id
+                    LEFT JOIN kingdom_npcs kn ON k.id = kn.kingdom_id
+                    WHERE k.owner = ?
+                    GROUP BY k.id
+                    """.trimIndent(),
                     owner.toString(),
                 ) { rs ->
                     KingdomData(
                         id = UUID.fromString(rs.getString("id")),
                         name = MM.deserialize(rs.getString("name")),
                         owner = UUID.fromString(rs.getString("owner")),
-                        members = rs.getString("members")?.let { parseUuidSet(it) } ?: emptySet(),
-                        npcs = rs.getString("npcs")?.let { parseUuidSet(it) } ?: emptySet(),
+                        members = rs.getString("member_uuids")?.let { parseUuidSet(it) } ?: emptySet(),
+                        npcs = rs.getString("npc_uuids")?.let { parseUuidSet(it) } ?: emptySet(),
                     )
                 }.firstOrNull()
 
@@ -48,13 +57,23 @@ internal data class KingdomData(
          * @return a list of all kingdoms.
          */
         fun getKingdoms(): List<KingdomData> =
-            DatabaseManager.query("SELECT * FROM kingdoms") { rs ->
+            DatabaseManager.query(
+                """
+                SELECT k.*,
+                       GROUP_CONCAT(DISTINCT km.member_uuid) as member_uuids,
+                       GROUP_CONCAT(DISTINCT kn.npc_uuid) as npc_uuids
+                FROM kingdoms k
+                LEFT JOIN kingdom_members km ON k.id = km.kingdom_id
+                LEFT JOIN kingdom_npcs kn ON k.id = kn.kingdom_id
+                GROUP BY k.id
+                """.trimIndent(),
+            ) { rs ->
                 KingdomData(
                     id = UUID.fromString(rs.getString("id")),
                     name = MM.deserialize(rs.getString("name")),
                     owner = UUID.fromString(rs.getString("owner")),
-                    members = rs.getString("members")?.let { parseUuidSet(it) } ?: emptySet(),
-                    npcs = rs.getString("npcs")?.let { parseUuidSet(it) } ?: emptySet(),
+                    members = rs.getString("member_uuids")?.let { parseUuidSet(it) } ?: emptySet(),
+                    npcs = rs.getString("npc_uuids")?.let { parseUuidSet(it) } ?: emptySet(),
                 )
             }
 
@@ -65,13 +84,29 @@ internal data class KingdomData(
          */
         fun saveKingdom(kingdomData: KingdomData) {
             DatabaseManager.execute(
-                "INSERT INTO kingdoms (id, name, owner, members, npcs) VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO kingdoms (id, name, owner) VALUES (?, ?, ?)",
                 kingdomData.id.toString(),
                 MM.serialize(kingdomData.name),
                 kingdomData.owner.toString(),
-                formatUuidSet(kingdomData.members),
-                formatUuidSet(kingdomData.npcs),
             )
+
+            // Insert members
+            kingdomData.members.forEach { member ->
+                DatabaseManager.execute(
+                    "INSERT INTO kingdom_members (kingdom_id, member_uuid) VALUES (?, ?)",
+                    kingdomData.id.toString(),
+                    member.toString(),
+                )
+            }
+
+            // Insert NPCs
+            kingdomData.npcs.forEach { npc ->
+                DatabaseManager.execute(
+                    "INSERT INTO kingdom_npcs (kingdom_id, npc_uuid) VALUES (?, ?)",
+                    kingdomData.id.toString(),
+                    npc.toString(),
+                )
+            }
         }
 
         /**
@@ -80,7 +115,8 @@ internal data class KingdomData(
          * @param owner the UUID of the kingdom owner.
          */
         fun deleteKingdom(owner: UUID) {
-            DatabaseManager.execute("DELETE FROM kingdoms WHERE owner = ?", owner.toString())
+            val kingdom = getKingdom(owner) ?: return
+            DatabaseManager.execute("DELETE FROM kingdoms WHERE id = ?", kingdom.id.toString())
         }
 
         /**
@@ -94,11 +130,10 @@ internal data class KingdomData(
             member: UUID,
         ) {
             val kingdom = getKingdom(owner) ?: return
-            val updated = kingdom.members + member
             DatabaseManager.execute(
-                "UPDATE kingdoms SET members = ? WHERE owner = ?",
-                formatUuidSet(updated),
-                owner.toString(),
+                "INSERT OR IGNORE INTO kingdom_members (kingdom_id, member_uuid) VALUES (?, ?)",
+                kingdom.id.toString(),
+                member.toString(),
             )
         }
 
@@ -113,11 +148,10 @@ internal data class KingdomData(
             npc: UUID,
         ) {
             val kingdom = getKingdom(owner) ?: return
-            val updated = kingdom.npcs + npc
             DatabaseManager.execute(
-                "UPDATE kingdoms SET npcs = ? WHERE owner = ?",
-                formatUuidSet(updated),
-                owner.toString(),
+                "INSERT OR IGNORE INTO kingdom_npcs (kingdom_id, npc_uuid) VALUES (?, ?)",
+                kingdom.id.toString(),
+                npc.toString(),
             )
         }
 
@@ -132,11 +166,10 @@ internal data class KingdomData(
             member: UUID,
         ) {
             val kingdom = getKingdom(owner) ?: return
-            val updated = kingdom.members - member
             DatabaseManager.execute(
-                "UPDATE kingdoms SET members = ? WHERE owner = ?",
-                formatUuidSet(updated),
-                owner.toString(),
+                "DELETE FROM kingdom_members WHERE kingdom_id = ? AND member_uuid = ?",
+                kingdom.id.toString(),
+                member.toString(),
             )
         }
 
@@ -151,24 +184,18 @@ internal data class KingdomData(
             npc: UUID,
         ) {
             val kingdom = getKingdom(owner) ?: return
-            val updated = kingdom.npcs - npc
             DatabaseManager.execute(
-                "UPDATE kingdoms SET npcs = ? WHERE owner = ?",
-                formatUuidSet(updated),
-                owner.toString(),
+                "DELETE FROM kingdom_npcs WHERE kingdom_id = ? AND npc_uuid = ?",
+                kingdom.id.toString(),
+                npc.toString(),
             )
         }
-
-        /**
-         * Serializes a set of UUIDs to a comma-separated string for database storage.
-         */
-        private fun formatUuidSet(set: Set<UUID>): String = set.joinToString(",") { it.toString() }
 
         /**
          * Deserializes a comma-separated string of UUIDs from the database into a set.
          */
         private fun parseUuidSet(string: String): Set<UUID> =
-            string.split(",").mapNotNull { runCatching { UUID.fromString(it) }.getOrNull() }.toSet()
+            string.split(",").mapNotNull { runCatching { UUID.fromString(it.trim()) }.getOrNull() }.toSet()
 
         /**
          * Updates the name of an existing [KingdomData] in the database.

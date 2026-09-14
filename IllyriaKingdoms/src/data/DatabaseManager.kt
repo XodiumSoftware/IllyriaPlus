@@ -31,11 +31,29 @@ internal object DatabaseManager {
         execute(
             """
             CREATE TABLE IF NOT EXISTS kingdoms (
-                id      TEXT PRIMARY KEY,
-                name    TEXT NOT NULL,
-                owner   TEXT NOT NULL,
-                members TEXT,
-                npcs    TEXT
+                id    TEXT PRIMARY KEY,
+                name  TEXT NOT NULL,
+                owner TEXT NOT NULL UNIQUE
+            )
+            """.trimIndent(),
+        )
+        execute(
+            """
+            CREATE TABLE IF NOT EXISTS kingdom_members (
+                kingdom_id TEXT NOT NULL,
+                member_uuid TEXT NOT NULL,
+                PRIMARY KEY (kingdom_id, member_uuid),
+                FOREIGN KEY (kingdom_id) REFERENCES kingdoms(id) ON DELETE CASCADE
+            )
+            """.trimIndent(),
+        )
+        execute(
+            """
+            CREATE TABLE IF NOT EXISTS kingdom_npcs (
+                kingdom_id TEXT NOT NULL,
+                npc_uuid TEXT NOT NULL,
+                PRIMARY KEY (kingdom_id, npc_uuid),
+                FOREIGN KEY (kingdom_id) REFERENCES kingdoms(id) ON DELETE CASCADE
             )
             """.trimIndent(),
         )
@@ -53,6 +71,16 @@ internal object DatabaseManager {
             )
             """.trimIndent(),
         )
+
+        // Create indexes for better performance
+        execute("CREATE INDEX IF NOT EXISTS idx_kingdom_members_kingdom_id ON kingdom_members(kingdom_id)")
+        execute("CREATE INDEX IF NOT EXISTS idx_kingdom_members_member_uuid ON kingdom_members(member_uuid)")
+        execute("CREATE INDEX IF NOT EXISTS idx_kingdom_npcs_kingdom_id ON kingdom_npcs(kingdom_id)")
+        execute("CREATE INDEX IF NOT EXISTS idx_kingdom_npcs_npc_uuid ON kingdom_npcs(npc_uuid)")
+        execute("CREATE INDEX IF NOT EXISTS idx_kingdoms_owner ON kingdoms(owner)")
+
+        // Enable foreign key constraints
+        execute("PRAGMA foreign_keys = ON")
     }
 
     /** Closes the database connection if it is open. */
