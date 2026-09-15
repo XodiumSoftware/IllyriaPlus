@@ -53,7 +53,7 @@ jobs:
         name: Run Markdown Lint
         run: |
           cd IllyriaWiki
-          markdownlint-cli2 "src/**/*.md"
+          markdownlint-cli2 --config ../.markdownlint.json "src/**/*.md"
         shell: bash
 
       - id: lint_summary
@@ -61,7 +61,7 @@ jobs:
         if: failure()
         run: |
           cd IllyriaWiki
-          markdownlint-cli2 "src/**/*.md" --format json > lint-results.json || true
+          markdownlint-cli2 --config ../.markdownlint.json "src/**/*.md" --format json > lint-results.json || true
           echo "## ❌ Markdown Lint Failed" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo '```json' >> $GITHUB_STEP_SUMMARY
