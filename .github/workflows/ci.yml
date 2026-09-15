@@ -84,7 +84,7 @@ jobs:
         name: Setup Java
         uses: actions/setup-java@v6.0.1
         with:
-          java-version: 25
+          java-version: 25.0.4+101.0.LTS
           distribution: temurin
 
       - id: setup_gradle
@@ -113,7 +113,7 @@ jobs:
         name: Setup Java
         uses: actions/setup-java@v6.0.1
         with:
-          java-version: 25
+          java-version: 25.0.4+101.0.LTS
           distribution: temurin
 
       - id: setup_gradle
@@ -149,7 +149,7 @@ jobs:
         name: Setup Java
         uses: actions/setup-java@v6.0.1
         with:
-          java-version: 25
+          java-version: 25.0.4+101.0.LTS
           distribution: temurin
 
       - id: setup_gradle
@@ -185,7 +185,7 @@ jobs:
         name: Setup Java
         uses: actions/setup-java@v6.0.1
         with:
-          java-version: 25
+          java-version: 25.0.4+101.0.LTS
           distribution: temurin
 
       - id: setup_gradle
