@@ -43,7 +43,7 @@ internal data class DeadNpcData(
 
         /** Loads all dead NPC entries from the database into [registry] asynchronously. */
         fun loadAll() {
-            KingdomData.asyncQuery(
+            DatabaseManager.asyncQuery(
                 {
                     DatabaseManager.query("SELECT * FROM dead_npcs") { rs ->
                         RawEntry(
@@ -100,7 +100,7 @@ internal data class DeadNpcData(
                     .getKey(entry.type)
                     ?.value() ?: "PLAINS"
             val level = entry.level
-            KingdomData.asyncQuery<Unit>(
+            DatabaseManager.asyncQuery<Unit>(
                 {
                     DatabaseManager.execute(
                         "INSERT INTO dead_npcs (uuid, world, x, y, z, profession, type, level) " +
@@ -120,7 +120,7 @@ internal data class DeadNpcData(
 
         /** Removes a single dead NPC entry from the database asynchronously. */
         fun delete(uuid: UUID) {
-            KingdomData.asyncQuery<Unit>(
+            DatabaseManager.asyncQuery<Unit>(
                 {
                     DatabaseManager.execute("DELETE FROM dead_npcs WHERE uuid = ?", uuid.toString())
                 },

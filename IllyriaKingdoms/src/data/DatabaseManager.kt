@@ -1,6 +1,7 @@
 package org.xodium.illyriakingdoms.data
 
 import org.bukkit.plugin.java.JavaPlugin
+import org.xodium.illyriakingdoms.IllyriaKingdoms.Companion.instance
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
@@ -88,6 +89,25 @@ internal object DatabaseManager {
         if (::connection.isInitialized && !connection.isClosed) {
             connection.close()
         }
+    }
+
+    /**
+     * Runs [block] asynchronously against the database, then invokes [callback] on the main thread.
+     *
+     * @param block the database operation to run on an async thread.
+     * @param callback invoked on the main thread with the result.
+     */
+    fun <T> asyncQuery(
+        block: () -> T,
+        callback: (T) -> Unit = {},
+    ) {
+        instance.server.scheduler.runTaskAsynchronously(
+            instance,
+            Runnable {
+                val result = block()
+                instance.server.scheduler.runTask(instance, Runnable { callback(result) })
+            },
+        )
     }
 
     /**

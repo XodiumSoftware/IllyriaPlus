@@ -1,7 +1,6 @@
 package org.xodium.illyriakingdoms.data
 
 import net.kyori.adventure.text.Component
-import org.xodium.illyriakingdoms.IllyriaKingdoms.Companion.instance
 import org.xodium.illyriakingdoms.Utils.MM
 import java.util.UUID
 
@@ -22,21 +21,6 @@ internal data class KingdomData(
     val npcs: Set<UUID> = emptySet(),
 ) {
     companion object {
-        /**
-         * Runs [block] asynchronously against the database, then invokes [callback] on the main thread.
-         */
-        internal fun <T> asyncQuery(
-            block: () -> T,
-            callback: (T) -> Unit = {},
-        ) {
-            instance.server.scheduler.runTaskAsynchronously(
-                instance,
-                Runnable {
-                    val result = block()
-                    instance.server.scheduler.runTask(instance, Runnable { callback(result) })
-                },
-            )
-        }
 
         /**
          * Retrieves a [KingdomData] by its owner from the database asynchronously.
@@ -48,7 +32,7 @@ internal data class KingdomData(
             owner: UUID,
             callback: (KingdomData?) -> Unit = {},
         ) {
-            asyncQuery(
+            DatabaseManager.asyncQuery(
                 {
                     DatabaseManager
                         .query(
@@ -83,7 +67,7 @@ internal data class KingdomData(
          * @param callback invoked on the main thread with the list of all kingdoms.
          */
         fun getKingdoms(callback: (List<KingdomData>) -> Unit = {}) {
-            asyncQuery(
+            DatabaseManager.asyncQuery(
                 {
                     DatabaseManager.query(
                         """
@@ -120,7 +104,7 @@ internal data class KingdomData(
             player: UUID,
             callback: (KingdomData?) -> Unit = {},
         ) {
-            asyncQuery(
+            DatabaseManager.asyncQuery(
                 {
                     DatabaseManager
                         .query(
@@ -161,7 +145,7 @@ internal data class KingdomData(
             kingdomData: KingdomData,
             onComplete: () -> Unit = {},
         ) {
-            asyncQuery<Unit>(
+            DatabaseManager.asyncQuery<Unit>(
                 {
                     DatabaseManager.execute(
                         "INSERT INTO kingdoms (id, name, owner) VALUES (?, ?, ?)",
@@ -200,7 +184,7 @@ internal data class KingdomData(
             owner: UUID,
             onComplete: () -> Unit = {},
         ) {
-            asyncQuery<Unit>(
+            DatabaseManager.asyncQuery<Unit>(
                 {
                     val kingdom = getKingdomBlocking(owner) ?: return@asyncQuery
                     DatabaseManager.execute("DELETE FROM kingdoms WHERE id = ?", kingdom.id.toString())
@@ -221,7 +205,7 @@ internal data class KingdomData(
             member: UUID,
             onComplete: () -> Unit = {},
         ) {
-            asyncQuery<Unit>(
+            DatabaseManager.asyncQuery<Unit>(
                 {
                     val kingdom = getKingdomBlocking(owner) ?: return@asyncQuery
                     DatabaseManager.execute(
@@ -246,7 +230,7 @@ internal data class KingdomData(
             npc: UUID,
             onComplete: () -> Unit = {},
         ) {
-            asyncQuery<Unit>(
+            DatabaseManager.asyncQuery<Unit>(
                 {
                     val kingdom = getKingdomBlocking(owner) ?: return@asyncQuery
                     DatabaseManager.execute(
@@ -271,7 +255,7 @@ internal data class KingdomData(
             member: UUID,
             onComplete: () -> Unit = {},
         ) {
-            asyncQuery<Unit>(
+            DatabaseManager.asyncQuery<Unit>(
                 {
                     val kingdom = getKingdomBlocking(owner) ?: return@asyncQuery
                     DatabaseManager.execute(
@@ -296,7 +280,7 @@ internal data class KingdomData(
             npc: UUID,
             onComplete: () -> Unit = {},
         ) {
-            asyncQuery<Unit>(
+            DatabaseManager.asyncQuery<Unit>(
                 {
                     val kingdom = getKingdomBlocking(owner) ?: return@asyncQuery
                     DatabaseManager.execute(
@@ -325,7 +309,7 @@ internal data class KingdomData(
             newNpc: UUID,
             onComplete: () -> Unit = {},
         ) {
-            asyncQuery<Unit>(
+            DatabaseManager.asyncQuery<Unit>(
                 {
                     val kingdom = getKingdomBlocking(owner) ?: return@asyncQuery
                     DatabaseManager.execute(
@@ -361,7 +345,7 @@ internal data class KingdomData(
             name: Component,
             onComplete: () -> Unit = {},
         ) {
-            asyncQuery<Unit>(
+            DatabaseManager.asyncQuery<Unit>(
                 {
                     DatabaseManager.execute(
                         "UPDATE kingdoms SET name = ? WHERE owner = ?",
