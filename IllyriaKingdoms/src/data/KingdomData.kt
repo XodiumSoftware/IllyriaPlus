@@ -1,7 +1,6 @@
 package org.xodium.illyriakingdoms.data
 
 import net.kyori.adventure.text.Component
-import org.bukkit.Bukkit
 import org.xodium.illyriakingdoms.IllyriaKingdoms.Companion.instance
 import org.xodium.illyriakingdoms.Utils.MM
 import java.util.UUID
@@ -26,15 +25,15 @@ internal data class KingdomData(
         /**
          * Runs [block] asynchronously against the database, then invokes [callback] on the main thread.
          */
-        private fun <T> asyncQuery(
+        internal fun <T> asyncQuery(
             block: () -> T,
             callback: (T) -> Unit = {},
         ) {
-            Bukkit.getScheduler().runTaskAsynchronously(
+            instance.server.scheduler.runTaskAsynchronously(
                 instance,
                 Runnable {
                     val result = block()
-                    Bukkit.getScheduler().runTask(instance, Runnable { callback(result) })
+                    instance.server.scheduler.runTask(instance, Runnable { callback(result) })
                 },
             )
         }
@@ -262,6 +261,40 @@ internal data class KingdomData(
                         "DELETE FROM kingdom_npcs WHERE kingdom_id = ? AND npc_uuid = ?",
                         kingdom.id.toString(),
                         npc.toString(),
+                    )
+                },
+                { onComplete() },
+            )
+        }
+
+        /**
+         * Atomically replaces an NPC's UUID in a kingdom (used when an NPC is resurrected
+         * and receives a new entity UUID). Both operations run in a single async task
+         * to avoid races between separate calls.
+         *
+         * @param owner the UUID of the kingdom owner.
+         * @param oldNpc the UUID of the NPC to remove.
+         * @param newNpc the UUID of the NPC to add.
+         * @param onComplete invoked on the main thread after the operation completes.
+         */
+        fun replaceNpc(
+            owner: UUID,
+            oldNpc: UUID,
+            newNpc: UUID,
+            onComplete: () -> Unit = {},
+        ) {
+            asyncQuery<Unit>(
+                {
+                    val kingdom = getKingdomBlocking(owner) ?: return@asyncQuery
+                    DatabaseManager.execute(
+                        "DELETE FROM kingdom_npcs WHERE kingdom_id = ? AND npc_uuid = ?",
+                        kingdom.id.toString(),
+                        oldNpc.toString(),
+                    )
+                    DatabaseManager.execute(
+                        "INSERT OR IGNORE INTO kingdom_npcs (kingdom_id, npc_uuid) VALUES (?, ?)",
+                        kingdom.id.toString(),
+                        newNpc.toString(),
                     )
                 },
                 { onComplete() },

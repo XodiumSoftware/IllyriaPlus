@@ -378,13 +378,11 @@ internal object MemberGui {
             villager.villagerType = deadData.type
             villager.villagerLevel = deadData.level
             villager.customName(MM.deserialize(name))
-            KingdomData.kickNpc(kingdom.owner, npcUuid) {
-                KingdomData.addNpc(kingdom.owner, villager.uniqueId) {
-                    instance.server.broadcast(
-                        MM.deserialize("<firewatch>[$kingdomName]</gradient> <green>$name has been resurrected!"),
-                    )
-                    refresh(viewer, kingdom.owner)
-                }
+            KingdomData.replaceNpc(kingdom.owner, npcUuid, villager.uniqueId) {
+                instance.server.broadcast(
+                    MM.deserialize("<firewatch>[$kingdomName]</gradient> <green>$name has been resurrected!"),
+                )
+                refresh(viewer, kingdom.owner)
             }
         }
     }
