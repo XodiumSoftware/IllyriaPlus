@@ -6,6 +6,7 @@ import org.xodium.illyriakingdoms.gui.KingdomGui
 import org.xodium.illyriakingdoms.gui.MemberGui
 import org.xodium.illyriakingdoms.mechanics.KingdomMechanic
 import org.xodium.illyriakingdoms.mechanics.MechanicInterface
+import kotlin.time.measureTime
 
 /** Main class of the plugin. */
 internal class IllyriaKingdoms : JavaPlugin() {
@@ -31,12 +32,17 @@ internal class IllyriaKingdoms : JavaPlugin() {
 
         instance = this
         DatabaseManager.init(this)
-        KingdomMechanic.onEnable()
 
         mechanics =
             listOf(
                 KingdomMechanic,
             )
+
+        val onEnableTime =
+            measureTime {
+                mechanics.forEach { it.onEnable() }
+            }
+        logger.info("Enabled ${mechanics.size} mechanic(s) in ${onEnableTime.inWholeMilliseconds}ms")
 
         logger.info(
             "Registered: ${mechanics.size} mechanic(s) | Took ${mechanics.sumOf { it.register() }}ms",

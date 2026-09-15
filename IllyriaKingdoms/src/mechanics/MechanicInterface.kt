@@ -24,6 +24,12 @@ internal interface MechanicInterface : Listener {
     val perms: List<Permission> get() = emptyList()
 
     /**
+     * Called when the plugin is enabled, before [register]. Override to load state
+     * or initialize resources; the default implementation does nothing.
+     */
+    fun onEnable() {}
+
+    /**
      * Registers this feature with the server.
      *
      * @return The time taken to register the feature in milliseconds.

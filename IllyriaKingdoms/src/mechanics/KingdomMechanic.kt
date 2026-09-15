@@ -311,7 +311,7 @@ internal object KingdomMechanic : MechanicInterface {
     }
 
     /** Loads dead NPC state from the database into memory. */
-    fun onEnable() {
+    override fun onEnable() {
         DeadNpcData.loadAll()
     }
 
