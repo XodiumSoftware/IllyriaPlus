@@ -13,6 +13,7 @@ import org.xodium.illyriacore.enchantments.vanilla.FortuneEnchantment
 import org.xodium.illyriacore.enchantments.vanilla.SilkTouchEnchantment
 import org.xodium.illyriacore.mechanics.MechanicInterface
 import org.xodium.illyriacore.mechanics.entity.*
+import org.xodium.illyriacore.mechanics.entity.DragonFightMechanic
 import org.xodium.illyriacore.mechanics.player.*
 import org.xodium.illyriacore.mechanics.server.*
 import org.xodium.illyriacore.mechanics.world.*
@@ -108,6 +109,7 @@ internal class IllyriaCore : JavaPlugin() {
                 RulesMechanic,
                 ResourcePackMechanic,
                 WanderingTraderMechanic,
+                DragonFightMechanic,
             )
 
         logger.info(
