@@ -43,6 +43,12 @@ Chainmail armor is craftable with **Iron Bars** using vanilla armor patterns.
 **Rotten Flesh** can be smelted in a furnace, smoker, or campfire — same
 recipe in each.
 
+| Method   | Image                                                                        |
+| -------- | ---------------------------------------------------------------------------- |
+| Furnace  | ![Rotten Flesh Furnace recipe](../assets/recipes/rotten_flesh_smelting.png)  |
+| Smoker   | ![Rotten Flesh Smoking recipe](../assets/recipes/rotten_flesh_smoking.png)   |
+| Campfire | ![Rotten Flesh Campfire recipe](../assets/recipes/rotten_flesh_campfire.png) |
+
 ## Stonecutting
 
 | Recipe           | Method      | Image                                                                          |

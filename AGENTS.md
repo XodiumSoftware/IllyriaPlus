@@ -4,7 +4,7 @@
 
 - **Name:** IllyriaPlus
 - **Type:** Multi-module Minecraft Paper plugin monorepo (server-side only)
-- **Modules:** `IllyriaCore` (core plugin, published as `IllyriaPlus`), `IllyriaKingdoms` (kingdoms plugin), `IllyriaBridge` (server↔client bridging plugin)
+- **Modules:** `IllyriaCore` (core plugin, published as `IllyriaPlus`), `IllyriaBridge` (server↔client bridging plugin)
 - **MC Version:** 26.2
 - **Language:** Kotlin (JVM 25)
 - **Build Tool:** Gradle with Kotlin DSL
@@ -47,7 +47,6 @@
 
 # Run a module's local test server (auto-downloads Paper 26.2)
 ./gradlew :IllyriaCore:runServer
-./gradlew :IllyriaKingdoms:runServer
 ./gradlew :IllyriaBridge:runServer
 
 # Run linting
@@ -62,7 +61,7 @@
 ```
 IllyriaPlus/                    # Repo root (Gradle aggregator, no code)
 ├── build.gradle.kts          # Aggregator only
-├── settings.gradle.kts         # Includes IllyriaCore + IllyriaKingdoms + IllyriaBridge
+├── settings.gradle.kts         # Includes IllyriaCore + IllyriaBridge
 ├── IllyriaResourcePack/      # Custom resource pack (released via ci_resourcepack.yml, served by ResourcePackMechanic)
 ├── IllyriaCore/                # Core plugin module (published plugin: IllyriaPlus)
 │   ├── build.gradle.kts        # Module build configuration
@@ -79,10 +78,6 @@ IllyriaPlus/                    # Repo root (Gradle aggregator, no code)
 │   │   ├── data/                   # Data classes
 │   │   └── pdcs/                   # PlayerPDC
 │   └── resources/              # Bundled resources (structures)
-└── IllyriaKingdoms/            # Kingdoms plugin module
-    ├── build.gradle.kts        # Module build configuration
-    └── src/                    # Source directory
-        └── IllyriaKingdoms.kt  # Main plugin class
 └── IllyriaBridge/              # Server↔client bridging module
     ├── build.gradle.kts        # Module build configuration (uses paperweight userdev for NMS)
     └── src/                    # Source directory

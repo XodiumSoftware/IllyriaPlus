@@ -5,7 +5,6 @@ on:
     branches: [main, dev]
     paths:
       - "IllyriaCore/**"
-      - "IllyriaKingdoms/**"
       - "IllyriaBridge/**"
       - "IllyriaResourcePack/**"
       - "settings.gradle.kts"
@@ -15,7 +14,6 @@ on:
     branches: [main, dev]
     paths:
       - "IllyriaCore/**"
-      - "IllyriaKingdoms/**"
       - "IllyriaBridge/**"
       - "IllyriaResourcePack/**"
       - "settings.gradle.kts"
@@ -37,7 +35,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       core: ${{ steps.filter.outputs.core }}
-      kingdoms: ${{ steps.filter.outputs.kingdoms }}
       bridge: ${{ steps.filter.outputs.bridge }}
       resourcepack: ${{ steps.filter.outputs.resourcepack }}
       all: ${{ steps.filter.outputs.all }}
@@ -54,8 +51,6 @@ jobs:
             core:
               - "IllyriaCore/**"
               - "!IllyriaCore/src/**"
-            kingdoms:
-              - "IllyriaKingdoms/**"
             bridge:
               - "IllyriaBridge/**"
             resourcepack:
@@ -71,7 +66,6 @@ jobs:
     needs: [changes]
     if: |
       needs.changes.outputs.core == 'true' ||
-      needs.changes.outputs.kingdoms == 'true' ||
       needs.changes.outputs.bridge == 'true' ||
       needs.changes.outputs.all == 'true'
     environment:
@@ -130,42 +124,6 @@ jobs:
         with:
           name: IllyriaCore
           path: IllyriaCore/build/libs/*.jar
-
-  build_kingdoms:
-    name: Build IllyriaKingdoms
-    needs: [changes]
-    if: needs.changes.outputs.kingdoms == 'true' || needs.changes.outputs.all == 'true'
-    runs-on: ubuntu-latest
-    environment:
-      name: "${{ github.ref_name }}"
-    steps:
-      - id: checkout
-        name: Checkout
-        uses: actions/checkout@v7.0.1
-        with:
-          fetch-depth: 0
-
-      - id: setup_java
-        name: Setup Java
-        uses: actions/setup-java@v6.0.1
-        with:
-          java-version: 25.0.4+101.0.LTS
-          distribution: temurin
-
-      - id: setup_gradle
-        name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6.3.0
-
-      - id: build
-        name: Build Plugin
-        run: ./gradlew :IllyriaKingdoms:shadowJar
-
-      - id: upload_artifact
-        name: Upload Artifact
-        uses: actions/upload-artifact@v7.0.1
-        with:
-          name: IllyriaKingdoms
-          path: IllyriaKingdoms/build/libs/*.jar
 
   build_bridge:
     name: Build IllyriaBridge
@@ -228,12 +186,10 @@ jobs:
 
   pr_comment:
     name: PR Comment
-    needs:
-      [changes, build_core, build_kingdoms, build_bridge, build_resourcepack]
+    needs: [changes, build_core, build_bridge, build_resourcepack]
     if: |
       always() && github.event_name == 'pull_request' &&
       (needs.build_core.result == 'success' ||
-       needs.build_kingdoms.result == 'success' ||
        needs.build_bridge.result == 'success' ||
        needs.build_resourcepack.result == 'success')
     runs-on: ubuntu-latest
@@ -279,15 +235,7 @@ jobs:
 
   nightly_release:
     name: Nightly Release
-    needs:
-      [
-        changes,
-        lint,
-        build_core,
-        build_kingdoms,
-        build_bridge,
-        build_resourcepack,
-      ]
+    needs: [changes, lint, build_core, build_bridge, build_resourcepack]
     runs-on: ubuntu-latest
     environment:
       name: "${{ github.ref_name }}"
@@ -295,7 +243,6 @@ jobs:
     if: |
       always() && github.ref == 'refs/heads/main' &&
       (needs.build_core.result == 'success' ||
-       needs.build_kingdoms.result == 'success' ||
        needs.build_bridge.result == 'success' ||
        needs.build_resourcepack.result == 'success')
     permissions:
@@ -313,14 +260,6 @@ jobs:
         uses: actions/download-artifact@v8.0.1
         with:
           name: IllyriaCore
-          path: dist/
-
-      - id: download_kingdoms
-        name: Download IllyriaKingdoms Artifact
-        if: needs.build_kingdoms.result == 'success'
-        uses: actions/download-artifact@v8.0.1
-        with:
-          name: IllyriaKingdoms
           path: dist/
 
       - id: download_bridge
@@ -361,7 +300,6 @@ jobs:
             # Only delete assets we're about to re-upload (built modules)
             built_modules=""
             [ "${{ needs.build_core.result }}" = "success" ] && built_modules="$built_modules IllyriaCore"
-            [ "${{ needs.build_kingdoms.result }}" = "success" ] && built_modules="$built_modules IllyriaKingdoms"
             [ "${{ needs.build_bridge.result }}" = "success" ] && built_modules="$built_modules IllyriaBridge"
             [ "${{ needs.build_resourcepack.result }}" = "success" ] && built_modules="$built_modules IllyriaResourcePack"
 

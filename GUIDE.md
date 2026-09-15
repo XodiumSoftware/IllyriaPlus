@@ -59,14 +59,12 @@ Build the plugins using Gradle.
 
     ```bash
     ./gradlew :IllyriaCore:shadowJar
-    ./gradlew :IllyriaKingdoms:shadowJar
     ./gradlew :IllyriaBridge:shadowJar
     ```
 
 3. The output JARs are at:
     ```
     IllyriaCore/build/libs/IllyriaPlus-*.jar
-    IllyriaKingdoms/build/libs/IllyriaKingdoms-*.jar
     IllyriaBridge/build/libs/IllyriaBridge-*.jar
     ```
 
@@ -76,7 +74,6 @@ To quickly test a plugin:
 
 ```bash
 ./gradlew :IllyriaCore:runServer
-./gradlew :IllyriaKingdoms:runServer
 ./gradlew :IllyriaBridge:runServer
 ```
 
