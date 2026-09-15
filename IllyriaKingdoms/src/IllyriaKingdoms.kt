@@ -59,7 +59,14 @@ internal class IllyriaKingdoms : JavaPlugin() {
             }
         }
         DatabaseManager.close()
-        KingdomGui.closeAll()
-        MemberGui.cancelCallTasks()
+        val gClosed = KingdomGui.closeAll()
+        val mClosed = MemberGui.closeAll()
+        val mCalls = MemberGui.cancelCallTasks()
+        if (gClosed > 0 || mClosed > 0 || mCalls > 0) {
+            logger.info(
+                "Closed $gClosed kingdom window(s), $mClosed member window(s), " +
+                    "cancelled $mCalls active call task(s).",
+            )
+        }
     }
 }

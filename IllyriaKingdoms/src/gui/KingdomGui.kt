@@ -38,8 +38,10 @@ internal object KingdomGui {
     }
 
     /** Closes every open kingdom window. */
-    fun closeAll() {
+    fun closeAll(): Int {
+        val count = openWindows.size
         openWindows.toList().forEach { runCatching { it.close() } }
+        return count
     }
 
     private fun buildWindow(

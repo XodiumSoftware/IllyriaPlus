@@ -51,6 +51,7 @@ internal object MemberGui {
     private val BORDER = Item.simple(ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).hideTooltip(true))
 
     private val callTasks = mutableMapOf<UUID, BukkitTask>()
+    private val openWindows = mutableSetOf<Window>()
 
     private val back =
         BoundItem
@@ -113,26 +114,34 @@ internal object MemberGui {
                 }
             }
 
-        return window(player) {
-            title by kingdom.name.append(MM.deserialize(" <gray>Members"))
-            upperGui by
-                pagedItemsGui(
-                    "# # # m # n # # #",
-                    "# x x x x x x x #",
-                    "# x x x x x x x #",
-                    "# x x x x x x x #",
-                    "# x x x x x x x #",
-                    "# # # < # > # # #",
-                ) {
-                    '#' by BORDER
-                    'x' by Markers.CONTENT_LIST_SLOT_HORIZONTAL
-                    'm' by playersTab
-                    'n' by npcsTab
-                    '<' by back
-                    '>' by forward
-                    content by contentProvider
-                }
+        val window =
+            window(player) {
+                title by kingdom.name.append(MM.deserialize(" <gray>Members"))
+                upperGui by
+                    pagedItemsGui(
+                        "# # # m # n # # #",
+                        "# x x x x x x x #",
+                        "# x x x x x x x #",
+                        "# x x x x x x x #",
+                        "# x x x x x x x #",
+                        "# # # < # > # # #",
+                    ) {
+                        '#' by BORDER
+                        'x' by Markers.CONTENT_LIST_SLOT_HORIZONTAL
+                        'm' by playersTab
+                        'n' by npcsTab
+                        '<' by back
+                        '>' by forward
+                        content by contentProvider
+                    }
+            }
+        window.addOpenHandler { openWindows += window }
+        window.addCloseHandler {
+            openWindows -= window
+            callTasks.values.forEach(BukkitTask::cancel)
+            callTasks.clear()
         }
+        return window
     }
 
     /**
@@ -309,9 +318,18 @@ internal object MemberGui {
     }
 
     /** Cancels all active call tasks. */
-    fun cancelCallTasks() {
+    fun cancelCallTasks(): Int {
+        val count = callTasks.size
         callTasks.values.forEach { it.cancel() }
         callTasks.clear()
+        return count
+    }
+
+    /** Closes every open member window. */
+    fun closeAll(): Int {
+        val count = openWindows.size
+        openWindows.toList().forEach { runCatching { it.close() } }
+        return count
     }
 
     /**
