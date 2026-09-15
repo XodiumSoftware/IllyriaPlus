@@ -177,22 +177,41 @@ internal object KingdomMechanic : MechanicInterface {
         val uuid = event.rightClicked.uniqueId
         val owner = player.uniqueId
 
-        when (val target = event.rightClicked) {
-            is Player -> {
-                KingdomData.addMember(owner, uuid)
-                player.sendActionBar(
-                    Utils.MM.deserialize("<green>${target.displayName()} joined your kingdom."),
-                )
+        KingdomData.getKingdom(owner) { kingdom ->
+            if (kingdom == null) {
+                player.sendActionBar(Utils.MM.deserialize("<red>You are not in a kingdom."))
+                return@getKingdom
             }
 
-            is Villager -> {
-                KingdomData.addNpc(owner, uuid)
-                player.sendActionBar(
-                    Utils.MM.deserialize("<green>${target.name} joined your kingdom."),
-                )
-            }
+            when (val target = event.rightClicked) {
+                is Player -> {
+                    if (uuid in kingdom.members || uuid == owner) {
+                        player.sendActionBar(
+                            Utils.MM.deserialize("<yellow>${target.displayName()} is already in your kingdom."),
+                        )
+                        return@getKingdom
+                    }
+                    KingdomData.addMember(owner, uuid)
+                    player.sendActionBar(
+                        Utils.MM.deserialize("<green>${target.displayName()} joined your kingdom."),
+                    )
+                }
 
-            else -> return
+                is Villager -> {
+                    if (uuid in kingdom.npcs) {
+                        player.sendActionBar(
+                            Utils.MM.deserialize("<yellow>${target.name} is already in your kingdom."),
+                        )
+                        return@getKingdom
+                    }
+                    KingdomData.addNpc(owner, uuid)
+                    player.sendActionBar(
+                        Utils.MM.deserialize("<green>${target.name} joined your kingdom."),
+                    )
+                }
+
+                else -> return@getKingdom
+            }
         }
         event.isCancelled = true
     }
