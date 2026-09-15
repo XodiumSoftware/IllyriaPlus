@@ -4,7 +4,7 @@
 
 - **Name:** IllyriaPlus
 - **Type:** Multi-module Minecraft Paper plugin monorepo (server-side only)
-- **Modules:** `IllyriaCore` (core plugin, published as `IllyriaPlus`), `IllyriaKingdoms` (kingdoms plugin)
+- **Modules:** `IllyriaCore` (core plugin, published as `IllyriaPlus`), `IllyriaKingdoms` (kingdoms plugin), `IllyriaBridge` (server↔client bridging plugin)
 - **MC Version:** 26.2
 - **Language:** Kotlin (JVM 25)
 - **Build Tool:** Gradle with Kotlin DSL
@@ -19,6 +19,7 @@
 | **Gradle Plugins**  | Shadow 9.6.1                                     | Fat JAR creation                   |
 |                     | run-paper 3.1.0                                  | Local test server                  |
 |                     | resource-factory 1.3.1                           | `paper-plugin.yml` generation      |
+|                     | paperweight userdev (IllyriaBridge only)         | Paper dev bundle (NMS access)      |
 |                     | foojay-resolver 1.0.0                            | Auto-download JVM toolchains       |
 |                     | ktlint 12.3.0                                    | Kotlin linting                     |
 | **Text Formatting** | MiniMessage                                      | Adventure API component-based text |
@@ -47,6 +48,7 @@
 # Run a module's local test server (auto-downloads Paper 26.2)
 ./gradlew :IllyriaCore:runServer
 ./gradlew :IllyriaKingdoms:runServer
+./gradlew :IllyriaBridge:runServer
 
 # Run linting
 ./gradlew ktlintCheck
@@ -81,6 +83,16 @@ IllyriaPlus/                    # Repo root (Gradle aggregator, no code)
     ├── build.gradle.kts        # Module build configuration
     └── src/                    # Source directory
         └── IllyriaKingdoms.kt  # Main plugin class
+└── IllyriaBridge/              # Server↔client bridging module
+    ├── build.gradle.kts        # Module build configuration (uses paperweight userdev for NMS)
+    └── src/                    # Source directory
+        ├── IllyriaBridge.kt        # Main plugin class
+        ├── bridges/                # BridgeInterface and bridge implementations
+        │   ├── BridgeInterface.kt      # Bridge contract (extends Listener, register() returns ms)
+        │   ├── FabricRecipeBridge.kt   # Fabric recipe sync handler
+        │   └── XaeroMapBridge.kt       # Xaero map sync handler
+        └── payloads/               # Plugin message payloads
+            └── FabricRecipeSyncPayload.kt
 ```
 
 ## Architecture
@@ -109,6 +121,15 @@ Custom enchantments implement `EnchantmentInterface` with:
 - Event handling via `@EventHandler fun on(event: <EventType>)` methods
 
 Only utility enchantments in `IllyriaCore/src/enchantments/utility/` are registered in `IllyriaPlusBootstrap`. Enchantments in `IllyriaCore/src/enchantments/vanilla/` listen to events and check for vanilla enchantments on items instead.
+
+### IllyriaBridge
+
+The `IllyriaBridge` module (`org.xodium.illyriabridge`) handles server↔client bridging via plugin channels and NMS packets (it uses paperweight userdev for NMS access).
+
+- **BridgeInterface** — Bridges are Kotlin `object` singletons implementing `BridgeInterface` (extends Bukkit `Listener`); each exposes a `register()` function returning setup time in milliseconds and is instantiated by the `IllyriaBridge` main class.
+- **FabricRecipeBridge** — Detects Fabric clients via `Player.getClientBrandName()` on join, registers the `fabric:recipe_sync` outgoing channel, groups recipes by `RecipeSerializer`, and sends a `ClientboundCustomPayloadPacket` encoded with `FabricRecipeSyncPayload.CODEC` (uses `RegistryFriendlyByteBuf`).
+- **XaeroMapBridge** — Registers the `xaeroworldmap:main` and `xaerominimap:main` channels and sends a persistent server world ID (stored in `xaeromap.id`) to Xaero map clients on `PlayerRegisterChannelEvent` / `PlayerChangedWorldEvent`.
+- **Client requirements** — Synced recipes only appear for players on **Fabric/NeoForge clients with JEI installed**; vanilla clients are unaffected.
 
 ### Key Conventions
 

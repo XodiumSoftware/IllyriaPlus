@@ -60,12 +60,14 @@ Build the plugins using Gradle.
     ```bash
     ./gradlew :IllyriaCore:shadowJar
     ./gradlew :IllyriaKingdoms:shadowJar
+    ./gradlew :IllyriaBridge:shadowJar
     ```
 
 3. The output JARs are at:
     ```
     IllyriaCore/build/libs/IllyriaPlus-*.jar
     IllyriaKingdoms/build/libs/IllyriaKingdoms-*.jar
+    IllyriaBridge/build/libs/IllyriaBridge-*.jar
     ```
 
 ### Run a Test Server
@@ -75,6 +77,7 @@ To quickly test a plugin:
 ```bash
 ./gradlew :IllyriaCore:runServer
 ./gradlew :IllyriaKingdoms:runServer
+./gradlew :IllyriaBridge:runServer
 ```
 
 This automatically downloads Paper 26.2 and starts a local test server with the plugin.
@@ -149,6 +152,15 @@ Custom crafting, smelting, stonecutting, and shapeless recipes:
 - Log/wood crafting improvements
 - Wool to string
 
+### Client Bridging (IllyriaBridge)
+
+The `IllyriaBridge` plugin bridges the server to modded clients with no server-side configuration:
+
+- **Fabric/NeoForge clients with JEI** — server recipes are synced to JEI on join
+- **Xaero's World Map / Minimap** — a persistent server world ID is sent so maps stay consistent across reconnects
+
+Vanilla clients are unaffected.
+
 ## Troubleshooting
 
 ### "Plugin disabled itself"
@@ -162,6 +174,12 @@ Custom crafting, smelting, stonecutting, and shapeless recipes:
 - Enchantments are registered during server startup
 - Check console for bootstrap errors
 - Ensure you're using Paper (not Spigot or Bukkit)
+
+### "Recipes not showing in JEI"
+
+- Ensure the player is on a Fabric or NeoForge client with JEI installed
+- Vanilla clients don't show synced recipes (no JEI on vanilla)
+- Check console for payload encoding errors from IllyriaBridge
 
 ### Build fails
 
