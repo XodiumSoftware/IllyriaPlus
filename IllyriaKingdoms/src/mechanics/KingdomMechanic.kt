@@ -136,12 +136,12 @@ internal object KingdomMechanic : MechanicInterface {
                                     )
                                     return@executes 0
                                 }
-                                KingdomData.getKingdom(player.uniqueId) { kingdom ->
+                                KingdomData.getKingdomByPlayer(player.uniqueId) { kingdom ->
                                     if (kingdom == null) {
                                         ctx.source.sender.sendActionBar(
                                             Utils.MM.deserialize("<red>You are not in a kingdom."),
                                         )
-                                        return@getKingdom
+                                        return@getKingdomByPlayer
                                     }
                                     startInviteMode(player)
                                 }
@@ -213,42 +213,43 @@ internal object KingdomMechanic : MechanicInterface {
         inviteModeRemove(player.uniqueId)
 
         val uuid = event.rightClicked.uniqueId
-        val owner = player.uniqueId
 
-        KingdomData.getKingdom(owner) { kingdom ->
+        KingdomData.getKingdomByPlayer(player.uniqueId) { kingdom ->
             if (kingdom == null) {
                 player.sendActionBar(Utils.MM.deserialize("<red>You are not in a kingdom."))
-                return@getKingdom
+                return@getKingdomByPlayer
             }
+
+            val kingdomOwner = kingdom.owner
 
             when (val target = event.rightClicked) {
                 is Player -> {
-                    if (uuid in kingdom.members || uuid == owner) {
+                    if (uuid in kingdom.members || uuid == kingdomOwner) {
                         player.sendActionBar(
-                            Utils.MM.deserialize("<yellow>${target.displayName()} is already in your kingdom."),
+                            Utils.MM.deserialize("<yellow>${target.displayName()} is already in the kingdom."),
                         )
-                        return@getKingdom
+                        return@getKingdomByPlayer
                     }
-                    KingdomData.addMember(owner, uuid)
+                    KingdomData.addMember(kingdomOwner, uuid)
                     player.sendActionBar(
-                        Utils.MM.deserialize("<green>${target.displayName()} joined your kingdom."),
+                        Utils.MM.deserialize("<green>${target.displayName()} joined the kingdom."),
                     )
                 }
 
                 is Villager -> {
                     if (uuid in kingdom.npcs) {
                         player.sendActionBar(
-                            Utils.MM.deserialize("<yellow>${target.name} is already in your kingdom."),
+                            Utils.MM.deserialize("<yellow>${target.name} is already in the kingdom."),
                         )
-                        return@getKingdom
+                        return@getKingdomByPlayer
                     }
-                    KingdomData.addNpc(owner, uuid)
+                    KingdomData.addNpc(kingdomOwner, uuid)
                     player.sendActionBar(
-                        Utils.MM.deserialize("<green>${target.name} joined your kingdom."),
+                        Utils.MM.deserialize("<green>${target.name} joined the kingdom."),
                     )
                 }
 
-                else -> return@getKingdom
+                else -> return@getKingdomByPlayer
             }
         }
         event.isCancelled = true
