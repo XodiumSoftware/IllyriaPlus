@@ -2,3 +2,7 @@
 title = "IllyriaRPG Wiki"
 authors = ["illyrius666"]
 language = "en"
+
+[output.html]
+git-repository-url = "https://github.com/XodiumSoftware/IllyriaPlus"
+edit-url-template = "https://github.com/XodiumSoftware/IllyriaPlus/edit/main/IllyriaWiki/{path}"
