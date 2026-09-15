@@ -20,6 +20,7 @@ import org.xodium.illyriacore.enchantments.utility.TetherEnchantment
 import org.xodium.illyriacore.enchantments.utility.VinemineEnchantment
 import org.xodium.illyriacore.paintings.OrthoPaintings
 import org.xodium.illyriacore.paintings.YapettoPaintings
+import org.xodium.illyriacore.variants.wolves.GoldenWolfVariant
 
 /** Main bootstrap class of the plugin. */
 @Suppress("UnstableApiUsage", "Unused")
@@ -40,6 +41,7 @@ internal class IllyriaCoreBootstrap : PluginBootstrap {
         private val YAPETTO_PAINTINGS = YapettoPaintings.paintings
         private val ORTHO_PAINTINGS = OrthoPaintings.paintings
         private val PAINTINGS = YAPETTO_PAINTINGS + ORTHO_PAINTINGS
+        private val WOLF_VARIANTS = setOf(GoldenWolfVariant.key)
     }
 
     override fun bootstrap(ctx: BootstrapContext) {
@@ -141,6 +143,13 @@ internal class IllyriaCoreBootstrap : PluginBootstrap {
             )
             ctx.logger.info("Registered: ${BANNERS.size} banner pattern(s).")
 
+            registerEventHandler(
+                RegistryEvents.WOLF_VARIANT.compose().newHandler { event ->
+                    event.registry().register(GoldenWolfVariant.key) { GoldenWolfVariant.invoke(it) }
+                },
+            )
+            ctx.logger.info("Registered: ${WOLF_VARIANTS.size} wolf variant(s).")
+
             registerEventHandler(LifecycleEvents.TAGS.postFlatten(RegistryKey.ENCHANTMENT)) { event ->
                 event.registrar().apply {
                     addToTag(EnchantmentTagKeys.TRADEABLE, ENCHANTMENTS)
@@ -233,6 +242,13 @@ internal class IllyriaCoreBootstrap : PluginBootstrap {
                         ),
                     )
                 }
+            }
+
+            registerEventHandler(LifecycleEvents.TAGS.postFlatten(RegistryKey.WOLF_VARIANT)) { event ->
+                event.registrar().addToTag(
+                    TagKey.create(RegistryKey.WOLF_VARIANT, Key.key("default_spawns")),
+                    WOLF_VARIANTS,
+                )
             }
         }
     }
