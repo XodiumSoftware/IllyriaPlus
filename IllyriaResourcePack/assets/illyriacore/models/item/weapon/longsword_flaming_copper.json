@@ -1,0 +1,7 @@
+{
+    "parent": "illyriacore:item/weapon/longsword",
+    "textures": {
+        "layer0": "illyriacore:item/weapon/longsword",
+        "layer1": "illyriacore:item/effect/sword/copper_flames"
+    }
+}

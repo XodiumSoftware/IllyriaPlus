@@ -1,0 +1,7 @@
+{
+    "parent": "illyriacore:item/weapon/greatsword",
+    "textures": {
+        "layer0": "illyriacore:item/weapon/greatsword",
+        "layer1": "illyriacore:item/effect/sword/soul_flames"
+    }
+}

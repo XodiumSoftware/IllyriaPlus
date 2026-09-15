@@ -2,21 +2,21 @@
     "providers": [
         {
             "type": "bitmap",
-            "file": "illyriaplus:font/wither.png",
+            "file": "illyriacore:font/wither.png",
             "ascent": 13,
             "height": 36,
             "chars": ["\uE901"]
         },
         {
             "type": "bitmap",
-            "file": "illyriaplus:font/enderdragon.png",
+            "file": "illyriacore:font/enderdragon.png",
             "ascent": 12,
             "height": 39,
             "chars": ["\uE902"]
         },
         {
             "type": "bitmap",
-            "file": "illyriaplus:font/raid.png",
+            "file": "illyriacore:font/raid.png",
             "ascent": 9,
             "height": 22,
             "chars": ["\uE903"]

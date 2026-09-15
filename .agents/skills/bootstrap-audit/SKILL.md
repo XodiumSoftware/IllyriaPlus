@@ -28,7 +28,7 @@ Use this skill when the user wants to verify that the plugin's registration wiri
 
 3. Compare the source directories against the registration lists:
    - Every file in `IllyriaCore/src/enchantments/utility/` should be registered in the bootstrap registry AND tagged.
-   - Every file in `IllyriaCore/src/enchantments/vanilla/` should be in the `enchantments` listener list in `IllyriaPlus.kt` (unless intentionally unused).
+   - Every file in `IllyriaCore/src/enchantments/vanilla/` should be in the `enchantments` listener list in `IllyriaCore.kt` (unless intentionally unused).
    - Every file in `IllyriaCore/src/mechanics/` (including subdirectories) should be in the `mechanics` list.
    - Every file in `IllyriaCore/src/recipes/vanilla/` should be in the `recipes` list.
 

@@ -17,13 +17,13 @@ Use this skill when the user wants to remove leftover or duplicate resource pack
 1. Confirm with the user which folders are safe to delete, or verify that the same files already exist under `IllyriaResourcePack/assets/`.
 
 2. Delete the leftover source folder(s) using the `delete_path` tool. Common examples:
-   - `minecraft/` at the project root
-   - Duplicate `font/` or `textures/` directories outside `IllyriaResourcePack/`
+    - `minecraft/` at the project root
+    - Duplicate `font/` or `textures/` directories outside `IllyriaResourcePack/`
 
 3. Verify the active resource pack still contains the needed assets:
-   - `IllyriaResourcePack/assets/minecraft/font/default.json`
-   - `IllyriaResourcePack/assets/illyriaplus/textures/font/`
-   - `IllyriaResourcePack/assets/minecraft/lang/en_us.json`
+    - `IllyriaResourcePack/assets/minecraft/font/default.json`
+    - `IllyriaResourcePack/assets/illyriacore/textures/font/`
+    - `IllyriaResourcePack/assets/minecraft/lang/en_us.json`
 
 4. Run `./gradlew shadowJar` to make sure the build is not affected.
 
