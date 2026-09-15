@@ -14,13 +14,14 @@ A heavy two-handed blade with devastating damage.
 
 Upgrade a **Netherite Sword** in a smithing table:
 
-| Slot     | Ingredient                        |
-| -------- | --------------------------------- |
+| Slot     | Ingredient                          |
+| -------- | ----------------------------------- |
 | Template | Netherite Upgrade Smithing Template |
-| Base     | Netherite Sword                   |
-| Addition | Nether Star                       |
+| Base     | Netherite Sword                     |
+| Addition | Nether Star                         |
 
 ## Playstyle
 
-The Greatsword hits the hardest of all custom weapons but swings the slowest. Best for players who prefer heavy,
-deliberate strikes — pairs well with damage-boosting enchantments.
+The Greatsword hits the hardest of all custom weapons but swings the slowest.
+Best for players who prefer heavy, deliberate strikes — pairs well with
+damage-boosting enchantments.

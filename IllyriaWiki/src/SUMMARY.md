@@ -4,24 +4,24 @@
 
 ---
 
-# Getting Started
+## Getting Started
 
 - [Joining the Server](getting-started/joining.md)
 - [Server Rules](getting-started/rules.md)
 - [Resource Pack](getting-started/resource-pack.md)
 
-# Datapacks
+## Datapacks
 
 - [Overview](datapacks/index.md)
 
-# Weapons
+## Weapons
 
 - [Overview](weapons/index.md)
 - [Greatsword](weapons/greatsword.md)
 - [Halberd](weapons/halberd.md)
 - [Longsword](weapons/longsword.md)
 
-# Enchantments
+## Enchantments
 
 - [Overview](enchantments/index.md)
 - [Embertread](enchantments/embertread.md)
@@ -30,7 +30,7 @@
 - [Vinemine](enchantments/vinemine.md)
 - [Vanilla Tweaks](enchantments/vanilla-tweaks.md)
 
-# Quality of Life
+## Quality of Life
 
 - [Overview](qol/index.md)
 - [Sitting](qol/sitting.md)
@@ -39,7 +39,7 @@
 - [XP Management](qol/xp.md)
 - [Anvil Improvements](qol/anvil.md)
 
-# Gameplay Changes
+## Gameplay Changes
 
 - [Overview](gameplay/index.md)
 - [Tree Mechanics](gameplay/trees.md)
@@ -48,11 +48,11 @@
 - [Anti-Griefing](gameplay/anti-griefing.md)
 - [Entity Tweaks](gameplay/entity-tweaks.md)
 
-# Recipes
+## Recipes
 
 - [Overview](recipes/index.md)
 
-# Client Mod Support
+## Client Mod Support
 
 - [Overview](mods/index.md)
 - [Xaero's Maps](mods/xaeros.md)
