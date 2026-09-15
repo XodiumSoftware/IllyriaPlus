@@ -10,6 +10,10 @@
 - [Server Rules](getting-started/rules.md)
 - [Resource Pack](getting-started/resource-pack.md)
 
+# Datapacks
+
+- [Overview](datapacks/index.md)
+
 # Weapons
 
 - [Overview](weapons/index.md)
