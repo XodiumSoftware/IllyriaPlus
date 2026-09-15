@@ -56,6 +56,26 @@ jobs:
           markdownlint-cli2 "src/**/*.md"
         shell: bash
 
+      - id: lint_summary
+        name: Upload Lint Summary
+        if: failure()
+        run: |
+          cd IllyriaWiki
+          markdownlint-cli2 "src/**/*.md" --format json > lint-results.json || true
+          echo "## ❌ Markdown Lint Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo '```json' >> $GITHUB_STEP_SUMMARY
+          cat lint-results.json >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+        shell: bash
+
+      - id: linkcheck
+        name: Link Check
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --verbose --no-progress 'IllyriaWiki/src/**/*.md'
+          fail: true
+
   build:
     name: Build
     if: |
