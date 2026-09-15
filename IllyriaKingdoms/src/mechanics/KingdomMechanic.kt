@@ -31,8 +31,8 @@ internal object KingdomMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("kingdom")
-                    .requires {
-                        it.sender.hasPermission(
+                    .requires { sender ->
+                        sender.sender.hasPermission(
                             "${instance.javaClass.simpleName}.command.kingdom".lowercase(),
                         )
                     }.executes { ctx ->
@@ -48,8 +48,8 @@ internal object KingdomMechanic : MechanicInterface {
                     }.then(
                         Commands
                             .literal("create")
-                            .requires {
-                                it.sender.hasPermission(
+                            .requires { sender ->
+                                sender.sender.hasPermission(
                                     "${instance.javaClass.simpleName}.command.kingdom.admin".lowercase(),
                                 )
                             }.then(
@@ -81,8 +81,8 @@ internal object KingdomMechanic : MechanicInterface {
                     ).then(
                         Commands
                             .literal("delete")
-                            .requires {
-                                it.sender.hasPermission(
+                            .requires { sender ->
+                                sender.sender.hasPermission(
                                     "${instance.javaClass.simpleName}.command.kingdom.admin".lowercase(),
                                 )
                             }.then(
@@ -124,8 +124,8 @@ internal object KingdomMechanic : MechanicInterface {
                     ).then(
                         Commands
                             .literal("invite")
-                            .requires {
-                                it.sender.hasPermission(
+                            .requires { sender ->
+                                sender.sender.hasPermission(
                                     "${instance.javaClass.simpleName}.command.kingdom".lowercase(),
                                 )
                             }.executes { ctx ->
@@ -146,12 +146,53 @@ internal object KingdomMechanic : MechanicInterface {
                                     startInviteMode(player)
                                 }
                                 1
-                            },
+                            }.then(
+                                Commands
+                                    .argument("player", ArgumentTypes.player())
+                                    .executes { ctx ->
+                                        val player = ctx.source.sender as? Player
+                                        if (player == null) {
+                                            ctx.source.sender.sendActionBar(
+                                                Utils.MM.deserialize("<red>This command can only be used by players."),
+                                            )
+                                            return@executes 0
+                                        }
+                                        val resolver =
+                                            ctx.getArgument("player", PlayerSelectorArgumentResolver::class.java)
+                                        val target = resolver.resolve(ctx.source).firstOrNull()
+                                        if (target == null) {
+                                            ctx.source.sender.sendActionBar(
+                                                Utils.MM.deserialize("<red>Player not found."),
+                                            )
+                                            return@executes 0
+                                        }
+                                        KingdomData.getKingdomByPlayer(player.uniqueId) { kingdom ->
+                                            if (kingdom == null) {
+                                                ctx.source.sender.sendActionBar(
+                                                    Utils.MM.deserialize("<red>You are not in a kingdom."),
+                                                )
+                                                return@getKingdomByPlayer
+                                            }
+                                            if (target.uniqueId in kingdom.members || target.uniqueId == kingdom.owner) {
+                                                ctx.source.sender.sendActionBar(
+                                                    Utils.MM.deserialize("<yellow>${target.name} is already in the kingdom."),
+                                                )
+                                                return@getKingdomByPlayer
+                                            }
+                                            KingdomData.addMember(kingdom.owner, target.uniqueId) {
+                                                ctx.source.sender.sendActionBar(
+                                                    Utils.MM.deserialize("<green>${target.name} joined the kingdom."),
+                                                )
+                                            }
+                                        }
+                                        1
+                                    },
+                            ),
                     ).then(
                         Commands
                             .literal("leave")
-                            .requires {
-                                it.sender.hasPermission(
+                            .requires { sender ->
+                                sender.sender.hasPermission(
                                     "${instance.javaClass.simpleName}.command.kingdom".lowercase(),
                                 )
                             }.executes { ctx ->
