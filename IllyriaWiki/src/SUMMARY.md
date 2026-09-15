@@ -47,10 +47,6 @@
 # Recipes
 
 - [Overview](recipes/index.md)
-- [Chainmail Armor](recipes/chainmail.md)
-- [Wool to String](recipes/wool-to-string.md)
-- [Diamond Recycling](recipes/diamond-recycling.md)
-- [More Recipes](recipes/misc.md)
 
 # Client Mod Support
 
