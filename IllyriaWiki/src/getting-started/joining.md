@@ -4,7 +4,7 @@
 
 | Property    | Value                          |
 | ----------- | ------------------------------ |
-| Server IP   | `illyria.xodium.org`           |
+| Server IP   | `play.illyria.cc`              |
 | Version     | Java Edition 26.2              |
 | Client Mods | Optional (see [Client Mod Support](../mods/index.md)) |
 
