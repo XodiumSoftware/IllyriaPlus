@@ -28,3 +28,5 @@ modules.xml
 
 #AI
 .claude/
+
+.wrangler
