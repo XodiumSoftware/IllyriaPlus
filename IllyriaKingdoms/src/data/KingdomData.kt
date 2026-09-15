@@ -110,6 +110,48 @@ internal data class KingdomData(
         }
 
         /**
+         * Retrieves the [KingdomData] that the given player belongs to,
+         * whether they are the owner or a member.
+         *
+         * @param player the UUID of the player to look up.
+         * @param callback invoked on the main thread with the [KingdomData] if found, or `null`.
+         */
+        fun getKingdomByPlayer(
+            player: UUID,
+            callback: (KingdomData?) -> Unit = {},
+        ) {
+            asyncQuery(
+                {
+                    DatabaseManager
+                        .query(
+                            """
+                            SELECT k.*,
+                                   GROUP_CONCAT(DISTINCT km.member_uuid) as member_uuids,
+                                   GROUP_CONCAT(DISTINCT kn.npc_uuid) as npc_uuids
+                            FROM kingdoms k
+                            LEFT JOIN kingdom_members km ON k.id = km.kingdom_id
+                            LEFT JOIN kingdom_npcs kn ON k.id = kn.kingdom_id
+                            WHERE k.owner = ?
+                               OR k.id IN (SELECT kingdom_id FROM kingdom_members WHERE member_uuid = ?)
+                            GROUP BY k.id
+                            """.trimIndent(),
+                            player.toString(),
+                            player.toString(),
+                        ) { rs ->
+                            KingdomData(
+                                id = UUID.fromString(rs.getString("id")),
+                                name = MM.deserialize(rs.getString("name")),
+                                owner = UUID.fromString(rs.getString("owner")),
+                                members = rs.getString("member_uuids")?.let { parseUuidSet(it) } ?: emptySet(),
+                                npcs = rs.getString("npc_uuids")?.let { parseUuidSet(it) } ?: emptySet(),
+                            )
+                        }.firstOrNull()
+                },
+                callback,
+            )
+        }
+
+        /**
          * Persists a [KingdomData] to the database asynchronously.
          *
          * @param kingdomData the kingdom data to save.

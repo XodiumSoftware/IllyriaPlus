@@ -147,6 +147,44 @@ internal object KingdomMechanic : MechanicInterface {
                                 }
                                 1
                             },
+                    ).then(
+                        Commands
+                            .literal("leave")
+                            .requires {
+                                it.sender.hasPermission(
+                                    "${instance.javaClass.simpleName}.command.kingdom".lowercase(),
+                                )
+                            }.executes { ctx ->
+                                val player = ctx.source.sender as? Player
+                                if (player == null) {
+                                    ctx.source.sender.sendActionBar(
+                                        Utils.MM.deserialize("<red>This command can only be used by players."),
+                                    )
+                                    return@executes 0
+                                }
+                                KingdomData.getKingdomByPlayer(player.uniqueId) { kingdom ->
+                                    when {
+                                        kingdom == null ->
+                                            ctx.source.sender.sendActionBar(
+                                                Utils.MM.deserialize("<red>You are not in a kingdom."),
+                                            )
+
+                                        kingdom.owner == player.uniqueId ->
+                                            ctx.source.sender.sendActionBar(
+                                                Utils.MM.deserialize("<red>Owners cannot leave their own kingdom."),
+                                            )
+
+                                        else -> {
+                                            KingdomData.kickMember(kingdom.owner, player.uniqueId) {
+                                                ctx.source.sender.sendActionBar(
+                                                    Utils.MM.deserialize("<green>You have left the kingdom."),
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                                1
+                            },
                     ),
                 "Kingdom management command.",
                 listOf("k"),
