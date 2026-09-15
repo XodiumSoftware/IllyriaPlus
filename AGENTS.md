@@ -66,8 +66,8 @@ IllyriaPlus/                    # Repo root (Gradle aggregator, no code)
 ├── IllyriaCore/                # Core plugin module (published plugin: IllyriaPlus)
 │   ├── build.gradle.kts        # Module build configuration
 │   ├── src/                    # Source directory
-│   │   ├── IllyriaPlus.kt          # Main plugin class
-│   │   ├── IllyriaPlusBootstrap.kt # Bootstrap class
+│   │   ├── IllyriaCore.kt          # Main plugin class
+│   │   ├── IllyriaCoreBootstrap.kt # Bootstrap class
 │   │   ├── Utils.kt                # Utility functions
 │   │   ├── mechanics/              # Feature mechanics (entity, player, server, world subfolders)
 │   │   ├── enchantments/           # Enchantment implementations
@@ -94,28 +94,28 @@ IllyriaPlus/                    # Repo root (Gradle aggregator, no code)
 
 ### Entry Points
 
-1. **IllyriaPlusBootstrap** (`PluginBootstrap`) — Runs before plugin enable. Creates item tags (`illyriaplus:tools`, `illyriaplus:weapons`, `illyriaplus:tether_items`), registers custom enchantments into Paper's registry, and tags them as tradeable/non-treasure/in-enchanting-table.
-2. **IllyriaPlus** (`JavaPlugin`) — Main class. Validates server version, registers recipes, mechanics, and enchantment event listeners.
+1. **IllyriaCoreBootstrap** (`PluginBootstrap`) — Runs before plugin enable. Creates item tags (`illyriacore:tools`, `illyriacore:weapons`, `illyriacore:tether_items`), registers custom enchantments into Paper's registry, and tags them as tradeable/non-treasure/in-enchanting-table.
+2. **IllyriaCore** (`JavaPlugin`) — Main class. Validates server version, registers recipes, mechanics, and enchantment event listeners.
 
 ### Module System
 
 - All mechanics are Kotlin `object` singletons implementing `MechanicInterface` (extends Bukkit `Listener`)
 - All enchantments are Kotlin `object` singletons implementing `EnchantmentInterface` (extends Bukkit `Listener`)
 - All recipes are Kotlin `object` singletons implementing `RecipeInterface`
-- Modules self-register in `IllyriaPlus.onEnable()` via their `register()` function
+- Modules self-register in `IllyriaCore.onEnable()` via their `register()` function
 - **There is no file-based configuration and no nested `Config` object** — all settings are compile-time constants declared directly in each module object
-- To disable a module, remove it from the corresponding list in `IllyriaPlus.onEnable()`
+- To disable a module, remove it from the corresponding list in `IllyriaCore.onEnable()`
 
 ### Enchantments
 
 Custom enchantments implement `EnchantmentInterface` with:
 
-- Auto-generated `TypedKey<Enchantment>` from class name (e.g., `VinemineEnchantment` → `illyriaplus:vinemine`)
+- Auto-generated `TypedKey<Enchantment>` from class name (e.g., `VinemineEnchantment` → `illyriacore:vinemine`)
 - `invoke(builder)` to configure registry entry (description, cost, levels, weight, slots)
 - `get()` to retrieve live `Enchantment` instance from registry
 - Event handling via `@EventHandler fun on(event: <EventType>)` methods
 
-Only utility enchantments in `IllyriaCore/src/enchantments/utility/` are registered in `IllyriaPlusBootstrap`. Enchantments in `IllyriaCore/src/enchantments/vanilla/` listen to events and check for vanilla enchantments on items instead.
+Only utility enchantments in `IllyriaCore/src/enchantments/utility/` are registered in `IllyriaCoreBootstrap`. Enchantments in `IllyriaCore/src/enchantments/vanilla/` listen to events and check for vanilla enchantments on items instead.
 
 ### IllyriaBridge
 
@@ -137,7 +137,7 @@ The `IllyriaBridge` module (`org.xodium.illyriabridge`) handles server↔client 
 - **Import types instead of using fully qualified paths** — e.g., `import org.bukkit.inventory.meta.PotionMeta` instead of `org.bukkit.inventory.meta.PotionMeta`
 - **Use `it` for single-parameter lambdas** — e.g., `list.forEach { it.doSomething() }` instead of `list.forEach { item -> item.doSomething() }`
 - **Use `ItemStack.of()` instead of `ItemStack()` constructor** — Paper's modern API for creating item stacks
-- **Don't create intermediate `const val` for override properties** — assign directly to the override, e.g., `override val key: String = "illyriaplus:my_potion"` instead of creating a `const val KEY` and then `override val key = KEY`
+- **Don't create intermediate `const val` for override properties** — assign directly to the override, e.g., `override val key: String = "illyriacore:my_potion"` instead of creating a `const val KEY` and then `override val key = KEY`
 - **Don't add KDoc to implemented overrides** — the base interface/class already has documentation; let it inherit naturally
 - **Use data class builders** — e.g., `potion(PotionData(color = X, displayName = Y))` instead of lambda receivers for simpler configuration
 - **Use explicit named factory functions** — prefer `potion()` and `splash()` over `invoke()` operator for clarity
@@ -168,7 +168,7 @@ Within each group:
 ## Important Notes
 
 - No file-based configuration — all settings are compile-time constants declared directly in module objects
-- Enchantments must be registered in `IllyriaPlusBootstrap` AND tagged as tradeable/non-treasure/enchanting-table to appear in vanilla systems
+- Enchantments must be registered in `IllyriaCoreBootstrap` AND tagged as tradeable/non-treasure/enchanting-table to appear in vanilla systems
 - Project uses Paper's modern lifecycle/registry APIs extensively
 
 ## Claude Code Workflow
@@ -217,11 +217,11 @@ GitHub Actions workflows in `.github/workflows/`:
 1. Create new file in `IllyriaCore/src/enchantments/utility/YournameEnchantment.kt` for custom registry enchantments, or `IllyriaCore/src/enchantments/vanilla/YournameEnchantment.kt` for vanilla behavior overrides
 2. Implement `EnchantmentInterface` as an `object`
 3. In `invoke(builder)`, configure: `description()`, `anvilCost()`, `maxLevel()`, `weight()`, `activeSlots()`, and optionally `supportedItems()`
-4. In `IllyriaPlusBootstrap.kt` (only for `utility/` enchantments):
+4. In `IllyriaCoreBootstrap.kt` (only for `utility/` enchantments):
     - Add `YournameEnchantment` to the registry handler, usually chaining `.supportedItems()` with a tag from the registry event
     - Add it to the tags (tradeable, non-treasure, enchanting-table)
     - Add supported items to appropriate `ItemTag` if needed
-5. In `IllyriaPlus.kt`:
+5. In `IllyriaCore.kt`:
     - Add `YournameEnchantment` to the `enchantments` list
 6. Add KDoc comments to explain the enchantment's behavior
 
@@ -232,7 +232,7 @@ GitHub Actions workflows in `.github/workflows/`:
 3. Hardcode settings as `private const val` / `private val` properties directly in the object (no nested `Config` object)
 4. Implement `@EventHandler` methods for events
 5. Register commands/permissions by overriding `cmds` and `perms` if needed
-6. In `IllyriaPlus.kt`, add `YourMechanic` to the `mechanics` list in `onEnable()`
+6. In `IllyriaCore.kt`, add `YourMechanic` to the `mechanics` list in `onEnable()`
 7. Add KDoc comments explaining the mechanic's purpose and features
 
 ### Adding a Recipe
@@ -241,7 +241,7 @@ GitHub Actions workflows in `.github/workflows/`:
 2. Implement `RecipeInterface` as an `object`
 3. Define `recipes` list for crafting/smelting recipes, or `potions` list for brewing recipes
 4. Use naming pattern `{descriptive_name}_{recipe_type}` for `NamespacedKey`
-5. In `IllyriaPlus.kt`, add `YourRecipe` to the `recipes` list in `onEnable()`
+5. In `IllyriaCore.kt`, add `YourRecipe` to the `recipes` list in `onEnable()`
 6. Add KDoc comments describing the recipe
 
 ### Adding a PDC (Persistent Data Container)

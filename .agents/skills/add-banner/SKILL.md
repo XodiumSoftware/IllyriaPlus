@@ -25,11 +25,11 @@ Ask the user to clarify:
 ## Resource-pack banner pattern
 
 1. Place the pattern texture in the appropriate resource pack path:
-   - `IllyriaResourcePack/assets/minecraft/textures/entity/banner/{pattern}.png`
-   - If namespaced: `IllyriaResourcePack/assets/illyriaplus/textures/entity/banner/{pattern}.png`
+    - `IllyriaResourcePack/assets/minecraft/textures/entity/banner/{pattern}.png`
+    - If namespaced: `IllyriaResourcePack/assets/illyriacore/textures/entity/banner/{pattern}.png`
 2. Add the pattern definition to `IllyriaResourcePack/assets/minecraft/banner_pattern/{pattern}.json` if the project uses custom pattern registry entries.
 3. Update language overrides in `IllyriaResourcePack/assets/minecraft/lang/en_us.json`:
-   - `"block.minecraft.banner.{pattern}.{color}": "<Display Name>"` if applicable
+    - `"block.minecraft.banner.{pattern}.{color}": "<Display Name>"` if applicable
 
 ## Custom banner item
 
@@ -44,15 +44,15 @@ Ask the user to clarify:
 1. Create `IllyriaCore/src/mechanics/{category}/<Name>BannerMechanic.kt`.
 2. Implement `internal object <Name>BannerMechanic : MechanicInterface`.
 3. Add `@EventHandler fun on(event: <EventType>)` methods as needed.
-4. Register it in `IllyriaCore/src/IllyriaPlus.kt` in the `mechanics` list.
+4. Register it in `IllyriaCore/src/IllyriaCore.kt` in the `mechanics` list.
 5. Add concise KDoc.
 
 ## Conventions
 
-- Keep banner assets namespaced under `illyriaplus:` when they are custom (not vanilla overrides).
+- Keep banner assets namespaced under `illyriacore:` when they are custom (not vanilla overrides).
 - Use `BannerMeta` and `PatternType` for code-based banner customization.
 - Do not create nested `Config` objects; hardcode constants directly in the mechanic/item object.
-- Keep the `mechanics` list in `IllyriaPlus.kt` alphabetically sorted.
+- Keep the `mechanics` list in `IllyriaCore.kt` alphabetically sorted.
 
 ## Validation
 

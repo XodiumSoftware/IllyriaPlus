@@ -365,1102 +365,1102 @@
             }
           },
           {
-            "when": "illyriaplus:alpha",
+            "when": "illyriacore:alpha",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/alpha"
+              "model": "illyriacore:item/painting/alpha"
             }
           },
           {
-            "when": "illyriaplus:an_intruder",
+            "when": "illyriacore:an_intruder",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/an_intruder"
+              "model": "illyriacore:item/painting/an_intruder"
             }
           },
           {
-            "when": "illyriaplus:ancestor",
+            "when": "illyriacore:ancestor",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/ancestor"
+              "model": "illyriacore:item/painting/ancestor"
             }
           },
           {
-            "when": "illyriaplus:anchor",
+            "when": "illyriacore:anchor",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/anchor"
+              "model": "illyriacore:item/painting/anchor"
             }
           },
           {
-            "when": "illyriaplus:aquaculture",
+            "when": "illyriacore:aquaculture",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/aquaculture"
+              "model": "illyriacore:item/painting/aquaculture"
             }
           },
           {
-            "when": "illyriaplus:archangel_michael",
+            "when": "illyriacore:archangel_michael",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/archangel_michael"
+              "model": "illyriacore:item/painting/archangel_michael"
             }
           },
           {
-            "when": "illyriaplus:archangel_michael_2",
+            "when": "illyriacore:archangel_michael_2",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/archangel_michael_2"
+              "model": "illyriacore:item/painting/archangel_michael_2"
             }
           },
           {
-            "when": "illyriaplus:ascension_of_christ",
+            "when": "illyriacore:ascension_of_christ",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/ascension_of_christ"
+              "model": "illyriacore:item/painting/ascension_of_christ"
             }
           },
           {
-            "when": "illyriaplus:aurorae",
+            "when": "illyriacore:aurorae",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/aurorae"
+              "model": "illyriacore:item/painting/aurorae"
             }
           },
           {
-            "when": "illyriaplus:awful_housing",
+            "when": "illyriacore:awful_housing",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/awful_housing"
+              "model": "illyriacore:item/painting/awful_housing"
             }
           },
           {
-            "when": "illyriaplus:baptism_of_christ",
+            "when": "illyriacore:baptism_of_christ",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/baptism_of_christ"
+              "model": "illyriacore:item/painting/baptism_of_christ"
             }
           },
           {
-            "when": "illyriaplus:beachside",
+            "when": "illyriacore:beachside",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/beachside"
+              "model": "illyriacore:item/painting/beachside"
             }
           },
           {
-            "when": "illyriaplus:best_friend",
+            "when": "illyriacore:best_friend",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/best_friend"
+              "model": "illyriacore:item/painting/best_friend"
             }
           },
           {
-            "when": "illyriaplus:beta",
+            "when": "illyriacore:beta",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/beta"
+              "model": "illyriacore:item/painting/beta"
             }
           },
           {
-            "when": "illyriaplus:bliss",
+            "when": "illyriacore:bliss",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/bliss"
+              "model": "illyriacore:item/painting/bliss"
             }
           },
           {
-            "when": "illyriaplus:blossoms",
+            "when": "illyriacore:blossoms",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/blossoms"
+              "model": "illyriacore:item/painting/blossoms"
             }
           },
           {
-            "when": "illyriaplus:boscage",
+            "when": "illyriacore:boscage",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/boscage"
+              "model": "illyriacore:item/painting/boscage"
             }
           },
           {
-            "when": "illyriaplus:bouquet_edition",
+            "when": "illyriacore:bouquet_edition",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/bouquet_edition"
+              "model": "illyriacore:item/painting/bouquet_edition"
             }
           },
           {
-            "when": "illyriaplus:bubbles",
+            "when": "illyriacore:bubbles",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/bubbles"
+              "model": "illyriacore:item/painting/bubbles"
             }
           },
           {
-            "when": "illyriaplus:caricature",
+            "when": "illyriacore:caricature",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/caricature"
+              "model": "illyriacore:item/painting/caricature"
             }
           },
           {
-            "when": "illyriaplus:cat",
+            "when": "illyriacore:cat",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/cat"
+              "model": "illyriacore:item/painting/cat"
             }
           },
           {
-            "when": "illyriaplus:cave_game",
+            "when": "illyriacore:cave_game",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/cave_game"
+              "model": "illyriacore:item/painting/cave_game"
             }
           },
           {
-            "when": "illyriaplus:chaos",
+            "when": "illyriacore:chaos",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/chaos"
+              "model": "illyriacore:item/painting/chaos"
             }
           },
           {
-            "when": "illyriaplus:cherry_moon",
+            "when": "illyriacore:cherry_moon",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/cherry_moon"
+              "model": "illyriacore:item/painting/cherry_moon"
             }
           },
           {
-            "when": "illyriaplus:christ_pantocrator",
+            "when": "illyriacore:christ_pantocrator",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/christ_pantocrator"
+              "model": "illyriacore:item/painting/christ_pantocrator"
             }
           },
           {
-            "when": "illyriaplus:cloth",
+            "when": "illyriacore:cloth",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/cloth"
+              "model": "illyriacore:item/painting/cloth"
             }
           },
           {
-            "when": "illyriaplus:cloud_cuckoo",
+            "when": "illyriacore:cloud_cuckoo",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/cloud_cuckoo"
+              "model": "illyriacore:item/painting/cloud_cuckoo"
             }
           },
           {
-            "when": "illyriaplus:crucifixion_of_christ",
+            "when": "illyriacore:crucifixion_of_christ",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/crucifixion_of_christ"
+              "model": "illyriacore:item/painting/crucifixion_of_christ"
             }
           },
           {
-            "when": "illyriaplus:crusty",
+            "when": "illyriacore:crusty",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/crusty"
+              "model": "illyriacore:item/painting/crusty"
             }
           },
           {
-            "when": "illyriaplus:death",
+            "when": "illyriacore:death",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/death"
+              "model": "illyriacore:item/painting/death"
             }
           },
           {
-            "when": "illyriaplus:decay",
+            "when": "illyriacore:decay",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/decay"
+              "model": "illyriacore:item/painting/decay"
             }
           },
           {
-            "when": "illyriaplus:distant_peaks",
+            "when": "illyriacore:distant_peaks",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/distant_peaks"
+              "model": "illyriacore:item/painting/distant_peaks"
             }
           },
           {
-            "when": "illyriaplus:disturbance",
+            "when": "illyriacore:disturbance",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/disturbance"
+              "model": "illyriacore:item/painting/disturbance"
             }
           },
           {
-            "when": "illyriaplus:drippy",
+            "when": "illyriacore:drippy",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/drippy"
+              "model": "illyriacore:item/painting/drippy"
             }
           },
           {
-            "when": "illyriaplus:ecotonal_pareidolia",
+            "when": "illyriacore:ecotonal_pareidolia",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/ecotonal_pareidolia"
+              "model": "illyriacore:item/painting/ecotonal_pareidolia"
             }
           },
           {
-            "when": "illyriaplus:endy_warhol",
+            "when": "illyriacore:endy_warhol",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/endy_warhol"
+              "model": "illyriacore:item/painting/endy_warhol"
             }
           },
           {
-            "when": "illyriaplus:escapeless",
+            "when": "illyriacore:escapeless",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/escapeless"
+              "model": "illyriacore:item/painting/escapeless"
             }
           },
           {
-            "when": "illyriaplus:ether",
+            "when": "illyriacore:ether",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/ether"
+              "model": "illyriacore:item/painting/ether"
             }
           },
           {
-            "when": "illyriaplus:eye",
+            "when": "illyriacore:eye",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/eye"
+              "model": "illyriacore:item/painting/eye"
             }
           },
           {
-            "when": "illyriaplus:farlander",
+            "when": "illyriacore:farlander",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/farlander"
+              "model": "illyriacore:item/painting/farlander"
             }
           },
           {
-            "when": "illyriaplus:fauna",
+            "when": "illyriacore:fauna",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/fauna"
+              "model": "illyriacore:item/painting/fauna"
             }
           },
           {
-            "when": "illyriaplus:feather_falling",
+            "when": "illyriacore:feather_falling",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/feather_falling"
+              "model": "illyriacore:item/painting/feather_falling"
             }
           },
           {
-            "when": "illyriaplus:film",
+            "when": "illyriacore:film",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/film"
+              "model": "illyriacore:item/painting/film"
             }
           },
           {
-            "when": "illyriaplus:flora",
+            "when": "illyriacore:flora",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/flora"
+              "model": "illyriacore:item/painting/flora"
             }
           },
           {
-            "when": "illyriaplus:fox",
+            "when": "illyriacore:fox",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/fox"
+              "model": "illyriacore:item/painting/fox"
             }
           },
           {
-            "when": "illyriaplus:fra_lippo_lippi",
+            "when": "illyriacore:fra_lippo_lippi",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/fra_lippo_lippi"
+              "model": "illyriacore:item/painting/fra_lippo_lippi"
             }
           },
           {
-            "when": "illyriaplus:frost",
+            "when": "illyriacore:frost",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/frost"
+              "model": "illyriacore:item/painting/frost"
             }
           },
           {
-            "when": "illyriaplus:gears",
+            "when": "illyriacore:gears",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/gears"
+              "model": "illyriacore:item/painting/gears"
             }
           },
           {
-            "when": "illyriaplus:generator",
+            "when": "illyriacore:generator",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/generator"
+              "model": "illyriacore:item/painting/generator"
             }
           },
           {
-            "when": "illyriaplus:giant",
+            "when": "illyriacore:giant",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/giant"
+              "model": "illyriacore:item/painting/giant"
             }
           },
           {
-            "when": "illyriaplus:greatsword",
+            "when": "illyriacore:greatsword",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/greatsword"
+              "model": "illyriacore:item/painting/greatsword"
             }
           },
           {
-            "when": "illyriaplus:grisaille",
+            "when": "illyriacore:grisaille",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/grisaille"
+              "model": "illyriacore:item/painting/grisaille"
             }
           },
           {
-            "when": "illyriaplus:gulls",
+            "when": "illyriacore:gulls",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/gulls"
+              "model": "illyriacore:item/painting/gulls"
             }
           },
           {
-            "when": "illyriaplus:harvest_moon",
+            "when": "illyriacore:harvest_moon",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/harvest_moon"
+              "model": "illyriacore:item/painting/harvest_moon"
             }
           },
           {
-            "when": "illyriaplus:heartbeat",
+            "when": "illyriacore:heartbeat",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/heartbeat"
+              "model": "illyriacore:item/painting/heartbeat"
             }
           },
           {
-            "when": "illyriaplus:hearth_rug",
+            "when": "illyriacore:hearth_rug",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/hearth_rug"
+              "model": "illyriacore:item/painting/hearth_rug"
             }
           },
           {
-            "when": "illyriaplus:heavens_ladder",
+            "when": "illyriacore:heavens_ladder",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/heavens_ladder"
+              "model": "illyriacore:item/painting/heavens_ladder"
             }
           },
           {
-            "when": "illyriaplus:heirloom",
+            "when": "illyriacore:heirloom",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/heirloom"
+              "model": "illyriacore:item/painting/heirloom"
             }
           },
           {
-            "when": "illyriaplus:horn_gates_of",
+            "when": "illyriacore:horn_gates_of",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/horn_gates_of"
+              "model": "illyriacore:item/painting/horn_gates_of"
             }
           },
           {
-            "when": "illyriaplus:ichor",
+            "when": "illyriacore:ichor",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/ichor"
+              "model": "illyriacore:item/painting/ichor"
             }
           },
           {
-            "when": "illyriaplus:iconography",
+            "when": "illyriacore:iconography",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/iconography"
+              "model": "illyriacore:item/painting/iconography"
             }
           },
           {
-            "when": "illyriaplus:in_situ",
+            "when": "illyriacore:in_situ",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/in_situ"
+              "model": "illyriacore:item/painting/in_situ"
             }
           },
           {
-            "when": "illyriaplus:interstice",
+            "when": "illyriacore:interstice",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/interstice"
+              "model": "illyriacore:item/painting/interstice"
             }
           },
           {
-            "when": "illyriaplus:ivory_gates_of",
+            "when": "illyriacore:ivory_gates_of",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/ivory_gates_of"
+              "model": "illyriacore:item/painting/ivory_gates_of"
             }
           },
           {
-            "when": "illyriaplus:java",
+            "when": "illyriacore:java",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/java"
+              "model": "illyriacore:item/painting/java"
             }
           },
           {
-            "when": "illyriaplus:jazz_town",
+            "when": "illyriacore:jazz_town",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/jazz_town"
+              "model": "illyriacore:item/painting/jazz_town"
             }
           },
           {
-            "when": "illyriaplus:john_devouring_his_son",
+            "when": "illyriacore:john_devouring_his_son",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/john_devouring_his_son"
+              "model": "illyriacore:item/painting/john_devouring_his_son"
             }
           },
           {
-            "when": "illyriaplus:journeys_end",
+            "when": "illyriacore:journeys_end",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/journeys_end"
+              "model": "illyriacore:item/painting/journeys_end"
             }
           },
           {
-            "when": "illyriaplus:justice",
+            "when": "illyriacore:justice",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/justice"
+              "model": "illyriacore:item/painting/justice"
             }
           },
           {
-            "when": "illyriaplus:keeping_up",
+            "when": "illyriacore:keeping_up",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/keeping_up"
+              "model": "illyriacore:item/painting/keeping_up"
             }
           },
           {
-            "when": "illyriaplus:life",
+            "when": "illyriacore:life",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/life"
+              "model": "illyriacore:item/painting/life"
             }
           },
           {
-            "when": "illyriaplus:life_cycle",
+            "when": "illyriacore:life_cycle",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/life_cycle"
+              "model": "illyriacore:item/painting/life_cycle"
             }
           },
           {
-            "when": "illyriaplus:light",
+            "when": "illyriacore:light",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/light"
+              "model": "illyriacore:item/painting/light"
             }
           },
           {
-            "when": "illyriaplus:lost_wax",
+            "when": "illyriacore:lost_wax",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/lost_wax"
+              "model": "illyriacore:item/painting/lost_wax"
             }
           },
           {
-            "when": "illyriaplus:luminescent",
+            "when": "illyriacore:luminescent",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/luminescent"
+              "model": "illyriacore:item/painting/luminescent"
             }
           },
           {
-            "when": "illyriaplus:macabre",
+            "when": "illyriacore:macabre",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/macabre"
+              "model": "illyriacore:item/painting/macabre"
             }
           },
           {
-            "when": "illyriaplus:macabre_alt",
+            "when": "illyriacore:macabre_alt",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/macabre_alt"
+              "model": "illyriacore:item/painting/macabre_alt"
             }
           },
           {
-            "when": "illyriaplus:macrocosm",
+            "when": "illyriacore:macrocosm",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/macrocosm"
+              "model": "illyriacore:item/painting/macrocosm"
             }
           },
           {
-            "when": "illyriaplus:medley",
+            "when": "illyriacore:medley",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/medley"
+              "model": "illyriacore:item/painting/medley"
             }
           },
           {
-            "when": "illyriaplus:mode_creative",
+            "when": "illyriacore:mode_creative",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/mode_creative"
+              "model": "illyriacore:item/painting/mode_creative"
             }
           },
           {
-            "when": "illyriaplus:moonlight_tower",
+            "when": "illyriacore:moonlight_tower",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/moonlight_tower"
+              "model": "illyriacore:item/painting/moonlight_tower"
             }
           },
           {
-            "when": "illyriaplus:morning_on_the_seine",
+            "when": "illyriacore:morning_on_the_seine",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/morning_on_the_seine"
+              "model": "illyriacore:item/painting/morning_on_the_seine"
             }
           },
           {
-            "when": "illyriaplus:mountains",
+            "when": "illyriacore:mountains",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/mountains"
+              "model": "illyriacore:item/painting/mountains"
             }
           },
           {
-            "when": "illyriaplus:mystical_supper",
+            "when": "illyriacore:mystical_supper",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/mystical_supper"
+              "model": "illyriacore:item/painting/mystical_supper"
             }
           },
           {
-            "when": "illyriaplus:nativity_of_christ",
+            "when": "illyriacore:nativity_of_christ",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/nativity_of_christ"
+              "model": "illyriacore:item/painting/nativity_of_christ"
             }
           },
           {
-            "when": "illyriaplus:never_blooming_wattle",
+            "when": "illyriacore:never_blooming_wattle",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/never_blooming_wattle"
+              "model": "illyriacore:item/painting/never_blooming_wattle"
             }
           },
           {
-            "when": "illyriaplus:night",
+            "when": "illyriacore:night",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/night"
+              "model": "illyriacore:item/painting/night"
             }
           },
           {
-            "when": "illyriaplus:nullity",
+            "when": "illyriacore:nullity",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/nullity"
+              "model": "illyriacore:item/painting/nullity"
             }
           },
           {
-            "when": "illyriaplus:nyctinasty",
+            "when": "illyriacore:nyctinasty",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/nyctinasty"
+              "model": "illyriacore:item/painting/nyctinasty"
             }
           },
           {
-            "when": "illyriaplus:oak_door",
+            "when": "illyriacore:oak_door",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/oak_door"
+              "model": "illyriacore:item/painting/oak_door"
             }
           },
           {
-            "when": "illyriaplus:operator",
+            "when": "illyriacore:operator",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/operator"
+              "model": "illyriacore:item/painting/operator"
             }
           },
           {
-            "when": "illyriaplus:order",
+            "when": "illyriacore:order",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/order"
+              "model": "illyriacore:item/painting/order"
             }
           },
           {
-            "when": "illyriaplus:parrot",
+            "when": "illyriacore:parrot",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/parrot"
+              "model": "illyriacore:item/painting/parrot"
             }
           },
           {
-            "when": "illyriaplus:perennial",
+            "when": "illyriacore:perennial",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/perennial"
+              "model": "illyriacore:item/painting/perennial"
             }
           },
           {
-            "when": "illyriaplus:picturesque",
+            "when": "illyriacore:picturesque",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/picturesque"
+              "model": "illyriacore:item/painting/picturesque"
             }
           },
           {
-            "when": "illyriaplus:pixel_gobelin",
+            "when": "illyriacore:pixel_gobelin",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/pixel_gobelin"
+              "model": "illyriacore:item/painting/pixel_gobelin"
             }
           },
           {
-            "when": "illyriaplus:post_mortem",
+            "when": "illyriacore:post_mortem",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/post_mortem"
+              "model": "illyriacore:item/painting/post_mortem"
             }
           },
           {
-            "when": "illyriaplus:prickle",
+            "when": "illyriacore:prickle",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/prickle"
+              "model": "illyriacore:item/painting/prickle"
             }
           },
           {
-            "when": "illyriaplus:pyramid",
+            "when": "illyriacore:pyramid",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/pyramid"
+              "model": "illyriacore:item/painting/pyramid"
             }
           },
           {
-            "when": "illyriaplus:rainbows",
+            "when": "illyriacore:rainbows",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/rainbows"
+              "model": "illyriacore:item/painting/rainbows"
             }
           },
           {
-            "when": "illyriaplus:rainbows_alt",
+            "when": "illyriacore:rainbows_alt",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/rainbows_alt"
+              "model": "illyriacore:item/painting/rainbows_alt"
             }
           },
           {
-            "when": "illyriaplus:rainbows_trans",
+            "when": "illyriacore:rainbows_trans",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/rainbows_trans"
+              "model": "illyriacore:item/painting/rainbows_trans"
             }
           },
           {
-            "when": "illyriaplus:rainforest",
+            "when": "illyriacore:rainforest",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/rainforest"
+              "model": "illyriacore:item/painting/rainforest"
             }
           },
           {
-            "when": "illyriaplus:rana",
+            "when": "illyriacore:rana",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/rana"
+              "model": "illyriacore:item/painting/rana"
             }
           },
           {
-            "when": "illyriaplus:randomtickspeed",
+            "when": "illyriacore:randomtickspeed",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/randomtickspeed"
+              "model": "illyriacore:item/painting/randomtickspeed"
             }
           },
           {
-            "when": "illyriaplus:red_dawn",
+            "when": "illyriacore:red_dawn",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/red_dawn"
+              "model": "illyriacore:item/painting/red_dawn"
             }
           },
           {
-            "when": "illyriaplus:rich_topsoil",
+            "when": "illyriacore:rich_topsoil",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/rich_topsoil"
+              "model": "illyriacore:item/painting/rich_topsoil"
             }
           },
           {
-            "when": "illyriaplus:rising_sun_and_fading_death",
+            "when": "illyriacore:rising_sun_and_fading_death",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/rising_sun_and_fading_death"
+              "model": "illyriacore:item/painting/rising_sun_and_fading_death"
             }
           },
           {
-            "when": "illyriaplus:rosemalling",
+            "when": "illyriacore:rosemalling",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/rosemalling"
+              "model": "illyriacore:item/painting/rosemalling"
             }
           },
           {
-            "when": "illyriaplus:saint_andrew",
+            "when": "illyriacore:saint_andrew",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/saint_andrew"
+              "model": "illyriacore:item/painting/saint_andrew"
             }
           },
           {
-            "when": "illyriaplus:saint_anthony",
+            "when": "illyriacore:saint_anthony",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/saint_anthony"
+              "model": "illyriacore:item/painting/saint_anthony"
             }
           },
           {
-            "when": "illyriaplus:saint_bartholomew",
+            "when": "illyriacore:saint_bartholomew",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/saint_bartholomew"
+              "model": "illyriacore:item/painting/saint_bartholomew"
             }
           },
           {
-            "when": "illyriaplus:saint_gabriel",
+            "when": "illyriacore:saint_gabriel",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/saint_gabriel"
+              "model": "illyriacore:item/painting/saint_gabriel"
             }
           },
           {
-            "when": "illyriaplus:saint_james",
+            "when": "illyriacore:saint_james",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/saint_james"
+              "model": "illyriacore:item/painting/saint_james"
             }
           },
           {
-            "when": "illyriaplus:saint_john",
+            "when": "illyriacore:saint_john",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/saint_john"
+              "model": "illyriacore:item/painting/saint_john"
             }
           },
           {
-            "when": "illyriaplus:saint_matthew",
+            "when": "illyriacore:saint_matthew",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/saint_matthew"
+              "model": "illyriacore:item/painting/saint_matthew"
             }
           },
           {
-            "when": "illyriaplus:saint_matthias",
+            "when": "illyriacore:saint_matthias",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/saint_matthias"
+              "model": "illyriacore:item/painting/saint_matthias"
             }
           },
           {
-            "when": "illyriaplus:saint_paul",
+            "when": "illyriacore:saint_paul",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/saint_paul"
+              "model": "illyriacore:item/painting/saint_paul"
             }
           },
           {
-            "when": "illyriaplus:saint_peter",
+            "when": "illyriacore:saint_peter",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/saint_peter"
+              "model": "illyriacore:item/painting/saint_peter"
             }
           },
           {
-            "when": "illyriaplus:saint_philip",
+            "when": "illyriacore:saint_philip",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/saint_philip"
+              "model": "illyriacore:item/painting/saint_philip"
             }
           },
           {
-            "when": "illyriaplus:saint_simon",
+            "when": "illyriacore:saint_simon",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/saint_simon"
+              "model": "illyriacore:item/painting/saint_simon"
             }
           },
           {
-            "when": "illyriaplus:saint_thomas",
+            "when": "illyriacore:saint_thomas",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/saint_thomas"
+              "model": "illyriacore:item/painting/saint_thomas"
             }
           },
           {
-            "when": "illyriaplus:sandstones",
+            "when": "illyriacore:sandstones",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/sandstones"
+              "model": "illyriacore:item/painting/sandstones"
             }
           },
           {
-            "when": "illyriaplus:serpent",
+            "when": "illyriacore:serpent",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/serpent"
+              "model": "illyriacore:item/painting/serpent"
             }
           },
           {
-            "when": "illyriaplus:shapes",
+            "when": "illyriacore:shapes",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/shapes"
+              "model": "illyriacore:item/painting/shapes"
             }
           },
           {
-            "when": "illyriaplus:slime_chunk",
+            "when": "illyriacore:slime_chunk",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/slime_chunk"
+              "model": "illyriacore:item/painting/slime_chunk"
             }
           },
           {
-            "when": "illyriaplus:squid_games",
+            "when": "illyriacore:squid_games",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/squid_games"
+              "model": "illyriacore:item/painting/squid_games"
             }
           },
           {
-            "when": "illyriaplus:stair_hall",
+            "when": "illyriacore:stair_hall",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/stair_hall"
+              "model": "illyriacore:item/painting/stair_hall"
             }
           },
           {
-            "when": "illyriaplus:stalks",
+            "when": "illyriacore:stalks",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/stalks"
+              "model": "illyriacore:item/painting/stalks"
             }
           },
           {
-            "when": "illyriaplus:statue",
+            "when": "illyriacore:statue",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/statue"
+              "model": "illyriacore:item/painting/statue"
             }
           },
           {
-            "when": "illyriaplus:still_life",
+            "when": "illyriacore:still_life",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/still_life"
+              "model": "illyriacore:item/painting/still_life"
             }
           },
           {
-            "when": "illyriaplus:storm",
+            "when": "illyriacore:storm",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/storm"
+              "model": "illyriacore:item/painting/storm"
             }
           },
           {
-            "when": "illyriaplus:sunflower",
+            "when": "illyriacore:sunflower",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/sunflower"
+              "model": "illyriacore:item/painting/sunflower"
             }
           },
           {
-            "when": "illyriaplus:sunrise_sparse",
+            "when": "illyriacore:sunrise_sparse",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/sunrise_sparse"
+              "model": "illyriacore:item/painting/sunrise_sparse"
             }
           },
           {
-            "when": "illyriaplus:table",
+            "when": "illyriacore:table",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/table"
+              "model": "illyriacore:item/painting/table"
             }
           },
           {
-            "when": "illyriaplus:the_far_lands",
+            "when": "illyriacore:the_far_lands",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/the_far_lands"
+              "model": "illyriacore:item/painting/the_far_lands"
             }
           },
           {
-            "when": "illyriaplus:the_far_lands_alt",
+            "when": "illyriacore:the_far_lands_alt",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/the_far_lands_alt"
+              "model": "illyriacore:item/painting/the_far_lands_alt"
             }
           },
           {
-            "when": "illyriaplus:the_foils",
+            "when": "illyriacore:the_foils",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/the_foils"
+              "model": "illyriacore:item/painting/the_foils"
             }
           },
           {
-            "when": "illyriaplus:the_painting_at_end_of_catalogue",
+            "when": "illyriacore:the_painting_at_end_of_catalogue",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/the_painting_at_end_of_catalogue"
+              "model": "illyriacore:item/painting/the_painting_at_end_of_catalogue"
             }
           },
           {
-            "when": "illyriaplus:the_scream",
+            "when": "illyriacore:the_scream",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/the_scream"
+              "model": "illyriacore:item/painting/the_scream"
             }
           },
           {
-            "when": "illyriaplus:theotokos_joy_of_all",
+            "when": "illyriacore:theotokos_joy_of_all",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/theotokos_joy_of_all"
+              "model": "illyriacore:item/painting/theotokos_joy_of_all"
             }
           },
           {
-            "when": "illyriaplus:traveller",
+            "when": "illyriacore:traveller",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/traveller"
+              "model": "illyriacore:item/painting/traveller"
             }
           },
           {
-            "when": "illyriaplus:tussie_mussie",
+            "when": "illyriacore:tussie_mussie",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/tussie_mussie"
+              "model": "illyriacore:item/painting/tussie_mussie"
             }
           },
           {
-            "when": "illyriaplus:underworld",
+            "when": "illyriacore:underworld",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/underworld"
+              "model": "illyriacore:item/painting/underworld"
             }
           },
           {
-            "when": "illyriaplus:underworld_2",
+            "when": "illyriacore:underworld_2",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/underworld_2"
+              "model": "illyriacore:item/painting/underworld_2"
             }
           },
           {
-            "when": "illyriaplus:unwrap",
+            "when": "illyriacore:unwrap",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/unwrap"
+              "model": "illyriacore:item/painting/unwrap"
             }
           },
           {
-            "when": "illyriaplus:verdigris",
+            "when": "illyriacore:verdigris",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/verdigris"
+              "model": "illyriacore:item/painting/verdigris"
             }
           },
           {
-            "when": "illyriaplus:vernal",
+            "when": "illyriacore:vernal",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/vernal"
+              "model": "illyriacore:item/painting/vernal"
             }
           },
           {
-            "when": "illyriaplus:vice",
+            "when": "illyriacore:vice",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/vice"
+              "model": "illyriacore:item/painting/vice"
             }
           },
           {
-            "when": "illyriaplus:virtuosi_pas_de_deux",
+            "when": "illyriacore:virtuosi_pas_de_deux",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/virtuosi_pas_de_deux"
+              "model": "illyriacore:item/painting/virtuosi_pas_de_deux"
             }
           },
           {
-            "when": "illyriaplus:void_manor",
+            "when": "illyriacore:void_manor",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/void_manor"
+              "model": "illyriacore:item/painting/void_manor"
             }
           },
           {
-            "when": "illyriaplus:waves",
+            "when": "illyriacore:waves",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/waves"
+              "model": "illyriacore:item/painting/waves"
             }
           },
           {
-            "when": "illyriaplus:we_need_to_go_deeper",
+            "when": "illyriacore:we_need_to_go_deeper",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/we_need_to_go_deeper"
+              "model": "illyriacore:item/painting/we_need_to_go_deeper"
             }
           },
           {
-            "when": "illyriaplus:wildstyle",
+            "when": "illyriacore:wildstyle",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/wildstyle"
+              "model": "illyriacore:item/painting/wildstyle"
             }
           },
           {
-            "when": "illyriaplus:windmill_field",
+            "when": "illyriacore:windmill_field",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/windmill_field"
+              "model": "illyriacore:item/painting/windmill_field"
             }
           },
           {
-            "when": "illyriaplus:wrong_side",
+            "when": "illyriacore:wrong_side",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/wrong_side"
+              "model": "illyriacore:item/painting/wrong_side"
             }
           },
           {
-            "when": "illyriaplus:yonder",
+            "when": "illyriacore:yonder",
             "model": {
               "type": "minecraft:model",
-              "model": "illyriaplus:item/painting/yonder"
+              "model": "illyriacore:item/painting/yonder"
             }
           }
         ],
