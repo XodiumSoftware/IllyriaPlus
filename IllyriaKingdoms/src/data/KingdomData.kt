@@ -21,7 +21,6 @@ internal data class KingdomData(
     val npcs: Set<UUID> = emptySet(),
 ) {
     companion object {
-
         /**
          * Retrieves a [KingdomData] by its owner from the database asynchronously.
          *

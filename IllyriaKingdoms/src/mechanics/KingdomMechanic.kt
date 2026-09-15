@@ -173,9 +173,13 @@ internal object KingdomMechanic : MechanicInterface {
                                                 )
                                                 return@getKingdomByPlayer
                                             }
-                                            if (target.uniqueId in kingdom.members || target.uniqueId == kingdom.owner) {
+                                            if (target.uniqueId in kingdom.members ||
+                                                target.uniqueId == kingdom.owner
+                                            ) {
                                                 ctx.source.sender.sendActionBar(
-                                                    Utils.MM.deserialize("<yellow>${target.name} is already in the kingdom."),
+                                                    Utils.MM.deserialize(
+                                                        "<yellow>${target.name} is already in the kingdom.",
+                                                    ),
                                                 )
                                                 return@getKingdomByPlayer
                                             }
