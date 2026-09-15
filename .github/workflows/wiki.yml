@@ -1,0 +1,124 @@
+name: IllyriaWiki CI/CD
+
+on:
+  push:
+    branches: [main, dev]
+    paths:
+      - "IllyriaWiki/**"
+      - ".github/workflows/wiki.yml"
+  pull_request:
+    branches: [main, dev]
+    paths:
+      - "IllyriaWiki/**"
+      - ".github/workflows/wiki.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  # renovate: datasource=crate depName=mdbook
+  MDBOOK_VERSION: "0.5.2"
+
+jobs:
+  lint:
+    name: Lint
+    if: |
+      !contains(github.event.head_commit.message, '[ci-skip]') &&
+      !contains(github.event.pull_request.title, '[ci-skip]')
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v7.0.1
+
+      - id: setup_node
+        name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+
+      - id: install_markdownlint
+        name: Install markdownlint-cli2
+        run: npm install -g markdownlint-cli2
+        shell: bash
+
+      - id: run_lint
+        name: Run Markdown Lint
+        run: |
+          cd IllyriaWiki
+          markdownlint-cli2 "src/**/*.md"
+        shell: bash
+
+  build:
+    name: Build
+    if: |
+      !contains(github.event.head_commit.message, '[ci-skip]') &&
+      !contains(github.event.pull_request.title, '[ci-skip]')
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+
+      - id: install_cargo_binstall
+        name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@v1.23.0
+
+      - id: cache_mdbook
+        name: Cache mdBook
+        uses: actions/cache@v6.1.0
+        with:
+          path: ~/.cargo/bin/mdbook
+          key: ${{ runner.os }}-mdbook-${{ env.MDBOOK_VERSION }}
+
+      - id: install_mdbook
+        name: Install mdBook
+        run: cargo binstall mdbook@${{ env.MDBOOK_VERSION }} --no-confirm --force
+        shell: bash
+
+      - id: build_book
+        name: Build mdBook
+        run: mdbook build IllyriaWiki
+        shell: bash
+
+      - id: upload_artifact
+        name: Upload book artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: book
+          path: IllyriaWiki/book/
+
+  deploy:
+    name: Deploy
+    if: |
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+      !contains(github.event.head_commit.message, '[ci-skip]') &&
+      !contains(github.event.pull_request.title, '[ci-skip]')
+    needs: [lint, build]
+    runs-on: ubuntu-latest
+    environment:
+      name: "${{ github.ref_name }}"
+    steps:
+      - id: download_artifact
+        name: Download book artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: book
+          path: book
+
+      - id: deploy
+        name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v4.0.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy book --project-name=illyriawiki --branch=${{ github.ref_name }} --commit-dirty=true
