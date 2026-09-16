@@ -44,6 +44,7 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
             JadeJukebox,
             JadeLectern,
             JadeRedstone,
+            JadeTrialSpawnerCooldown,
         )
 
     /** The provider keys, in handshake order. */
