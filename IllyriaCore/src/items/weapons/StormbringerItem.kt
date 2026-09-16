@@ -1,4 +1,4 @@
-package org.xodium.illyriacore.items
+package org.xodium.illyriacore.items.weapons
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemAttributeModifiers
@@ -11,15 +11,16 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.Utils
+import org.xodium.illyriacore.items.ItemInterface
 
-/** Represents a Longsword. */
-internal object LongswordItem : ItemInterface {
-    override val key: NamespacedKey = NamespacedKey(instance, "longsword")
+/** Represents a Stormbringer. */
+internal object StormbringerItem : ItemInterface {
+    override val key: NamespacedKey = NamespacedKey(instance, "stormbringer")
 
     override fun invoke(): ItemStack =
         ItemStack.of(Material.NETHERITE_SWORD).apply {
             if (!hasData(DataComponentTypes.CUSTOM_NAME) && !hasData(DataComponentTypes.ITEM_NAME)) {
-                setData(DataComponentTypes.CUSTOM_NAME, Utils.MM.deserialize("Longsword"))
+                setData(DataComponentTypes.CUSTOM_NAME, Utils.MM.deserialize("Stormbringer"))
             }
             setData(DataComponentTypes.ITEM_MODEL, key)
             setData(
@@ -28,7 +29,7 @@ internal object LongswordItem : ItemInterface {
                     .itemAttributes()
                     .addModifier(
                         Attribute.ATTACK_DAMAGE,
-                        AttributeModifier(key, 8.0, AttributeModifier.Operation.ADD_NUMBER),
+                        AttributeModifier(key, 8.5, AttributeModifier.Operation.ADD_NUMBER),
                         EquipmentSlotGroup.MAINHAND,
                     ).addModifier(
                         Attribute.ATTACK_SPEED,

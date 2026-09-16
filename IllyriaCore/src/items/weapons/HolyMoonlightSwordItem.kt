@@ -1,4 +1,4 @@
-package org.xodium.illyriacore.items
+package org.xodium.illyriacore.items.weapons
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemAttributeModifiers
@@ -11,15 +11,16 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.Utils
+import org.xodium.illyriacore.items.ItemInterface
 
-/** Represents a Masamune. */
-internal object MasamuneItem : ItemInterface {
-    override val key: NamespacedKey = NamespacedKey(instance, "masamune")
+/** Represents a Holy Moonlight Sword. */
+internal object HolyMoonlightSwordItem : ItemInterface {
+    override val key: NamespacedKey = NamespacedKey(instance, "holy_moonlight_sword")
 
     override fun invoke(): ItemStack =
         ItemStack.of(Material.NETHERITE_SWORD).apply {
             if (!hasData(DataComponentTypes.CUSTOM_NAME) && !hasData(DataComponentTypes.ITEM_NAME)) {
-                setData(DataComponentTypes.CUSTOM_NAME, Utils.MM.deserialize("Masamune"))
+                setData(DataComponentTypes.CUSTOM_NAME, Utils.MM.deserialize("Holy Moonlight Sword"))
             }
             setData(DataComponentTypes.ITEM_MODEL, key)
             setData(
@@ -28,11 +29,11 @@ internal object MasamuneItem : ItemInterface {
                     .itemAttributes()
                     .addModifier(
                         Attribute.ATTACK_DAMAGE,
-                        AttributeModifier(key, 8.5, AttributeModifier.Operation.ADD_NUMBER),
+                        AttributeModifier(key, 9.0, AttributeModifier.Operation.ADD_NUMBER),
                         EquipmentSlotGroup.MAINHAND,
                     ).addModifier(
                         Attribute.ATTACK_SPEED,
-                        AttributeModifier(key, 1.7, AttributeModifier.Operation.ADD_NUMBER),
+                        AttributeModifier(key, 1.5, AttributeModifier.Operation.ADD_NUMBER),
                         EquipmentSlotGroup.MAINHAND,
                     ).build(),
             )

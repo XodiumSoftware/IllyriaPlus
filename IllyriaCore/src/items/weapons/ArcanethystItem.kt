@@ -1,4 +1,4 @@
-package org.xodium.illyriacore.items
+package org.xodium.illyriacore.items.weapons
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemAttributeModifiers
@@ -11,15 +11,16 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.Utils
+import org.xodium.illyriacore.items.ItemInterface
 
-/** Represents a Cyber Katana. */
-internal object CyberKatanaItem : ItemInterface {
-    override val key: NamespacedKey = NamespacedKey(instance, "cyber_katana")
+/** Represents an Arcanethyst. */
+internal object ArcanethystItem : ItemInterface {
+    override val key: NamespacedKey = NamespacedKey(instance, "arcanethyst")
 
     override fun invoke(): ItemStack =
         ItemStack.of(Material.NETHERITE_SWORD).apply {
             if (!hasData(DataComponentTypes.CUSTOM_NAME) && !hasData(DataComponentTypes.ITEM_NAME)) {
-                setData(DataComponentTypes.CUSTOM_NAME, Utils.MM.deserialize("Cyber Katana"))
+                setData(DataComponentTypes.CUSTOM_NAME, Utils.MM.deserialize("Arcanethyst"))
             }
             setData(DataComponentTypes.ITEM_MODEL, key)
             setData(
@@ -28,11 +29,11 @@ internal object CyberKatanaItem : ItemInterface {
                     .itemAttributes()
                     .addModifier(
                         Attribute.ATTACK_DAMAGE,
-                        AttributeModifier(key, 7.0, AttributeModifier.Operation.ADD_NUMBER),
+                        AttributeModifier(key, 7.5, AttributeModifier.Operation.ADD_NUMBER),
                         EquipmentSlotGroup.MAINHAND,
                     ).addModifier(
                         Attribute.ATTACK_SPEED,
-                        AttributeModifier(key, 2.0, AttributeModifier.Operation.ADD_NUMBER),
+                        AttributeModifier(key, 1.8, AttributeModifier.Operation.ADD_NUMBER),
                         EquipmentSlotGroup.MAINHAND,
                     ).build(),
             )

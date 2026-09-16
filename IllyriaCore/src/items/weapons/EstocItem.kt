@@ -1,4 +1,4 @@
-package org.xodium.illyriacore.items
+package org.xodium.illyriacore.items.weapons
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemAttributeModifiers
@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.Utils
+import org.xodium.illyriacore.items.ItemInterface
 
 /** Represents an Estoc. */
 internal object EstocItem : ItemInterface {
