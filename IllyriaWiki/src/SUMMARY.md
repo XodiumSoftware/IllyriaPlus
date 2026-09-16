@@ -42,7 +42,6 @@
 - [Overview](gameplay/index.md)
 - [Tree Mechanics](gameplay/trees.md)
 - [Openable Blocks](gameplay/openables.md)
-- [Chiseled Bookshelf Storage](gameplay/chiseled-bookshelf.md)
 - [Anti-Griefing](gameplay/anti-griefing.md)
 - [Entity Tweaks](gameplay/entity-tweaks.md)
 
