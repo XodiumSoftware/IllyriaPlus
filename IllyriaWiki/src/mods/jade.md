@@ -1,20 +1,25 @@
 # Jade
 
-The server supports **Jade** (the modern WAILA fork), enabling its server-connected mode for the look-at
-tooltip overlay.
+The server supports **Jade** (the modern WAILA fork), running it in server-connected mode so block
+tooltips show live server data.
 
 ## Features
 
-- **Tooltip overlay** — See what block or entity you're looking at, with its name and mod origin
-- **Server-aware** — The server completes Jade's handshake so the mod runs in its connected mode
+| Block or entity | Live data shown                                |
+| :-------------: | ---------------------------------------------- |
+| Any block/entity | Name and mod origin (client-side overlay)     |
+| <img class="mc-icon" alt="Brewing stand" title="Brewing stand" src="../img/jade/brewing_stand.png"> | Blaze-powder fuel left & brew-time countdown   |
+| <img class="mc-icon" alt="Beehive" title="Beehive" src="../img/jade/beehive.png"> | Bee count (green when full) + honey level      |
+| <img class="mc-icon" alt="Hopper" title="Hopper" src="../img/jade/hopper.png"> | “Locked” indicator when disabled by redstone   |
 
 ## Setup
 
 1. Install [Jade](https://modrinth.com/mod/jade) on your client
 2. Join the server — the mod is automatically detected
-3. The look-at tooltip works with full client-side detail
+3. Hover a block to see live server data in the tooltip
 
 ## Notes
 
 - Vanilla clients are completely unaffected
 - Server data synchronization happens automatically on join
+- Only the features listed above are synced by the server; everything else renders client-side as usual

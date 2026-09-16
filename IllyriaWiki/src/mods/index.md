@@ -8,7 +8,7 @@ IllyriaRPG works with all vanilla clients, but enhances the experience for playe
 | -------------------------------------------- | ---------------------------------------------- |
 | [Xaero's World Map / Minimap](xaeros.md)     | Server-tracked waypoints & shared map data     |
 | [JEI / REI / EMI](recipe-viewers.md)         | Custom recipes in your recipe viewer           |
-| [Jade](jade.md)                              | Look-at tooltip overlay (WAILA)                |
+| [Jade](jade.md)                              | Live block tooltips (brewing stand, hives, more) |
 | [AppleSkin](appleskin.md)                    | Accurate saturation & hunger overlay           |
 
 ## Requirements
