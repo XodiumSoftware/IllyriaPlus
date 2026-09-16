@@ -4,6 +4,8 @@ IllyriaRPG adds convenient vanilla-style recipes for common QoL needs.
 
 ## All Recipes
 
+<div class="recipe-table">
+
 | Recipe                       | Method                                                                                                   | Input                                                                                                              | Output                                                                                                              |
 | ---------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
 | Chainmail Helmet¹            | <img class="mc-icon" alt="Crafting Table" title="Crafting Table" src="../img/method/crafting_table.png"> | 5 × <img class="mc-icon" alt="Iron Bars" title="Iron Bars" src="../img/item/iron_bars.png">                        | 1 × <img class="mc-icon" alt="Chainmail Helmet" title="Chainmail Helmet" src="../img/item/chainmail_helmet.png">    |
@@ -18,6 +20,8 @@ IllyriaRPG adds convenient vanilla-style recipes for common QoL needs.
 | Wood to Log³                 | <img class="mc-icon" alt="Crafting Table" title="Crafting Table" src="../img/method/crafting_table.png"> | 1 × <img class="mc-icon" alt="Wood Block (any type)" title="Wood Block (any type)" src="../img/item/oak_log.png">  | 4 × <img class="mc-icon" alt="Matching Logs" title="Matching Logs" src="../img/item/oak_log.png">                   |
 | Diamond Recycling⁴           | <img class="mc-icon" alt="Blast Furnace" title="Blast Furnace" src="../img/method/blast_furnace.png">    | 1 × <img class="mc-icon" alt="Diamond Tool or Armor" title="Diamond Tool or Armor" src="../img/item/diamond_sword.png"> | 1 × <img class="mc-icon" alt="Diamond" title="Diamond" src="../img/item/diamond.png">                               |
 | Custom Paintings⁵            | <img class="mc-icon" alt="Stonecutter" title="Stonecutter" src="../img/method/stonecutter.png">          | 1 × <img class="mc-icon" alt="Painting" title="Painting" src="../img/item/painting.png">                | 1 × <img class="mc-icon" alt="Custom Painting" title="Custom Painting" src="../img/item/painting.png">              |
+
+</div>
 
 ## Notes
 

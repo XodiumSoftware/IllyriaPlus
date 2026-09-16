@@ -1,5 +1,16 @@
 /* Minecraft item/method icons used in tables. */
 
+/* Centers Method/Input/Output columns in the recipes table. */
+
+.recipe-table table td:nth-child(2),
+.recipe-table table td:nth-child(3),
+.recipe-table table td:nth-child(4),
+.recipe-table table th:nth-child(2),
+.recipe-table table th:nth-child(3),
+.recipe-table table th:nth-child(4) {
+    text-align: center;
+}
+
 .mc-icon {
     height: 1.4em;
     width: 1.4em;
