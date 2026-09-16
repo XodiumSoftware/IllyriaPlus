@@ -12,7 +12,7 @@ The server officially supports **AppleSkin**, syncing your exact food stats to t
 
 ## Setup
 
-1. Install [AppleSkin](https://www.curseforge.com/minecraft/mc-mods/appleskin) on your client
+1. Install [AppleSkin](https://modrinth.com/mod/appleskin) on your client
 2. Join the server — the mod is automatically detected
 3. The hunger bar overlay and food tooltips now show live server values
 

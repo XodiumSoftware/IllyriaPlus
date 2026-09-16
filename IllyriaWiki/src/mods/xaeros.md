@@ -16,5 +16,5 @@ The server officially supports **Xaero's World Map** and **Xaero's Minimap**.
 
 ## Downloads
 
-- [Xaero's Minimap on CurseForge](https://www.curseforge.com/minecraft/mc-mods/xaeros-minimap)
-- [Xaero's World Map on CurseForge](https://www.curseforge.com/minecraft/mc-mods/xaeros-world-map)
+- [Xaero's Minimap on Modrinth](https://modrinth.com/mod/xaeros-minimap)
+- [Xaero's World Map on Modrinth](https://modrinth.com/mod/xaeros-world-map)

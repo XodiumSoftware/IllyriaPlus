@@ -11,7 +11,7 @@ recipes to your recipe book.
 ## Setup
 
 1. Install **Fabric Loader** (or NeoForge)
-2. Install **JEI** ([Just Enough Items](https://www.curseforge.com/minecraft/mc-mods/jei))
+2. Install **JEI** ([Just Enough Items](https://modrinth.com/mod/jei))
 3. Join the server — Fabric/NeoForge clients are detected automatically on join
 
 ## Notes
