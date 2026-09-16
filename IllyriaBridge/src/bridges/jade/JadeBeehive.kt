@@ -3,7 +3,6 @@ package org.xodium.illyriabridge.bridges.jade
 import net.minecraft.nbt.CompoundTag
 import org.bukkit.block.Beehive
 import org.bukkit.block.Block
-import org.xodium.illyriabridge.bridges.jade.JadeBridge.bytePayload
 
 /**
  * Provides bee occupancy to Jade. Honey level is read client-side from the block state; this

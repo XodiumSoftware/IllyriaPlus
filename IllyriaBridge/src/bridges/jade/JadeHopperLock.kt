@@ -3,7 +3,6 @@ package org.xodium.illyriabridge.bridges.jade
 import net.minecraft.nbt.CompoundTag
 import org.bukkit.block.Block
 import org.bukkit.block.data.type.Hopper
-import org.xodium.illyriabridge.bridges.jade.JadeBridge.boolPayload
 
 /**
  * Provides the hopper lock state to Jade, replacing the object name with a locked

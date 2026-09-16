@@ -3,7 +3,6 @@ package org.xodium.illyriabridge.bridges.jade
 import net.minecraft.nbt.CompoundTag
 import org.bukkit.block.Block
 import org.bukkit.block.BrewingStand
-import org.xodium.illyriabridge.bridges.jade.JadeBridge.varIntPairPayload
 
 /**
  * Provides brewing stand state to Jade: remaining blaze-powder fuel and, while brewing,

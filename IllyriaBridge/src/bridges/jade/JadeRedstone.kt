@@ -7,7 +7,6 @@ import net.minecraft.world.level.block.entity.CalibratedSculkSensorBlockEntity
 import net.minecraft.world.level.block.entity.ComparatorBlockEntity
 import org.bukkit.block.Block
 import org.bukkit.craftbukkit.CraftWorld
-import org.xodium.illyriabridge.bridges.jade.JadeBridge.varIntPayload
 
 /**
  * Provides redstone signal data to Jade for comparators and calibrated sculk sensors.
