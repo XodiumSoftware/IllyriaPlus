@@ -39,6 +39,7 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
             JadeBeehive,
             JadeBrewingStand,
             JadeHopperLock,
+            JadeJukebox,
             JadeLectern,
             JadeRedstone,
         )
