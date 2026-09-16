@@ -53,6 +53,7 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
     internal val entityProviders =
         listOf<JadeEntityProvider>(
             JadeEntityHealth,
+            JadeMobGrowth,
         )
 
     /** The block provider keys, in handshake order. */
