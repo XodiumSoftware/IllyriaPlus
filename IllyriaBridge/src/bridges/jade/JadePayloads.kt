@@ -55,6 +55,18 @@ internal fun varIntPayload(value: Int): ByteArray {
 }
 
 /**
+ * Encodes a string into Jade's codec format (VarInt length + UTF-8 bytes).
+ *
+ * @param value The string to encode
+ * @return The encoded payload
+ */
+internal fun stringPayload(value: String): ByteArray {
+    val buf = RegistryFriendlyByteBuf(Unpooled.buffer(), registryAccess(null))
+    buf.writeUtf(value)
+    return buf.toByteArray()
+}
+
+/**
  * Encodes two ints as VarInts into Jade's codec format.
  *
  * @param first The first int
