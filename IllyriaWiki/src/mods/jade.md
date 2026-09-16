@@ -1,7 +1,7 @@
 # Jade
 
-The server supports **Jade** (the modern WAILA fork), running it in server-connected mode so block
-tooltips show live server data.
+The server supports **Jade** (the modern WAILA fork), running it in server-connected mode so block and
+entity tooltips show live server data.
 
 ## Features
 
@@ -18,11 +18,17 @@ tooltips show live server data.
 | <img class="mc-icon" alt="Command Block" title="Command Block" src="../img/jade/command_block.png"> | Stored command (operators only)                |
 | <img class="mc-icon" alt="Trial Spawner" title="Trial Spawner" src="../img/jade/trial_spawner.png"> | Remaining cooldown time after a trial          |
 
+## Entity tooltips
+
+| Entity | Live data shown                                  |
+| :----: | ------------------------------------------------ |
+| <img class="mc-icon" alt="Health" title="Health" src="../img/jade/heart.png"> | Hearts and armor when hovering a living entity |
+
 ## Setup
 
 1. Install [Jade](https://modrinth.com/mod/jade) on your client
 2. Join the server — the mod is automatically detected
-3. Hover a block to see live server data in the tooltip
+3. Hover a block or entity to see live server data in the tooltip
 
 ## Notes
 
