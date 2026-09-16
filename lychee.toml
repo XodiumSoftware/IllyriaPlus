@@ -1,0 +1,7 @@
+# Lychee link checker configuration for IllyriaWiki.
+#
+# Card links in Markdown pages use mdBook output paths (*.html); lychee would
+# resolve those against src/ where only *.md sources exist. Remap local file
+# URLs from .html to .md so the link check validates the actual sources.
+
+remap = ["file://(.*)/IllyriaWiki/src/(.*)\\.html file://$1/IllyriaWiki/src/$2.md"]

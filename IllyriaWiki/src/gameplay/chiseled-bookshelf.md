@@ -9,11 +9,11 @@ The contents appear as an action bar message.
 
 ## What You See
 
-| Content Type    | Display                                          |
-| --------------- | ------------------------------------------------ |
-| Written Book    | Book icon + title + author                        |
-| Enchanted Book  | Book icon + stored enchantments                   |
-| Other Books     | Book icon only                                    |
+| Content Type                                                                                            | Display                        |
+| :-----------------------------------------------------------------------------------------------------: | ------------------------------ |
+| <img class="mc-icon" alt="Written Book" title="Written Book" src="../img/item/written_book.png">            | Book icon + title + author     |
+| <img class="mc-icon" alt="Enchanted Book" title="Enchanted Book" src="../img/item/enchanted_book.png">     | Book icon + stored enchantments |
+| <img class="mc-icon" alt="Book or any item" title="Book or any item" src="../img/item/book.png">            | Item icon only                 |
 
 ## Details
 

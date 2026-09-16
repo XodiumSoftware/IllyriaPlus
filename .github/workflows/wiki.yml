@@ -73,6 +73,7 @@ jobs:
         name: Link Check
         uses: lycheeverse/lychee-action@v2
         with:
+          # Remap lives in lychee.toml at the repo root.
           args: --verbose --no-progress 'IllyriaWiki/src/**/*.md'
           fail: true
 
