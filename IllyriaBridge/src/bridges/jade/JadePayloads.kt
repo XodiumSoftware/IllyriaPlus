@@ -96,3 +96,25 @@ internal fun itemStackPayload(stack: org.bukkit.inventory.ItemStack?): ByteArray
     ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, nms)
     return buf.toByteArray()
 }
+
+/**
+ * Encodes a furnace's state into Jade's codec format: cook progress, total cook time,
+ * then the 3 inventory slots (input, fuel, result) as optional item stacks.
+ *
+ * @param progress Current cook ticks elapsed
+ * @param total Total cook ticks for the current recipe
+ * @param slots The 3 inventory slots in order: input, fuel, result
+ * @return The encoded payload
+ */
+internal fun furnacePayload(
+    progress: Int,
+    total: Int,
+    vararg slots: org.bukkit.inventory.ItemStack?,
+): ByteArray {
+    val buf = RegistryFriendlyByteBuf(Unpooled.buffer(), registryAccess(null))
+    buf.writeVarInt(progress)
+    buf.writeVarInt(total)
+    buf.writeVarInt(slots.size)
+    slots.forEach { ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, it?.let(CraftItemStack::asNMSCopy) ?: ItemStack.EMPTY) }
+    return buf.toByteArray()
+}
