@@ -55,4 +55,5 @@
 - [Overview](mods/index.md)
 - [Xaero's Maps](mods/xaeros.md)
 - [JEI, REI & EMI](mods/recipe-viewers.md)
+- [Jade](mods/jade.md)
 - [AppleSkin](mods/appleskin.md)
