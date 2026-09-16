@@ -19,6 +19,7 @@ entity tooltips show live server data.
 | <img class="mc-icon" alt="Chiseled Bookshelf" title="Chiseled Bookshelf" src="../img/jade/chiseled_bookshelf.png"> | Name of the book in the hovered slot           |
 | <img class="mc-icon" alt="Campfire" title="Campfire" src="../img/jade/campfire.png"> | Cooking items with per-item countdown          |
 | <img class="mc-icon" alt="Containers" title="Containers" src="../img/jade/containers.png"> | Contents of chests, barrels, shulkers & more   |
+| <img class="mc-icon" alt="Pack Animals & Minecart Chests" title="Pack Animals & Minecart Chests" src="../img/jade/saddle.png"> | Contents of llamas, horses, chest minecarts & more |
 | <img class="mc-icon" alt="Trial Spawner" title="Trial Spawner" src="../img/jade/trial_spawner.png"> | Remaining cooldown time after a trial          |
 | <img class="mc-icon" alt="Health" title="Health" src="../img/jade/heart.png"> | Hearts and armor when hovering a living entity |
 | <img class="mc-icon" alt="Mob Growth" title="Mob Growth" src="../img/jade/growth.png"> | Time until a baby mob grows up                 |
