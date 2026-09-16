@@ -12,7 +12,7 @@ tooltips show live server data.
 | <img class="mc-icon" alt="Beehive" title="Beehive" src="../img/jade/beehive.png"> | Bee count (green when full) + honey level      |
 | <img class="mc-icon" alt="Hopper" title="Hopper" src="../img/jade/hopper.png"> | “Locked” indicator when disabled by redstone   |
 | <img class="mc-icon" alt="Redstone" title="Redstone" src="../img/jade/redstone.png"> | Output signal strength (power level)           |
-| <img class="mc-icon" alt="Lectern" title="Lectern" src="../img/jade/lectern.png"> | Name of the book placed on it                  |
+| <img class="mc-icon" alt="Lectern" title="Lectern" src="../img/jade/lectern.webp"> | Name of the book placed on it                  |
 
 ## Setup
 
