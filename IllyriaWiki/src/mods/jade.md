@@ -27,7 +27,7 @@ entity tooltips show live server data.
 | <img class="mc-icon" alt="Status Effects" title="Status Effects" src="../img/jade/status_effects.png"> | Active potion effects with durations           |
 | <img class="mc-icon" alt="Copper Golem" title="Copper Golem" src="../img/jade/waxed.png"> | Waxed status (honeycomb icon on a waxed golem) |
 | <img class="mc-icon" alt="Zombie Villager" title="Zombie Villager" src="../img/jade/zombie_villager.png"> | Cure conversion time while being healed        |
-| <img class="mc-icon" alt="Chicken" title="Chicken" src="../img/jade/next_drop.png"> | Time until the next egg is laid                |
+| <img class="mc-icon" alt="Chicken / Armadillo / Sniffer" title="Chicken / Armadillo / Sniffer" src="../img/jade/next_drop.png"> | Time until a mob lays its next egg/scute/etc.  |
 
 ## Setup
 
