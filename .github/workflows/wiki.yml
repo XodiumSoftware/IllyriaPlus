@@ -73,9 +73,8 @@ jobs:
         name: Link Check
         uses: lycheeverse/lychee-action@v2
         with:
-          # Card links use mdBook output paths (*.html); remap them to the
-          # Markdown sources (*.md) so lychee can resolve them in src/.
-          args: --verbose --no-progress --remap 'file://(.*)/IllyriaWiki/src/(.*)\\.html file://$1/IllyriaWiki/src/$2.md' 'IllyriaWiki/src/**/*.md'
+          # Remap lives in lychee.toml at the repo root.
+          args: --verbose --no-progress 'IllyriaWiki/src/**/*.md'
           fail: true
 
   build:
