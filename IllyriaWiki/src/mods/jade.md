@@ -17,11 +17,6 @@ entity tooltips show live server data.
 | <img class="mc-icon" alt="Jukebox" title="Jukebox" src="../img/jade/jukebox.png"> | Currently playing record’s song                |
 | <img class="mc-icon" alt="Command Block" title="Command Block" src="../img/jade/command_block.png"> | Stored command (operators only)                |
 | <img class="mc-icon" alt="Trial Spawner" title="Trial Spawner" src="../img/jade/trial_spawner.png"> | Remaining cooldown time after a trial          |
-
-## Entity tooltips
-
-| Entity | Live data shown                                  |
-| :----: | ------------------------------------------------ |
 | <img class="mc-icon" alt="Health" title="Health" src="../img/jade/heart.png"> | Hearts and armor when hovering a living entity |
 | <img class="mc-icon" alt="Mob Growth" title="Mob Growth" src="../img/jade/growth.png"> | Time until a baby mob grows up                 |
 | <img class="mc-icon" alt="Mob Breeding" title="Mob Breeding" src="../img/jade/breeding.png"> | Breeding cooldown, or "fed" when in love mode  |
