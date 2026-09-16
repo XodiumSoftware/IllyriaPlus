@@ -1,4 +1,12 @@
-/* Card grid used on the introduction page. */
+/* Minecraft item/method icons used in tables. */
+
+.mc-icon {
+    height: 1.4em;
+    width: 1.4em;
+    vertical-align: -0.35em;
+    image-rendering: pixelated;
+    margin-right: 0.35em;
+}
 
 .card-grid {
     display: grid;
