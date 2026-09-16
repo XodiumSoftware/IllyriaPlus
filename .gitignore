@@ -29,4 +29,7 @@ modules.xml
 #AI
 .claude/
 
+# Third-party source packs (used only as asset reference, not distributed)
+Blades Of Majestica/
+
 .wrangler
