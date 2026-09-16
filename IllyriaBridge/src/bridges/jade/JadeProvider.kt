@@ -1,6 +1,7 @@
 package org.xodium.illyriabridge.bridges.jade
 
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.world.phys.BlockHitResult
 import org.bukkit.block.Block
 import org.bukkit.entity.Entity
 
@@ -13,11 +14,13 @@ internal interface JadeBlockProvider {
      * Writes this provider's data into the response tag for the given block.
      *
      * @param block The target block
+     * @param hit The ray-trace hit result (used by slot-based providers like shelves)
      * @param tag The response NBT to write into
      * @return Whether data was written (false if the block doesn't support this provider)
      */
     fun write(
         block: Block,
+        hit: BlockHitResult,
         tag: CompoundTag,
     ): Boolean
 }

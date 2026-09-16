@@ -1,6 +1,7 @@
 package org.xodium.illyriabridge.bridges.jade
 
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.world.phys.BlockHitResult
 import org.bukkit.block.Block
 import org.bukkit.block.Jukebox
 
@@ -13,6 +14,7 @@ internal object JadeJukebox : JadeBlockProvider {
 
     override fun write(
         block: Block,
+        hit: BlockHitResult,
         tag: CompoundTag,
     ): Boolean {
         val jukebox = block.state as? Jukebox ?: return false

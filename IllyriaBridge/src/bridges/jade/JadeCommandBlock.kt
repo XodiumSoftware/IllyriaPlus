@@ -1,6 +1,7 @@
 package org.xodium.illyriabridge.bridges.jade
 
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.world.phys.BlockHitResult
 import org.bukkit.block.Block
 import org.bukkit.block.CommandBlock
 
@@ -15,6 +16,7 @@ internal object JadeCommandBlock : JadeBlockProvider {
 
     override fun write(
         block: Block,
+        hit: BlockHitResult,
         tag: CompoundTag,
     ): Boolean {
         val commandBlock = block.state as? CommandBlock ?: return false

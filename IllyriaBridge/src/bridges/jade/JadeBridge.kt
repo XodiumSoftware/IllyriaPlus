@@ -46,6 +46,7 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
             JadeJukebox,
             JadeLectern,
             JadeRedstone,
+            JadeShelf,
             JadeTrialSpawnerCooldown,
         )
 
@@ -128,7 +129,8 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
         val buf = RegistryFriendlyByteBuf(Unpooled.wrappedBuffer(message), registryAccess(player))
 
         buf.readBoolean() // showDetails
-        val pos = buf.readBlockHitResult().blockPos // BlockHitResult
+        val hit = buf.readBlockHitResult() // BlockHitResult
+        val pos = hit.blockPos
         ItemStack.OPTIONAL_STREAM_CODEC.decode(buf) // serversideRep
         if (buf.isReadable && buf.getByte(buf.readerIndex()).toInt() and 0xFF == 0x0A) {
             ByteBufCodecs.COMPOUND_TAG.decode(buf) // accessor data
@@ -146,7 +148,7 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
         tag.putString("BlockId", block.type.key.toString())
 
         var wrote = false
-        matched.forEach { wrote = it.write(block, tag) || wrote }
+        matched.forEach { wrote = it.write(block, hit, tag) || wrote }
 
         if (wrote) send(player, RECEIVE_DATA_CHANNEL, encodeNbt(tag))
     }

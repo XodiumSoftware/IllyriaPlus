@@ -1,6 +1,7 @@
 package org.xodium.illyriabridge.bridges.jade
 
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.world.phys.BlockHitResult
 import org.bukkit.block.Block
 import org.bukkit.block.TrialSpawner
 
@@ -12,6 +13,7 @@ internal object JadeTrialSpawnerCooldown : JadeBlockProvider {
 
     override fun write(
         block: Block,
+        hit: BlockHitResult,
         tag: CompoundTag,
     ): Boolean {
         val spawner = block.state as? TrialSpawner ?: return false

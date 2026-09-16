@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.level.block.CalibratedSculkSensorBlock
 import net.minecraft.world.level.block.entity.CalibratedSculkSensorBlockEntity
 import net.minecraft.world.level.block.entity.ComparatorBlockEntity
+import net.minecraft.world.phys.BlockHitResult
 import org.bukkit.block.Block
 import org.bukkit.craftbukkit.CraftWorld
 
@@ -17,6 +18,7 @@ internal object JadeRedstone : JadeBlockProvider {
 
     override fun write(
         block: Block,
+        hit: BlockHitResult,
         tag: CompoundTag,
     ): Boolean {
         val level = (block.world as CraftWorld).handle
