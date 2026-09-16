@@ -34,4 +34,10 @@ Small features that make everyday play more comfortable.
 <span class="card-desc">Better anvil mechanics</span>
 </a>
 
+<a class="card" href="condensing.html">
+<img class="card-icon" alt="" src="../img/item/amethyst_shard.png">
+<span class="card-title">Condensing</span>
+<span class="card-desc">Convert items to blocks and back with /condense and /uncondense</span>
+</a>
+
 </div>

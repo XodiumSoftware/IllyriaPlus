@@ -16,12 +16,6 @@ World and gameplay modifications that set IllyriaRPG apart.
 <span class="card-desc">Doors and trapdoors with extended behavior</span>
 </a>
 
-<a class="card" href="chiseled-bookshelf.html">
-<img class="card-icon" alt="" src="../img/item/chiseled_bookshelf.png">
-<span class="card-title">Chiseled Bookshelf Storage</span>
-<span class="card-desc">Extra book storage</span>
-</a>
-
 <a class="card" href="anti-griefing.html">
 <img class="card-icon" alt="" src="../img/item/shield.png">
 <span class="card-title">Anti-Griefing</span>

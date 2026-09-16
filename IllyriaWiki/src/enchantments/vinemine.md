@@ -19,7 +19,7 @@ Breaking an ore block also breaks connected ore blocks of the same type.
 ## Max Blocks per Level
 
 | Level | Max Blocks Broken |
-| ----- | ----------------- |
+| :---: | :---------------: |
 | 1     | 16                |
 | 2     | 32                |
 | 3     | 48                |
