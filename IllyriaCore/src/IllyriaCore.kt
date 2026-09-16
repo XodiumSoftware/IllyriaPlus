@@ -100,6 +100,7 @@ internal class IllyriaCore : JavaPlugin() {
                 BatMechanic,
                 SpawnEggMechanic,
                 GriefingMechanic,
+                CondenseMechanic,
                 MotdMechanic,
                 MessagesMechanic,
                 TabListMechanic,

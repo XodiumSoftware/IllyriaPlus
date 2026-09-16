@@ -36,6 +36,7 @@
 - [Ender Chest](qol/enderchest.md)
 - [XP Management](qol/xp.md)
 - [Anvil Improvements](qol/anvil.md)
+- [Condensing](qol/condensing.md)
 
 # Gameplay Changes
 
