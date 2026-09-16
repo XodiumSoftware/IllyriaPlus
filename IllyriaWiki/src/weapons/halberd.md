@@ -4,22 +4,30 @@ A polearm with extended reach for keeping enemies at bay.
 
 ## Stats
 
-| Attribute     | Value           |
-| ------------- | --------------- |
-| Base Item     | Netherite Spear |
-| Attack Damage | 9.5             |
-| Attack Speed  | 1.3             |
-| Reach         | 4.0 blocks      |
+<div class="icon-table">
+
+| Attribute     | Value                                                                                                                                 |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Base Item     | <img class="mc-icon" alt="Netherite Spear" title="Netherite Spear" src="../img/item/netherite_spear.png">                             |
+| Attack Damage | 9.5                                                                                                                                   |
+| Attack Speed  | 1.3                                                                                                                                   |
+| Reach         | 4.0 blocks                                                                                                                            |
+
+</div>
 
 ## Crafting
 
 Upgrade a **Netherite Spear** in a smithing table:
 
-| Slot     | Ingredient                          |
-| -------- | ----------------------------------- |
-| Template | Netherite Upgrade Smithing Template |
-| Base     | Netherite Spear                     |
-| Addition | Nether Star                         |
+<div class="icon-table">
+
+| Slot     | Ingredient                                                                                                                                      |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Template | <img class="mc-icon" alt="Netherite Upgrade Smithing Template" title="Netherite Upgrade Smithing Template" src="../img/item/netherite_upgrade_smithing_template.png"> |
+| Base     | <img class="mc-icon" alt="Netherite Spear" title="Netherite Spear" src="../img/item/netherite_spear.png">                                             |
+| Addition | <img class="mc-icon" alt="Nether Star" title="Nether Star" src="../img/item/nether_star.png">                                                        |
+
+</div>
 
 ## Playstyle
 

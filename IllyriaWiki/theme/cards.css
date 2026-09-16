@@ -1,13 +1,17 @@
 /* Minecraft item/method icons used in tables. */
 
-/* Centers Method/Input/Output columns in the recipes table. */
+/* Centers Method/Input/Output (or Base Item/Catalyst) columns in icon-driven tables. */
 
 .recipe-table table td:nth-child(2),
 .recipe-table table td:nth-child(3),
 .recipe-table table td:nth-child(4),
 .recipe-table table th:nth-child(2),
 .recipe-table table th:nth-child(3),
-.recipe-table table th:nth-child(4) {
+.recipe-table table th:nth-child(4),
+.icon-table table td:nth-child(2),
+.icon-table table td:nth-child(3),
+.icon-table table th:nth-child(2),
+.icon-table table th:nth-child(3) {
     text-align: center;
 }
 

@@ -4,21 +4,29 @@ A heavy two-handed blade with devastating damage.
 
 ## Stats
 
-| Attribute     | Value           |
-| ------------- | --------------- |
-| Base Item     | Netherite Sword |
-| Attack Damage | 10.0            |
-| Attack Speed  | 1.2             |
+<div class="icon-table">
+
+| Attribute     | Value                                                                                                                                 |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Base Item     | <img class="mc-icon" alt="Netherite Sword" title="Netherite Sword" src="../img/item/netherite_sword.png">                             |
+| Attack Damage | 10.0                                                                                                                                  |
+| Attack Speed  | 1.2                                                                                                                                   |
+
+</div>
 
 ## Crafting
 
 Upgrade a **Netherite Sword** in a smithing table:
 
-| Slot     | Ingredient                          |
-| -------- | ----------------------------------- |
-| Template | Netherite Upgrade Smithing Template |
-| Base     | Netherite Sword                     |
-| Addition | Nether Star                         |
+<div class="icon-table">
+
+| Slot     | Ingredient                                                                                                                                      |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Template | <img class="mc-icon" alt="Netherite Upgrade Smithing Template" title="Netherite Upgrade Smithing Template" src="../img/item/netherite_upgrade_smithing_template.png"> |
+| Base     | <img class="mc-icon" alt="Netherite Sword" title="Netherite Sword" src="../img/item/netherite_sword.png">                                             |
+| Addition | <img class="mc-icon" alt="Nether Star" title="Nether Star" src="../img/item/nether_star.png">                                                        |
+
+</div>
 
 ## Playstyle
 
