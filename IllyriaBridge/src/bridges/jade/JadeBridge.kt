@@ -40,10 +40,10 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
         listOf<JadeBlockProvider>(
             JadeBeehive,
             JadeBrewingStand,
-            JadeCampfire,
             JadeCommandBlock,
             JadeFurnace,
             JadeHopperLock,
+            JadeItemStorage,
             JadeJukebox,
             JadeLectern,
             JadeRedstone,
