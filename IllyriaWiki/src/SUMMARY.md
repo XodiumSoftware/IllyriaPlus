@@ -55,3 +55,4 @@
 - [Overview](mods/index.md)
 - [Xaero's Maps](mods/xaeros.md)
 - [Fabric & JEI](mods/fabric-jei.md)
+- [AppleSkin](mods/appleskin.md)

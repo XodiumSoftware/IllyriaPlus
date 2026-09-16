@@ -8,6 +8,7 @@ IllyriaRPG works with all vanilla clients, but enhances the experience for playe
 | -------------------------------------------- | ---------------------------------------------- |
 | [Xaero's World Map / Minimap](xaeros.md)     | Server-tracked waypoints & shared map data     |
 | [Fabric + JEI](fabric-jei.md)                | Full recipe book sync for custom recipes       |
+| [AppleSkin](appleskin.md)                    | Accurate saturation & hunger overlay           |
 
 ## Requirements
 
