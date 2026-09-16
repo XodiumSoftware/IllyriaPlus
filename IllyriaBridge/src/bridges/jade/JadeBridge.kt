@@ -56,6 +56,7 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
             JadeEntityHealth,
             JadeMobBreeding,
             JadeMobGrowth,
+            JadeNextEntityDrop,
             JadeStatusEffects,
             JadeWaxed,
             JadeZombieVillager,
