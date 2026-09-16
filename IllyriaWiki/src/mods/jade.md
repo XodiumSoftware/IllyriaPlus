@@ -8,6 +8,7 @@ tooltips show live server data.
 | Block or entity | Live data shown                                |
 | :-------------: | ---------------------------------------------- |
 | Any block/entity | Name and mod origin (client-side overlay)     |
+| <img class="mc-icon" alt="Furnace" title="Furnace" src="../img/jade/furnace.png"> | Smelt progress arrow with input/fuel/result    |
 | <img class="mc-icon" alt="Brewing stand" title="Brewing stand" src="../img/jade/brewing_stand.png"> | Blaze-powder fuel left & brew-time countdown   |
 | <img class="mc-icon" alt="Beehive" title="Beehive" src="../img/jade/beehive.png"> | Bee count (green when full) + honey level      |
 | <img class="mc-icon" alt="Hopper" title="Hopper" src="../img/jade/hopper.png"> | “Locked” indicator when disabled by redstone   |
