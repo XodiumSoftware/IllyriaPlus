@@ -18,7 +18,7 @@ internal object JadeNextEntityDrop : JadeEntityProvider {
     private const val SCUTE_TAG = "NextScuteIn"
     private const val SNIFF_TAG = "NextSniffIn"
 
-    private val maxTime = 24000 * 2
+    private const val MAX_TIME = 24000 * 2
 
     override val key: String = "minecraft:next_entity_drop"
 
@@ -40,7 +40,7 @@ internal object JadeNextEntityDrop : JadeEntityProvider {
     ): Boolean {
         if (!chicken.isAdult) return false
         val time = chicken.eggLayTime
-        if (time <= 0 || time >= maxTime) return false
+        if (time !in 1..<MAX_TIME) return false
         tag.putInt(EGG_TAG, time)
         return true
     }
@@ -53,7 +53,7 @@ internal object JadeNextEntityDrop : JadeEntityProvider {
         val handle = (armadillo as CraftEntity).handle
         if (handle !is Armadillo || handle.isBaby) return false
         val time = scuteTime(handle)
-        if (time <= 0 || time >= maxTime) return false
+        if (time !in 1..<MAX_TIME) return false
         tag.putInt(SCUTE_TAG, time)
         return true
     }
@@ -66,7 +66,7 @@ internal object JadeNextEntityDrop : JadeEntityProvider {
         val handle = (sniffer as CraftEntity).handle
         if (handle !is Sniffer || handle.isBaby) return false
         val time = handle.brain.getTimeUntilExpiry(MemoryModuleType.SNIFF_COOLDOWN)
-        if (time <= 0 || time >= maxTime) return false
+        if (time !in 1..<MAX_TIME) return false
         tag.putInt(SNIFF_TAG, time.toInt())
         return true
     }
