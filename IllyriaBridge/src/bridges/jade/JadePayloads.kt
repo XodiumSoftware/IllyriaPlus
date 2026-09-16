@@ -2,6 +2,8 @@ package org.xodium.illyriabridge.bridges.jade
 
 import io.netty.buffer.Unpooled
 import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.ComponentSerialization
 import net.minecraft.world.item.ItemStack
 import org.bukkit.craftbukkit.CraftServer
 import org.bukkit.craftbukkit.entity.CraftPlayer
@@ -17,6 +19,13 @@ import org.bukkit.entity.Player
 internal fun registryAccess(player: Player?) =
     player?.let { (it as CraftPlayer).handle.level().registryAccess() }
         ?: (org.bukkit.Bukkit.getServer() as CraftServer).handle.server.registryAccess()
+
+/**
+ * Creates a fresh registry-aware buffer bound to the server's registry access.
+ *
+ * @return The new buffer
+ */
+internal fun newBuffer(): RegistryFriendlyByteBuf = RegistryFriendlyByteBuf(Unpooled.buffer(), registryAccess(null))
 
 /**
  * Reads this buffer's readable bytes into a new byte array, starting at index 0.
@@ -140,5 +149,18 @@ internal fun furnacePayload(
     buf.writeVarInt(total)
     buf.writeVarInt(slots.size)
     slots.forEach { ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, it?.let(CraftItemStack::asNMSCopy) ?: ItemStack.EMPTY) }
+    return buf.toByteArray()
+}
+
+/**
+ * Encodes a plain-text chat component into Jade's codec format, using the registry-aware
+ * component codec used for the animal owner provider.
+ *
+ * @param text The text to encode
+ * @return The encoded payload
+ */
+internal fun componentPayload(text: String): ByteArray {
+    val buf = RegistryFriendlyByteBuf(Unpooled.buffer(), registryAccess(null))
+    ComponentSerialization.STREAM_CODEC.encode(buf, Component.literal(text))
     return buf.toByteArray()
 }

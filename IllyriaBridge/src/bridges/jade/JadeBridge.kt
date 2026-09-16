@@ -52,6 +52,7 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
     /** The entity data providers advertised in the handshake; request indices refer to this list. */
     internal val entityProviders =
         listOf<JadeEntityProvider>(
+            JadeAnimalOwner,
             JadeEntityHealth,
             JadeMobBreeding,
             JadeMobGrowth,
