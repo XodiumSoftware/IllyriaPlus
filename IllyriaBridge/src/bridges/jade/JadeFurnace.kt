@@ -8,7 +8,7 @@ import org.bukkit.block.Furnace
  * Provides furnace state to Jade: current smelt progress, total cook time, and the
  * input/fuel/result slots, so the tooltip shows a live progress arrow with items.
  */
-internal object JadeFurnace : JadeProvider {
+internal object JadeFurnace : JadeBlockProvider {
     override val key: String = "minecraft:furnace"
 
     override fun write(

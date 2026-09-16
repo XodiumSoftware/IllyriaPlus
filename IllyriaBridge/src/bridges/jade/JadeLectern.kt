@@ -8,7 +8,7 @@ import org.bukkit.block.Lectern
  * Provides the book placed on a lectern to Jade. The client only requests it when a book is present;
  * this streams the book item so its name shows in the tooltip.
  */
-internal object JadeLectern : JadeProvider {
+internal object JadeLectern : JadeBlockProvider {
     override val key: String = "minecraft:lectern"
 
     override fun write(

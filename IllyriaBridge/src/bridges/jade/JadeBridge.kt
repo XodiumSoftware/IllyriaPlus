@@ -9,6 +9,7 @@ import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket
 import net.minecraft.network.protocol.common.custom.DiscardedPayload
 import net.minecraft.resources.Identifier
 import net.minecraft.world.item.ItemStack
+import org.bukkit.craftbukkit.CraftWorld
 import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.plugin.messaging.PluginMessageListener
@@ -21,7 +22,7 @@ import kotlin.time.measureTime
 /**
  * Manages Jade (What Am I Looking At) plugin channel synchronization.
  * Replies to the client handshake to enable server-connected mode and routes block
- * data requests to the registered [JadeProvider]s.
+ * and entity data requests to the registered providers.
  *
  * All server→client payloads are sent as raw [ClientboundCustomPayloadPacket]s, because
  * Bukkit's `sendPluginMessage` silently drops messages for Fabric clients that never
@@ -31,11 +32,12 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
     private const val CLIENT_HANDSHAKE_CHANNEL = "jade:client_handshake"
     private const val SERVER_HANDSHAKE_CHANNEL = "jade:server_handshake"
     private const val REQUEST_BLOCK_CHANNEL = "jade:request_block"
+    private const val REQUEST_ENTITY_CHANNEL = "jade:request_entity"
     private const val RECEIVE_DATA_CHANNEL = "jade:receive_data"
 
-    /** The block data providers advertised in the handshake; request provider indices refer to this list. */
-    internal val providers =
-        listOf<JadeProvider>(
+    /** The block data providers advertised in the handshake; request indices refer to this list. */
+    internal val blockProviders =
+        listOf<JadeBlockProvider>(
             JadeBeehive,
             JadeBrewingStand,
             JadeCommandBlock,
@@ -47,14 +49,24 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
             JadeTrialSpawnerCooldown,
         )
 
-    /** The provider keys, in handshake order. */
-    private val providerKeys = providers.map { it.key }
+    /** The entity data providers advertised in the handshake; request indices refer to this list. */
+    internal val entityProviders =
+        listOf<JadeEntityProvider>(
+            JadeEntityHealth,
+        )
+
+    /** The block provider keys, in handshake order. */
+    private val blockProviderKeys = blockProviders.map { it.key }
+
+    /** The entity provider keys, in handshake order. */
+    private val entityProviderKeys = entityProviders.map { it.key }
 
     override fun register(): Long =
         super.register() +
             measureTime {
                 instance.server.messenger.registerIncomingPluginChannel(instance, CLIENT_HANDSHAKE_CHANNEL, this)
                 instance.server.messenger.registerIncomingPluginChannel(instance, REQUEST_BLOCK_CHANNEL, this)
+                instance.server.messenger.registerIncomingPluginChannel(instance, REQUEST_ENTITY_CHANNEL, this)
                 instance.server.messenger.registerOutgoingPluginChannel(instance, SERVER_HANDSHAKE_CHANNEL)
                 instance.server.messenger.registerOutgoingPluginChannel(instance, RECEIVE_DATA_CHANNEL)
             }.inWholeMilliseconds
@@ -71,12 +83,13 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
             }
 
             REQUEST_BLOCK_CHANNEL -> handleBlockRequest(player, message)
+            REQUEST_ENTITY_CHANNEL -> handleEntityRequest(player, message)
         }
     }
 
     /**
      * Builds the server handshake: empty config map, empty shearable blocks,
-     * the supported block providers, and empty entity providers.
+     * then the supported block and entity providers.
      *
      * @param player The player the handshake is for
      * @return The encoded handshake payload
@@ -86,9 +99,10 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
 
         buf.writeVarInt(0) // serverConfig
         buf.writeVarInt(0) // shearableBlocks
-        buf.writeVarInt(providerKeys.size)
-        providerKeys.forEach { buf.writeUtf(it) }
-        buf.writeVarInt(0) // entityProviderIds
+        buf.writeVarInt(blockProviderKeys.size)
+        blockProviderKeys.forEach { buf.writeUtf(it) }
+        buf.writeVarInt(entityProviderKeys.size)
+        entityProviderKeys.forEach { buf.writeUtf(it) }
 
         return buf.toByteArray()
     }
@@ -114,7 +128,7 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
         }
 
         val indices = (0 until buf.readVarInt()).map { buf.readVarInt() }
-        val matched = indices.mapNotNull { providers.getOrNull(it) }.distinct()
+        val matched = indices.mapNotNull { blockProviders.getOrNull(it) }.distinct()
         if (matched.isEmpty()) return
 
         val block = player.world.getBlockAt(pos.x, pos.y, pos.z)
@@ -126,6 +140,43 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
 
         var wrote = false
         matched.forEach { wrote = it.write(block, tag) || wrote }
+
+        if (wrote) send(player, RECEIVE_DATA_CHANNEL, encodeNbt(tag))
+    }
+
+    /**
+     * Handles an entity data request by decoding the target entity id and requested provider indices,
+     * letting each matching provider write into the response NBT, and replying with receive_data.
+     *
+     * @param player The requesting player
+     * @param message The raw request payload
+     */
+    private fun handleEntityRequest(
+        player: Player,
+        message: ByteArray,
+    ) {
+        val buf = RegistryFriendlyByteBuf(Unpooled.wrappedBuffer(message), registryAccess(player))
+
+        buf.readBoolean() // showDetails
+        val entityId = buf.readVarInt() // entity id
+        buf.readVarInt() // partIndex
+        repeat(3) { buf.readFloat() } // hitVec
+        if (buf.isReadable && buf.getByte(buf.readerIndex()).toInt() and 0xFF == 0x0A) {
+            ByteBufCodecs.COMPOUND_TAG.decode(buf) // accessor data
+        }
+
+        val indices = (0 until buf.readVarInt()).map { buf.readVarInt() }
+        val matched = indices.mapNotNull { entityProviders.getOrNull(it) }.distinct()
+        if (matched.isEmpty()) return
+
+        val entity =
+            (player.world as CraftWorld).handle.getEntity(entityId)?.bukkitEntity
+                ?: return
+        val tag = CompoundTag()
+        tag.putInt("EntityId", entityId)
+
+        var wrote = false
+        matched.forEach { wrote = it.write(entity, tag) || wrote }
 
         if (wrote) send(player, RECEIVE_DATA_CHANNEL, encodeNbt(tag))
     }

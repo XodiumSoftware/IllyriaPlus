@@ -7,7 +7,7 @@ import org.bukkit.block.TrialSpawner
 /**
  * Provides the trial spawner's remaining cooldown to Jade, in ticks, while it is cooling down.
  */
-internal object JadeTrialSpawnerCooldown : JadeProvider {
+internal object JadeTrialSpawnerCooldown : JadeBlockProvider {
     override val key: String = "minecraft:mob_spawner.cooldown"
 
     override fun write(

@@ -8,7 +8,7 @@ import org.bukkit.block.BrewingStand
  * Provides brewing stand state to Jade: remaining blaze-powder fuel and, while brewing,
  * the time left until the current batch finishes.
  */
-internal object JadeBrewingStand : JadeProvider {
+internal object JadeBrewingStand : JadeBlockProvider {
     override val key: String = "minecraft:brewing_stand"
 
     override fun write(

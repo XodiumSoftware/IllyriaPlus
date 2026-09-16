@@ -8,7 +8,7 @@ import org.bukkit.block.data.type.Hopper
  * Provides the hopper lock state to Jade, replacing the object name with a locked
  * indicator when redstone power disables the hopper.
  */
-internal object JadeHopperLock : JadeProvider {
+internal object JadeHopperLock : JadeBlockProvider {
     override val key: String = "minecraft:hopper_lock"
 
     override fun write(

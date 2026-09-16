@@ -12,7 +12,7 @@ import org.bukkit.craftbukkit.CraftWorld
  * Provides redstone signal data to Jade for comparators and calibrated sculk sensors.
  * Levers, repeaters, and redstone wire read their state client-side and need no server data.
  */
-internal object JadeRedstone : JadeProvider {
+internal object JadeRedstone : JadeBlockProvider {
     override val key: String = "minecraft:redstone"
 
     override fun write(

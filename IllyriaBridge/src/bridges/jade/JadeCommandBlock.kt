@@ -8,7 +8,7 @@ import org.bukkit.block.CommandBlock
  * Provides a command block's command to Jade, truncated to 40 characters. Only op players
  * can trigger it — the client suppresses the request for anyone without gamemaster blocks access.
  */
-internal object JadeCommandBlock : JadeProvider {
+internal object JadeCommandBlock : JadeBlockProvider {
     private const val MAX_LENGTH = 40
 
     override val key: String = "minecraft:command_block"

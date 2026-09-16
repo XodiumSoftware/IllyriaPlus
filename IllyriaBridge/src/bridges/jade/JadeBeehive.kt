@@ -8,7 +8,7 @@ import org.bukkit.block.Block
  * Provides bee occupancy to Jade. Honey level is read client-side from the block state; this
  * supplies the bee count, positive when the hive is full and negative otherwise (as Jade expects).
  */
-internal object JadeBeehive : JadeProvider {
+internal object JadeBeehive : JadeBlockProvider {
     override val key: String = "minecraft:beehive"
 
     override fun write(

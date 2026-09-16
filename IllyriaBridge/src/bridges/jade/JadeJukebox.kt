@@ -8,7 +8,7 @@ import org.bukkit.block.Jukebox
  * Provides the record inside a jukebox to Jade. The client only requests it when a record is
  * inserted; this streams the record item so the playing song name shows in the tooltip.
  */
-internal object JadeJukebox : JadeProvider {
+internal object JadeJukebox : JadeBlockProvider {
     override val key: String = "minecraft:jukebox"
 
     override fun write(

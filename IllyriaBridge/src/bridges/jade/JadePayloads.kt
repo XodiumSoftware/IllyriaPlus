@@ -55,6 +55,18 @@ internal fun varIntPayload(value: Int): ByteArray {
 }
 
 /**
+ * Encodes a float into Jade's codec format (4 bytes, big-endian).
+ *
+ * @param value The float to encode
+ * @return The encoded payload
+ */
+internal fun floatPayload(value: Float): ByteArray {
+    val buf = RegistryFriendlyByteBuf(Unpooled.buffer(), registryAccess(null))
+    buf.writeFloat(value)
+    return buf.toByteArray()
+}
+
+/**
  * Encodes a string into Jade's codec format (VarInt length + UTF-8 bytes).
  *
  * @param value The string to encode
