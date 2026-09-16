@@ -164,3 +164,31 @@ internal fun componentPayload(text: String): ByteArray {
     ComponentSerialization.STREAM_CODEC.encode(buf, Component.literal(text))
     return buf.toByteArray()
 }
+
+/**
+ * Encodes a universal item-storage payload: a map entry of extension uid to a single view group
+ * containing the given NMS item stacks. Wraps the inner stacks in ViewGroup(uid-less, data-less).
+ *
+ * The result goes under the "minecraft:item_storage" NBT key as a byte array.
+ *
+ * @param uid The extension provider uid (e.g. "minecraft:campfire")
+ * @param stacks The item stacks to include in the single view group
+ * @return The encoded payload
+ */
+internal fun itemStoragePayload(
+    uid: String,
+    stacks: List<net.minecraft.world.item.ItemStack>,
+): ByteArray {
+    val buf = RegistryFriendlyByteBuf(Unpooled.buffer(), registryAccess(null))
+
+    buf.writeUtf(uid) // extension uid
+    buf.writeVarInt(1) // one view group
+
+    // ViewGroup: list of stacks, Optional<String> id, Optional<CompoundTag> extraData
+    buf.writeVarInt(stacks.size)
+    stacks.forEach { ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, it) }
+    buf.writeBoolean(false) // id absent
+    buf.writeBoolean(false) // extraData absent
+
+    return buf.toByteArray()
+}
