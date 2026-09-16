@@ -4,6 +4,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.xodium.illyriabridge.bridges.AppleSkinBridge
 import org.xodium.illyriabridge.bridges.BridgeInterface
 import org.xodium.illyriabridge.bridges.FabricRecipeBridge
+import org.xodium.illyriabridge.bridges.JadeBridge
 import org.xodium.illyriabridge.bridges.XaeroMapBridge
 
 /** Main class of the plugin. */
@@ -28,6 +29,7 @@ internal class IllyriaBridge : JavaPlugin() {
             listOf(
                 AppleSkinBridge,
                 FabricRecipeBridge,
+                JadeBridge,
                 XaeroMapBridge,
             )
 
@@ -37,6 +39,7 @@ internal class IllyriaBridge : JavaPlugin() {
     }
 
     override fun onDisable() {
+        server.messenger.unregisterIncomingPluginChannel(this)
         server.messenger.unregisterOutgoingPluginChannel(this)
     }
 }
