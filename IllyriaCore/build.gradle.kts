@@ -77,7 +77,12 @@ tasks {
         doFirst {
             val keep = archiveFileName.get()
             val base = archiveBaseName.get()
-            layout.buildDirectory.dir("libs").get().asFile.listFiles()
+            layout
+                .buildDirectory
+                .dir("libs")
+                .get()
+                .asFile
+                .listFiles()
                 ?.filter { it.isFile && it.name.startsWith("$base-") && it.name.endsWith(".jar") && it.name != keep }
                 ?.forEach { it.delete() }
         }
