@@ -15,6 +15,7 @@ tooltips show live server data.
 | <img class="mc-icon" alt="Redstone" title="Redstone" src="../img/jade/redstone.png"> | Output signal strength (power level)           |
 | <img class="mc-icon" alt="Lectern" title="Lectern" src="../img/jade/lectern.webp"> | Name of the book placed on it                  |
 | <img class="mc-icon" alt="Jukebox" title="Jukebox" src="../img/jade/jukebox.png"> | Currently playing record’s song                |
+| <img class="mc-icon" alt="Command Block" title="Command Block" src="../img/jade/command_block.png"> | Stored command (operators only)                |
 
 ## Setup
 
