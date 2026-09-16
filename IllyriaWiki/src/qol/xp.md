@@ -7,11 +7,15 @@ Store your experience points in bottles for safekeeping.
 **Right-click an enchanting table** with an empty **glass bottle** to convert your XP into an
 **Experience Bottle**.
 
-| Property                 | Value               |
-| ------------------------ | ------------------- |
-| XP Cost per Bottle       | 11 experience points |
-| Required Item            | Glass Bottle         |
-| Required Block           | Enchanting Table     |
+<div class="icon-table">
+
+| Property           | Value                                                                                                                           |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| XP Cost per Bottle | 11 × <img class="mc-icon" alt="experience points" title="Experience points" src="../img/item/xp_orb.webp">                    |
+| Required Item      | <img class="mc-icon" alt="Glass Bottle" title="Glass Bottle" src="../img/item/glass_bottle.png">                                  |
+| Required Block     | <img class="mc-icon" alt="Enchanting Table" title="Enchanting Table" src="../img/item/enchanting_table.webp">                    |
+
+</div>
 
 ## Why Bottle XP?
 
