@@ -1,6 +1,7 @@
 package org.xodium.illyriacore.items.weapons
 
 import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.datacomponent.item.AttackRange
 import io.papermc.paper.datacomponent.item.ItemAttributeModifiers
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -13,27 +14,35 @@ import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.Utils
 import org.xodium.illyriacore.items.ItemInterface
 
-/** Represents a Storm Bringer. */
-internal object StormBringerItem : ItemInterface {
-    override val key: NamespacedKey = NamespacedKey(instance, "stormbringer")
+/** Represents a Magi Scythe. */
+internal object MagiScytheItem : ItemInterface {
+    override val key: NamespacedKey = NamespacedKey(instance, "magiscythe")
 
     override fun invoke(): ItemStack =
-        ItemStack.of(Material.NETHERITE_SWORD).apply {
+        ItemStack.of(Material.NETHERITE_SPEAR).apply {
             if (!hasData(DataComponentTypes.CUSTOM_NAME) && !hasData(DataComponentTypes.ITEM_NAME)) {
-                setData(DataComponentTypes.CUSTOM_NAME, Utils.MM.deserialize("Storm Bringer"))
+                setData(DataComponentTypes.CUSTOM_NAME, Utils.MM.deserialize("Magi Scythe"))
             }
             setData(DataComponentTypes.ITEM_MODEL, key)
+            setData(
+                DataComponentTypes.ATTACK_RANGE,
+                AttackRange
+                    .attackRange()
+                    .maxReach(4.0f)
+                    .maxCreativeReach(4.0f)
+                    .build(),
+            )
             setData(
                 DataComponentTypes.ATTRIBUTE_MODIFIERS,
                 ItemAttributeModifiers
                     .itemAttributes()
                     .addModifier(
                         Attribute.ATTACK_DAMAGE,
-                        AttributeModifier(key, 8.0, AttributeModifier.Operation.ADD_NUMBER),
+                        AttributeModifier(key, 9.5, AttributeModifier.Operation.ADD_NUMBER),
                         EquipmentSlotGroup.MAINHAND,
                     ).addModifier(
                         Attribute.ATTACK_SPEED,
-                        AttributeModifier(key, 1.6, AttributeModifier.Operation.ADD_NUMBER),
+                        AttributeModifier(key, 1.3, AttributeModifier.Operation.ADD_NUMBER),
                         EquipmentSlotGroup.MAINHAND,
                     ).build(),
             )

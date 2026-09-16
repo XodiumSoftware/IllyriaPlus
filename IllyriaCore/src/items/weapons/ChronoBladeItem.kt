@@ -13,14 +13,14 @@ import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.Utils
 import org.xodium.illyriacore.items.ItemInterface
 
-/** Represents a Storm Bringer. */
-internal object StormBringerItem : ItemInterface {
-    override val key: NamespacedKey = NamespacedKey(instance, "stormbringer")
+/** Represents a Chrono Blade. */
+internal object ChronoBladeItem : ItemInterface {
+    override val key: NamespacedKey = NamespacedKey(instance, "chrono_blade")
 
     override fun invoke(): ItemStack =
         ItemStack.of(Material.NETHERITE_SWORD).apply {
             if (!hasData(DataComponentTypes.CUSTOM_NAME) && !hasData(DataComponentTypes.ITEM_NAME)) {
-                setData(DataComponentTypes.CUSTOM_NAME, Utils.MM.deserialize("Storm Bringer"))
+                setData(DataComponentTypes.CUSTOM_NAME, Utils.MM.deserialize("Chrono Blade"))
             }
             setData(DataComponentTypes.ITEM_MODEL, key)
             setData(
