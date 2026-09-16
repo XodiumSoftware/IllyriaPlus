@@ -59,6 +59,6 @@ internal object <Name>Item : ItemInterface {
 }
 ```
 
-Replace `<project.package>` with the actual project package (e.g., `org.xodium.illyriaplus`).
+Replace `<project.package>` with the actual project package (e.g., `org.xodium.illyriacore`).
 
 After finishing, summarize the files changed and ask the user if they want to commit.

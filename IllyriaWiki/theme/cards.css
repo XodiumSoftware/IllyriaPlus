@@ -1,0 +1,80 @@
+/* Minecraft item/method icons used in tables. */
+
+/* Centers Method/Input/Output (or Base Item/Catalyst) columns in icon-driven tables. */
+
+.recipe-table table td:nth-child(2),
+.recipe-table table td:nth-child(3),
+.recipe-table table td:nth-child(4),
+.recipe-table table th:nth-child(2),
+.recipe-table table th:nth-child(3),
+.recipe-table table th:nth-child(4),
+.icon-table table td:nth-child(2),
+.icon-table table td:nth-child(3),
+.icon-table table th:nth-child(2),
+.icon-table table th:nth-child(3) {
+    text-align: center;
+}
+
+.mc-icon {
+    height: 1.4em;
+    width: 1.4em;
+    vertical-align: -0.35em;
+    image-rendering: pixelated;
+    margin-right: 0.35em;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+    margin: 1.5rem 0;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.5rem 1.75rem;
+    border: 1px solid var(--table-border-color);
+    border-radius: 10px;
+    background-color: var(--sidebar-bg);
+    color: var(--fg);
+    text-decoration: none;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    border-color: var(--sidebar-active);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    text-decoration: none;
+    color: var(--fg);
+}
+
+.card .card-icon {
+    display: block;
+    font-size: 2.2rem;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+}
+
+.card img.card-icon {
+    display: block;
+    height: 2.2rem;
+    width: 2.2rem;
+    image-rendering: pixelated;
+}
+
+.card .card-title {
+    display: block;
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin-bottom: 0.4rem;
+}
+
+.card .card-desc {
+    display: block;
+    font-size: 1rem;
+    color: var(--fg);
+    opacity: 0.75;
+}

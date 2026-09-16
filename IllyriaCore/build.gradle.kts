@@ -77,16 +77,15 @@ tasks {
     }
     jar { enabled = false }
     runServer {
-        dependsOn(":IllyriaBridge:shadowJar", ":IllyriaKingdoms:shadowJar", "copyPluginJars")
+        dependsOn(":IllyriaBridge:shadowJar", "copyPluginJars")
         minecraftVersion(mcVersion)
         runDirectory = rootProject.layout.projectDirectory.dir(".server")
     }
 
     val copyPluginJars by registering(Copy::class) {
-        dependsOn(":IllyriaBridge:shadowJar", ":IllyriaKingdoms:shadowJar")
+        dependsOn(":IllyriaBridge:shadowJar")
         from(
             rootProject.layout.projectDirectory.dir("IllyriaBridge/build/libs"),
-            rootProject.layout.projectDirectory.dir("IllyriaKingdoms/build/libs"),
         )
         into(rootProject.layout.projectDirectory.dir(".server/plugins"))
     }

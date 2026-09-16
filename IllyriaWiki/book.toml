@@ -1,0 +1,12 @@
+[book]
+title = "IllyriaRPG Wiki"
+authors = ["illyrius666"]
+language = "en"
+
+[output.html]
+site-url = "https://wiki.illyria.cc/"
+git-repository-url = "https://github.com/XodiumSoftware/IllyriaPlus"
+edit-url-template = "https://github.com/XodiumSoftware/IllyriaPlus/edit/main/IllyriaWiki/{path}"
+hash-files = true
+smart-punctuation = true
+additional-css = ["theme/cards.css"]

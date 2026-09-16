@@ -1,4 +1,4 @@
-// Root project is an aggregator — the plugin modules live in `IllyriaCore/` and `IllyriaKingdoms/`.
+// Root project is an aggregator — the plugin modules live in `IllyriaCore/` and `IllyriaBridge/`.
 
 plugins {
     id("xyz.jpenilla.run-paper") version "3.1.0" apply false
