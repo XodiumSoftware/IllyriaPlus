@@ -56,6 +56,7 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
         listOf<JadeEntityProvider>(
             JadeAnimalOwner,
             JadeEntityHealth,
+            JadeEntityItemStorage,
             JadeMobBreeding,
             JadeMobGrowth,
             JadeNextEntityDrop,
