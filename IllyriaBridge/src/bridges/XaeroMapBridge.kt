@@ -33,12 +33,6 @@ internal object XaeroMapBridge : BridgeInterface {
                 worldId
             }.inWholeMilliseconds
 
-    /**
-     * Handles player channel registration events by sending the server world ID
-     * when a player registers a Xaero map channel.
-     *
-     * @param event The player register channel event
-     */
     @EventHandler
     fun on(event: PlayerRegisterChannelEvent) {
         when (val channel = event.channel) {
@@ -47,12 +41,6 @@ internal object XaeroMapBridge : BridgeInterface {
         }
     }
 
-    /**
-     * Handles player world change events by re-sending the server world ID
-     * for both WorldMap and Minimap channels.
-     *
-     * @param event The player changed world event
-     */
     @EventHandler
     fun on(event: PlayerChangedWorldEvent) {
         event.player.apply {
