@@ -16,6 +16,7 @@ entity tooltips show live server data.
 | <img class="mc-icon" alt="Lectern" title="Lectern" src="../img/jade/lectern.webp"> | Name of the book placed on it                  |
 | <img class="mc-icon" alt="Jukebox" title="Jukebox" src="../img/jade/jukebox.png"> | Currently playing record’s song                |
 | <img class="mc-icon" alt="Command Block" title="Command Block" src="../img/jade/command_block.png"> | Stored command (operators only)                |
+| <img class="mc-icon" alt="Chiseled Bookshelf" title="Chiseled Bookshelf" src="../img/jade/chiseled_bookshelf.png"> | Name of the book in the hovered slot           |
 | <img class="mc-icon" alt="Trial Spawner" title="Trial Spawner" src="../img/jade/trial_spawner.png"> | Remaining cooldown time after a trial          |
 | <img class="mc-icon" alt="Health" title="Health" src="../img/jade/heart.png"> | Hearts and armor when hovering a living entity |
 | <img class="mc-icon" alt="Mob Growth" title="Mob Growth" src="../img/jade/growth.png"> | Time until a baby mob grows up                 |
