@@ -23,6 +23,10 @@ entity tooltips show live server data.
 | Entity | Live data shown                                  |
 | :----: | ------------------------------------------------ |
 | <img class="mc-icon" alt="Health" title="Health" src="../img/jade/heart.png"> | Hearts and armor when hovering a living entity |
+| <img class="mc-icon" alt="Mob Growth" title="Mob Growth" src="../img/jade/growth.png"> | Time until a baby mob grows up                 |
+| <img class="mc-icon" alt="Mob Breeding" title="Mob Breeding" src="../img/jade/breeding.png"> | Breeding cooldown, or "fed" when in love mode  |
+| <img class="mc-icon" alt="Animal Owner" title="Animal Owner" src="../img/jade/animal_owner.png"> | Tamed animal's owner name                      |
+| <img class="mc-icon" alt="Status Effects" title="Status Effects" src="../img/jade/status_effects.png"> | Active potion effects with durations           |
 
 ## Setup
 
