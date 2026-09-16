@@ -37,6 +37,7 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
     /** The block data providers advertised in the handshake; request provider indices refer to this list. */
     internal val providers =
         listOf<JadeProvider>(
+            JadeBrewingStand,
             JadeHopperLock,
         )
 
@@ -185,6 +186,23 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
     internal fun boolPayload(value: Boolean): ByteArray {
         val buf = RegistryFriendlyByteBuf(Unpooled.buffer(), registryAccess(null))
         buf.writeBoolean(value)
+        return buf.toByteArray()
+    }
+
+    /**
+     * Encodes two ints as VarInts into Jade's codec format.
+     *
+     * @param first The first int
+     * @param second The second int
+     * @return The encoded payload
+     */
+    internal fun varIntPairPayload(
+        first: Int,
+        second: Int,
+    ): ByteArray {
+        val buf = RegistryFriendlyByteBuf(Unpooled.buffer(), registryAccess(null))
+        buf.writeVarInt(first)
+        buf.writeVarInt(second)
         return buf.toByteArray()
     }
 }
