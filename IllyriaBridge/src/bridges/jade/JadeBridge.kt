@@ -58,6 +58,7 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
             JadeMobGrowth,
             JadeStatusEffects,
             JadeWaxed,
+            JadeZombieVillager,
         )
 
     /** The block provider keys, in handshake order. */
