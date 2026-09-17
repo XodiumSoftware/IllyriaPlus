@@ -141,6 +141,13 @@ internal class IllyriaCoreBootstrap : PluginBootstrap {
             )
             ctx.logger.info("Registered: ${BANNERS.size} banner pattern(s).")
 
+            registerEventHandler(LifecycleEvents.TAGS.postFlatten(RegistryKey.ITEM)) { event ->
+                event.registrar().addToTag(
+                    ItemTypeTagKeys.TRIMMABLE_ARMOR,
+                    listOf(ItemTypeKeys.ELYTRA),
+                )
+            }
+
             registerEventHandler(LifecycleEvents.TAGS.postFlatten(RegistryKey.ENCHANTMENT)) { event ->
                 event.registrar().apply {
                     addToTag(EnchantmentTagKeys.TRADEABLE, ENCHANTMENTS)
