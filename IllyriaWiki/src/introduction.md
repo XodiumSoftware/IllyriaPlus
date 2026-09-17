@@ -18,12 +18,6 @@ Welcome to the official wiki for the **IllyriaRPG** Minecraft server.
 <span class="card-desc">Datapacks running on the server</span>
 </a>
 
-<a class="card" href="weapons/index.html">
-<span class="card-icon">⚔️</span>
-<span class="card-title">Weapons</span>
-<span class="card-desc">Greatsword, Halberd, and Longsword</span>
-</a>
-
 <a class="card" href="enchantments/index.html">
 <span class="card-icon">✨</span>
 <span class="card-title">Enchantments</span>
@@ -60,7 +54,6 @@ Welcome to the official wiki for the **IllyriaRPG** Minecraft server.
 
 IllyriaRPG is a vanilla-plus Minecraft survival server with RPG flavor:
 
-- ⚔️ **Custom end-game weapons** craftable via the smithing table
 - ✨ **Unique enchantments** like Vinemine (vein mining) and Embertread (lava walker)
 - 🏷️ **Quality-of-life features** — nicknames, XP bottling, and more
 - 🗺️ **Mod support** for Xaero's maps and Fabric/JEI users

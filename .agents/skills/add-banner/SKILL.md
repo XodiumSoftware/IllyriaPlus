@@ -10,17 +10,16 @@ Use this skill when the user wants to add a custom banner pattern, banner item, 
 ## What this skill covers
 
 - Resource-pack banner patterns (textures and pattern JSON)
-- Custom banner items via the item builder system (`IllyriaCore/src/items/`)
 - Banner-related gameplay mechanics (`IllyriaCore/src/mechanics/`)
 
 ## Before writing anything
 
 Ask the user to clarify:
 
-1. Is this a **resource-pack pattern** (new banner design), a **custom banner item** (e.g., a prefab banner), or a **gameplay mechanic** that reacts to banners?
+1. Is this a **resource-pack pattern** (new banner design) or a **gameplay mechanic** that reacts to banners?
 2. What is the internal name/key (snake_case or lowerCamelCase)?
 3. For patterns: is there a source PNG, and what dye color / default palette should it use?
-4. For items/mechanics: which Bukkit events, materials, or data components are involved?
+4. For mechanics: which Bukkit events or data components are involved?
 
 ## Resource-pack banner pattern
 
@@ -30,14 +29,6 @@ Ask the user to clarify:
 2. Add the pattern definition to `IllyriaResourcePack/assets/minecraft/banner_pattern/{pattern}.json` if the project uses custom pattern registry entries.
 3. Update language overrides in `IllyriaResourcePack/assets/minecraft/lang/en_us.json`:
     - `"block.minecraft.banner.{pattern}.{color}": "<Display Name>"` if applicable
-
-## Custom banner item
-
-1. Create `IllyriaCore/src/items/banners/<Name>BannerItem.kt` (or use an existing group folder).
-2. Implement `internal object <Name>BannerItem : ItemInterface`.
-3. Build an `ItemStack` with `Material.WHITE_BANNER` (or another base color) and use `BannerMeta` to set patterns.
-4. Add concise KDoc.
-5. Reference the item from any recipe or mechanic that needs it.
 
 ## Banner mechanic
 

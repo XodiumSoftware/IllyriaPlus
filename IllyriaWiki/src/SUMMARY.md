@@ -12,13 +12,6 @@
 
 - [Overview](datapacks/index.md)
 
-# Weapons
-
-- [Overview](weapons/index.md)
-- [Greatsword](weapons/greatsword.md)
-- [Halberd](weapons/halberd.md)
-- [Longsword](weapons/longsword.md)
-
 # Enchantments
 
 - [Overview](enchantments/index.md)

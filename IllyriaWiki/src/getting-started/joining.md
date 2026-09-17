@@ -20,5 +20,6 @@
 Once you're in, here are some things to check out:
 
 - Read the [Server Rules](rules.md)
-- Explore custom [Weapons](../weapons/index.md) and [Enchantments](../enchantments/index.md)
+- Explore the custom [Enchantments](../enchantments/index.md)
+- Try right-clicking a stair to [sit down](../qol/sitting.md)
 - Set your nickname with `/nick`
