@@ -97,8 +97,13 @@ tasks {
     val copyPluginJars by registering(Copy::class) {
         dependsOn(":IllyriaBridge:shadowJar")
         doFirst {
-            rootProject.layout.projectDirectory.dir(".server/plugins")
-                .asFile
+            val pluginsDir =
+                rootProject
+                    .layout
+                    .projectDirectory
+                    .dir(".server/plugins")
+                    .asFile
+            pluginsDir
                 .listFiles()
                 ?.filter { it.isFile && it.name.endsWith(".jar") }
                 ?.forEach { it.delete() }

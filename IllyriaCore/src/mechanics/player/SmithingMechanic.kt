@@ -28,7 +28,7 @@ internal object SmithingMechanic : MechanicInterface {
             Material.GOLDEN_AXE to Upgrade(Material.DIAMOND_AXE, Material.DIAMOND, 20),
         )
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGH)
     fun on(event: PrepareAnvilEvent) {
         val inventory = event.inventory
         val firstItem = inventory.getItem(0) ?: return
