@@ -22,7 +22,7 @@ internal object StockCategoriesGui : GuiInterface {
 
     /**
      * Builds and opens the category picker for the given player. Clicking a category opens the
-     * paged shop filtered to that category.
+     * paged shop filtered to that category. Categories with no stocked items are shown disabled.
      *
      * @param player The player browsing the trader's stock.
      * @param handlers The trader's callbacks (items, stock of, purchase, deposit).
@@ -31,6 +31,7 @@ internal object StockCategoriesGui : GuiInterface {
         player: Player,
         handlers: StockHandlers,
     ) {
+        val stocked = handlers.items().mapTo(mutableSetOf()) { MaterialCategory.of(it.result.type) }
         val pickerWindow =
             window(player) {
                 title by MM.deserialize(TITLE)
@@ -42,15 +43,15 @@ internal object StockCategoriesGui : GuiInterface {
                     ) {
                         '#' by border
                         '.' by border
-                        'B' by categoryIcon(MaterialCategory.BUILDING_BLOCKS, player, handlers)
-                        'T' by categoryIcon(MaterialCategory.TOOLS_AND_WEAPONS, player, handlers)
-                        'F' by categoryIcon(MaterialCategory.FOOD_AND_FARMING, player, handlers)
-                        'M' by categoryIcon(MaterialCategory.MATERIALS, player, handlers)
-                        'R' by categoryIcon(MaterialCategory.REDSTONE_AND_UTILITY, player, handlers)
-                        'X' by categoryIcon(MaterialCategory.MISC, player, handlers)
+                        'B' by categoryIcon(MaterialCategory.BUILDING_BLOCKS, stocked, player, handlers)
+                        'T' by categoryIcon(MaterialCategory.TOOLS_AND_WEAPONS, stocked, player, handlers)
+                        'F' by categoryIcon(MaterialCategory.FOOD_AND_FARMING, stocked, player, handlers)
+                        'M' by categoryIcon(MaterialCategory.MATERIALS, stocked, player, handlers)
+                        'R' by categoryIcon(MaterialCategory.REDSTONE_AND_UTILITY, stocked, player, handlers)
+                        'X' by categoryIcon(MaterialCategory.MISC, stocked, player, handlers)
                         's' by
                             item {
-                                itemProvider by ItemBuilder(Material.EMERALD).setName(SELL_BUTTON_NAME)
+                                itemProvider by ItemBuilder(Material.EMERALD).setName(MM.deserialize(SELL_BUTTON_NAME))
                                 onClick {
                                     StockSellGui.open(player, handlers, StockBuyGui::refreshAll) {
                                         open(player, handlers)
@@ -65,18 +66,27 @@ internal object StockCategoriesGui : GuiInterface {
     }
 
     /**
-     * Builds a picker button for [category]: a static icon showing the category's display name.
-     * Clicking opens the paged shop filtered to that category.
+     * Builds a picker button for [category]: when [stocked], an icon showing the category's
+     * display name that opens the paged shop filtered to that category; when empty, a disabled
+     * gray glass pane with the category's name grayed out.
      */
     private fun categoryIcon(
         category: MaterialCategory,
+        stocked: Set<MaterialCategory>,
         player: Player,
         handlers: StockHandlers,
     ): Item =
-        item {
-            itemProvider by
-                ItemBuilder(category.icon)
-                    .setName("<mango><b>${category.displayName}")
-            onClick { StockBuyGui.open(player, category, handlers) }
+        if (category in stocked) {
+            item {
+                itemProvider by
+                    ItemBuilder(category.icon)
+                        .setName(MM.deserialize("<${category.color}><b>${category.displayName}"))
+                onClick { StockBuyGui.open(player, category, handlers) }
+            }
+        } else {
+            Item.simple(
+                ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
+                    .setName(MM.deserialize("<dark_gray>${category.displayName}")),
+            )
         }
 }

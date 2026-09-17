@@ -23,7 +23,7 @@ import xyz.xenondevs.invui.window.Window
 /** Builds and opens the paged shop window for a single [MaterialCategory]. */
 @OptIn(ExperimentalDslApi::class)
 internal object StockBuyGui : GuiInterface {
-    private const val TITLE = "<mango>Wandering Trader"
+    private const val TITLE = "<mango>WT"
     private const val PREVIOUS_PAGE_NAME = "<gray>Previous page"
     private const val NEXT_PAGE_NAME = "<gray>Next page"
     private const val BACK_NAME = "<gray>Back to categories"
@@ -40,7 +40,7 @@ internal object StockBuyGui : GuiInterface {
             .pagedBuilder()
             .setItemProvider { _, gui ->
                 if (gui.page > 0) {
-                    ItemBuilder(Material.ARROW).setName(PREVIOUS_PAGE_NAME)
+                    ItemBuilder(Material.ARROW).setName(MM.deserialize(PREVIOUS_PAGE_NAME))
                 } else {
                     ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true)
                 }
@@ -51,7 +51,7 @@ internal object StockBuyGui : GuiInterface {
             .pagedBuilder()
             .setItemProvider { _, gui ->
                 if (gui.page < gui.pageCount - 1) {
-                    ItemBuilder(Material.ARROW).setName(NEXT_PAGE_NAME)
+                    ItemBuilder(Material.ARROW).setName(MM.deserialize(NEXT_PAGE_NAME))
                 } else {
                     ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true)
                 }
@@ -99,7 +99,7 @@ internal object StockBuyGui : GuiInterface {
 
         val shopWindow =
             window(player) {
-                title by MM.deserialize("$TITLE <dark_gray>—</dark_gray> <mango>${category.displayName}")
+                title by MM.deserialize("$TITLE <dark_gray>—</dark_gray> <${category.color}>${category.displayName}")
                 upperGui by
                     pagedItemsGui(
                         "# # # # # # # # #",
@@ -115,12 +115,12 @@ internal object StockBuyGui : GuiInterface {
                         '>' by next
                         'b' by
                             item {
-                                itemProvider by ItemBuilder(Material.ARROW).setName(BACK_NAME)
+                                itemProvider by ItemBuilder(Material.ARROW).setName(MM.deserialize(BACK_NAME))
                                 onClick { StockCategoriesGui.open(player, handlers) }
                             }
                         's' by
                             item {
-                                itemProvider by ItemBuilder(Material.EMERALD).setName(SELL_BUTTON_NAME)
+                                itemProvider by ItemBuilder(Material.EMERALD).setName(MM.deserialize(SELL_BUTTON_NAME))
                                 onClick {
                                     StockSellGui.open(player, handlers, ::refreshAll) {
                                         buildWindow(player, category, handlers).open()

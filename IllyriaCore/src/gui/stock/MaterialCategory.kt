@@ -10,17 +10,19 @@ import org.bukkit.Tag
  *
  * @property displayName The name shown on the category icon in the picker.
  * @property icon The item material representing this category in the picker.
+ * @property color The MiniMessage color used to style the category's name in the picker.
  */
 internal enum class MaterialCategory(
     val displayName: String,
     val icon: Material,
+    val color: String,
 ) {
-    BUILDING_BLOCKS("Building Blocks", Material.BRICKS),
-    TOOLS_AND_WEAPONS("Tools & Weapons", Material.IRON_PICKAXE),
-    FOOD_AND_FARMING("Food & Farming", Material.BREAD),
-    MATERIALS("Materials", Material.IRON_INGOT),
-    REDSTONE_AND_UTILITY("Redstone & Utility", Material.REDSTONE),
-    MISC("Misc", Material.CHEST),
+    BUILDING_BLOCKS("Building Blocks", Material.BRICKS, "gold"),
+    TOOLS_AND_WEAPONS("Tools & Weapons", Material.IRON_PICKAXE, "blue"),
+    FOOD_AND_FARMING("Food & Farming", Material.BREAD, "green"),
+    MATERIALS("Materials", Material.IRON_INGOT, "yellow"),
+    REDSTONE_AND_UTILITY("Redstone & Utility", Material.REDSTONE, "red"),
+    MISC("Misc", Material.CHEST, "gray"),
     ;
 
     companion object {
