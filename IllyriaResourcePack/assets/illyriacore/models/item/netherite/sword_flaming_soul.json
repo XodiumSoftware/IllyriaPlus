@@ -1,0 +1,7 @@
+{
+    "parent": "minecraft:item/netherite_sword",
+    "textures": {
+        "layer0": "minecraft:item/netherite_sword",
+        "layer1": "illyriacore:item/effect/sword/soul_flames"
+    }
+}

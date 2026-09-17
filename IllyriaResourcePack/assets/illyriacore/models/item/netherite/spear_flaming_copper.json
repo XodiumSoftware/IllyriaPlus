@@ -1,0 +1,7 @@
+{
+    "parent": "minecraft:item/netherite_spear",
+    "textures": {
+        "layer0": "minecraft:item/netherite_spear",
+        "layer1": "illyriacore:item/effect/spear/spear_green_flames"
+    }
+}

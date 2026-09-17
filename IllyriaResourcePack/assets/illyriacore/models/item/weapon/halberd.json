@@ -1,6 +1,0 @@
-{
-    "parent": "illyriacore:item/weapon/_weapon_",
-    "textures": {
-        "layer0": "illyriacore:item/weapon/halberd"
-    }
-}
