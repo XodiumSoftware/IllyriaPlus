@@ -10,6 +10,12 @@ World and gameplay modifications that set IllyriaRPG apart.
 <span class="card-desc">Built-in build protection</span>
 </a>
 
+<a class="card" href="elytra-trims.html">
+<img class="card-icon" alt="" src="../img/item/elytra.png">
+<span class="card-title">Elytra Trims</span>
+<span class="card-desc">Armor-trim your elytra</span>
+</a>
+
 <a class="card" href="entity-tweaks.html">
 <img class="card-icon" alt="" src="../img/item/egg.png">
 <span class="card-title">Entity Tweaks</span>

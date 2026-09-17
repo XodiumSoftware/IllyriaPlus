@@ -2,7 +2,7 @@
 
 Give a tamed pet to another player.
 
-## How to Transfer Ownership
+## How to Transfer Ownership <img class="mc-icon" alt="" src="../img/item/bone.png">
 
 1. Equip a **Lead** in your main hand.
 2. Leash a pet you have already tamed (so the lead is attached to it).

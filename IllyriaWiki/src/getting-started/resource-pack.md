@@ -19,4 +19,5 @@ folder.
 - Flaming sword/spear textures for Fire Aspect weapons
 - Custom painting variants
 - Boss bar icons
+- Trimmed elytra textures (see [Elytra Trims](../gameplay/elytra-trims.md))
 - UI and text overrides

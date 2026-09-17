@@ -35,6 +35,7 @@
 
 - [Overview](gameplay/index.md)
 - [Anti-Griefing](gameplay/anti-griefing.md)
+- [Elytra Trims](gameplay/elytra-trims.md)
 - [Entity Tweaks](gameplay/entity-tweaks.md)
 - [Openable Blocks](gameplay/openables.md)
 - [Pet Transfer](gameplay/tameable.md)
