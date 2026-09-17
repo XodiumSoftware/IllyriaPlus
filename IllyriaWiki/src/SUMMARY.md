@@ -40,10 +40,11 @@
 # Gameplay Changes
 
 - [Overview](gameplay/index.md)
-- [Tree Mechanics](gameplay/trees.md)
-- [Openable Blocks](gameplay/openables.md)
 - [Anti-Griefing](gameplay/anti-griefing.md)
 - [Entity Tweaks](gameplay/entity-tweaks.md)
+- [Openable Blocks](gameplay/openables.md)
+- [Pet Transfer](gameplay/tameable.md)
+- [Tree Mechanics](gameplay/trees.md)
 
 # Recipes
 
