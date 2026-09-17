@@ -63,6 +63,7 @@ internal class IllyriaCore : JavaPlugin() {
                 NetherWartBlockRecipe,
                 PaintingRecipe,
                 RottenFleshRecipe,
+                ToolTrimRecipe,
                 WoodLogRecipe,
                 WoolToStringRecipe,
             )
