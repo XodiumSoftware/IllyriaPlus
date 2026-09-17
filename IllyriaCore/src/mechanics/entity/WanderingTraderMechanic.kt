@@ -14,7 +14,10 @@ import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.Utils.MM
 import org.xodium.illyriacore.data.WanderingTraderItemData
-import org.xodium.illyriacore.gui.WanderingTraderGui
+import org.xodium.illyriacore.gui.stock.StockBuyGui
+import org.xodium.illyriacore.gui.stock.StockCategoriesGui
+import org.xodium.illyriacore.gui.stock.StockHandlers
+import org.xodium.illyriacore.gui.stock.StockSellGui
 import org.xodium.illyriacore.mechanics.MechanicInterface
 import java.io.File
 import java.nio.file.AtomicMoveNotSupportedException
@@ -106,7 +109,9 @@ internal object WanderingTraderMechanic : MechanicInterface {
     override fun onDisable() {
         // Suppress save scheduling, then close tracked windows so pending deposits land in the stock before flushing.
         shuttingDown = true
-        WanderingTraderGui.closeAll()
+        StockCategoriesGui.closeAll()
+        StockBuyGui.closeAll()
+        StockSellGui.closeAll()
         flushStock()
     }
 
@@ -123,7 +128,15 @@ internal object WanderingTraderMechanic : MechanicInterface {
         val inHand = player.inventory.itemInMainHand.type
         if (inHand == Material.LEAD || inHand == Material.NAME_TAG) return
         event.isCancelled = true
-        WanderingTraderGui.openShop(player, ::stockedTrades, ::stockOf, ::purchase, ::processDeposit)
+        StockCategoriesGui.open(
+            player,
+            StockHandlers(
+                items = ::stockedTrades,
+                stockOf = ::stockOf,
+                purchase = ::purchase,
+                deposit = ::processDeposit,
+            ),
+        )
     }
 
     /**
