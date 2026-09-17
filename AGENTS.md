@@ -5,7 +5,7 @@
 - **Name:** IllyriaPlus
 - **Type:** Multi-module Minecraft Paper plugin monorepo (server-side only)
 - **Modules:** `IllyriaCore` (core plugin, published as `IllyriaPlus`), `IllyriaBridge` (server↔client bridging plugin)
-- **MC Version:** 26.2
+- **MC Version:** 26.3
 - **Language:** Kotlin (JVM 25)
 - **Build Tool:** Gradle with Kotlin DSL
 
@@ -13,7 +13,7 @@
 
 | Category            | Technology                                       | Purpose                            |
 | ------------------- | ------------------------------------------------ | ---------------------------------- |
-| **Core API**        | [Paper API](https://papermc.io/) 26.2            | Minecraft server plugin API        |
+| **Core API**        | [Paper API](https://papermc.io/) 26.3            | Minecraft server plugin API        |
 | **Language**        | Kotlin 2.4.20                                    | JVM language                       |
 | **Build Tool**      | Gradle (Kotlin DSL)                              | Build automation                   |
 | **Gradle Plugins**  | Shadow 9.6.1                                     | Fat JAR creation                   |
@@ -29,7 +29,7 @@
 ### Paper API Resources
 
 - **Documentation**: https://docs.papermc.io/paper/dev/
-- **JavaDoc**: https://jd.papermc.io/paper/26.2/ (matches project version)
+- **JavaDoc**: https://jd.papermc.io/paper/26.3/ (matches project version)
 
 ### Paper API Notes
 
@@ -45,7 +45,7 @@
 # Build all plugin JARs (outputs in <module>/build/libs/)
 ./gradlew shadowJar
 
-# Run a module's local test server (auto-downloads Paper 26.2)
+# Run a module's local test server (auto-downloads Paper 26.3)
 ./gradlew :IllyriaCore:runServer
 ./gradlew :IllyriaBridge:runServer
 
