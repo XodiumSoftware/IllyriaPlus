@@ -4,12 +4,6 @@ Small features that make everyday play more comfortable.
 
 <div class="card-grid">
 
-<a class="card" href="sitting.html">
-<img class="card-icon" alt="" src="../img/item/saddle.png">
-<span class="card-title">Sitting</span>
-<span class="card-desc">Right-click stairs and slabs to sit on them</span>
-</a>
-
 <a class="card" href="nicknames.html">
 <img class="card-icon" alt="" src="../img/item/name_tag.png">
 <span class="card-title">Nicknames</span>

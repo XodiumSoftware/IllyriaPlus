@@ -95,7 +95,6 @@ internal class IllyriaCore : JavaPlugin() {
                 HeadMechanic,
                 ChatMechanic,
                 InventoryMechanic,
-                SitMechanic,
                 BlockPlacementMechanic,
                 BatMechanic,
                 SpawnEggMechanic,
