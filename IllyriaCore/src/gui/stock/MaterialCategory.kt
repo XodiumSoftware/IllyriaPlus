@@ -37,15 +37,19 @@ internal enum class MaterialCategory(
 
         private fun isFoodOrFarming(material: Material): Boolean =
             material.isEdible ||
-                material == Material.WHEAT ||
-                material == Material.WHEAT_SEEDS ||
-                material == Material.BEETROOT_SEEDS ||
-                material == Material.CARROT ||
-                material == Material.POTATO ||
-                material == Material.PUMPKIN_SEEDS ||
-                material == Material.MELON_SEEDS ||
-                material == Material.TORCHFLOWER_SEEDS ||
-                material == Material.PITCHER_POD ||
+                Tag.ITEMS_MEAT.isTagged(material) ||
+                Tag.ITEMS_FISHES.isTagged(material) ||
+                Tag.ITEMS_EGGS.isTagged(material) ||
+                Tag.ITEMS_VILLAGER_PLANTABLE_SEEDS.isTagged(material) ||
+                Tag.ITEMS_CHICKEN_FOOD.isTagged(material) ||
+                Tag.ITEMS_COW_FOOD.isTagged(material) ||
+                Tag.ITEMS_HORSE_FOOD.isTagged(material) ||
+                Tag.ITEMS_PANDA_FOOD.isTagged(material) ||
+                Tag.ITEMS_PARROT_FOOD.isTagged(material) ||
+                Tag.ITEMS_PIG_FOOD.isTagged(material) ||
+                Tag.ITEMS_RABBIT_FOOD.isTagged(material) ||
+                Tag.ITEMS_SHEEP_FOOD.isTagged(material) ||
+                Tag.ITEMS_VILLAGER_PICKS_UP.isTagged(material) ||
                 material == Material.SUGAR_CANE ||
                 material == Material.COCOA_BEANS ||
                 material == Material.NETHER_WART ||
@@ -57,14 +61,14 @@ internal enum class MaterialCategory(
                 Tag.ITEMS_PICKAXES.isTagged(material) ||
                 Tag.ITEMS_SHOVELS.isTagged(material) ||
                 Tag.ITEMS_HOES.isTagged(material) ||
+                Tag.ITEMS_SPEARS.isTagged(material) ||
                 Tag.ITEMS_HEAD_ARMOR.isTagged(material) ||
                 Tag.ITEMS_CHEST_ARMOR.isTagged(material) ||
                 Tag.ITEMS_LEG_ARMOR.isTagged(material) ||
                 Tag.ITEMS_FOOT_ARMOR.isTagged(material) ||
-                material == Material.BOW ||
-                material == Material.CROSSBOW ||
-                material == Material.TRIDENT ||
-                material == Material.MACE ||
+                Tag.ITEMS_TRIMMABLE_ARMOR.isTagged(material) ||
+                Tag.ITEMS_ENCHANTABLE_WEAPON.isTagged(material) ||
+                Tag.ITEMS_ARROWS.isTagged(material) ||
                 material == Material.SHIELD ||
                 material == Material.FISHING_ROD ||
                 material == Material.SHEARS ||
@@ -73,7 +77,17 @@ internal enum class MaterialCategory(
                 material == Material.BRUSH
 
         private fun isRedstoneOrUtility(material: Material): Boolean =
-            material == Material.REDSTONE ||
+            Tag.ITEMS_RAILS.isTagged(material) ||
+                Tag.ITEMS_DOORS.isTagged(material) ||
+                Tag.ITEMS_TRAPDOORS.isTagged(material) ||
+                Tag.ITEMS_FENCE_GATES.isTagged(material) ||
+                Tag.ITEMS_BUTTONS.isTagged(material) ||
+                Tag.ITEMS_WOODEN_PRESSURE_PLATES.isTagged(material) ||
+                Tag.ITEMS_SIGNS.isTagged(material) ||
+                Tag.ITEMS_HANGING_SIGNS.isTagged(material) ||
+                Tag.ITEMS_BOATS.isTagged(material) ||
+                Tag.ITEMS_CHEST_BOATS.isTagged(material) ||
+                material == Material.REDSTONE ||
                 material == Material.REDSTONE_TORCH ||
                 material == Material.REDSTONE_BLOCK ||
                 material == Material.REPEATER ||
@@ -90,10 +104,6 @@ internal enum class MaterialCategory(
                 material == Material.TARGET ||
                 material == Material.SCULK_SENSOR ||
                 material == Material.CALIBRATED_SCULK_SENSOR ||
-                material == Material.RAIL ||
-                material == Material.POWERED_RAIL ||
-                material == Material.DETECTOR_RAIL ||
-                material == Material.ACTIVATOR_RAIL ||
                 material == Material.MINECART ||
                 material == Material.CHEST_MINECART ||
                 material == Material.FURNACE_MINECART ||
@@ -104,27 +114,16 @@ internal enum class MaterialCategory(
                 material == Material.LAVA_BUCKET ||
                 material == Material.POWDER_SNOW_BUCKET ||
                 material == Material.MILK_BUCKET ||
-                material.name.endsWith("_PRESSURE_PLATE") ||
-                material.name.endsWith("_BUTTON")
+                material.name.endsWith("_PRESSURE_PLATE")
 
         private fun isMaterial(material: Material): Boolean =
             Tag.ITEMS_COALS.isTagged(material) ||
+                Tag.ITEMS_DYES.isTagged(material) ||
+                Tag.ITEMS_BEACON_PAYMENT_ITEMS.isTagged(material) ||
+                Tag.ITEMS_TRIM_MATERIALS.isTagged(material) ||
                 material.name.endsWith("_INGOT") ||
                 material.name.endsWith("_NUGGET") ||
                 material.name.endsWith("_GEM") ||
-                material.name.endsWith("_DYE") ||
-                material == Material.DIAMOND ||
-                material == Material.EMERALD ||
-                material == Material.LAPIS_LAZULI ||
-                material == Material.QUARTZ ||
-                material == Material.AMETHYST_SHARD ||
-                material == Material.ECHO_SHARD ||
-                material == Material.DISC_FRAGMENT_5 ||
-                material == Material.NETHERITE_SCRAP ||
-                material == Material.CLAY_BALL ||
-                material == Material.BRICK ||
-                material == Material.NETHER_BRICK ||
-                material == Material.FLINT ||
                 material == Material.RAW_IRON ||
                 material == Material.RAW_GOLD ||
                 material == Material.RAW_COPPER ||
@@ -150,6 +149,13 @@ internal enum class MaterialCategory(
                 material == Material.GLOW_INK_SAC ||
                 material == Material.PAPER ||
                 material == Material.BOOK ||
-                material == Material.EXPERIENCE_BOTTLE
+                material == Material.EXPERIENCE_BOTTLE ||
+                material == Material.NETHERITE_SCRAP ||
+                material == Material.CLAY_BALL ||
+                material == Material.BRICK ||
+                material == Material.NETHER_BRICK ||
+                material == Material.FLINT ||
+                material == Material.ECHO_SHARD ||
+                material == Material.DISC_FRAGMENT_5
     }
 }
