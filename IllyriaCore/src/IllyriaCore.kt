@@ -16,11 +16,7 @@ import org.xodium.illyriacore.mechanics.entity.*
 import org.xodium.illyriacore.mechanics.player.*
 import org.xodium.illyriacore.mechanics.server.*
 import org.xodium.illyriacore.mechanics.world.*
-import org.xodium.illyriacore.recipes.RecipeInterface
-import org.xodium.illyriacore.recipes.custom.GreatswordRecipe
-import org.xodium.illyriacore.recipes.custom.HalberdRecipe
-import org.xodium.illyriacore.recipes.custom.LongswordRecipe
-import org.xodium.illyriacore.recipes.vanilla.*
+import org.xodium.illyriacore.recipes.*
 
 /** Main class of the plugin. */
 internal class IllyriaCore : JavaPlugin() {
@@ -63,10 +59,7 @@ internal class IllyriaCore : JavaPlugin() {
             listOf(
                 ChainmailRecipe,
                 DiamondRecycleRecipe,
-                GreatswordRecipe,
-                HalberdRecipe,
                 IceBreakdownRecipe,
-                LongswordRecipe,
                 NetherWartBlockRecipe,
                 PaintingRecipe,
                 RottenFleshRecipe,

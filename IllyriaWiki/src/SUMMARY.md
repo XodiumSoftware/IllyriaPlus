@@ -12,13 +12,6 @@
 
 - [Overview](datapacks/index.md)
 
-# Weapons
-
-- [Overview](weapons/index.md)
-- [Greatsword](weapons/greatsword.md)
-- [Halberd](weapons/halberd.md)
-- [Longsword](weapons/longsword.md)
-
 # Enchantments
 
 - [Overview](enchantments/index.md)
@@ -41,6 +34,7 @@
 
 - [Overview](gameplay/index.md)
 - [Anti-Griefing](gameplay/anti-griefing.md)
+- [Elytra Trims](gameplay/elytra-trims.md)
 - [Entity Tweaks](gameplay/entity-tweaks.md)
 - [Openable Blocks](gameplay/openables.md)
 - [Pet Transfer](gameplay/tameable.md)

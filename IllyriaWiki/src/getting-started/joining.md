@@ -2,10 +2,10 @@
 
 ## Server Information
 
-| Property    | Value                          |
-| ----------- | ------------------------------ |
-| Server IP   | `play.illyria.cc`              |
-| Version     | Java Edition 26.3              |
+| Property    | Value                                                 |
+| ----------- | ----------------------------------------------------- |
+| Server IP   | `play.illyria.cc`                                     |
+| Version     | Java Edition 26.3                                     |
 | Client Mods | Optional (see [Client Mod Support](../mods/index.md)) |
 
 ## How to Join
@@ -20,5 +20,6 @@
 Once you're in, here are some things to check out:
 
 - Read the [Server Rules](rules.md)
-- Explore custom [Weapons](../weapons/index.md) and [Enchantments](../enchantments/index.md)
+- Explore the custom [Enchantments](../enchantments/index.md)
+- Try right-clicking a stair to [sit down](../qol/sitting.md)
 - Set your nickname with `/nick`

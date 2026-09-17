@@ -4,14 +4,14 @@ Extended behavior for doors and other openable blocks.
 
 ## Features
 
-| Feature           | How to Trigger                              |
-| ----------------- | ------------------------------------------- |
-| Double Door Sync  | Right-click either door of a double door pair |
-| Door Knocking     | Sneak + left-click a door with an empty hand |
+| Feature          | How to Trigger                                |
+| ---------------- | --------------------------------------------- |
+| Double Door Sync | Right-click either door of a double door pair |
+| Door Knocking    | Sneak + left-click a door with an empty hand  |
 
 ---
 
-## Double Door Sync
+## Double Door Sync <img class="mc-icon" alt="" src="../img/item/oak_door.png">
 
 Right-clicking one door of a **double door pair** automatically opens or closes the adjacent door in sync.
 No more manually clicking both doors.
@@ -23,7 +23,7 @@ No more manually clicking both doors.
 
 ---
 
-## Door Knocking
+## Door Knocking <img class="mc-icon" alt="" src="../img/item/oak_door.png">
 
 Announce your arrival by knocking on a door!
 

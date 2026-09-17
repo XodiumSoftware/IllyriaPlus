@@ -2,7 +2,7 @@
 
 Change your in-game display name with **MiniMessage** formatting support.
 
-## Usage
+## Usage <img class="mc-icon" alt="" src="../img/item/name_tag.png">
 
 Run `/nick` (alias for `/nickname`) to open the nickname dialog.
 Enter your desired name and confirm.
@@ -13,11 +13,11 @@ Nicknames support full MiniMessage syntax — colors, gradients, bold, and more.
 
 ### Examples
 
-| Input                                    | Result               |
-| ---------------------------------------- | -------------------- |
-| `<red>Steve</red>`                       | Red name             |
+| Input                                       | Result                |
+| ------------------------------------------- | --------------------- |
+| `<red>Steve</red>`                          | Red name              |
 | `<gradient:#FF0000:#0000FF>Alex</gradient>` | Gradient-colored name |
-| `<bold><gold>Knight</gold></bold>`       | Bold, gold name      |
+| `<bold><gold>Knight</gold></bold>`          | Bold, gold name       |
 
 ### RGB Gradients Made Easy
 

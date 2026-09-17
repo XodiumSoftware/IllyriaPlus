@@ -1,6 +1,6 @@
 # Resource Pack
 
-IllyriaRPG uses a custom resource pack to enhance your experience with custom weapon models, textures,
+IllyriaRPG uses a custom resource pack to enhance your experience with custom textures,
 and UI elements.
 
 ## Automatic Installation
@@ -16,7 +16,8 @@ folder.
 
 ## What's Included
 
-- Custom 3D weapon models (Greatsword, Halberd, Longsword)
+- Flaming sword/spear textures for Fire Aspect weapons
 - Custom painting variants
 - Boss bar icons
+- Trimmed elytra textures (see [Elytra Trims](../gameplay/elytra-trims.md))
 - UI and text overrides
