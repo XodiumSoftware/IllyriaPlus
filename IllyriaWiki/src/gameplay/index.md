@@ -34,6 +34,12 @@ World and gameplay modifications that set IllyriaRPG apart.
 <span class="card-desc">Give tamed pets to other players</span>
 </a>
 
+<a class="card" href="tool-trims.html">
+<img class="card-icon" alt="" src="../img/item/netherite_sword.png">
+<span class="card-title">Tool Trims</span>
+<span class="card-desc">Armor-trim your tools</span>
+</a>
+
 <a class="card" href="trees.html">
 <img class="card-icon" alt="" src="../img/item/oak_sapling.png">
 <span class="card-title">Tree Mechanics</span>
