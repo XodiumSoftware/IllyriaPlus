@@ -3,6 +3,7 @@ package org.xodium.illyriabridge.bridges.jade
 import net.minecraft.nbt.CompoundTag
 import org.bukkit.craftbukkit.inventory.CraftItemStack
 import org.bukkit.entity.Entity
+import org.bukkit.entity.Player
 import org.bukkit.entity.minecart.StorageMinecart
 import org.bukkit.inventory.InventoryHolder
 
@@ -23,6 +24,7 @@ internal object JadeEntityItemStorage : JadeEntityProvider {
         entity: Entity,
         tag: CompoundTag,
     ): Boolean {
+        if (entity is Player) return false
         val holder = entity as? InventoryHolder ?: return false
         val inventory = holder.inventory
         if (hasUngenereatedLoot(entity)) {
