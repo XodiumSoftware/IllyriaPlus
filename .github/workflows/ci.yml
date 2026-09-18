@@ -188,7 +188,7 @@ jobs:
 
       - id: cache_packsquash_assets
         name: Cache PackSquash Output
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cache/packsquash
@@ -233,7 +233,7 @@ jobs:
 
       - id: cache_packsquash_overlays
         name: Cache PackSquash Output
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cache/packsquash
@@ -278,7 +278,7 @@ jobs:
 
       - id: cache_packsquash
         name: Cache PackSquash Output
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cache/packsquash
