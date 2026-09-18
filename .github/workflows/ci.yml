@@ -49,10 +49,11 @@ jobs:
         with:
           filters: |
             core:
-              - "IllyriaCore/**"
-              - "!IllyriaCore/src/**"
+              - "IllyriaCore/src/**"
+              - "IllyriaCore/build.gradle.kts"
             bridge:
-              - "IllyriaBridge/**"
+              - "IllyriaBridge/src/**"
+              - "IllyriaBridge/build.gradle.kts"
             resourcepack:
               - "IllyriaResourcePack/**"
             all:
