@@ -1,0 +1,11 @@
+{
+    "__comment": "Randomly picks a ritual circle style per table position. Remove entries to force fewer styles.",
+    "variants": {
+        "": [
+            { "model": "block/enchanting_table_ring" },
+            { "model": "block/enchanting_table_pentagram" },
+            { "model": "block/enchanting_table_red_pentagram" },
+            { "model": "block/enchanting_table_nature_ring" }
+        ]
+    }
+}
