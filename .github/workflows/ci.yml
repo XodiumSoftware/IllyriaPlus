@@ -30,7 +30,6 @@ env:
 
 permissions:
   contents: read
-  pull-requests: write
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"
@@ -393,55 +392,6 @@ jobs:
           echo "Deploying IllyriaResourcePack artifacts"
           # Add your deployment logic here
           echo "Artifacts available in IllyriaResourcePack*"
-
-  pr_comment:
-    name: PR Comment
-    needs: [changes, build_core, build_bridge, build_resourcepack]
-    if: |
-      always() && github.event_name == 'pull_request' &&
-      (needs.build_core.result == 'success' ||
-       needs.build_bridge.result == 'success' ||
-       needs.build_resourcepack.result == 'success')
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-    steps:
-      - name: Post Artifact Link
-        uses: actions/github-script@v9
-        with:
-          script: |
-            const botMarker = '<!-- IllyriaPlus Artifact Bot -->';
-            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-            const body = `${botMarker}
-            Build completed for commit \`${context.sha.substring(0, 7)}\`.
-
-            [View Artifacts](${runUrl})
-            [View Workflow Run](${runUrl})
-            `;
-
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
-
-            const existing = comments.find(c => c.body && c.body.includes(botMarker));
-
-            if (existing) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: existing.id,
-                body: body,
-              });
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body: body,
-              });
-            }
 
   nightly_release:
     name: Nightly Release
