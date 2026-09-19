@@ -431,6 +431,8 @@ jobs:
     name: Build IllyriaWiki
     runs-on: ubuntu-latest
     needs: [changes, lint]
+    environment:
+      name: "${{ github.ref_name }}"
     if: |
       needs.changes.outputs.wiki == 'true' &&
       !contains(github.event.head_commit.message, '[ci-skip]') &&

@@ -33,6 +33,7 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$mcVersion.build.+")
+    compileOnly("com.google.code.gson:gson:2.14.0")
 
     implementation(kotlin("stdlib"))
     implementation("com.github.retrooper:packetevents-spigot:2.13.0")
