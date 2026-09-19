@@ -96,7 +96,9 @@ internal object UpdateChecker {
         instance.server.scheduler.runTask(
             instance,
             Runnable {
-                instance.server.onlinePlayers
+                instance
+                    .server
+                    .onlinePlayers
                     .filter { it.isOp }
                     .forEach { it.sendMessage(component) }
             },
@@ -177,7 +179,12 @@ internal object UpdateChecker {
                         throw IllegalStateException("Download failed with status ${response.statusCode()}")
                     }
 
-                    val updateDir = instance.dataFolder.parentFile.toPath().resolve("update")
+                    val updateDir =
+                        instance
+                            .dataFolder
+                            .parentFile
+                            .toPath()
+                            .resolve("update")
                     updateDir.createDirectories()
 
                     val jarFile = updateDir.resolve("$name.jar")
@@ -216,6 +223,5 @@ internal object UpdateChecker {
      * @param version The version string to parse
      * @return The build number, or `0` if it cannot be parsed
      */
-    private fun extractBuildNumber(version: String): Int =
-        version.substringAfter("+build.").toIntOrNull() ?: 0
+    private fun extractBuildNumber(version: String): Int = version.substringAfter("+build.").toIntOrNull() ?: 0
 }
