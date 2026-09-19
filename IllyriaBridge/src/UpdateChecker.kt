@@ -3,7 +3,6 @@ package org.xodium.illyriabridge
 import com.google.gson.JsonParser
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
-
 import org.xodium.illyriabridge.IllyriaBridge.Companion.instance
 import org.xodium.illyriabridge.Utils.MM
 import java.net.URI
