@@ -334,62 +334,6 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy book --project-name=illyriawiki --branch=${{ github.ref_name }} --commit-dirty=true
 
-  # Separate deployment jobs for each component - they don't wait for each other
-  deploy_core:
-    name: Deploy IllyriaCore
-    needs: [changes, build_core]
-    if: |
-      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
-      (needs.changes.outputs.core == 'true' || needs.changes.outputs.all == 'true')
-    runs-on: ubuntu-latest
-    environment:
-      name: "${{ github.ref_name }}"
-    permissions:
-      contents: write
-    steps:
-      - id: deploy
-        name: Deploy IllyriaCore
-        run: |
-          echo "Deploying IllyriaCore artifact"
-          # Add your deployment logic here (e.g., upload to release, send to server)
-          echo "Artifact available in IllyriaCore"
-
-  deploy_bridge:
-    name: Deploy IllyriaBridge
-    needs: [changes, build_bridge]
-    if: |
-      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
-      (needs.changes.outputs.bridge == 'true' || needs.changes.outputs.all == 'true')
-    runs-on: ubuntu-latest
-    environment:
-      name: "${{ github.ref_name }}"
-    permissions:
-      contents: write
-    steps:
-      - id: deploy
-        name: Deploy IllyriaBridge
-        run: |
-          echo "Deploying IllyriaBridge artifact"
-          # Add your deployment logic here
-          echo "Artifact available in IllyriaBridge"
-
-  deploy_resourcepack:
-    name: Deploy IllyriaResourcePack
-    needs: [changes, build_resourcepack]
-    if: |
-      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
-      (needs.changes.outputs.resourcepack == 'true' || needs.changes.outputs.all == 'true')
-    runs-on: ubuntu-latest
-    environment:
-      name: "${{ github.ref_name }}"
-    steps:
-      - id: deploy
-        name: Deploy IllyriaResourcePack
-        run: |
-          echo "Deploying IllyriaResourcePack artifacts"
-          # Add your deployment logic here
-          echo "Artifacts available in IllyriaResourcePack*"
-
   nightly_release:
     name: Nightly Release
     # Publishes built artifacts to the rotating 'nightly' prerelease
