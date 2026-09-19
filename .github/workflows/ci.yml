@@ -150,7 +150,7 @@ jobs:
 
   build_core:
     name: Build IllyriaCore
-    needs: [changes, lint]
+    needs: [changes]
     if: needs.changes.outputs.core == 'true' || needs.changes.outputs.all == 'true'
     runs-on: ubuntu-latest
     environment:
@@ -186,7 +186,7 @@ jobs:
 
   build_bridge:
     name: Build IllyriaBridge
-    needs: [changes, lint]
+    needs: [changes]
     if: needs.changes.outputs.bridge == 'true' || needs.changes.outputs.all == 'true'
     runs-on: ubuntu-latest
     environment:
@@ -222,7 +222,7 @@ jobs:
 
   build_resourcepack:
     name: Build IllyriaResourcePack
-    needs: [changes, lint]
+    needs: [changes]
     if: needs.changes.outputs.resourcepack == 'true' || needs.changes.outputs.all == 'true'
     runs-on: ubuntu-latest
     environment:
@@ -267,7 +267,7 @@ jobs:
   build_wiki:
     name: Build IllyriaWiki
     runs-on: ubuntu-latest
-    needs: [changes, lint]
+    needs: [changes]
     if: |
       needs.changes.outputs.wiki == 'true' &&
       !contains(github.event.head_commit.message, '[ci-skip]') &&
@@ -334,97 +334,47 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy book --project-name=illyriawiki --branch=${{ github.ref_name }} --commit-dirty=true
 
-  nightly_release:
-    name: Nightly Release
-    # Publishes built artifacts to the rotating 'nightly' prerelease
-    needs: [changes, lint, build_core, build_bridge, build_resourcepack]
+  # Common per-component release flow: download the component's artifact,
+  # then amend the shared rotating 'nightly' prerelease. Each job re-points the
+  # tag, deletes only that component's old asset(s), and uploads the new file.
+  release_core:
+    name: Release IllyriaCore
+    needs: [changes, build_core]
+    if: github.ref == 'refs/heads/main' && (needs.changes.outputs.core == 'true' || needs.changes.outputs.all == 'true')
+    concurrency: nightly-release
     runs-on: ubuntu-latest
     environment:
       name: "${{ github.ref_name }}"
       url: "${{ steps.create_release.outputs.url }}"
-    if: |
-      always() && github.ref == 'refs/heads/main' &&
-      (needs.changes.outputs.core == 'true' ||
-       needs.changes.outputs.bridge == 'true' ||
-       needs.changes.outputs.resourcepack == 'true' ||
-       needs.changes.outputs.all == 'true')
     permissions:
       contents: write
     steps:
-      - id: checkout
-        name: Checkout
-        uses: actions/checkout@v7.0.1
-        with:
-          fetch-depth: 0
-
-      - id: download_core
+      - id: download_artifact
         name: Download IllyriaCore Artifact
-        if: needs.changes.outputs.core == 'true' || needs.changes.outputs.all == 'true'
         uses: actions/download-artifact@v8.0.1
         with:
           name: IllyriaCore
           path: dist/
 
-      - id: download_bridge
-        name: Download IllyriaBridge Artifact
-        if: needs.changes.outputs.bridge == 'true' || needs.changes.outputs.all == 'true'
-        uses: actions/download-artifact@v8.0.1
-        with:
-          name: IllyriaBridge
-          path: dist/
-
-      - id: download_resourcepack
-        name: Download IllyriaResourcePack Artifact
-        if: needs.changes.outputs.resourcepack == 'true' || needs.changes.outputs.all == 'true'
-        uses: actions/download-artifact@v8.0.1
-        with:
-          name: IllyriaResourcePack
-          path: dist/
-
-      - id: check_outputs
-        name: Check Available Outputs
-        run: |
-          echo "Artifacts to release:"
-          ls -la dist/ || echo "No artifacts downloaded"
-          if [ -z "$(ls -A dist/ 2>/dev/null)" ]; then
-            echo "::warning::No artifacts to release"
-          fi
-
       - id: update_nightly_tag
         name: Update Nightly Tag
-        if: hashFiles('dist/') != ''
         run: |
           gh api repos/${{ github.repository }}/git/refs/tags/nightly \
-            --method PATCH \
-            --field sha=${{ github.sha }} \
-            --field force=true 2>/dev/null || \
+            --method PATCH --field sha=${{ github.sha }} --field force=true 2>/dev/null || \
           gh api repos/${{ github.repository }}/git/refs \
-            --method POST \
-            --field ref=refs/tags/nightly \
-            --field sha=${{ github.sha }}
+            --method POST --field ref=refs/tags/nightly --field sha=${{ github.sha }}
         env:
           GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
-      - id: delete_old_release_assets
-        name: Delete Old Release Assets
-        if: hashFiles('dist/') != ''
+      - id: delete_old_assets
+        name: Delete Old IllyriaCore Assets
         run: |
           release_id=$(gh api repos/${{ github.repository }}/releases/tags/nightly --jq '.id' 2>/dev/null || echo "")
           if [ -n "$release_id" ]; then
-            # Only delete assets we're about to re-upload (built modules)
-            built_modules=""
-            [ "${{ needs.changes.outputs.core }}" = "true" ] && built_modules="$built_modules IllyriaCore"
-            [ "${{ needs.changes.outputs.bridge }}" = "true" ] && built_modules="$built_modules IllyriaBridge"
-            [ "${{ needs.changes.outputs.resourcepack }}" = "true" ] && built_modules="$built_modules IllyriaResourcePack"
-            [ "${{ needs.changes.outputs.all }}" = "true" ] && built_modules="$built_modules IllyriaCore IllyriaBridge IllyriaResourcePack"
-
-            for module in $built_modules; do
-              asset_ids=$(gh api repos/${{ github.repository }}/releases/$release_id/assets \
-                --jq ".[] | select(.name | startswith(\"$module\")) | .id" 2>/dev/null || echo "")
-              for asset_id in $asset_ids; do
-                echo "Deleting old $module asset: $asset_id"
-                gh api repos/${{ github.repository }}/releases/assets/$asset_id --method DELETE
-              done
+            asset_ids=$(gh api repos/${{ github.repository }}/releases/$release_id/assets \
+              --jq '.[] | select(.name | startswith("IllyriaCore")) | .id' 2>/dev/null || echo "")
+            for asset_id in $asset_ids; do
+              gh api repos/${{ github.repository }}/releases/assets/$asset_id --method DELETE
             done
           fi
         env:
@@ -432,7 +382,114 @@ jobs:
 
       - id: create_release
         name: Create Nightly Release
-        if: hashFiles('dist/') != ''
+        uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          prerelease: true
+          files: dist/*
+          tag_name: nightly
+          name: Nightly Build
+
+  release_bridge:
+    name: Release IllyriaBridge
+    needs: [changes, build_bridge]
+    if: github.ref == 'refs/heads/main' && (needs.changes.outputs.bridge == 'true' || needs.changes.outputs.all == 'true')
+    concurrency: nightly-release
+    runs-on: ubuntu-latest
+    environment:
+      name: "${{ github.ref_name }}"
+      url: "${{ steps.create_release.outputs.url }}"
+    permissions:
+      contents: write
+    steps:
+      - id: download_artifact
+        name: Download IllyriaBridge Artifact
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: IllyriaBridge
+          path: dist/
+
+      - id: update_nightly_tag
+        name: Update Nightly Tag
+        run: |
+          gh api repos/${{ github.repository }}/git/refs/tags/nightly \
+            --method PATCH --field sha=${{ github.sha }} --field force=true 2>/dev/null || \
+          gh api repos/${{ github.repository }}/git/refs \
+            --method POST --field ref=refs/tags/nightly --field sha=${{ github.sha }}
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - id: delete_old_assets
+        name: Delete Old IllyriaBridge Assets
+        run: |
+          release_id=$(gh api repos/${{ github.repository }}/releases/tags/nightly --jq '.id' 2>/dev/null || echo "")
+          if [ -n "$release_id" ]; then
+            asset_ids=$(gh api repos/${{ github.repository }}/releases/$release_id/assets \
+              --jq '.[] | select(.name | startswith("IllyriaBridge")) | .id' 2>/dev/null || echo "")
+            for asset_id in $asset_ids; do
+              gh api repos/${{ github.repository }}/releases/assets/$asset_id --method DELETE
+            done
+          fi
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - id: create_release
+        name: Create Nightly Release
+        uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          prerelease: true
+          files: dist/*
+          tag_name: nightly
+          name: Nightly Build
+
+  release_resourcepack:
+    name: Release IllyriaResourcePack
+    needs: [changes, build_resourcepack]
+    if: github.ref == 'refs/heads/main' && (needs.changes.outputs.resourcepack == 'true' || needs.changes.outputs.all == 'true')
+    concurrency: nightly-release
+    runs-on: ubuntu-latest
+    environment:
+      name: "${{ github.ref_name }}"
+      url: "${{ steps.create_release.outputs.url }}"
+    permissions:
+      contents: write
+    steps:
+      - id: download_artifact
+        name: Download IllyriaResourcePack Artifact
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: IllyriaResourcePack
+          path: dist/
+
+      - id: update_nightly_tag
+        name: Update Nightly Tag
+        run: |
+          gh api repos/${{ github.repository }}/git/refs/tags/nightly \
+            --method PATCH --field sha=${{ github.sha }} --field force=true 2>/dev/null || \
+          gh api repos/${{ github.repository }}/git/refs \
+            --method POST --field ref=refs/tags/nightly --field sha=${{ github.sha }}
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - id: delete_old_assets
+        name: Delete Old IllyriaResourcePack Assets
+        run: |
+          release_id=$(gh api repos/${{ github.repository }}/releases/tags/nightly --jq '.id' 2>/dev/null || echo "")
+          if [ -n "$release_id" ]; then
+            asset_ids=$(gh api repos/${{ github.repository }}/releases/$release_id/assets \
+              --jq '.[] | select(.name == "pack.zip") | .id' 2>/dev/null || echo "")
+            for asset_id in $asset_ids; do
+              gh api repos/${{ github.repository }}/releases/assets/$asset_id --method DELETE
+            done
+          fi
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - id: create_release
+        name: Create Nightly Release
         uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
