@@ -1,0 +1,7 @@
+Overlay order is based on alphabetical order. 
+
+The closer to "A" the lower the layer.
+
+The closer to "Z" the higher the layer.
+
+By keeping the naming this folder "_transitions" it takes priority over all CTM

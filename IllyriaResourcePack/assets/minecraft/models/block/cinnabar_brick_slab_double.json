@@ -1,0 +1,8 @@
+{
+    "parent": "block/cube_bottom_top",
+    "textures": {
+        "bottom": "block/cinnabar_bricks_slab",
+        "top": "block/cinnabar_bricks_slab",
+        "side": "block/cinnabar_bricks_slab"
+    }
+}

@@ -1,0 +1,21 @@
+06/24/23
+
+as of 1.20, connect=material is no longer supported.
+
+the following properties have been converted...
+
+[OptiFine] Unknown connect: material
+[OptiFine] Invalid connect in: optifine/ctm/foliage/reeds/cattail/sugar_cane_cattail.properties
+[OptiFine] Invalid connect in: optifine/ctm/foliage/reeds/cattail/sugar_cane_cattail_a.properties
+[OptiFine] Invalid connect in: optifine/ctm/foliage/reeds/papyrus/papyrus.properties
+[OptiFine] Invalid connect in: optifine/ctm/stone/brick/doubleslab.properties
+[OptiFine] Invalid connect in: optifine/ctm/stone/cobble/cobblestone.properties
+[OptiFine] Invalid connect in: optifine/ctm/stone/cobble/cobblestone_mossy.properties
+[OptiFine] Invalid connect in: optifine/ctm/stone/cobble/slab.properties
+[OptiFine] Invalid connect in: optifine/ctm/stone/granite_smooth/polished_granite.properties
+[OptiFine] Invalid connect in: optifine/ctm/wood/birch_planks/slab.properties
+[OptiFine] Invalid connect in: optifine/ctm/wood/birch_planks/stair.properties
+[OptiFine] Invalid connect in: optifine/ctm/wood/oak_planks/slab.properties
+[OptiFine] Invalid connect in: optifine/ctm/wood/oak_planks/stair.properties
+[OptiFine] Invalid connect in: optifine/ctm/wood/spruce_planks/slab.properties
+[OptiFine] Invalid connect in: optifine/ctm/wood/spruce_planks/stair.properties

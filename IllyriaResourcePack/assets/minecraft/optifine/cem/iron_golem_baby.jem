@@ -1,0 +1,85 @@
+{
+	"credit": "Made with Blockbench",
+	"textureSize": [64, 64],
+	"texture": "iron_golem_baby.png",
+	"models": [
+		{
+			"part": "head",
+			"id": "head",
+			"invertAxis": "xy",
+			"translate": [0, -18, 0]
+		},
+		{
+			"part": "headwear",
+			"id": "headwear",
+			"invertAxis": "xy",
+			"translate": [0, -18, 0]
+		},
+		{
+			"part": "body",
+			"id": "body",
+			"invertAxis": "xy",
+			"translate": [0, -18, 0],
+			"boxes": [
+				{"coordinates": [-7, 10, -3, 12, 8, 6], "textureOffset": [10, 24]},
+				{"coordinates": [-5, 8, -3, 8, 2, 6], "textureOffset": [12, 24]}
+			],
+			"submodels": [
+				{
+					"id": "head_unscaled",
+					"invertAxis": "xy",
+					"translate": [0, 18, 0],
+					"boxes": [
+						{"coordinates": [-7, 0, -6, 12, 12, 12], "textureOffset": [0, 0]},
+						{"coordinates": [-7, 0, -7, 12, 6, 2], "textureOffset": [36, 2]},
+						{"coordinates": [-3, 12, -6, 4, 2, 12], "textureOffset": [26, 50]}
+					]
+				}
+			],
+			"animations": [
+				{
+					"this.rx": 0,
+					"head_unscaled.rx": "head.rx",
+					"head_unscaled.ry": "head.ry",
+					"head_unscaled.rz": "head.rz"
+				}
+			]
+		},
+		{
+			"part": "left_arm",
+			"id": "left_arm",
+			"invertAxis": "xy",
+			"translate": [5, -16, 0],
+			"boxes": [
+				{"coordinates": [-11, 4, -2, 4, 14, 4], "textureOffset": [48, 42]}
+			]
+		},
+		{
+			"part": "right_arm",
+			"id": "right_arm",
+			"invertAxis": "xy",
+			"translate": [-5, -16, 0],
+			"boxes": [
+				{"coordinates": [5, 4, -2, 4, 14, 4], "textureOffset": [48, 24]}
+			]
+		},
+		{
+			"part": "left_leg",
+			"id": "left_leg",
+			"invertAxis": "xy",
+			"translate": [1.9, -6, 0],
+			"boxes": [
+				{"coordinates": [-6, 0, -2, 4, 8, 4], "textureOffset": [20, 48]}
+			]
+		},
+		{
+			"part": "right_leg",
+			"id": "right_leg",
+			"invertAxis": "xy",
+			"translate": [-1.9, -6, 0],
+			"boxes": [
+				{"coordinates": [0, 0, -2, 4, 8, 4], "textureOffset": [0, 48]}
+			]
+		}
+	]
+}

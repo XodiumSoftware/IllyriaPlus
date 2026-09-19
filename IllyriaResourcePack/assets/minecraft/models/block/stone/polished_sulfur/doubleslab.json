@@ -1,0 +1,23 @@
+{
+    "parent": "block/block",
+    "textures": {
+        "particle": "block/polished_sulfur",	
+        "texture": "block/polished_sulfur_slab",
+        "top": "block/polished_sulfur",
+        "bottom": "block/polished_sulfur"		
+      },
+    "elements": [
+        {   "from": [ 0, 0, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+                "down":  { "texture": "#bottom", "cullface": "down" },
+                "up":    { "texture": "#top", "cullface": "up"   },
+                "north": { "texture": "#texture" },
+                "south": { "texture": "#texture" },
+                "west":  { "texture": "#texture" },
+                "east":  { "texture": "#texture" }
+            },
+            "__comment": "block"
+        }
+    ]
+}

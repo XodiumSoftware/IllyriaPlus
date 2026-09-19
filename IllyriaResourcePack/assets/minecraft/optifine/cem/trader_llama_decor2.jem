@@ -1,0 +1,83 @@
+{
+	"textureSize": [128, 64],
+	"models": [
+		{
+			"part": "head",
+			"id": "head",
+			"invertAxis": "xy",
+			"translate": [0, -17, 6]
+		},
+		{
+			"part": "body",
+			"id": "body",
+			"invertAxis": "xy",
+			"translate": [0, -19, -2],
+			"rotate": [-90, 0, 0],
+			"boxes": [
+				{
+					"coordinates": [-5, 10, -5, 10, 18, 10],
+					"uvNorth": [40, 10, 50, 28],
+					"uvEast": [29, 10, 39, 28],
+					"uvSouth": [62, 10, 72, 28],
+					"uvWest": [51, 10, 61, 28],
+					"uvUp": [49, 10, 39, 0],
+					"uvDown": [59, 0, 49, 10],
+					"sizeAdd": 0.5
+				}
+			],
+			"animations": [
+				{
+					"this.rx": 0
+				}
+			]
+		},
+		{
+			"part": "leg1",
+			"id": "leg1",
+			"invertAxis": "xy",
+			"translate": [-3.5, -14, -6]
+		},
+		{
+			"part": "leg2",
+			"id": "leg2",
+			"invertAxis": "xy",
+			"translate": [3.5, -14, -6]
+		},
+		{
+			"part": "leg3",
+			"id": "leg3",
+			"invertAxis": "xy",
+			"translate": [-3.5, -14, 5]
+		},
+		{
+			"part": "leg4",
+			"id": "leg4",
+			"invertAxis": "xy",
+			"translate": [3.5, -14, 5]
+		},
+		{
+			"part": "chest_left",
+			"id": "chest_left",
+			"invertAxis": "xy",
+			"translate": [5.5, -21, -3],
+			"rotate": [0, -90, 0],
+			"animations": [
+				{
+					"this.ry": 0
+				}
+			]
+		},
+		{
+			"part": "chest_right",
+			"id": "chest_right",
+			"invertAxis": "xy",
+			"translate": [-8.5, -21, -3],
+			"rotate": [0, -90, 0],
+			"animations": [
+				{
+					"this.ry": 0
+				}
+			]
+		}
+	]
+}

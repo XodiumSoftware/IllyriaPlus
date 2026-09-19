@@ -1,0 +1,1 @@
+cobble_mossy and mossy_cobble overlay work as a psuedo fix to connect-material vertical ctm

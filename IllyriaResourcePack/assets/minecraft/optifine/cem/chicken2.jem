@@ -1,0 +1,187 @@
+{
+	"credit": "Made with Blockbench - GrandPappyJay",
+	"textureSize": [64, 32],
+	"texture": "chicken_temperate_duck.png",
+	"models": [
+		{
+			"part": "head",
+			"id": "head",
+			"invertAxis": "xy",
+			"translate": [0, -9, 4],
+			"scale": 1,
+			"boxes": [
+				{"coordinates": [-2, 9, -6, 4, 6, 3], "textureOffset": [0, 0]},
+				{
+					"coordinates": [-1.5, 11, -9, 3, 2, 3],
+					"uvNorth": [17, 2, 20, 4],
+					"uvEast": [14, 2, 17, 4],
+					"uvSouth": [23, 2, 26, 4],
+					"uvWest": [20, 2, 23, 4],
+					"uvUp": [19, 3, 16, 0],
+					"uvDown": [24, 0, 21, 3]
+				}
+			],
+			"animations": [
+				{
+					"head.ty": 16,
+					"head.tz": -4,
+					"body.ty": 17
+				},
+				{
+					"right_wing2.ry": "if(is_in_water, 0, right_wing.rz)",
+					"left_wing2.ry": "if(is_in_water, 0, left_wing.rz)",
+					"right_leg2.rx": "if(is_in_water, torad(-35) + sin(time * 0.5) * torad(20), right_leg.rx - torad(90))",
+					"left_leg2.rx": "if(is_in_water, torad(-35) - sin(time * 0.5) * torad(20), left_leg.rx - torad(90))"
+				}
+			]
+		},
+		{
+			"part": "body",
+			"id": "body",
+			"invertAxis": "xy",
+			"translate": [0, -8, 0],
+			"rotate": [-90, 0, 0],
+			"scale": 1,
+			"boxes": [
+				{"coordinates": [-3, 4, -3, 6, 9, 5], "textureOffset": [1, 10]}
+			],
+			"submodels": [
+				{
+					"id": "right_leg2",
+					"invertAxis": "xy",
+					"translate": [2, 7, -3],
+					"rotate": [90, 0, 0],
+					"boxes": [
+						{
+							"coordinates": [-1, -4, -0.99, 1, 5, 1],
+							"uvNorth": [36, 3, 37, 8],
+							"uvEast": [36, 3, 37, 8],
+							"uvSouth": [36, 3, 37, 8],
+							"uvWest": [36, 3, 37, 8],
+							"uvUp": [37, 4, 36, 3],
+							"uvDown": [37, 7, 36, 8]
+						},
+						{
+							"coordinates": [-2, -4, -3, 3, 0, 3],
+							"uvNorth": [0, 0, 1, 1],
+							"uvEast": [0, 0, 1, 1],
+							"uvSouth": [0, 0, 1, 1],
+							"uvWest": [0, 0, 1, 1],
+							"uvUp": [32, 3, 35, 0],
+							"uvDown": [0, 0, 1, 1]
+						}
+					]
+				},
+				{
+					"id": "left_leg2",
+					"invertAxis": "xy",
+					"translate": [-2, 7, -3],
+					"rotate": [90, 0, 0],
+					"boxes": [
+						{
+							"coordinates": [0, -4, -0.99, 1, 5, 1],
+							"uvNorth": [37, 3, 36, 8],
+							"uvEast": [37, 3, 36, 8],
+							"uvSouth": [37, 3, 36, 8],
+							"uvWest": [37, 3, 36, 8],
+							"uvUp": [36, 4, 37, 3],
+							"uvDown": [36, 7, 37, 8]
+						},
+						{
+							"coordinates": [-1, -4, -3, 3, 0, 3],
+							"uvNorth": [1, 0, 0, 1],
+							"uvEast": [1, 0, 0, 1],
+							"uvSouth": [1, 0, 0, 1],
+							"uvWest": [1, 0, 0, 1],
+							"uvUp": [35, 3, 32, 0],
+							"uvDown": [1, 0, 0, 1]
+						}
+					]
+				},
+				{
+					"id": "tail",
+					"invertAxis": "xy",
+					"translate": [0, 5.5, 3],
+					"rotate": [-22.5, 0, 0],
+					"boxes": [
+						{
+							"coordinates": [-2, -3.5, -4, 4, 4, 3],
+							"uvNorth": [27, 19, 31, 23],
+							"uvEast": [31, 19, 34, 23],
+							"uvSouth": [27, 19, 31, 23],
+							"uvWest": [24, 19, 27, 23],
+							"uvUp": [31, 23, 27, 20],
+							"uvDown": [31, 20, 27, 23]
+						}
+					]
+				},
+				{
+					"id": "right_wing2",
+					"invertAxis": "xy",
+					"translate": [3, 8, 2],
+					"rotate": [90, 0, 0],
+					"boxes": [
+						{"coordinates": [0, -4, -3, 1, 4, 6], "textureOffset": [24, 13]}
+					]
+				},
+				{
+					"id": "left_wing2",
+					"invertAxis": "xy",
+					"mirrorTexture": "u",
+					"translate": [-3, 8, 2],
+					"rotate": [90, 0, 0],
+					"boxes": [
+						{"coordinates": [-1, -4, -3, 1, 4, 6], "textureOffset": [24, 13]}
+					]
+				}
+			],
+			"animations": [
+				{
+					"this.rx": 0
+				}
+			]
+		},
+		{
+			"part": "bill",
+			"id": "bill",
+			"invertAxis": "xy",
+			"translate": [1, -9, 4],
+			"scale": 1
+		},
+		{
+			"part": "chin",
+			"id": "chin",
+			"invertAxis": "xy",
+			"translate": [0, -9, 4],
+			"scale": 1
+		},
+		{
+			"part": "right_wing",
+			"id": "right_wing",
+			"invertAxis": "xy",
+			"translate": [-4, -11, 0],
+			"scale": 1
+		},
+		{
+			"part": "left_wing",
+			"id": "left_wing",
+			"invertAxis": "xy",
+			"translate": [4, -11, 0],
+			"scale": 1
+		},
+		{
+			"part": "right_leg",
+			"id": "right_leg",
+			"invertAxis": "xy",
+			"translate": [-2, -5, -1],
+			"scale": 1
+		},
+		{
+			"part": "left_leg",
+			"id": "left_leg",
+			"invertAxis": "xy",
+			"translate": [1, -5, -1],
+			"scale": 1
+		}
+	]
+}
