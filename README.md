@@ -32,7 +32,7 @@
 
 ## Requirements
 
-- [Paper](https://papermc.io/) 26.2
+- [Paper](https://papermc.io/) 26.3
 - Java 25
 
 <p align="right"><a href="#readme-top">▲</a></p>

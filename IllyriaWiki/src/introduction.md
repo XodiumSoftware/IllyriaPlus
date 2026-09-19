@@ -25,9 +25,9 @@ Welcome to the official wiki for the **IllyriaRPG** Minecraft server.
 </a>
 
 <a class="card" href="qol/index.html">
-<span class="card-icon">🪑</span>
+<span class="card-icon">🏷️</span>
 <span class="card-title">Quality of Life</span>
-<span class="card-desc">Sitting, nicknames, XP bottling, and more</span>
+<span class="card-desc">Nicknames, XP bottling, and more</span>
 </a>
 
 <a class="card" href="gameplay/index.html">
@@ -55,5 +55,5 @@ Welcome to the official wiki for the **IllyriaRPG** Minecraft server.
 IllyriaRPG is a vanilla-plus Minecraft survival server with RPG flavor:
 
 - ✨ **Unique enchantments** like Vinemine (vein mining) and Embertread (lava walker)
-- 🪑 **Quality-of-life features** — sit, bottle XP, set nicknames
+- 🏷️ **Quality-of-life features** — nicknames, XP bottling, and more
 - 🗺️ **Mod support** for Xaero's maps and Fabric/JEI users

@@ -24,7 +24,6 @@
 # Quality of Life
 
 - [Overview](qol/index.md)
-- [Sitting](qol/sitting.md)
 - [Nicknames](qol/nicknames.md)
 - [Ender Chest](qol/enderchest.md)
 - [XP Management](qol/xp.md)
