@@ -172,103 +172,32 @@ jobs:
           name: IllyriaBridge
           path: IllyriaBridge/build/libs/*.jar
 
-  build_resourcepack_assets:
-    name: Build IllyriaResourcePack - Assets
-    needs: [changes]
-    if: needs.changes.outputs.resourcepack == 'true' || needs.changes.outputs.all == 'true'
-    runs-on: ubuntu-latest
-    environment:
-      name: "${{ github.ref_name }}"
-    steps:
-      - id: checkout
-        name: Checkout
-        uses: actions/checkout@v7.0.1
-        with:
-          fetch-depth: 0
-
-      - id: cache_packsquash_assets
-        name: Cache PackSquash Output
-        uses: actions/cache@v6
-        with:
-          path: |
-            ~/.cache/packsquash
-            /tmp/packsquash-cache-assets
-          key: packsquash-assets-${{ runner.os }}-${{ github.sha }}
-          restore-keys: |
-            packsquash-assets-${{ runner.os }}-${{ github.ref }}-
-            packsquash-assets-${{ runner.os }}-
-
-      - id: packsquash
-        name: Create Zip & Optimize Assets with Packsquash
-        uses: ComunidadAylas/PackSquash-action@v4
-        with:
-          packsquash_version: v0.4.1
-          artifact_name: IllyriaResourcePack-Assets
-          options: |
-            pack_directory = 'IllyriaResourcePack/assets'
-            output_file_path = '/tmp/pack-assets.zip'
-        env:
-          PACKSQUASH_CACHE_DIR: ${{ runner.temp }}/packsquash-cache-assets
-
-      - id: upload_artifact
-        name: Upload Assets Artifact
-        uses: actions/upload-artifact@v7.0.1
-        with:
-          name: IllyriaResourcePack-Assets
-          path: /tmp/pack-assets.zip
-
-  build_resourcepack_overlays:
-    name: Build IllyriaResourcePack - Overlays
-    needs: [changes]
-    if: needs.changes.outputs.resourcepack == 'true' || needs.changes.outputs.all == 'true'
-    runs-on: ubuntu-latest
-    environment:
-      name: "${{ github.ref_name }}"
-    steps:
-      - id: checkout
-        name: Checkout
-        uses: actions/checkout@v7.0.1
-        with:
-          fetch-depth: 0
-
-      - id: cache_packsquash_overlays
-        name: Cache PackSquash Output
-        uses: actions/cache@v6
-        with:
-          path: |
-            ~/.cache/packsquash
-            /tmp/packsquash-cache-overlays
-          key: packsquash-overlays-${{ runner.os }}-${{ github.sha }}
-          restore-keys: |
-            packsquash-overlays-${{ runner.os }}-${{ github.ref }}-
-            packsquash-overlays-${{ runner.os }}-
-
-      - id: packsquash
-        name: Create Zip & Optimize Overlays with Packsquash
-        uses: ComunidadAylas/PackSquash-action@v4
-        with:
-          packsquash_version: v0.4.1
-          artifact_name: IllyriaResourcePack-Overlays
-          options: |
-            pack_directory = 'IllyriaResourcePack/overlay_mod_support'
-            output_file_path = '/tmp/pack-overlays.zip'
-        env:
-          PACKSQUASH_CACHE_DIR: ${{ runner.temp }}/packsquash-cache-overlays
-
-      - id: upload_artifact
-        name: Upload Overlays Artifact
-        uses: actions/upload-artifact@v7.0.1
-        with:
-          name: IllyriaResourcePack-Overlays
-          path: /tmp/pack-overlays.zip
-
   build_resourcepack:
-    name: Build IllyriaResourcePack
+    name: Build IllyriaResourcePack - ${{ matrix.name }}
     needs: [changes]
     if: needs.changes.outputs.resourcepack == 'true' || needs.changes.outputs.all == 'true'
     runs-on: ubuntu-latest
     environment:
       name: "${{ github.ref_name }}"
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Full
+            artifact: IllyriaResourcePack
+            pack_directory: IllyriaResourcePack
+            output_file: /tmp/pack.zip
+            cache_slug: full
+          - name: Assets
+            artifact: IllyriaResourcePack-Assets
+            pack_directory: IllyriaResourcePack/assets
+            output_file: /tmp/pack-assets.zip
+            cache_slug: assets
+          - name: Overlays
+            artifact: IllyriaResourcePack-Overlays
+            pack_directory: IllyriaResourcePack/overlay_mod_support
+            output_file: /tmp/pack-overlays.zip
+            cache_slug: overlays
     steps:
       - id: checkout
         name: Checkout
@@ -282,22 +211,29 @@ jobs:
         with:
           path: |
             ~/.cache/packsquash
-            /tmp/packsquash-cache
-          key: packsquash-${{ runner.os }}-${{ github.sha }}
+            ${{ runner.temp }}/packsquash-cache-${{ matrix.cache_slug }}
+          key: packsquash-${{ matrix.cache_slug }}-${{ runner.os }}-${{ github.sha }}
           restore-keys: |
-            packsquash-${{ runner.os }}-${{ github.ref }}-
-            packsquash-${{ runner.os }}-
+            packsquash-${{ matrix.cache_slug }}-${{ runner.os }}-${{ github.ref }}-
+            packsquash-${{ matrix.cache_slug }}-${{ runner.os }}-
 
       - id: packsquash
         name: Create Zip & Optimize with Packsquash
         uses: ComunidadAylas/PackSquash-action@v4
         with:
           packsquash_version: v0.4.1
-          artifact_name: IllyriaResourcePack
           options: |
-            pack_directory = 'IllyriaResourcePack'
+            pack_directory = '${{ matrix.pack_directory }}'
+            output_file_path = '${{ matrix.output_file }}'
         env:
-          PACKSQUASH_CACHE_DIR: ${{ runner.temp }}/packsquash-cache
+          PACKSQUASH_CACHE_DIR: ${{ runner.temp }}/packsquash-cache-${{ matrix.cache_slug }}
+
+      - id: upload_artifact
+        name: Upload Artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.output_file }}
 
   lint_wiki:
     name: Lint Wiki
@@ -462,13 +398,7 @@ jobs:
 
   deploy_resourcepack:
     name: Deploy IllyriaResourcePack
-    needs:
-      [
-        changes,
-        build_resourcepack,
-        build_resourcepack_assets,
-        build_resourcepack_overlays,
-      ]
+    needs: [changes, build_resourcepack]
     if: |
       (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
       (needs.changes.outputs.resourcepack == 'true' || needs.changes.outputs.all == 'true')
@@ -485,22 +415,12 @@ jobs:
 
   pr_comment:
     name: PR Comment
-    needs:
-      [
-        changes,
-        build_core,
-        build_bridge,
-        build_resourcepack,
-        build_resourcepack_assets,
-        build_resourcepack_overlays,
-      ]
+    needs: [changes, build_core, build_bridge, build_resourcepack]
     if: |
       always() && github.event_name == 'pull_request' &&
       (needs.build_core.result == 'success' ||
        needs.build_bridge.result == 'success' ||
-       needs.build_resourcepack.result == 'success' ||
-       needs.build_resourcepack_assets.result == 'success' ||
-       needs.build_resourcepack_overlays.result == 'success')
+       needs.build_resourcepack.result == 'success')
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
