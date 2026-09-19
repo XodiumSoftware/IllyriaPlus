@@ -173,31 +173,12 @@ jobs:
           path: IllyriaBridge/build/libs/*.jar
 
   build_resourcepack:
-    name: Build IllyriaResourcePack - ${{ matrix.name }}
+    name: Build IllyriaResourcePack
     needs: [changes]
     if: needs.changes.outputs.resourcepack == 'true' || needs.changes.outputs.all == 'true'
     runs-on: ubuntu-latest
     environment:
       name: "${{ github.ref_name }}"
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: Full
-            artifact: IllyriaResourcePack
-            pack_directory: IllyriaResourcePack
-            output_file: /tmp/pack.zip
-            cache_slug: full
-          - name: Assets
-            artifact: IllyriaResourcePack-Assets
-            pack_directory: IllyriaResourcePack/assets
-            output_file: /tmp/pack-assets.zip
-            cache_slug: assets
-          - name: Overlays
-            artifact: IllyriaResourcePack-Overlays
-            pack_directory: IllyriaResourcePack/overlay_mod_support
-            output_file: /tmp/pack-overlays.zip
-            cache_slug: overlays
     steps:
       - id: checkout
         name: Checkout
@@ -211,11 +192,11 @@ jobs:
         with:
           path: |
             ~/.cache/packsquash
-            ${{ runner.temp }}/packsquash-cache-${{ matrix.cache_slug }}
-          key: packsquash-${{ matrix.cache_slug }}-${{ runner.os }}-${{ github.sha }}
+            ${{ runner.temp }}/packsquash-cache
+          key: packsquash-${{ runner.os }}-${{ github.sha }}
           restore-keys: |
-            packsquash-${{ matrix.cache_slug }}-${{ runner.os }}-${{ github.ref }}-
-            packsquash-${{ matrix.cache_slug }}-${{ runner.os }}-
+            packsquash-${{ runner.os }}-${{ github.ref }}-
+            packsquash-${{ runner.os }}-
 
       - id: packsquash
         name: Create Zip & Optimize with Packsquash
@@ -223,17 +204,17 @@ jobs:
         with:
           packsquash_version: v0.4.1
           options: |
-            pack_directory = '${{ matrix.pack_directory }}'
-            output_file_path = '${{ matrix.output_file }}'
+            pack_directory = 'IllyriaResourcePack'
+            output_file_path = '/tmp/pack.zip'
         env:
-          PACKSQUASH_CACHE_DIR: ${{ runner.temp }}/packsquash-cache-${{ matrix.cache_slug }}
+          PACKSQUASH_CACHE_DIR: ${{ runner.temp }}/packsquash-cache
 
       - id: upload_artifact
         name: Upload Artifact
         uses: actions/upload-artifact@v7.0.1
         with:
-          name: ${{ matrix.artifact }}
-          path: ${{ matrix.output_file }}
+          name: IllyriaResourcePack
+          path: /tmp/pack.zip
 
   lint_wiki:
     name: Lint Wiki
@@ -507,22 +488,6 @@ jobs:
         uses: actions/download-artifact@v8.0.1
         with:
           name: IllyriaResourcePack
-          path: dist/
-
-      - id: download_resourcepack_assets
-        name: Download IllyriaResourcePack Assets Artifact
-        if: needs.changes.outputs.resourcepack == 'true' || needs.changes.outputs.all == 'true'
-        uses: actions/download-artifact@v8.0.1
-        with:
-          name: IllyriaResourcePack-Assets
-          path: dist/
-
-      - id: download_resourcepack_overlays
-        name: Download IllyriaResourcePack Overlays Artifact
-        if: needs.changes.outputs.resourcepack == 'true' || needs.changes.outputs.all == 'true'
-        uses: actions/download-artifact@v8.0.1
-        with:
-          name: IllyriaResourcePack-Overlays
           path: dist/
 
       - id: check_outputs
