@@ -36,6 +36,8 @@ internal class IllyriaBridge : JavaPlugin() {
         logger.info(
             "Registered: ${bridges.size} bridge(s) | Took ${bridges.sumOf { it.register() }}ms",
         )
+
+        UpdateChecker.check()
     }
 
     override fun onDisable() {

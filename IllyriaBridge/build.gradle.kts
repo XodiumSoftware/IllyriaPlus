@@ -33,6 +33,7 @@ dependencies {
     paperweight.paperDevBundle("$mcVersion.build.+")
 
     implementation(kotlin("stdlib"))
+    compileOnly("com.google.code.gson:gson:2.13.2")
 }
 
 java {
