@@ -1,0 +1,9 @@
+{
+    "variants": {
+        "": [
+            { "model": "block/nether_wart_block", "weight": 1 },
+            { "model": "block/wart/nether_wart_block1", "weight": 1 },
+            { "model": "block/wart/nether_wart_block2", "weight": 1 }
+        ]
+    }
+}

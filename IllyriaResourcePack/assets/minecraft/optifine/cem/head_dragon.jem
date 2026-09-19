@@ -1,0 +1,67 @@
+{
+	"credit": "Made with Blockbench",
+	"textureSize": [256, 256],
+	"models": [
+		{
+			"part": "head",
+			"id": "head",
+			"invertAxis": "xy",
+			"translate": [0, -8, -2],
+			"boxes": [
+				{"coordinates": [-6, 4, -22, 12, 5, 16], "textureOffset": [176, 44]},
+				{"coordinates": [-8, 0, -8, 16, 16, 16], "textureOffset": [112, 30]},
+				{"coordinates": [-5, 9, -20, 2, 2, 4], "textureOffset": [112, 0]}
+			],
+			"submodels": [
+				{
+					"id": "spike_top",
+					"invertAxis": "xy",
+					"translate": [0, 15.5, 4],
+					"rotate": [-22.5, 0, 0],
+					"boxes": [
+						{"coordinates": [-5, -2, -6, 2, 5, 12], "textureOffset": [220, 53]},
+						{"coordinates": [3, -2, -6, 2, 5, 12], "textureOffset": [220, 53]}
+					]
+				},
+				{
+					"id": "spike_right",
+					"invertAxis": "xy",
+					"translate": [8, 9.5, 5],
+					"rotate": [-22.5, 0, -90],
+					"boxes": [
+						{"coordinates": [-4, -2.5, -7, 2, 4, 12], "textureOffset": [220, 53]},
+						{"coordinates": [1, -2.26537, -2.15224, 2, 3, 6], "textureOffset": [48, 0]}
+					]
+				},
+				{
+					"id": "spike_left",
+					"invertAxis": "xy",
+					"translate": [-8, 8.5, 5],
+					"rotate": [-22.5, 0, 90],
+					"boxes": [
+						{"coordinates": [3, -2.5, -7, 2, 4, 12], "textureOffset": [220, 53]},
+						{"coordinates": [-2, -2.26537, -2.15224, 2, 3, 6], "textureOffset": [48, 0]}
+					]
+				},
+				{
+					"id": "mirrored",
+					"invertAxis": "xy",
+					"mirrorTexture": "u",
+					"translate": [0, 2, 26],
+					"boxes": [
+						{"coordinates": [3, 7, -46, 2, 2, 4], "textureOffset": [112, 0]}
+					]
+				}
+			]
+		},
+		{
+			"part": "jaw",
+			"id": "jaw",
+			"invertAxis": "xy",
+			"translate": [0, -4, 6],
+			"boxes": [
+				{"coordinates": [-6, 0, -22, 12, 4, 16], "textureOffset": [176, 65]}
+			]
+		}
+	]
+}

@@ -1,0 +1,117 @@
+{
+	"textureSize": [16, 16],
+	"texture": "chicken_temperate_duck_baby.png",
+	"models": [
+		{
+			"part": "left_leg",
+			"id": "left_leg",
+			"invertAxis": "xy",
+			"translate": [1, -2, -0.5],
+			"submodels": [
+				{
+					"id": "left_leg2",
+					"invertAxis": "xy",
+					"translate": [-1, 1.5, 0],
+					"rotate": [0, 12.5, 0],
+					"boxes": [
+						{"coordinates": [-1, -1.5, 1, 1, 3, 0], "textureOffset": [13, 1]},
+						{"coordinates": [-1.5, -1.5, -1, 2, 0, 2], "textureOffset": [10, 4]}
+					]
+				}
+			]
+		},
+		{
+			"part": "right_leg",
+			"id": "right_leg",
+			"invertAxis": "xy",
+			"translate": [-1, -2, -0.5],
+			"submodels": [
+				{
+					"id": "right_leg2",
+					"invertAxis": "xy",
+					"translate": [2, 1.5, 0],
+					"rotate": [0, -12.5, 0],
+					"boxes": [
+						{"coordinates": [-1, -1.5, 1, 1, 3, 0], "textureOffset": [13, 1]},
+						{"coordinates": [-1.5, -1.5, -1, 2, 0, 2], "textureOffset": [10, 4]}
+					]
+				}
+			]
+		},
+		{
+			"part": "root",
+			"id": "root",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0]
+		},
+		{
+			"part": "body",
+			"id": "body",
+			"invertAxis": "xy",
+			"translate": [0, -3.75, 1.25],
+			"submodels": [
+				{
+					"id": "body_head",
+					"invertAxis": "xy",
+					"translate": [0, 9, -2],
+					"boxes": [
+						{"coordinates": [-1.5, -2.5, -1.5, 3, 3, 3], "textureOffset": [0, 0]}
+					],
+					"submodels": [
+						{
+							"id": "bill",
+							"invertAxis": "xy",
+							"translate": [0, 0, 0],
+							"boxes": [
+								{
+									"coordinates": [-1, -2.5, -2.5, 2, 1, 1],
+									"uvNorth": [10, 1, 12, 2],
+									"uvEast": [9, 1, 10, 2],
+									"uvSouth": [10, 1, 12, 2],
+									"uvWest": [12, 1, 13, 2],
+									"uvUp": [12, 1, 10, 0],
+									"uvDown": [14, 0, 12, 1]
+								}
+							]
+						}
+					]
+				},
+				{
+					"id": "body3",
+					"invertAxis": "xy",
+					"translate": [0, 8, 0],
+					"rotate": [-90, 0, 0],
+					"boxes": [
+						{"coordinates": [-2, -3, -5, 4, 5, 4], "textureOffset": [0, 7]}
+					]
+				}
+			]
+		},
+		{
+			"part": "right_wing",
+			"id": "right_wing",
+			"invertAxis": "xy",
+			"translate": [2, -5, 0],
+			"boxes": [
+				{
+					"coordinates": [-2, 6, -1, 2, 0, 2],
+					"uvSouth": [16, 7, 14, 9],
+					"uvWest": [16, 7, 14, 9],
+					"uvUp": [14, 7, 16, 9]
+				}
+			]
+		},
+		{
+			"part": "left_wing",
+			"id": "left_wing",
+			"invertAxis": "xy",
+			"translate": [-2, -5, 0],
+			"boxes": [
+				{
+					"coordinates": [0, 6, -1, 2, 0, 2],
+					"uvUp": [16, 7, 14, 9]
+				}
+			]
+		}
+	]
+}

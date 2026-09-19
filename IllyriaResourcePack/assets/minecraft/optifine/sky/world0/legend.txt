@@ -1,0 +1,11 @@
+1 - night stars
+2 - midday rainbow
+3 - day clouds
+4 - sunrise flare
+5 - sunset flare
+6 - night clouds
+7 - sunrise clouds
+8 - sunrise clouds
+9 - sunset clouds
+10 - day northstar
+11- night northstar

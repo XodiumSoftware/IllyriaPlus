@@ -1,0 +1,33 @@
+{
+	"textureSize": [64, 64],
+	"models": [
+		{
+			"part": "top",
+			"id": "top",
+			"invertAxis": "xy",
+			"translate": [0, 0, 0],
+			"boxes": [
+				{"coordinates": [-10, 42, -1, 20, 2, 2], "textureOffset": [0, 42]},
+				{"coordinates": [-10, 22, -1.01, 20, 2, 2], "textureOffset": [0, 42]}
+			]
+		},
+		{
+			"part": "slate",
+			"id": "slate",
+			"invertAxis": "xy",
+			"translate": [0, -44, 0],
+			"boxes": [
+				{"coordinates": [-10, 4, -2, 20, 40, 1], "textureOffset": [0, 0]}
+			]
+		},
+		{
+			"part": "stand",
+			"id": "stand",
+			"invertAxis": "xy",
+			"translate": [0, 0, 0],
+			"boxes": [
+				{"coordinates": [-1, 0, -1, 2, 42, 2], "textureOffset": [44, 0]}
+			]
+		}
+	]
+}

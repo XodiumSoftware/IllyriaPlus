@@ -7,6 +7,7 @@ on:
       - "IllyriaCore/**"
       - "IllyriaBridge/**"
       - "IllyriaResourcePack/**"
+      - "IllyriaWiki/**"
       - "settings.gradle.kts"
       - "gradle.properties"
       - ".github/workflows/ci.yml"
@@ -16,10 +17,16 @@ on:
       - "IllyriaCore/**"
       - "IllyriaBridge/**"
       - "IllyriaResourcePack/**"
+      - "IllyriaWiki/**"
       - "settings.gradle.kts"
       - "gradle.properties"
       - ".github/workflows/ci.yml"
   workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+  # renovate: datasource=crate depName=mdbook
+  MDBOOK_VERSION: "0.5.2"
 
 permissions:
   contents: read
@@ -37,6 +44,7 @@ jobs:
       core: ${{ steps.filter.outputs.core }}
       bridge: ${{ steps.filter.outputs.bridge }}
       resourcepack: ${{ steps.filter.outputs.resourcepack }}
+      wiki: ${{ steps.filter.outputs.wiki }}
       all: ${{ steps.filter.outputs.all }}
     steps:
       - id: checkout
@@ -49,12 +57,15 @@ jobs:
         with:
           filters: |
             core:
-              - "IllyriaCore/**"
-              - "!IllyriaCore/src/**"
+              - "IllyriaCore/src/**"
+              - "IllyriaCore/build.gradle.kts"
             bridge:
-              - "IllyriaBridge/**"
+              - "IllyriaBridge/src/**"
+              - "IllyriaBridge/build.gradle.kts"
             resourcepack:
               - "IllyriaResourcePack/**"
+            wiki:
+              - "IllyriaWiki/**"
             all:
               - "settings.gradle.kts"
               - "gradle.properties"
@@ -161,6 +172,96 @@ jobs:
           name: IllyriaBridge
           path: IllyriaBridge/build/libs/*.jar
 
+  build_resourcepack_assets:
+    name: Build IllyriaResourcePack - Assets
+    needs: [changes]
+    if: needs.changes.outputs.resourcepack == 'true' || needs.changes.outputs.all == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: "${{ github.ref_name }}"
+    steps:
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+
+      - id: cache_packsquash_assets
+        name: Cache PackSquash Output
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cache/packsquash
+            /tmp/packsquash-cache-assets
+          key: packsquash-assets-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            packsquash-assets-${{ runner.os }}-${{ github.ref }}-
+            packsquash-assets-${{ runner.os }}-
+
+      - id: packsquash
+        name: Create Zip & Optimize Assets with Packsquash
+        uses: ComunidadAylas/PackSquash-action@v4
+        with:
+          packsquash_version: v0.4.1
+          artifact_name: IllyriaResourcePack-Assets
+          options: |
+            pack_directory = 'IllyriaResourcePack/assets'
+            output_file_path = '/tmp/pack-assets.zip'
+        env:
+          PACKSQUASH_CACHE_DIR: ${{ runner.temp }}/packsquash-cache-assets
+
+      - id: upload_artifact
+        name: Upload Assets Artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: IllyriaResourcePack-Assets
+          path: /tmp/pack-assets.zip
+
+  build_resourcepack_overlays:
+    name: Build IllyriaResourcePack - Overlays
+    needs: [changes]
+    if: needs.changes.outputs.resourcepack == 'true' || needs.changes.outputs.all == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: "${{ github.ref_name }}"
+    steps:
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+
+      - id: cache_packsquash_overlays
+        name: Cache PackSquash Output
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cache/packsquash
+            /tmp/packsquash-cache-overlays
+          key: packsquash-overlays-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            packsquash-overlays-${{ runner.os }}-${{ github.ref }}-
+            packsquash-overlays-${{ runner.os }}-
+
+      - id: packsquash
+        name: Create Zip & Optimize Overlays with Packsquash
+        uses: ComunidadAylas/PackSquash-action@v4
+        with:
+          packsquash_version: v0.4.1
+          artifact_name: IllyriaResourcePack-Overlays
+          options: |
+            pack_directory = 'IllyriaResourcePack/overlay_mod_support'
+            output_file_path = '/tmp/pack-overlays.zip'
+        env:
+          PACKSQUASH_CACHE_DIR: ${{ runner.temp }}/packsquash-cache-overlays
+
+      - id: upload_artifact
+        name: Upload Overlays Artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: IllyriaResourcePack-Overlays
+          path: /tmp/pack-overlays.zip
+
   build_resourcepack:
     name: Build IllyriaResourcePack
     needs: [changes]
@@ -175,6 +276,18 @@ jobs:
         with:
           fetch-depth: 0
 
+      - id: cache_packsquash
+        name: Cache PackSquash Output
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cache/packsquash
+            /tmp/packsquash-cache
+          key: packsquash-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            packsquash-${{ runner.os }}-${{ github.ref }}-
+            packsquash-${{ runner.os }}-
+
       - id: packsquash
         name: Create Zip & Optimize with Packsquash
         uses: ComunidadAylas/PackSquash-action@v4
@@ -183,15 +296,211 @@ jobs:
           artifact_name: IllyriaResourcePack
           options: |
             pack_directory = 'IllyriaResourcePack'
+        env:
+          PACKSQUASH_CACHE_DIR: ${{ runner.temp }}/packsquash-cache
+
+  lint_wiki:
+    name: Lint Wiki
+    runs-on: ubuntu-latest
+    needs: [changes]
+    if: |
+      needs.changes.outputs.wiki == 'true' &&
+      !contains(github.event.head_commit.message, '[ci-skip]') &&
+      !contains(github.event.pull_request.title, '[ci-skip]')
+    steps:
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v7.0.1
+
+      - id: setup_node
+        name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+
+      - id: install_markdownlint
+        name: Install markdownlint-cli2
+        run: npm install -g markdownlint-cli2
+        shell: bash
+
+      - id: run_lint
+        name: Run Markdown Lint
+        run: |
+          cd IllyriaWiki
+          markdownlint-cli2 --config ../.markdownlint.json "src/**/*.md"
+        shell: bash
+
+      - id: lint_summary
+        name: Upload Lint Summary
+        if: failure()
+        run: |
+          cd IllyriaWiki
+          markdownlint-cli2 --config ../.markdownlint.json "src/**/*.md" --format json > lint-results.json || true
+          echo "## ❌ Markdown Lint Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo '```json' >> $GITHUB_STEP_SUMMARY
+          cat lint-results.json >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+        shell: bash
+
+      - id: linkcheck
+        name: Link Check
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # Remap lives in lychee.toml at the repo root.
+          args: --verbose --no-progress 'IllyriaWiki/src/**/*.md'
+          fail: true
+
+  build_wiki:
+    name: Build Wiki
+    runs-on: ubuntu-latest
+    needs: [changes]
+    if: |
+      needs.changes.outputs.wiki == 'true' &&
+      !contains(github.event.head_commit.message, '[ci-skip]') &&
+      !contains(github.event.pull_request.title, '[ci-skip]')
+    steps:
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+
+      - id: install_cargo_binstall
+        name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@v1.23.0
+
+      - id: cache_mdbook
+        name: Cache mdBook
+        uses: actions/cache@v6.1.0
+        with:
+          path: ~/.cargo/bin/mdbook
+          key: ${{ runner.os }}-mdbook-${{ env.MDBOOK_VERSION }}
+
+      - id: install_mdbook
+        name: Install mdBook
+        run: cargo binstall mdbook@${{ env.MDBOOK_VERSION }} --no-confirm --force
+        shell: bash
+
+      - id: build_book
+        name: Build mdBook
+        run: mdbook build IllyriaWiki
+        shell: bash
+
+      - id: upload_artifact
+        name: Upload book artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: book
+          path: IllyriaWiki/book/
+
+  deploy_wiki:
+    name: Deploy Wiki
+    runs-on: ubuntu-latest
+    needs: [changes, lint_wiki, build_wiki]
+    if: |
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+      needs.changes.outputs.wiki == 'true' &&
+      !contains(github.event.head_commit.message, '[ci-skip]') &&
+      !contains(github.event.pull_request.title, '[ci-skip]')
+    environment:
+      name: "${{ github.ref_name }}"
+    steps:
+      - id: download_artifact
+        name: Download book artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: book
+          path: book
+
+      - id: deploy
+        name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v4.0.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy book --project-name=illyriawiki --branch=${{ github.ref_name }} --commit-dirty=true
+
+  # Separate deployment jobs for each component - they don't wait for each other
+  deploy_core:
+    name: Deploy IllyriaCore
+    needs: [changes, build_core]
+    if: |
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+      (needs.changes.outputs.core == 'true' || needs.changes.outputs.all == 'true')
+    runs-on: ubuntu-latest
+    environment:
+      name: "${{ github.ref_name }}"
+    permissions:
+      contents: write
+    steps:
+      - id: deploy
+        name: Deploy IllyriaCore
+        run: |
+          echo "Deploying IllyriaCore artifact"
+          # Add your deployment logic here (e.g., upload to release, send to server)
+          echo "Artifact available in IllyriaCore"
+
+  deploy_bridge:
+    name: Deploy IllyriaBridge
+    needs: [changes, build_bridge]
+    if: |
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+      (needs.changes.outputs.bridge == 'true' || needs.changes.outputs.all == 'true')
+    runs-on: ubuntu-latest
+    environment:
+      name: "${{ github.ref_name }}"
+    permissions:
+      contents: write
+    steps:
+      - id: deploy
+        name: Deploy IllyriaBridge
+        run: |
+          echo "Deploying IllyriaBridge artifact"
+          # Add your deployment logic here
+          echo "Artifact available in IllyriaBridge"
+
+  deploy_resourcepack:
+    name: Deploy IllyriaResourcePack
+    needs:
+      [
+        changes,
+        build_resourcepack,
+        build_resourcepack_assets,
+        build_resourcepack_overlays,
+      ]
+    if: |
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+      (needs.changes.outputs.resourcepack == 'true' || needs.changes.outputs.all == 'true')
+    runs-on: ubuntu-latest
+    environment:
+      name: "${{ github.ref_name }}"
+    steps:
+      - id: deploy
+        name: Deploy IllyriaResourcePack
+        run: |
+          echo "Deploying IllyriaResourcePack artifacts"
+          # Add your deployment logic here
+          echo "Artifacts available in IllyriaResourcePack*"
 
   pr_comment:
     name: PR Comment
-    needs: [changes, build_core, build_bridge, build_resourcepack]
+    needs:
+      [
+        changes,
+        build_core,
+        build_bridge,
+        build_resourcepack,
+        build_resourcepack_assets,
+        build_resourcepack_overlays,
+      ]
     if: |
       always() && github.event_name == 'pull_request' &&
       (needs.build_core.result == 'success' ||
        needs.build_bridge.result == 'success' ||
-       needs.build_resourcepack.result == 'success')
+       needs.build_resourcepack.result == 'success' ||
+       needs.build_resourcepack_assets.result == 'success' ||
+       needs.build_resourcepack_overlays.result == 'success')
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -235,16 +544,18 @@ jobs:
 
   nightly_release:
     name: Nightly Release
-    needs: [changes, lint, build_core, build_bridge, build_resourcepack]
+    # Only depends on changes detection, not on all builds
+    needs: [changes]
     runs-on: ubuntu-latest
     environment:
       name: "${{ github.ref_name }}"
       url: "${{ steps.create_release.outputs.url }}"
     if: |
       always() && github.ref == 'refs/heads/main' &&
-      (needs.build_core.result == 'success' ||
-       needs.build_bridge.result == 'success' ||
-       needs.build_resourcepack.result == 'success')
+      (needs.changes.outputs.core == 'true' ||
+       needs.changes.outputs.bridge == 'true' ||
+       needs.changes.outputs.resourcepack == 'true' ||
+       needs.changes.outputs.all == 'true')
     permissions:
       contents: write
     steps:
@@ -256,7 +567,7 @@ jobs:
 
       - id: download_core
         name: Download IllyriaCore Artifact
-        if: needs.build_core.result == 'success'
+        if: needs.changes.outputs.core == 'true' || needs.changes.outputs.all == 'true'
         uses: actions/download-artifact@v8.0.1
         with:
           name: IllyriaCore
@@ -264,7 +575,7 @@ jobs:
 
       - id: download_bridge
         name: Download IllyriaBridge Artifact
-        if: needs.build_bridge.result == 'success'
+        if: needs.changes.outputs.bridge == 'true' || needs.changes.outputs.all == 'true'
         uses: actions/download-artifact@v8.0.1
         with:
           name: IllyriaBridge
@@ -272,14 +583,40 @@ jobs:
 
       - id: download_resourcepack
         name: Download IllyriaResourcePack Artifact
-        if: needs.build_resourcepack.result == 'success'
+        if: needs.changes.outputs.resourcepack == 'true' || needs.changes.outputs.all == 'true'
         uses: actions/download-artifact@v8.0.1
         with:
           name: IllyriaResourcePack
           path: dist/
 
+      - id: download_resourcepack_assets
+        name: Download IllyriaResourcePack Assets Artifact
+        if: needs.changes.outputs.resourcepack == 'true' || needs.changes.outputs.all == 'true'
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: IllyriaResourcePack-Assets
+          path: dist/
+
+      - id: download_resourcepack_overlays
+        name: Download IllyriaResourcePack Overlays Artifact
+        if: needs.changes.outputs.resourcepack == 'true' || needs.changes.outputs.all == 'true'
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: IllyriaResourcePack-Overlays
+          path: dist/
+
+      - id: check_outputs
+        name: Check Available Outputs
+        run: |
+          echo "Artifacts to release:"
+          ls -la dist/ || echo "No artifacts downloaded"
+          if [ -z "$(ls -A dist/ 2>/dev/null)" ]; then
+            echo "::warning::No artifacts to release"
+          fi
+
       - id: update_nightly_tag
         name: Update Nightly Tag
+        if: hashFiles('dist/') != ''
         run: |
           gh api repos/${{ github.repository }}/git/refs/tags/nightly \
             --method PATCH \
@@ -294,14 +631,16 @@ jobs:
 
       - id: delete_old_release_assets
         name: Delete Old Release Assets
+        if: hashFiles('dist/') != ''
         run: |
           release_id=$(gh api repos/${{ github.repository }}/releases/tags/nightly --jq '.id' 2>/dev/null || echo "")
           if [ -n "$release_id" ]; then
             # Only delete assets we're about to re-upload (built modules)
             built_modules=""
-            [ "${{ needs.build_core.result }}" = "success" ] && built_modules="$built_modules IllyriaCore"
-            [ "${{ needs.build_bridge.result }}" = "success" ] && built_modules="$built_modules IllyriaBridge"
-            [ "${{ needs.build_resourcepack.result }}" = "success" ] && built_modules="$built_modules IllyriaResourcePack"
+            [ "${{ needs.changes.outputs.core }}" = "true" ] && built_modules="$built_modules IllyriaCore"
+            [ "${{ needs.changes.outputs.bridge }}" = "true" ] && built_modules="$built_modules IllyriaBridge"
+            [ "${{ needs.changes.outputs.resourcepack }}" = "true" ] && built_modules="$built_modules IllyriaResourcePack"
+            [ "${{ needs.changes.outputs.all }}" = "true" ] && built_modules="$built_modules IllyriaCore IllyriaBridge IllyriaResourcePack"
 
             for module in $built_modules; do
               asset_ids=$(gh api repos/${{ github.repository }}/releases/$release_id/assets \
@@ -317,6 +656,7 @@ jobs:
 
       - id: create_release
         name: Create Nightly Release
+        if: hashFiles('dist/') != ''
         uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
