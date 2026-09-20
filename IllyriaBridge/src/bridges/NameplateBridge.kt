@@ -3,10 +3,10 @@ package org.xodium.illyriabridge.bridges
 import io.netty.channel.ChannelDuplexHandler
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelPromise
+import io.papermc.paper.adventure.PaperAdventure
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
-import io.papermc.paper.adventure.PaperAdventure
 import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -44,7 +44,12 @@ internal object NameplateBridge : BridgeInterface {
     private fun inject(player: Player) {
         if (!injectedPlayers.add(player.uniqueId)) return
 
-        val channel = (player as CraftPlayer).handle.connection.connection.channel
+        val channel =
+            (player as CraftPlayer)
+                .handle
+                .connection
+                .connection
+                .channel
         if (channel.pipeline().get(HANDLER_NAME) != null) return
 
         channel.pipeline().addBefore("packet_handler", HANDLER_NAME, Handler())
@@ -77,7 +82,9 @@ internal object NameplateBridge : BridgeInterface {
         }
 
         /** Removes vanilla nametag metadata entries from the list. */
-        private fun filterNametagData(items: List<SynchedEntityData.DataValue<*>>): List<SynchedEntityData.DataValue<*>> =
+        private fun filterNametagData(
+            items: List<SynchedEntityData.DataValue<*>>,
+        ): List<SynchedEntityData.DataValue<*>> =
             items.filterNot { it.id == CUSTOM_NAME_ID || it.id == CUSTOM_NAME_VISIBLE_ID }
 
         /** Finds the Bukkit player matching the given entity ID. */
