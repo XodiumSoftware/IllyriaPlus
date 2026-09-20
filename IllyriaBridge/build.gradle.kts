@@ -8,7 +8,7 @@ plugins {
     id("com.gradleup.shadow") version "9.6.1"
     id("io.papermc.paperweight.userdev")
     id("xyz.jpenilla.run-paper")
-    id("xyz.jpenilla.resource-factory-paper-convention") version "1.3.1"
+    id("xyz.jpenilla.resource-factory-paper-convention") version "1.4.0"
     id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
 }
 
