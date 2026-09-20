@@ -38,7 +38,7 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation("com.github.retrooper:packetevents-spigot:2.13.0")
     implementation("xyz.xenondevs.invui:invui:2.5.0")
-    implementation("xyz.xenondevs.invui:invui-kotlin:2.3.2")
+    implementation("xyz.xenondevs.invui:invui-kotlin:2.5.0")
 }
 
 java {
