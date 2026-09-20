@@ -5,14 +5,11 @@ import org.bukkit.entity.Player
 import org.bukkit.persistence.PersistentDataType
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
 
-/** Provides access to [Player]-specific persistent data including nicknames and scoreboard preferences. */
+/** Provides access to [Player]-specific persistent data including nicknames. */
 @Suppress("Unused")
 internal object PlayerPDC {
     /** The [NamespacedKey] used for storing nickname data. */
     private val NICKNAME_KEY = NamespacedKey(instance, "nickname")
-
-    /** The [NamespacedKey] used for storing scoreboard visibility preferences. */
-    private val SCOREBOARD_VISIBILITY_KEY = NamespacedKey(instance, "scoreboard_visibility")
 
     /**
      * Gets or sets a [Player]'s nickname in their persistent data container.
@@ -28,13 +25,4 @@ internal object PlayerPDC {
                 persistentDataContainer.set(NICKNAME_KEY, PersistentDataType.STRING, value)
             }
         }
-
-    /**
-     * Gets or sets a [Player]'s scoreboard visibility preference in their persistent data container.
-     *
-     * @return `true` if the scoreboard is visible, `false` otherwise.
-     */
-    var Player.scoreboardVisibility: Boolean
-        get() = persistentDataContainer.getOrDefault(SCOREBOARD_VISIBILITY_KEY, PersistentDataType.BOOLEAN, false)
-        set(value) = persistentDataContainer.set(SCOREBOARD_VISIBILITY_KEY, PersistentDataType.BOOLEAN, value)
 }

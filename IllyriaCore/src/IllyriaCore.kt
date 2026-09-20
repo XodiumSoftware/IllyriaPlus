@@ -77,7 +77,6 @@ internal class IllyriaCore : JavaPlugin() {
         mechanics =
             listOf(
                 NicknameMechanic,
-                ScoreBoardMechanic,
                 LocatorMechanic,
                 OpenableMechanic,
                 TameableMechanic,

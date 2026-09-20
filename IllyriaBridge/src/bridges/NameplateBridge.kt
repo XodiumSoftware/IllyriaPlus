@@ -69,7 +69,9 @@ internal object NameplateBridge : BridgeInterface {
     private fun refreshViewer(viewer: Player) {
         val connection = (viewer as CraftPlayer).handle.connection
 
-        instance.server.onlinePlayers
+        instance
+            .server
+            .onlinePlayers
             .asSequence()
             .filter { it.uniqueId != viewer.uniqueId }
             .filter { it.world == viewer.world }
