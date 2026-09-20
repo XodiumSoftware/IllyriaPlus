@@ -1,20 +1,25 @@
 package org.xodium.illyriabridge
 
 import com.google.gson.JsonParser
+import net.kyori.adventure.text.Component
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerJoinEvent
 import org.xodium.illyriabridge.IllyriaBridge.Companion.instance
 import org.xodium.illyriabridge.Utils.MM
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
+import java.util.UUID
 import kotlin.io.path.createDirectories
 import kotlin.io.path.writeBytes
 
 /** Checks GitHub nightly releases for newer builds of this plugin. */
 @Suppress("UnstableApiUsage")
-internal object UpdateChecker {
+internal object UpdateChecker : Listener {
     private const val REPO = "XodiumSoftware/IllyriaPlus"
     private const val RELEASE_URL = "https://api.github.com/repos/$REPO/releases/tags/nightly"
     private const val ASSET_SUFFIX = ".jar"
@@ -24,9 +29,15 @@ internal object UpdateChecker {
     private val commandName: String get() = "${name.lowercase()}-$UPDATE_COMMAND"
     private val httpClient: HttpClient = HttpClient.newHttpClient()
 
+    @Volatile
+    private var updateMessage: Component? = null
+
+    private val notifiedOps = mutableSetOf<UUID>()
+
     /** Checks asynchronously whether a newer build is available and logs the result. */
     fun check() {
         registerCommand()
+        instance.server.pluginManager.registerEvents(this, instance)
 
         val currentVersion = instance.pluginMeta.version
         instance.server.scheduler.runTaskAsynchronously(
@@ -74,6 +85,13 @@ internal object UpdateChecker {
         return null
     }
 
+    @EventHandler
+    fun on(event: PlayerJoinEvent) {
+        val player = event.player
+        if (!player.isOp || !notifiedOps.add(player.uniqueId)) return
+        updateMessage?.let { player.sendMessage(it) }
+    }
+
     /**
      * Sends a chat notification to all online OP players about a newer available build.
      *
@@ -91,6 +109,7 @@ internal object UpdateChecker {
                     "<click:run_command:'/$commandName'>" +
                     "<mango>[<b>Update Now</b>]</mango></click>",
             )
+        updateMessage = component
         instance.server.scheduler.runTask(
             instance,
             Runnable {
@@ -98,7 +117,9 @@ internal object UpdateChecker {
                     .server
                     .onlinePlayers
                     .filter { it.isOp }
-                    .forEach { it.sendMessage(component) }
+                    .forEach {
+                        if (notifiedOps.add(it.uniqueId)) it.sendMessage(component)
+                    }
             },
         )
     }

@@ -21,7 +21,10 @@ internal object ResourcePackMechanic : MechanicInterface {
     private const val PACK_URL =
         "https://github.com/XodiumSoftware/IllyriaPlus/releases/download/nightly/pack.zip"
 
-    private val request: ResourcePackRequest by lazy {
+    @Volatile
+    private var request: ResourcePackRequest = buildRequest()
+
+    private fun buildRequest(): ResourcePackRequest =
         ResourcePackRequest
             .resourcePackRequest()
             .packs(
@@ -32,7 +35,6 @@ internal object ResourcePackMechanic : MechanicInterface {
                     .join(),
             ).required(true)
             .build()
-    }
 
     override val cmds: Collection<CommandData> =
         listOf(
@@ -44,9 +46,15 @@ internal object ResourcePackMechanic : MechanicInterface {
                         player.sendActionBar(
                             MM.deserialize("<green>Reloading IllyriaCore resource pack for all online players..."),
                         )
-                        instance.server.onlinePlayers.forEach {
-                            it.clearResourcePacks()
-                            it.sendResourcePacks(request)
+                        instance.server.asyncScheduler.runNow(instance) {
+                            val freshRequest = buildRequest()
+                            instance.server.globalRegionScheduler.run(instance) { _ ->
+                                request = freshRequest
+                                instance.server.onlinePlayers.forEach {
+                                    it.clearResourcePacks()
+                                    it.sendResourcePacks(freshRequest)
+                                }
+                            }
                         }
                     },
                 "Reloads the IllyriaCore resource pack for all online players",

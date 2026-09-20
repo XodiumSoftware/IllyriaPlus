@@ -4,6 +4,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.xodium.illyriabridge.bridges.AppleSkinBridge
 import org.xodium.illyriabridge.bridges.BridgeInterface
 import org.xodium.illyriabridge.bridges.FabricRecipeBridge
+import org.xodium.illyriabridge.bridges.NameplateBridge
 import org.xodium.illyriabridge.bridges.XaeroMapBridge
 import org.xodium.illyriabridge.bridges.jade.JadeBridge
 
@@ -30,6 +31,7 @@ internal class IllyriaBridge : JavaPlugin() {
                 AppleSkinBridge,
                 FabricRecipeBridge,
                 JadeBridge,
+                NameplateBridge,
                 XaeroMapBridge,
             )
 
