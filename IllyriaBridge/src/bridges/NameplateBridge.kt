@@ -6,7 +6,6 @@ import io.netty.channel.ChannelPromise
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
-import net.minecraft.world.entity.Entity
 import io.papermc.paper.adventure.PaperAdventure
 import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
@@ -21,6 +20,8 @@ import java.util.concurrent.ConcurrentHashMap
 /** Rewrites outgoing player nametag metadata to use Bukkit display names. */
 internal object NameplateBridge : BridgeInterface {
     private const val HANDLER_NAME = "illyria_nametag_bridge"
+    private const val CUSTOM_NAME_ID = 2
+    private const val CUSTOM_NAME_VISIBLE_ID = 3
 
     private val injectedPlayers = ConcurrentHashMap.newKeySet<UUID>()
 
@@ -77,7 +78,7 @@ internal object NameplateBridge : BridgeInterface {
 
         /** Removes vanilla nametag metadata entries from the list. */
         private fun filterNametagData(items: List<SynchedEntityData.DataValue<*>>): List<SynchedEntityData.DataValue<*>> =
-            items.filterNot { it.id == Entity.DATA_CUSTOM_NAME.id || it.id == Entity.DATA_CUSTOM_NAME_VISIBLE.id }
+            items.filterNot { it.id == CUSTOM_NAME_ID || it.id == CUSTOM_NAME_VISIBLE_ID }
 
         /** Finds the Bukkit player matching the given entity ID. */
         private fun findPlayer(entityId: Int): Player? =
@@ -87,12 +88,12 @@ internal object NameplateBridge : BridgeInterface {
         private fun createCustomNameMetadata(player: Player): List<SynchedEntityData.DataValue<*>> =
             listOf(
                 SynchedEntityData.DataValue(
-                    Entity.DATA_CUSTOM_NAME.id,
+                    CUSTOM_NAME_ID,
                     EntityDataSerializers.OPTIONAL_COMPONENT,
                     Optional.of(PaperAdventure.asVanilla(player.displayName())),
                 ),
                 SynchedEntityData.DataValue(
-                    Entity.DATA_CUSTOM_NAME_VISIBLE.id,
+                    CUSTOM_NAME_VISIBLE_ID,
                     EntityDataSerializers.BOOLEAN,
                     true,
                 ),
