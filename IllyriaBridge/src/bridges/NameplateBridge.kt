@@ -1,0 +1,101 @@
+package org.xodium.illyriabridge.bridges
+
+import io.netty.channel.ChannelDuplexHandler
+import io.netty.channel.ChannelHandlerContext
+import io.netty.channel.ChannelPromise
+import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.world.entity.Entity
+import io.papermc.paper.adventure.PaperAdventure
+import org.bukkit.craftbukkit.entity.CraftPlayer
+import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
+import org.xodium.illyriabridge.IllyriaBridge.Companion.instance
+import java.util.Optional
+import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
+
+/** Rewrites outgoing player nametag metadata to use Bukkit display names. */
+internal object NameplateBridge : BridgeInterface {
+    private const val HANDLER_NAME = "illyria_nametag_bridge"
+
+    private val injectedPlayers = ConcurrentHashMap.newKeySet<UUID>()
+
+    override fun register(): Long =
+        super.register().also {
+            instance.server.onlinePlayers.forEach { inject(it) }
+        }
+
+    @EventHandler
+    fun on(event: PlayerJoinEvent) {
+        inject(event.player)
+    }
+
+    @EventHandler
+    fun on(event: PlayerQuitEvent) {
+        injectedPlayers.remove(event.player.uniqueId)
+    }
+
+    /** Injects the packet handler into the player's channel if it is not already present. */
+    private fun inject(player: Player) {
+        if (!injectedPlayers.add(player.uniqueId)) return
+
+        val channel = (player as CraftPlayer).handle.connection.connection.channel
+        if (channel.pipeline().get(HANDLER_NAME) != null) return
+
+        channel.pipeline().addBefore("packet_handler", HANDLER_NAME, Handler())
+    }
+
+    /** Handles outgoing packets and rewrites player nametag metadata. */
+    private class Handler : ChannelDuplexHandler() {
+        override fun write(
+            ctx: ChannelHandlerContext,
+            msg: Any,
+            promise: ChannelPromise,
+        ) {
+            super.write(ctx, rewrite(msg), promise)
+        }
+
+        /** Rewrites packets containing player metadata to replace nametags with display names. */
+        private fun rewrite(msg: Any): Any =
+            when (msg) {
+                is ClientboundSetEntityDataPacket -> rewriteMetadataPacket(msg)
+                else -> msg
+            }
+
+        /** Rewrites metadata packets for players to replace custom names with display names. */
+        private fun rewriteMetadataPacket(packet: ClientboundSetEntityDataPacket): Any {
+            val player = findPlayer(packet.id) ?: return packet
+            val playerMetadata = createCustomNameMetadata(player)
+            val filteredMetadata = filterNametagData(packet.packedItems)
+
+            return ClientboundSetEntityDataPacket(packet.id, filteredMetadata + playerMetadata)
+        }
+
+        /** Removes vanilla nametag metadata entries from the list. */
+        private fun filterNametagData(items: List<SynchedEntityData.DataValue<*>>): List<SynchedEntityData.DataValue<*>> =
+            items.filterNot { it.id == Entity.DATA_CUSTOM_NAME.id || it.id == Entity.DATA_CUSTOM_NAME_VISIBLE.id }
+
+        /** Finds the Bukkit player matching the given entity ID. */
+        private fun findPlayer(entityId: Int): Player? =
+            instance.server.onlinePlayers.firstOrNull { it.entityId == entityId }
+
+        /** Creates metadata entries for the custom name and its visibility. */
+        private fun createCustomNameMetadata(player: Player): List<SynchedEntityData.DataValue<*>> =
+            listOf(
+                SynchedEntityData.DataValue(
+                    Entity.DATA_CUSTOM_NAME.id,
+                    EntityDataSerializers.OPTIONAL_COMPONENT,
+                    Optional.of(PaperAdventure.asVanilla(player.displayName())),
+                ),
+                SynchedEntityData.DataValue(
+                    Entity.DATA_CUSTOM_NAME_VISIBLE.id,
+                    EntityDataSerializers.BOOLEAN,
+                    true,
+                ),
+            )
+    }
+}
