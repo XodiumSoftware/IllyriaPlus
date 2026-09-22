@@ -29,7 +29,11 @@ internal object UpdateChecker : Listener {
 
     private val name: String get() = instance::class.simpleName ?: "Unknown"
     private val commandName: String get() = "${name.lowercase()}-$UPDATE_COMMAND"
-    private val httpClient: HttpClient = HttpClient.newHttpClient()
+    private val httpClient: HttpClient =
+        HttpClient
+            .newBuilder()
+            .followRedirects(HttpClient.Redirect.NORMAL)
+            .build()
 
     @Volatile
     private var updateMessage: Component? = null
@@ -106,10 +110,10 @@ internal object UpdateChecker : Listener {
     ) {
         val component =
             Utils.MM.deserialize(
-                "<mango>[</mango><firewatch>$name</firewatch><mango>]</mango> <yellow>Update available:</yellow> " +
+                "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> <yellow>Update available:</yellow> " +
                     "<green>$latest</green> <gray>(current: $current)</gray> " +
                     "<click:run_command:'/$commandName'>" +
-                    "<mango>[<b>Update Now</b>]</mango></click>",
+                    "<mango>[<b>Update Now</b>]</gradient></click>",
             )
         updateMessage = component
         instance.server.scheduler.runTask(
