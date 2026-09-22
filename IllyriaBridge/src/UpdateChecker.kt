@@ -108,7 +108,8 @@ internal object UpdateChecker : Listener {
     ) {
         val component =
             MM.deserialize(
-                "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> <yellow>Update available:</yellow> " +
+                "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
+                    "<yellow>Update available:</yellow> " +
                     "<green>$latest</green> <gray>(current: $current)</gray> " +
                     "<click:run_command:'/$commandName'>" +
                     "<mango>[<b>Update Now</b>]</gradient></click>",
