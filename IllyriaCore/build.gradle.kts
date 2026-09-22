@@ -7,7 +7,7 @@ plugins {
 
     id("com.gradleup.shadow") version "9.6.1"
     id("xyz.jpenilla.run-paper")
-    id("xyz.jpenilla.resource-factory-paper-convention") version "1.3.1"
+    id("xyz.jpenilla.resource-factory-paper-convention") version "1.4.0"
     id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
 }
 
@@ -37,8 +37,8 @@ dependencies {
 
     implementation(kotlin("stdlib"))
     implementation("com.github.retrooper:packetevents-spigot:2.13.0")
-    implementation("xyz.xenondevs.invui:invui:2.4.0")
-    implementation("xyz.xenondevs.invui:invui-kotlin:2.3.2")
+    implementation("xyz.xenondevs.invui:invui:2.5.0")
+    implementation("xyz.xenondevs.invui:invui-kotlin:2.5.0")
 }
 
 java {
