@@ -1,12 +1,11 @@
 package org.xodium.illyriacore
 
 import com.google.gson.JsonParser
+import com.mojang.brigadier.Command
 import com.mojang.brigadier.builder.LiteralArgumentBuilder.literal
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import net.kyori.adventure.text.Component
-import org.bukkit.command.Command
-import org.bukkit.command.CommandSender
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
@@ -135,50 +134,37 @@ internal object UpdateChecker : Listener {
     private fun registerCommand() {
         instance.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) { event ->
             event.registrar().register(
-                literal<CommandSourceStack>(commandName).build(),
+                literal<CommandSourceStack>(commandName)
+                    .executes { ctx ->
+                        ctx.source.sender.sendMessage(
+                            Utils.MM.deserialize(
+                                "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
+                                    "<yellow>Downloading update...</yellow>",
+                            ),
+                        )
+                        downloadUpdate { success, version ->
+                            if (success) {
+                                ctx.source.sender.sendMessage(
+                                    Utils.MM.deserialize(
+                                        "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
+                                            "<green>Successfully downloaded $version.</green> " +
+                                            "<gray>Restart the server to apply.</gray>",
+                                    ),
+                                )
+                            } else {
+                                ctx.source.sender.sendMessage(
+                                    Utils.MM.deserialize(
+                                        "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
+                                            "<red>Failed to download update. Check console for details.</red>",
+                                    ),
+                                )
+                            }
+                        }
+                        Command.SINGLE_SUCCESS
+                    }.build(),
+                "Downloads the latest $name nightly build",
             )
         }
-        instance.server.commandMap.register(
-            name.lowercase(),
-            object : Command(commandName) {
-                init {
-                    description = "Downloads the latest $name nightly build"
-                    usage = "/$commandName"
-                }
-
-                override fun execute(
-                    sender: CommandSender,
-                    commandLabel: String,
-                    args: Array<out String>,
-                ): Boolean {
-                    sender.sendMessage(
-                        Utils.MM.deserialize(
-                            "<mango>[</mango><firewatch>$name</firewatch><mango>]</mango> " +
-                                "<yellow>Downloading update...</yellow>",
-                        ),
-                    )
-                    downloadUpdate { success, version ->
-                        if (success) {
-                            sender.sendMessage(
-                                Utils.MM.deserialize(
-                                    "<mango>[</mango><firewatch>$name</firewatch><mango>]</mango> " +
-                                        "<green>Successfully downloaded $version.</green> " +
-                                        "<gray>Restart the server to apply.</gray>",
-                                ),
-                            )
-                        } else {
-                            sender.sendMessage(
-                                Utils.MM.deserialize(
-                                    "<mango>[</mango><firewatch>$name</firewatch><mango>]</mango> " +
-                                        "<red>Failed to download update. Check console for details.</red>",
-                                ),
-                            )
-                        }
-                    }
-                    return true
-                }
-            },
-        )
     }
 
     /**

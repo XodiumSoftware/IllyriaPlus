@@ -1,14 +1,15 @@
 package org.xodium.illyriabridge
 
 import com.google.gson.JsonParser
+import com.mojang.brigadier.Command
+import com.mojang.brigadier.builder.LiteralArgumentBuilder.literal
+import io.papermc.paper.command.brigadier.CommandSourceStack
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import net.kyori.adventure.text.Component
-import org.bukkit.command.Command
-import org.bukkit.command.CommandSender
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.xodium.illyriabridge.IllyriaBridge.Companion.instance
-import org.xodium.illyriabridge.Utils.MM
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -107,7 +108,7 @@ internal object UpdateChecker : Listener {
         current: String,
     ) {
         val component =
-            MM.deserialize(
+            Utils.MM.deserialize(
                 "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
                     "<yellow>Update available:</yellow> " +
                     "<green>$latest</green> <gray>(current: $current)</gray> " +
@@ -131,47 +132,39 @@ internal object UpdateChecker : Listener {
 
     /** Registers the update download command. */
     private fun registerCommand() {
-        instance.server.commandMap.register(
-            name.lowercase(),
-            object : Command(commandName) {
-                init {
-                    description = "Downloads the latest $name nightly build"
-                    usage = "/$commandName"
-                }
-
-                override fun execute(
-                    sender: CommandSender,
-                    commandLabel: String,
-                    args: Array<out String>,
-                ): Boolean {
-                    sender.sendMessage(
-                        MM.deserialize(
-                            "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
-                                "<yellow>Downloading update...</yellow>",
-                        ),
-                    )
-                    downloadUpdate { success, version ->
-                        if (success) {
-                            sender.sendMessage(
-                                MM.deserialize(
-                                    "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
-                                        "<green>Successfully downloaded $version.</green> " +
-                                        "<gray>Restart the server to apply.</gray>",
-                                ),
-                            )
-                        } else {
-                            sender.sendMessage(
-                                MM.deserialize(
-                                    "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
-                                        "<red>Failed to download update. Check console for details.</red>",
-                                ),
-                            )
+        instance.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) { event ->
+            event.registrar().register(
+                literal<CommandSourceStack>(commandName)
+                    .executes { ctx ->
+                        ctx.source.sender.sendMessage(
+                            Utils.MM.deserialize(
+                                "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
+                                    "<yellow>Downloading update...</yellow>",
+                            ),
+                        )
+                        downloadUpdate { success, version ->
+                            if (success) {
+                                ctx.source.sender.sendMessage(
+                                    Utils.MM.deserialize(
+                                        "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
+                                            "<green>Successfully downloaded $version.</green> " +
+                                            "<gray>Restart the server to apply.</gray>",
+                                    ),
+                                )
+                            } else {
+                                ctx.source.sender.sendMessage(
+                                    Utils.MM.deserialize(
+                                        "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
+                                            "<red>Failed to download update. Check console for details.</red>",
+                                    ),
+                                )
+                            }
                         }
-                    }
-                    return true
-                }
-            },
-        )
+                        Command.SINGLE_SUCCESS
+                    }.build(),
+                "Downloads the latest $name nightly build",
+            )
+        }
     }
 
     /**
