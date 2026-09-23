@@ -6,19 +6,19 @@
                 "illyriacore:trims/items/elytra_trim",
                 "illyriacore:trims/items/broken_elytra_trim"
             ],
-            "palette_key": "palettes/trim_base",
+            "palette_key": "trims/color_palettes/trim_palette",
             "permutations": {
-                "quartz": "palettes/trim/quartz",
-                "iron": "palettes/trim/iron",
-                "gold": "palettes/trim/gold",
-                "diamond": "palettes/trim/diamond",
-                "netherite": "palettes/trim/netherite",
-                "redstone": "palettes/trim/redstone",
-                "copper": "palettes/trim/copper",
-                "emerald": "palettes/trim/emerald",
-                "lapis": "palettes/trim/lapis",
-                "amethyst": "palettes/trim/amethyst",
-                "resin": "palettes/trim/resin"
+                "quartz": "trims/color_palettes/quartz",
+                "iron": "trims/color_palettes/iron",
+                "gold": "trims/color_palettes/gold",
+                "diamond": "trims/color_palettes/diamond",
+                "netherite": "trims/color_palettes/netherite",
+                "redstone": "trims/color_palettes/redstone",
+                "copper": "trims/color_palettes/copper",
+                "emerald": "trims/color_palettes/emerald",
+                "lapis": "trims/color_palettes/lapis",
+                "amethyst": "trims/color_palettes/amethyst",
+                "resin": "trims/color_palettes/resin"
             }
         },
         {
@@ -115,23 +115,23 @@
                 "illyriacore:trims/items/hoe/wayfinder",
                 "illyriacore:trims/items/hoe/wild"
             ],
-            "palette_key": "palettes/trim_base",
+            "palette_key": "trims/color_palettes/trim_palette",
             "permutations": {
-                "quartz": "palettes/trim/quartz",
-                "iron": "palettes/trim/iron",
-                "gold": "palettes/trim/gold",
-                "diamond": "palettes/trim/diamond",
-                "netherite": "palettes/trim/netherite",
-                "redstone": "palettes/trim/redstone",
-                "copper": "palettes/trim/copper",
-                "emerald": "palettes/trim/emerald",
-                "lapis": "palettes/trim/lapis",
-                "amethyst": "palettes/trim/amethyst",
-                "resin": "palettes/trim/resin",
-                "iron_darker": "palettes/trim/iron_darker",
-                "gold_darker": "palettes/trim/gold_darker",
-                "diamond_darker": "palettes/trim/diamond_darker",
-                "netherite_darker": "palettes/trim/netherite_darker"
+                "quartz": "trims/color_palettes/quartz",
+                "iron": "trims/color_palettes/iron",
+                "gold": "trims/color_palettes/gold",
+                "diamond": "trims/color_palettes/diamond",
+                "netherite": "trims/color_palettes/netherite",
+                "redstone": "trims/color_palettes/redstone",
+                "copper": "trims/color_palettes/copper",
+                "emerald": "trims/color_palettes/emerald",
+                "lapis": "trims/color_palettes/lapis",
+                "amethyst": "trims/color_palettes/amethyst",
+                "resin": "trims/color_palettes/resin",
+                "iron_darker": "trims/color_palettes/iron_darker",
+                "gold_darker": "trims/color_palettes/gold_darker",
+                "diamond_darker": "trims/color_palettes/diamond_darker",
+                "netherite_darker": "trims/color_palettes/netherite_darker"
             }
         }
     ]
