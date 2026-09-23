@@ -199,10 +199,10 @@ internal object UpdateChecker : Listener {
                             .resolve("update")
                     updateDir.createDirectories()
 
-                    val jarFile = updateDir.resolve("$name.jar")
+                    val jarFile = updateDir.resolve("$name-$version.jar")
                     jarFile.writeBytes(response.body())
 
-                    instance.logger.info("Downloaded $name-$version to plugins/update/")
+                    instance.logger.info("Downloaded $name-$version.jar to plugins/update/")
                     callback(true, version)
                 } catch (e: Exception) {
                     instance.logger.warning("Failed to download update: ${e.message}")
