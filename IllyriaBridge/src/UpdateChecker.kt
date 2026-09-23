@@ -146,7 +146,7 @@ internal object UpdateChecker : Listener {
                 ): Boolean {
                     sender.sendMessage(
                         MM.deserialize(
-                            "<mango>[</mango><firewatch>$name</firewatch><mango>]</mango> " +
+                            "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
                                 "<yellow>Downloading update...</yellow>",
                         ),
                     )
@@ -154,7 +154,7 @@ internal object UpdateChecker : Listener {
                         if (success) {
                             sender.sendMessage(
                                 MM.deserialize(
-                                    "<mango>[</mango><firewatch>$name</firewatch><mango>]</mango> " +
+                                    "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
                                         "<green>Successfully downloaded $version.</green> " +
                                         "<gray>Restart the server to apply.</gray>",
                                 ),
@@ -162,7 +162,7 @@ internal object UpdateChecker : Listener {
                         } else {
                             sender.sendMessage(
                                 MM.deserialize(
-                                    "<mango>[</mango><firewatch>$name</firewatch><mango>]</mango> " +
+                                    "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
                                         "<red>Failed to download update. Check console for details.</red>",
                                 ),
                             )
