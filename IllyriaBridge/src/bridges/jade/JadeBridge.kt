@@ -93,8 +93,13 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
                 send(player, SERVER_HANDSHAKE_CHANNEL, handshake(player))
             }
 
-            REQUEST_BLOCK_CHANNEL -> handleBlockRequest(player, message)
-            REQUEST_ENTITY_CHANNEL -> handleEntityRequest(player, message)
+            REQUEST_BLOCK_CHANNEL -> {
+                handleBlockRequest(player, message)
+            }
+
+            REQUEST_ENTITY_CHANNEL -> {
+                handleEntityRequest(player, message)
+            }
         }
     }
 
