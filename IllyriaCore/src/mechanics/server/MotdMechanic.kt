@@ -1,8 +1,8 @@
 package org.xodium.illyriacore.mechanics.server
 
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
-import org.xodium.illyriacore.Utils.MM
 import org.xodium.illyriacore.mechanics.MechanicInterface
+import org.xodium.illyrialib.Utils.MM
 import kotlin.time.measureTime
 
 /** Represents a mechanic handling server MOTD within the system. */

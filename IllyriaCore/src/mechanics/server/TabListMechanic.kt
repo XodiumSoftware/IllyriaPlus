@@ -5,8 +5,8 @@ import net.kyori.adventure.audience.Audience
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.PlayerJoinEvent
-import org.xodium.illyriacore.Utils.MM
 import org.xodium.illyriacore.mechanics.MechanicInterface
+import org.xodium.illyrialib.Utils.MM
 
 /** Represents a mechanic handling tab list updates within the system. */
 internal object TabListMechanic : MechanicInterface {

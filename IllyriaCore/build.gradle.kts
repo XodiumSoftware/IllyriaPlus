@@ -35,6 +35,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:$mcVersion.build.+")
     compileOnly("com.google.code.gson:gson:2.14.0")
 
+    implementation(project(":IllyriaLib"))
     implementation(kotlin("stdlib"))
     implementation("com.github.retrooper:packetevents-spigot:2.14.0")
     implementation("xyz.xenondevs.invui:invui:2.5.0")
@@ -74,6 +75,7 @@ tasks {
         relocate("io.github.retrooper", "${project.group}.libs.packetevents")
         relocate("xyz.xenondevs.commons", "${project.group}.libs.commons")
         relocate("xyz.xenondevs.invui", "${project.group}.libs.invui")
+        relocate("org.xodium.illyrialib", "${project.group}.libs.illyrialib")
         minimize()
         doFirst {
             val keep = archiveFileName.get()

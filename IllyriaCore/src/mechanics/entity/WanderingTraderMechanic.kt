@@ -12,13 +12,13 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
-import org.xodium.illyriacore.Utils.MM
 import org.xodium.illyriacore.data.WanderingTraderItemData
 import org.xodium.illyriacore.gui.stock.StockBuyGui
 import org.xodium.illyriacore.gui.stock.StockCategoriesGui
 import org.xodium.illyriacore.gui.stock.StockHandlers
 import org.xodium.illyriacore.gui.stock.StockSellGui
 import org.xodium.illyriacore.mechanics.MechanicInterface
+import org.xodium.illyrialib.Utils.MM
 import java.io.File
 import java.nio.file.AtomicMoveNotSupportedException
 import java.nio.file.Files

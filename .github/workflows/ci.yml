@@ -58,9 +58,11 @@ jobs:
             core:
               - "IllyriaCore/src/**"
               - "IllyriaCore/build.gradle.kts"
+              - "IllyriaLib/**"
             bridge:
               - "IllyriaBridge/src/**"
               - "IllyriaBridge/build.gradle.kts"
+              - "IllyriaLib/**"
             resourcepack:
               - "IllyriaResourcePack/**"
             wiki:

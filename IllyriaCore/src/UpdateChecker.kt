@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.xodium.illyrialib.Utils.MM
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -108,7 +109,7 @@ internal object UpdateChecker : Listener {
         current: String,
     ) {
         val component =
-            Utils.MM.deserialize(
+            MM.deserialize(
                 "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
                     "<yellow>Update available:</yellow> " +
                     "<green>$latest</green> <gray>(current: $current)</gray> " +
@@ -137,7 +138,7 @@ internal object UpdateChecker : Listener {
                 literal<CommandSourceStack>(commandName)
                     .executes { ctx ->
                         ctx.source.sender.sendMessage(
-                            Utils.MM.deserialize(
+                            MM.deserialize(
                                 "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
                                     "<yellow>Downloading update...</yellow>",
                             ),
@@ -145,7 +146,7 @@ internal object UpdateChecker : Listener {
                         downloadUpdate { success, version ->
                             if (success) {
                                 ctx.source.sender.sendMessage(
-                                    Utils.MM.deserialize(
+                                    MM.deserialize(
                                         "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
                                             "<green>Successfully downloaded $version.</green> " +
                                             "<gray>Restart the server to apply.</gray>",
@@ -153,7 +154,7 @@ internal object UpdateChecker : Listener {
                                 )
                             } else {
                                 ctx.source.sender.sendMessage(
-                                    Utils.MM.deserialize(
+                                    MM.deserialize(
                                         "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
                                             "<red>Failed to download update. Check console for details.</red>",
                                     ),

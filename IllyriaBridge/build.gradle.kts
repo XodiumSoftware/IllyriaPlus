@@ -32,6 +32,7 @@ repositories {
 dependencies {
     paperweight.paperDevBundle("$mcVersion.build.+")
 
+    implementation(project(":IllyriaLib"))
     implementation(kotlin("stdlib"))
     compileOnly("com.google.code.gson:gson:2.14.0")
 }
@@ -62,6 +63,7 @@ ktlint {
 tasks {
     shadowJar {
         archiveClassifier.set("")
+        relocate("org.xodium.illyrialib", "${project.group}.libs.illyrialib")
         minimize()
         doFirst {
             val keep = archiveFileName.get()
