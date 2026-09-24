@@ -3,12 +3,12 @@ import xyz.jpenilla.runtask.task.AbstractRun
 plugins {
     id("java")
 
-    kotlin("jvm") version "2.4.20"
+    kotlin("jvm")
 
-    id("com.gradleup.shadow") version "9.6.1"
+    id("com.gradleup.shadow")
     id("xyz.jpenilla.run-paper")
-    id("xyz.jpenilla.resource-factory-paper-convention") version "1.4.0"
-    id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
+    id("xyz.jpenilla.resource-factory-paper-convention")
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 val mcVersion = "26.2"
