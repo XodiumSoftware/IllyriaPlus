@@ -1,14 +1,14 @@
 @file:Suppress("Unused")
 
-package org.xodium.illyriabridge
+package org.xodium.illyrialib
 
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.Tag
 
-/** General utilities for IllyriaBridge. */
-internal object Utils {
+/** General utilities shared across the IllyriaPlus plugin modules. */
+public object Utils {
     /** MiniMessage instance for parsing formatted strings with custom gradient aliases. */
-    val MM: MiniMessage =
+    public val MM: MiniMessage =
         MiniMessage
             .builder()
             .editTags {

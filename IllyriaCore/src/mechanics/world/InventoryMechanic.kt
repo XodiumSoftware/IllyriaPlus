@@ -18,10 +18,10 @@ import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.Utils
 import org.xodium.illyriacore.Utils.Block.center
 import org.xodium.illyriacore.Utils.Command.playerExecuted
-import org.xodium.illyriacore.Utils.MM
 import org.xodium.illyriacore.Utils.Player.getContainersAround
 import org.xodium.illyriacore.data.CommandData
 import org.xodium.illyriacore.mechanics.MechanicInterface
+import org.xodium.illyrialib.Utils.MM
 
 /** Represents a mechanic handling inventory interactions within the system. */
 internal object InventoryMechanic : MechanicInterface {

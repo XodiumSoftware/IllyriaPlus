@@ -40,6 +40,7 @@ internal object TameableMechanic : MechanicInterface {
         if (!pet.isTamed || pet.owner != source) return false
 
         pet.owner = target
+        @Suppress("UsePropertyAccessSyntax")
         pet.setLeashHolder(target)
         return true
     }

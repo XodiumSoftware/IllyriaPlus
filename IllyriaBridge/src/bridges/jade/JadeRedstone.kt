@@ -26,7 +26,9 @@ internal object JadeRedstone : JadeBlockProvider {
 
         val signal =
             when (val blockEntity = level.getBlockEntity(pos)) {
-                is ComparatorBlockEntity -> blockEntity.outputSignal
+                is ComparatorBlockEntity -> {
+                    blockEntity.outputSignal
+                }
 
                 is CalibratedSculkSensorBlockEntity -> {
                     val state = blockEntity.blockState
@@ -39,7 +41,9 @@ internal object JadeRedstone : JadeBlockProvider {
                     level.getSignal(pos.relative(facing), facing)
                 }
 
-                else -> return false
+                else -> {
+                    return false
+                }
             }
 
         tag.putByteArray(key, varIntPayload(signal))

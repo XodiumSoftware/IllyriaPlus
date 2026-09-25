@@ -3,12 +3,12 @@ import xyz.jpenilla.runtask.task.AbstractRun
 plugins {
     id("java")
 
-    kotlin("jvm") version "2.4.20"
+    kotlin("jvm")
 
-    id("com.gradleup.shadow") version "9.6.1"
+    id("com.gradleup.shadow")
     id("xyz.jpenilla.run-paper")
-    id("xyz.jpenilla.resource-factory-paper-convention") version "1.4.0"
-    id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
+    id("xyz.jpenilla.resource-factory-paper-convention")
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 val mcVersion = "26.3"
@@ -35,8 +35,9 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:$mcVersion.build.+")
     compileOnly("com.google.code.gson:gson:2.14.0")
 
+    implementation(project(":IllyriaLib"))
     implementation(kotlin("stdlib"))
-    implementation("com.github.retrooper:packetevents-spigot:2.13.0")
+    implementation("com.github.retrooper:packetevents-spigot:2.14.0")
     implementation("xyz.xenondevs.invui:invui:2.5.0")
     implementation("xyz.xenondevs.invui:invui-kotlin:2.5.0")
 }
@@ -74,6 +75,7 @@ tasks {
         relocate("io.github.retrooper", "${project.group}.libs.packetevents")
         relocate("xyz.xenondevs.commons", "${project.group}.libs.commons")
         relocate("xyz.xenondevs.invui", "${project.group}.libs.invui")
+        relocate("org.xodium.illyrialib", "${project.group}.libs.illyrialib")
         minimize()
         doFirst {
             val keep = archiveFileName.get()

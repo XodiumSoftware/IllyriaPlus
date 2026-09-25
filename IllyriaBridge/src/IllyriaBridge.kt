@@ -6,6 +6,7 @@ import org.xodium.illyriabridge.bridges.BridgeInterface
 import org.xodium.illyriabridge.bridges.FabricRecipeBridge
 import org.xodium.illyriabridge.bridges.XaeroMapBridge
 import org.xodium.illyriabridge.bridges.jade.JadeBridge
+import org.xodium.illyrialib.UpdateChecker
 
 /** Main class of the plugin. */
 internal class IllyriaBridge : JavaPlugin() {
@@ -37,7 +38,7 @@ internal class IllyriaBridge : JavaPlugin() {
             "Registered: ${bridges.size} bridge(s) | Took ${bridges.sumOf { it.register() }}ms",
         )
 
-        UpdateChecker.check()
+        UpdateChecker(this).check()
     }
 
     override fun onDisable() {

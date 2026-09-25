@@ -7,8 +7,8 @@ import io.papermc.paper.registry.data.PaintingVariantRegistryEntry
 import net.kyori.adventure.key.Key
 import org.bukkit.Art
 import org.xodium.illyriacore.IllyriaCore
-import org.xodium.illyriacore.Utils.MM
 import org.xodium.illyriacore.data.PaintingData
+import org.xodium.illyrialib.Utils.MM
 
 /** Represents a collection of registerable painting variants within the system. */
 internal interface PaintingInterface {

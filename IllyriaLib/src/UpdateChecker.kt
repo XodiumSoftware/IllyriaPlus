@@ -1,16 +1,16 @@
-package org.xodium.illyriacore
+package org.xodium.illyrialib
 
 import com.google.gson.JsonParser
+import com.mojang.brigadier.Command
 import com.mojang.brigadier.builder.LiteralArgumentBuilder.literal
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import net.kyori.adventure.text.Component
-import org.bukkit.command.Command
-import org.bukkit.command.CommandSender
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
-import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.bukkit.plugin.java.JavaPlugin
+import org.xodium.illyrialib.Utils.MM
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -19,17 +19,32 @@ import java.util.UUID
 import kotlin.io.path.createDirectories
 import kotlin.io.path.writeBytes
 
-/** Checks GitHub nightly releases for newer builds of this plugin. */
+/**
+ * Checks GitHub nightly releases for newer builds of a plugin.
+ *
+ * Each plugin creates its own instance, keeping per-plugin notification
+ * state, listener registration, and update command cleanly separated.
+ *
+ * @property plugin The plugin to check updates for.
+ */
 @Suppress("UnstableApiUsage")
-internal object UpdateChecker : Listener {
-    private const val REPO = "XodiumSoftware/IllyriaPlus"
-    private const val RELEASE_URL = "https://api.github.com/repos/$REPO/releases/tags/nightly"
-    private const val ASSET_SUFFIX = ".jar"
-    private const val UPDATE_COMMAND = "update"
+class UpdateChecker(
+    private val plugin: JavaPlugin,
+) : Listener {
+    private companion object {
+        private const val REPO = "XodiumSoftware/IllyriaPlus"
+        private const val RELEASE_URL = "https://api.github.com/repos/$REPO/releases/tags/nightly"
+        private const val ASSET_SUFFIX = ".jar"
+        private const val UPDATE_COMMAND = "update"
+    }
 
-    private val name: String get() = instance::class.simpleName ?: "Unknown"
+    private val name: String get() = plugin::class.simpleName ?: "Unknown"
     private val commandName: String get() = "${name.lowercase()}-$UPDATE_COMMAND"
-    private val httpClient: HttpClient = HttpClient.newHttpClient()
+    private val httpClient: HttpClient =
+        HttpClient
+            .newBuilder()
+            .followRedirects(HttpClient.Redirect.NORMAL)
+            .build()
 
     @Volatile
     private var updateMessage: Component? = null
@@ -39,25 +54,25 @@ internal object UpdateChecker : Listener {
     /** Checks asynchronously whether a newer build is available and logs the result. */
     fun check() {
         registerCommand()
-        instance.server.pluginManager.registerEvents(this, instance)
+        plugin.server.pluginManager.registerEvents(this, plugin)
 
-        val currentVersion = instance.pluginMeta.version
-        instance.server.scheduler.runTaskAsynchronously(
-            instance,
+        val currentVersion = plugin.pluginMeta.version
+        plugin.server.scheduler.runTaskAsynchronously(
+            plugin,
             Runnable {
                 try {
                     val latestVersion = fetchLatestVersion() ?: return@Runnable
                     if (isNewer(currentVersion, latestVersion)) {
-                        instance.logger.warning(
+                        plugin.logger.warning(
                             "A new nightly build is available: $latestVersion (current: $currentVersion). " +
                                 "Download: https://github.com/$REPO/releases/tag/nightly",
                         )
                         notifyOps(latestVersion, currentVersion)
                     } else {
-                        instance.logger.info("No newer nightly build available (current: $currentVersion).")
+                        plugin.logger.info("No newer nightly build available (current: $currentVersion).")
                     }
                 } catch (e: Exception) {
-                    instance.logger.warning("Failed to check for updates: ${e.message}")
+                    plugin.logger.warning("Failed to check for updates: ${e.message}")
                 }
             },
         )
@@ -105,17 +120,18 @@ internal object UpdateChecker : Listener {
         current: String,
     ) {
         val component =
-            Utils.MM.deserialize(
-                "<mango>[</mango><firewatch>$name</firewatch><mango>]</mango> <yellow>Update available:</yellow> " +
+            MM.deserialize(
+                "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
+                    "<yellow>Update available:</yellow> " +
                     "<green>$latest</green> <gray>(current: $current)</gray> " +
                     "<click:run_command:'/$commandName'>" +
-                    "<mango>[<b>Update Now</b>]</mango></click>",
+                    "<mango>[<b>Update Now</b>]</gradient></click>",
             )
         updateMessage = component
-        instance.server.scheduler.runTask(
-            instance,
+        plugin.server.scheduler.runTask(
+            plugin,
             Runnable {
-                instance
+                plugin
                     .server
                     .onlinePlayers
                     .filter { it.isOp }
@@ -128,52 +144,39 @@ internal object UpdateChecker : Listener {
 
     /** Registers the update download command. */
     private fun registerCommand() {
-        instance.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) { event ->
+        plugin.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) { event ->
             event.registrar().register(
-                literal<CommandSourceStack>(commandName).build(),
+                literal<CommandSourceStack>(commandName)
+                    .executes { ctx ->
+                        ctx.source.sender.sendMessage(
+                            MM.deserialize(
+                                "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
+                                    "<yellow>Downloading update...</yellow>",
+                            ),
+                        )
+                        downloadUpdate { success, version ->
+                            if (success) {
+                                ctx.source.sender.sendMessage(
+                                    MM.deserialize(
+                                        "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
+                                            "<green>Successfully downloaded $version.</green> " +
+                                            "<gray>Restart the server to apply.</gray>",
+                                    ),
+                                )
+                            } else {
+                                ctx.source.sender.sendMessage(
+                                    MM.deserialize(
+                                        "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
+                                            "<red>Failed to download update. Check console for details.</red>",
+                                    ),
+                                )
+                            }
+                        }
+                        Command.SINGLE_SUCCESS
+                    }.build(),
+                "Downloads the latest $name nightly build",
             )
         }
-        instance.server.commandMap.register(
-            name.lowercase(),
-            object : Command(commandName) {
-                init {
-                    description = "Downloads the latest $name nightly build"
-                    usage = "/$commandName"
-                }
-
-                override fun execute(
-                    sender: CommandSender,
-                    commandLabel: String,
-                    args: Array<out String>,
-                ): Boolean {
-                    sender.sendMessage(
-                        Utils.MM.deserialize(
-                            "<mango>[</mango><firewatch>$name</firewatch><mango>]</mango> " +
-                                "<yellow>Downloading update...</yellow>",
-                        ),
-                    )
-                    downloadUpdate { success, version ->
-                        if (success) {
-                            sender.sendMessage(
-                                Utils.MM.deserialize(
-                                    "<mango>[</mango><firewatch>$name</firewatch><mango>]</mango> " +
-                                        "<green>Successfully downloaded $version.</green> " +
-                                        "<gray>Restart the server to apply.</gray>",
-                                ),
-                            )
-                        } else {
-                            sender.sendMessage(
-                                Utils.MM.deserialize(
-                                    "<mango>[</mango><firewatch>$name</firewatch><mango>]</mango> " +
-                                        "<red>Failed to download update. Check console for details.</red>",
-                                ),
-                            )
-                        }
-                    }
-                    return true
-                }
-            },
-        )
     }
 
     /**
@@ -182,8 +185,8 @@ internal object UpdateChecker : Listener {
      * @param callback Invoked with `true` and the downloaded version on success, `false` on failure.
      */
     private fun downloadUpdate(callback: (Boolean, String) -> Unit) {
-        instance.server.scheduler.runTaskAsynchronously(
-            instance,
+        plugin.server.scheduler.runTaskAsynchronously(
+            plugin,
             Runnable {
                 try {
                     val version = fetchLatestVersion() ?: throw IllegalStateException("No release found")
@@ -201,20 +204,20 @@ internal object UpdateChecker : Listener {
                     }
 
                     val updateDir =
-                        instance
+                        plugin
                             .dataFolder
                             .parentFile
                             .toPath()
                             .resolve("update")
                     updateDir.createDirectories()
 
-                    val jarFile = updateDir.resolve("$name.jar")
+                    val jarFile = updateDir.resolve("$name-$version.jar")
                     jarFile.writeBytes(response.body())
 
-                    instance.logger.info("Downloaded $name-$version to plugins/update/")
+                    plugin.logger.info("Downloaded $name-$version.jar to plugins/update/")
                     callback(true, version)
                 } catch (e: Exception) {
-                    instance.logger.warning("Failed to download update: ${e.message}")
+                    plugin.logger.warning("Failed to download update: ${e.message}")
                     callback(false, "")
                 }
             },

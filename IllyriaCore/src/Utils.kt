@@ -7,8 +7,6 @@ import com.mojang.brigadier.context.CommandContext
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.registry.TypedKey
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.minimessage.MiniMessage
-import net.kyori.adventure.text.minimessage.tag.Tag
 import org.bukkit.Chunk
 import org.bukkit.Location
 import org.bukkit.NamespacedKey
@@ -24,25 +22,11 @@ import org.bukkit.entity.Tameable
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.xodium.illyrialib.Utils.MM
 import kotlin.time.Duration
 
 /** General utilities. */
 internal object Utils {
-    /** MiniMessage instance for parsing formatted strings with custom gradient aliases. */
-    val MM: MiniMessage =
-        MiniMessage
-            .builder()
-            .editTags {
-                listOf(
-                    "mango" to "#FFE259:#FFA751",
-                    "mango_r" to "#FFA751:#FFE259",
-                    "firewatch" to "#CB2D3E:#EF473A",
-                    "skyline" to "#1488CC:#2B32B2",
-                    "deep-ocean" to "#13547a:#80d0c7",
-                    "rose" to "#F4C4F3:#FC67FA",
-                ).forEach { (name, colors) -> it.tag(name, Tag.preProcessParsed("<gradient:$colors>")) }
-            }.build()
-
     /** Converts a [Duration] to Minecraft ticks (20 ticks per second). */
     fun Duration.toTicks(): Int = inWholeSeconds.toInt() * 20
 

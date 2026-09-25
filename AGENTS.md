@@ -61,14 +61,18 @@
 ```
 IllyriaPlus/                    # Repo root (Gradle aggregator, no code)
 ├── build.gradle.kts          # Aggregator only
-├── settings.gradle.kts         # Includes IllyriaCore + IllyriaBridge
+├── settings.gradle.kts         # Includes IllyriaLib, IllyriaCore + IllyriaBridge
 ├── IllyriaResourcePack/      # Custom resource pack (released via ci_resourcepack.yml, served by ResourcePackMechanic)
+├── IllyriaLib/                # Shared library module (org.xodium.illyrialib), shaded into both plugins
+│   ├── build.gradle.kts        # Module build configuration
+│   └── src/                    # Source directory
+│       └── Utils.kt                # Shared utilities (MiniMessage instance `Utils.MM`)
 ├── IllyriaCore/                # Core plugin module (published plugin: IllyriaPlus)
 │   ├── build.gradle.kts        # Module build configuration
 │   ├── src/                    # Source directory
 │   │   ├── IllyriaCore.kt          # Main plugin class
 │   │   ├── IllyriaCoreBootstrap.kt # Bootstrap class
-│   │   ├── Utils.kt                # Utility functions
+│   │   ├── Utils.kt                # Core-only utility functions
 │   │   ├── mechanics/              # Feature mechanics (entity, player, server, world subfolders)
 │   │   ├── enchantments/           # Enchantment implementations
 │   │   │   ├── utility/            # Custom utility enchantments (registered in bootstrap)
@@ -130,7 +134,7 @@ The `IllyriaBridge` module (`org.xodium.illyriabridge`) handles server↔client 
 
 - All internal classes use `internal` visibility
 - All mechanics/enchantments/recipes are `object` singletons
-- Use MiniMessage (`Utils.MM`) for all text formatting
+- Use MiniMessage (`IllyriaLib`'s `Utils.MM`) for all text formatting
 - Add `@Suppress("UnstableApiUsage")` when using Paper's experimental APIs
 - ktlint is enforced; wildcard imports are disabled globally via `.editorconfig`
 - Recipe `NamespacedKey` naming: `{descriptive_name}_{recipe_type}`
@@ -264,7 +268,7 @@ GitHub Actions workflows in `.github/workflows/`:
 1. Edit `IllyriaCore/src/Utils.kt` or add a nested object inside `Utils`
 2. Keep utility functions `internal` visibility
 3. Prefer extension functions on existing types
-4. Use `Utils.MM` for MiniMessage formatting
+4. Use `Utils.MM` (from IllyriaLib) for MiniMessage formatting
 5. Add KDoc comments for complex utilities
 
 ## Memory System

@@ -3,8 +3,8 @@ package org.xodium.illyriacore.gui.stock
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
-import org.xodium.illyriacore.Utils.MM
 import org.xodium.illyriacore.gui.GuiInterface
+import org.xodium.illyrialib.Utils.MM
 import xyz.xenondevs.invui.dsl.ExperimentalDslApi
 import xyz.xenondevs.invui.dsl.window
 import xyz.xenondevs.invui.inventory.VirtualInventory

@@ -17,6 +17,7 @@ import org.xodium.illyriacore.mechanics.player.*
 import org.xodium.illyriacore.mechanics.server.*
 import org.xodium.illyriacore.mechanics.world.*
 import org.xodium.illyriacore.recipes.*
+import org.xodium.illyrialib.UpdateChecker
 
 /** Main class of the plugin. */
 internal class IllyriaCore : JavaPlugin() {
@@ -124,7 +125,7 @@ internal class IllyriaCore : JavaPlugin() {
             }ms",
         )
 
-        UpdateChecker.check()
+        UpdateChecker(this).check()
     }
 
     override fun onDisable() {

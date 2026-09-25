@@ -16,8 +16,8 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.view.AnvilView
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
-import org.xodium.illyriacore.Utils
 import org.xodium.illyriacore.mechanics.MechanicInterface
+import org.xodium.illyrialib.Utils.MM
 
 /** Represents a mechanic handling custom anvil operations, including disenchantment and cost-limit bypass. */
 internal object AnvilMechanic : MechanicInterface {
@@ -203,7 +203,7 @@ internal object AnvilMechanic : MechanicInterface {
         val result = event.result?.takeIf { !it.type.isAir } ?: return
         val renameText = event.view.renameText?.takeIf { it.isNotEmpty() } ?: return
 
-        result.setData(DataComponentTypes.CUSTOM_NAME, Utils.MM.deserialize(renameText))
+        result.setData(DataComponentTypes.CUSTOM_NAME, MM.deserialize(renameText))
         event.result = result
     }
 
