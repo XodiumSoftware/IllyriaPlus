@@ -2,8 +2,8 @@ package org.xodium.illyriacore.gui.stock
 
 import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.xodium.illyriacore.Utils.MM
 import org.xodium.illyriacore.gui.GuiInterface
+import org.xodium.illyrialib.Utils.MM
 import xyz.xenondevs.invui.dsl.ExperimentalDslApi
 import xyz.xenondevs.invui.dsl.gui
 import xyz.xenondevs.invui.dsl.item

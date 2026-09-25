@@ -14,8 +14,8 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.command.UnknownCommandEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.*
-import org.xodium.illyriacore.Utils.MM
 import org.xodium.illyriacore.mechanics.MechanicInterface
+import org.xodium.illyrialib.Utils.MM
 
 /** Represents a mechanic handling player messages within the system. */
 internal object MessagesMechanic : MechanicInterface {
