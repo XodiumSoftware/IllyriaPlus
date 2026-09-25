@@ -27,6 +27,7 @@ alike.
 |  <img class="mc-icon" alt="Warped Fungus" title="Warped Fungus" src="../img/item/warped_fungus.png">   |       ✅        |
 |    <img class="mc-icon" alt="Red Mushroom" title="Red Mushroom" src="../img/item/red_mushroom.png">    |       ✅        |
 | <img class="mc-icon" alt="Brown Mushroom" title="Brown Mushroom" src="../img/item/brown_mushroom.png"> |       ✅        |
+|                                                 Poplar                                                 |       ❌        |
 
 </div>
 
