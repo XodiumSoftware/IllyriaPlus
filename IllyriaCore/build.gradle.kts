@@ -38,7 +38,7 @@ dependencies {
     implementation(project(":IllyriaLib"))
     implementation(kotlin("stdlib"))
     implementation("com.github.retrooper:packetevents-spigot:2.14.0")
-    implementation("xyz.xenondevs.invui:invui:2.5.0")
+    implementation("xyz.xenondevs.invui:invui:2.5.1")
     implementation("xyz.xenondevs.invui:invui-kotlin:2.5.0")
 }
 
