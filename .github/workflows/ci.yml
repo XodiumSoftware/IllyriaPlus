@@ -448,7 +448,7 @@ jobs:
 
       - id: install_cargo_binstall
         name: Install cargo-binstall
-        uses: cargo-bins/cargo-binstall@v1.23.0
+        uses: cargo-bins/cargo-binstall@v1.24.0
 
       - id: cache_mdbook
         name: Cache mdBook
