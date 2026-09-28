@@ -36,19 +36,6 @@ Notes:
 - Does not work on players or hostile mobs (monsters cannot be silenced this way)
 - The shard is **not consumed in Creative mode**
 
-## Wandering Trader <img class="mc-icon" alt="" src="../img/item/wandering_trader_spawn_egg.png">
-
-Wandering traders run a shared **custom shop** instead of their vanilla offers.
-
-- Right-click any wandering trader to open a category picker — items the trader has in stock are
-  grouped into Building Blocks, Tools & Weapons, Food & Farming, Materials, Redstone & Utility, and Misc
-- **Buy** items from the shop using any accepted currency: Copper Ingots, Gold Ingots, Diamonds,
-  or Emeralds, or a mix of all four — change is made automatically
-- **Sell** items back to the trader via the Sell window; the trader pays in mixed currency at a
-  fraction of the current buy price
-- Prices shift with **supply and demand** — items frequently bought become pricier, items frequently sold become cheaper
-- Stock is **shared across all wandering traders** on the server
-
 ## Spawn Eggs <img class="mc-icon" alt="" src="../img/item/egg.png">
 
 Rare chance to collect a mob's spawn egg by killing it.

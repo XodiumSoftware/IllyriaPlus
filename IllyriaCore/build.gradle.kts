@@ -28,7 +28,6 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-releases/")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
-    maven("https://repo.xenondevs.xyz/releases")
 }
 
 dependencies {
@@ -38,8 +37,6 @@ dependencies {
     implementation(project(":IllyriaLib"))
     implementation(kotlin("stdlib"))
     implementation("com.github.retrooper:packetevents-spigot:2.14.0")
-    implementation("xyz.xenondevs.invui:invui:2.5.1")
-    implementation("xyz.xenondevs.invui:invui-kotlin:2.5.1")
 }
 
 java {
@@ -73,8 +70,6 @@ tasks {
         archiveClassifier.set("")
         relocate("com.github.retrooper", "${project.group}.libs.packetevents")
         relocate("io.github.retrooper", "${project.group}.libs.packetevents")
-        relocate("xyz.xenondevs.commons", "${project.group}.libs.commons")
-        relocate("xyz.xenondevs.invui", "${project.group}.libs.invui")
         relocate("org.xodium.illyrialib", "${project.group}.libs.illyrialib")
         minimize()
         doFirst {
