@@ -100,7 +100,7 @@ jobs:
       - id: setup_gradle
         name: Setup Gradle
         if: needs.changes.outputs.core == 'true' || needs.changes.outputs.bridge == 'true' || needs.changes.outputs.all == 'true'
-        uses: gradle/actions/setup-gradle@v6.3.0
+        uses: gradle/actions/setup-gradle@v6.4.0
 
       - id: run_ktlint
         name: Run ktlint
@@ -174,7 +174,7 @@ jobs:
 
       - id: setup_gradle
         name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6.3.0
+        uses: gradle/actions/setup-gradle@v6.4.0
 
       - id: build
         name: Build Plugin
@@ -264,7 +264,7 @@ jobs:
 
       - id: setup_gradle
         name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6.3.0
+        uses: gradle/actions/setup-gradle@v6.4.0
 
       - id: build
         name: Build Plugin
