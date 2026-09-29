@@ -37,4 +37,8 @@ However, instead of generating a linked portal at scaled coordinates, entering a
 teleports the player directly to the **Overworld world spawn** without creating or searching for
 an Overworld portal.
 
+Your Nether-side portal is remembered: the next time you enter a Nether portal from the
+Overworld, you return to that same portal instead of a freshly generated one. If the portal has
+since been destroyed, a new one is generated normally.
+
 The teleport destination Y coordinate is adjusted to the highest solid block at the spawn X/Z.

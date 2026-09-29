@@ -21,6 +21,7 @@ import org.xodium.illyriacore.items.IncendiumKeyItem
 import org.xodium.illyriacore.items.ItemInterface
 import org.xodium.illyriacore.items.NullscapeKeyItem
 import org.xodium.illyriacore.mechanics.MechanicInterface
+import org.xodium.illyriacore.pdcs.PlayerPDC.lastNetherPortal
 import org.xodium.illyrialib.Utils.MM
 
 /**
@@ -74,6 +75,7 @@ internal object PortalMechanic : MechanicInterface {
             ) {
                 return
             }
+            returnToLastLocation(event)
             returnToSpawn(event)
         }
         if (event.cause == PlayerTeleportEvent.TeleportCause.END_PORTAL) {
@@ -284,11 +286,48 @@ internal object PortalMechanic : MechanicInterface {
                 .worlds
                 .find { it.environment == World.Environment.NORMAL } ?: return
         event.isCancelled = true
+        event.player.lastNetherPortal = findPortalBlock(event.from)
         val destination = overworld.spawnLocation.toSurface()
         instance.server.scheduler.runTask(
             instance,
             Runnable { event.player.teleport(destination) },
         )
+    }
+
+    /**
+     * Finds the NETHER_PORTAL block at or adjacent to the given location. When a player teleports
+     * through a portal, their position is inside the portal column, but may be one block below or
+     * above the nearest portal block depending on frame shape, so a small vertical scan is used.
+     *
+     * @param location The location to search around.
+     * @return The portal block's location, or the given location if no portal block is found.
+     */
+    private fun findPortalBlock(location: Location): Location {
+        val block = location.block
+        if (block.type == Material.NETHER_PORTAL) return block.location
+        for (dy in -1..1) {
+            val candidate = block.getRelative(0, dy, 0)
+            if (candidate.type == Material.NETHER_PORTAL) return candidate.location
+        }
+        return location
+    }
+
+    /**
+     * Redirects an Overworld to Nether portal teleport to the player's last used Nether-side
+     * portal, if one is stored. This effectively links the player's trips so they resume at their
+     * own portal in the Nether instead of generating a new vanilla portal exit.
+     *
+     * @param event The [PlayerPortalEvent] to redirect.
+     */
+    private fun returnToLastLocation(event: PlayerPortalEvent) {
+        if (event.from.world?.environment != World.Environment.NORMAL) return
+        val lastPortal = event.player.lastNetherPortal ?: return
+        if (lastPortal.world.environment != World.Environment.NETHER) return
+        if (lastPortal.block.type != Material.NETHER_PORTAL) {
+            event.player.lastNetherPortal = null
+            return
+        }
+        event.to = lastPortal.toCenterLocation()
     }
 
     /**
