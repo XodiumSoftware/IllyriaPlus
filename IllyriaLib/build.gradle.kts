@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:26.3.pre.+")
+    compileOnly("io.papermc.paper:paper-api:26.3.rc.+")
 
     implementation(kotlin("stdlib"))
     compileOnly("com.google.code.gson:gson:2.14.0")
