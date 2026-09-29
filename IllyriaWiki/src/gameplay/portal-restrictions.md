@@ -1,7 +1,18 @@
 # Portal Restrictions
 
 IllyriaRPG restricts Overworld portal usage to the spawn protection area, while Nether portals can
-be created anywhere but always lead back to the Overworld spawn.
+be created anywhere but always lead back to the Overworld spawn. Additionally, dimension travel is
+gated behind special key items.
+
+## Dimension Keys
+
+Traveling to certain dimensions requires holding a special key item in your inventory:
+
+- **Nether** requires the **Incendium Key**
+- **The End** requires the **Nullscape Key**
+
+Attempting to enter a dimension without its key displays an error message and blocks the teleport.
+Keys are craftable using Overworld materials (see [Recipes](../recipes/index.md)).
 
 ## Spawn Protection (Overworld)
 

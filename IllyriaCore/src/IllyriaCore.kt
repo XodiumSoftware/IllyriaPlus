@@ -60,6 +60,7 @@ internal class IllyriaCore : JavaPlugin() {
             listOf(
                 ChainmailRecipe,
                 DiamondRecycleRecipe,
+                DimensionKeyRecipe,
                 IceBreakdownRecipe,
                 NetherWartBlockRecipe,
                 PaintingRecipe,
@@ -97,7 +98,7 @@ internal class IllyriaCore : JavaPlugin() {
                 TreeMechanic,
                 RulesMechanic,
                 ResourcePackMechanic,
-                NetherPortalMechanic,
+                PortalMechanic,
             )
 
         logger.info(
