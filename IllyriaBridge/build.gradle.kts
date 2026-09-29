@@ -65,18 +65,6 @@ tasks {
         archiveClassifier.set("")
         relocate("org.xodium.illyrialib", "${project.group}.libs.illyrialib")
         minimize()
-        doFirst {
-            val keep = archiveFileName.get()
-            val base = archiveBaseName.get()
-            layout
-                .buildDirectory
-                .dir("libs")
-                .get()
-                .asFile
-                .listFiles()
-                ?.filter { it.isFile && it.name.startsWith("$base-") && it.name.endsWith(".jar") && it.name != keep }
-                ?.forEach { it.delete() }
-        }
     }
     jar { enabled = false }
     runServer { minecraftVersion(mcVersion) }
