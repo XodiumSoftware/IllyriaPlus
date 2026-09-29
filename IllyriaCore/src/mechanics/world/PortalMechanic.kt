@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.event.world.PortalCreateEvent
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.Utils.World.toSurface
+import org.xodium.illyriacore.data.PortalData
 import org.xodium.illyriacore.items.IncendiumKeyItem
 import org.xodium.illyriacore.items.ItemInterface
 import org.xodium.illyriacore.items.NullscapeKeyItem
@@ -103,12 +104,10 @@ internal object PortalMechanic : MechanicInterface {
         if (player.gameMode == GameMode.CREATIVE || player.gameMode == GameMode.SPECTATOR) return
         if (player.portalCooldown > 0) return
 
-        // Only check portals that lead to a key-gated dimension; other blocks (and other portal
-        // types) are ignored.
         val portalInfo =
             when (blockType) {
                 Material.NETHER_PORTAL ->
-                    PortalInfo(
+                    PortalData(
                         World.Environment.NETHER,
                         IncendiumKeyItem,
                         "<mango>You need the Incendium Key!</gradient>",
@@ -116,7 +115,7 @@ internal object PortalMechanic : MechanicInterface {
                     )
 
                 Material.END_PORTAL ->
-                    PortalInfo(
+                    PortalData(
                         World.Environment.THE_END,
                         NullscapeKeyItem,
                         "<mango>You need the Nullscape Key!</gradient>",
@@ -126,8 +125,6 @@ internal object PortalMechanic : MechanicInterface {
                 else -> return
             }
 
-        // Only reject when traveling toward the gated dimension (e.g. a Nether portal in the
-        // Overworld). Traveling back from the Nether/End never requires a key.
         val fromEnvironment = event.location.world?.environment ?: return
         if (fromEnvironment == portalInfo.targetEnvironment) return
 
@@ -136,14 +133,6 @@ internal object PortalMechanic : MechanicInterface {
         player.portalCooldown = REJECT_COOLDOWN_TICKS
         rejectPlayer(player, event.location, portalInfo.title, portalInfo.subtitle)
     }
-
-    /** Holds the key requirement data for a key-gated portal type. */
-    private data class PortalInfo(
-        val targetEnvironment: World.Environment,
-        val keyItem: ItemInterface,
-        val title: String,
-        val subtitle: String,
-    )
 
     @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerInteractEvent) {
