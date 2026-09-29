@@ -34,6 +34,12 @@ World and gameplay modifications that set IllyriaRPG apart.
 <span class="card-desc">Spawn-protected Overworld portals</span>
 </a>
 
+<a class="card" href="spawn-protection.html">
+<img class="card-icon" alt="" src="../img/item/villager_spawn_egg.png">
+<span class="card-title">Spawn Protection</span>
+<span class="card-desc">Safe zone around the Overworld spawn</span>
+</a>
+
 <a class="card" href="tameable.html">
 <img class="card-icon" alt="" src="../img/item/bone.png">
 <span class="card-title">Pet Transfer</span>

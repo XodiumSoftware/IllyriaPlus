@@ -98,6 +98,7 @@ internal class IllyriaCore : JavaPlugin() {
                 TreeMechanic,
                 RulesMechanic,
                 ResourcePackMechanic,
+                SpawnProtectionMechanic,
                 PortalMechanic,
             )
 

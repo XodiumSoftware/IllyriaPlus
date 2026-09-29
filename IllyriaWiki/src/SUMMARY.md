@@ -38,6 +38,7 @@
 - [Entity Tweaks](gameplay/entity-tweaks.md)
 - [Openable Blocks](gameplay/openables.md)
 - [Portal Restrictions](gameplay/portal-restrictions.md)
+- [Spawn Protection](gameplay/spawn-protection.md)
 - [Pet Transfer](gameplay/tameable.md)
 - [Tree Mechanics](gameplay/trees.md)
 
