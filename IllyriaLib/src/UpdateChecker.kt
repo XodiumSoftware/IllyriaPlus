@@ -55,7 +55,13 @@ class UpdateChecker(
     fun check() {
         registerCommand()
         plugin.server.pluginManager.registerEvents(this, plugin)
+        runCheck()
+    }
 
+    /**
+     * Runs the asynchronous update check without re-registering the command or listener.
+     */
+    private fun runCheck() {
         val currentVersion = plugin.pluginMeta.version
         plugin.server.scheduler.runTaskAsynchronously(
             plugin,
@@ -106,6 +112,7 @@ class UpdateChecker(
     fun on(event: PlayerJoinEvent) {
         val player = event.player
         if (!player.isOp || !notifiedOps.add(player.uniqueId)) return
+        runCheck()
         updateMessage?.let { player.sendMessage(it) }
     }
 
