@@ -70,8 +70,7 @@ internal class IllyriaCore : JavaPlugin() {
             )
 
         logger.info(
-            "Registered: ${recipes.sumOf { it.recipes.size }} recipe(s) " +
-                "and ${recipes.sumOf { it.potions.size }} potion mix(es) |" +
+            "Registered: ${recipes.sumOf { it.recipes.size }} recipe(s) |" +
                 "Took ${recipes.sumOf { it.register() }}ms",
         )
 

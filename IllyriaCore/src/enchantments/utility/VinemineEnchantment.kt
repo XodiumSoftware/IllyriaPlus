@@ -1,10 +1,10 @@
 package org.xodium.illyriacore.enchantments.utility
 
-import com.destroystokyo.paper.MaterialTags
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.registry.data.EnchantmentRegistryEntry
 import org.bukkit.GameMode
 import org.bukkit.Material
+import org.bukkit.Tag
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.event.EventHandler
@@ -48,7 +48,7 @@ internal object VinemineEnchantment : EnchantmentInterface {
 
         val block = event.block
 
-        if (!MaterialTags.ORES.isTagged(block.type)) return
+        if (!Tag.ORES.isTagged(block.type) && block.type != Material.ANCIENT_DEBRIS) return
 
         val blockType = block.type
         val enchantLevel = itemInHand.getEnchantmentLevel(get())

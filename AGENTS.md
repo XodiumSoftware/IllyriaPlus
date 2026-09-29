@@ -11,19 +11,19 @@
 
 ## APIs & Tools
 
-| Category            | Technology                                       | Purpose                            |
-| ------------------- | ------------------------------------------------ | ---------------------------------- |
-| **Core API**        | [Paper API](https://papermc.io/) 26.3            | Minecraft server plugin API        |
-| **Language**        | Kotlin 2.4.20                                    | JVM language                       |
-| **Build Tool**      | Gradle (Kotlin DSL)                              | Build automation                   |
-| **Gradle Plugins**  | Shadow 9.6.1                                     | Fat JAR creation                   |
-|                     | run-paper 3.1.0                                  | Local test server                  |
-|                     | resource-factory 1.3.1                           | `paper-plugin.yml` generation      |
-|                     | paperweight userdev (IllyriaBridge only)         | Paper dev bundle (NMS access)      |
-|                     | foojay-resolver 1.0.0                            | Auto-download JVM toolchains       |
-|                     | ktlint 12.3.0                                    | Kotlin linting                     |
-| **Text Formatting** | MiniMessage                                      | Adventure API component-based text |
-| **Code Style**      | ktlint                                           | Kotlin linting (IDE plugin)        |
+| Category            | Technology                               | Purpose                            |
+| ------------------- | ---------------------------------------- | ---------------------------------- |
+| **Core API**        | [Paper API](https://papermc.io/) 26.3    | Minecraft server plugin API        |
+| **Language**        | Kotlin 2.4.20                            | JVM language                       |
+| **Build Tool**      | Gradle (Kotlin DSL)                      | Build automation                   |
+| **Gradle Plugins**  | Shadow 9.6.1                             | Fat JAR creation                   |
+|                     | run-paper 3.1.0                          | Local test server                  |
+|                     | resource-factory 1.3.1                   | `paper-plugin.yml` generation      |
+|                     | paperweight userdev (IllyriaBridge only) | Paper dev bundle (NMS access)      |
+|                     | foojay-resolver 1.0.0                    | Auto-download JVM toolchains       |
+|                     | ktlint 12.3.0                            | Kotlin linting                     |
+| **Text Formatting** | MiniMessage                              | Adventure API component-based text |
+| **Code Style**      | ktlint                                   | Kotlin linting (IDE plugin)        |
 
 ### Paper API Resources
 
@@ -242,7 +242,7 @@ GitHub Actions workflows in `.github/workflows/`:
 
 1. Create new file in `IllyriaCore/src/recipes/vanilla/YourRecipe.kt`
 2. Implement `RecipeInterface` as an `object`
-3. Define `recipes` list for crafting/smelting recipes, or `potions` list for brewing recipes
+3. Define `recipes` list for crafting/smelting recipes; brewing recipes use `BrewingRecipe` (also returned from `recipes`, registered via `server.addRecipe()` — the deprecated `PotionMix`/`PotionBrewer` API was removed)
 4. Use naming pattern `{descriptive_name}_{recipe_type}` for `NamespacedKey`
 5. In `IllyriaCore.kt`, add `YourRecipe` to the `recipes` list in `onEnable()`
 6. Add KDoc comments describing the recipe
