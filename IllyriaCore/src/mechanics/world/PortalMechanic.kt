@@ -102,6 +102,7 @@ internal object PortalMechanic : MechanicInterface {
     /**
      * Checks if a player traveling to a specific dimension has the required key item.
      * If the player doesn't have the key, the portal travel is cancelled.
+     * If the player has the key, one key is consumed upon successful teleportation.
      * Players in creative or spectator mode are exempt from the key requirement.
      *
      * @param event The [PlayerPortalEvent] to check.
@@ -130,6 +131,17 @@ internal object PortalMechanic : MechanicInterface {
             event.isCancelled = true
             event.player.sendActionBar(MM.deserialize(errorMessage))
             return false
+        }
+
+        val keyItemStack = keyItem()
+        val itemSlot = event.player.inventory.first(keyItemStack)
+        if (itemSlot != -1) {
+            val item = event.player.inventory.getItem(itemSlot) ?: return false
+            if (item.amount > 1) {
+                item.amount--
+            } else {
+                event.player.inventory.setItem(itemSlot, null)
+            }
         }
 
         return true

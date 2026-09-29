@@ -12,6 +12,10 @@ Traveling to certain dimensions requires holding a special key item in your inve
 - **The End** requires the **Nullscape Key**
 
 Attempting to enter a dimension without its key displays an error message and blocks the teleport.
+One key is **consumed** per successful trip to the dimension — returning to the Overworld does not
+consume additional keys. Players in creative or spectator mode are exempt from the key requirement
+and do not consume keys.
+
 Keys are craftable using Overworld materials (see [Recipes](../recipes/index.md)).
 
 ## Spawn Protection (Overworld)
