@@ -62,8 +62,8 @@ internal object NetherPortalMechanic : MechanicInterface {
      * Links the portal teleport to the counterpart world's spawn location.
      *
      * Overworld spawn portals teleport to the Nether world spawn, and Nether spawn portals teleport
-     * to the Overworld spawn. This bypasses vanilla portal searching/creation to guarantee the pair
-     * always link to each other regardless of the overworld spawn offset.
+     * to the Overworld spawn. The destination Y coordinate is adjusted to the highest solid block
+     * to account for flat worlds with non-standard spawn heights.
      *
      * @param event The [PlayerPortalEvent] to redirect.
      */
@@ -79,13 +79,12 @@ internal object NetherPortalMechanic : MechanicInterface {
                 .server
                 .worlds
                 .find { it.environment == targetEnvironment } ?: return
-        event.canCreatePortal = false
-        event.searchRadius = 0
-        event.to = targetWorld.spawnLocation
+        event.to = targetWorld.spawnLocation.toSurface()
     }
 
     /**
      * Redirects End portal teleports from the End to the Overworld spawn instead of the player's respawn point.
+     * The destination Y coordinate is adjusted to the highest solid block.
      *
      * @param event The [PlayerPortalEvent] to redirect.
      */
@@ -96,7 +95,7 @@ internal object NetherPortalMechanic : MechanicInterface {
                 .server
                 .worlds
                 .find { it.environment == World.Environment.NORMAL } ?: return
-        event.to = overworld.spawnLocation
+        event.to = overworld.spawnLocation.toSurface()
     }
 
     /**
@@ -109,3 +108,14 @@ internal object NetherPortalMechanic : MechanicInterface {
             MM.deserialize("<firewatch>Portals cannot be created, use the one at spawn instead!</gradient>"),
         )
 }
+
+/**
+ * Returns a copy of this location with the Y adjusted to the highest solid block's Y + 1 at the current X/Z.
+ * If no solid block exists (e.g. flat world), falls back to the original Y.
+ */
+private fun Location.toSurface(): Location =
+    clone().apply {
+        val world = world ?: return@apply
+        val surfaceY = world.getHighestBlockYAt(blockX, blockZ) + 1
+        y = maxOf(surfaceY, blockY).toDouble()
+    }
