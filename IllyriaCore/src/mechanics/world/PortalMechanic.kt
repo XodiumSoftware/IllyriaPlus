@@ -1,6 +1,7 @@
 package org.xodium.illyriacore.mechanics.world
 
 import io.papermc.paper.datacomponent.DataComponentTypes
+import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
@@ -101,12 +102,13 @@ internal object PortalMechanic : MechanicInterface {
     /**
      * Checks if a player traveling to a specific dimension has the required key item.
      * If the player doesn't have the key, the portal travel is cancelled.
+     * Players in creative or spectator mode are exempt from the key requirement.
      *
      * @param event The [PlayerPortalEvent] to check.
      * @param targetEnvironment The target world environment to check for.
      * @param keyItem The required key item.
      * @param errorMessage The MiniMessage formatted error message to display.
-     * @return `true` if the player can travel (has key or is not traveling to the target dimension), `false` otherwise.
+     * @return `true` if the player can travel (has key, is in creative/spectator mode, or is not traveling to the target dimension), `false` otherwise.
      */
     private fun requireKey(
         event: PlayerPortalEvent,
@@ -114,6 +116,10 @@ internal object PortalMechanic : MechanicInterface {
         keyItem: ItemInterface,
         errorMessage: String,
     ): Boolean {
+        if (event.player.gameMode == GameMode.CREATIVE || event.player.gameMode == GameMode.SPECTATOR) {
+            return true
+        }
+
         val toWorld = event.to.world ?: return false
 
         if (toWorld.environment != targetEnvironment) {
