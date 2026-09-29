@@ -5,6 +5,7 @@ import net.kyori.adventure.title.Title
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.Particle
 import org.bukkit.World
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -32,6 +33,12 @@ internal object PortalMechanic : MechanicInterface {
 
     /** Upward velocity component of the portal rejection pushback. */
     private const val PUSHBACK_UPWARD = 0.5
+
+    /** Number of portal particles spawned on rejection. */
+    private const val REJECT_PARTICLE_COUNT = 40
+
+    /** Spread (offset radius) of the rejection particles around the player. */
+    private const val REJECT_PARTICLE_SPREAD = 0.6
 
     @EventHandler(ignoreCancelled = true)
     fun on(event: PortalCreateEvent) {
@@ -153,6 +160,15 @@ internal object PortalMechanic : MechanicInterface {
                     .direction
                     .multiply(-PUSHBACK_STRENGTH)
                     .setY(PUSHBACK_UPWARD)
+            val particleCenter = event.player.location.add(0.0, 1.0, 0.0)
+            event.player.world.spawnParticle(
+                Particle.REVERSE_PORTAL,
+                particleCenter,
+                REJECT_PARTICLE_COUNT,
+                REJECT_PARTICLE_SPREAD,
+                REJECT_PARTICLE_SPREAD,
+                REJECT_PARTICLE_SPREAD,
+            )
             return false
         }
 
