@@ -23,7 +23,7 @@ internal object JadePetArmor : JadeEntityProvider {
         if (entity !is Tameable && entity !is AbstractHorse && entity !is HappyGhast) return false
         val armor = (entity as CraftMob).handle.bodyArmorItem
         if (armor.isEmpty) return false
-        tag.putByteArray(key, itemStackPayload(CraftItemStack.asCraftMirror(armor)))
+        tag.putByteArray(key, itemStackPayload(CraftItemStack.asBukkitMirror(armor)))
         return true
     }
 }

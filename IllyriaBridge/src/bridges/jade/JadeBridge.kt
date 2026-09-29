@@ -9,6 +9,7 @@ import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket
 import net.minecraft.network.protocol.common.custom.DiscardedPayload
 import net.minecraft.resources.Identifier
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.phys.BlockHitResult
 import org.bukkit.craftbukkit.CraftWorld
 import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
@@ -137,7 +138,7 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
         val buf = RegistryFriendlyByteBuf(Unpooled.wrappedBuffer(message), registryAccess(player))
 
         buf.readBoolean() // showDetails
-        val hit = buf.readBlockHitResult() // BlockHitResult
+        val hit = BlockHitResult.STREAM_CODEC.decode(buf) // BlockHitResult
         val pos = hit.blockPos
         ItemStack.OPTIONAL_STREAM_CODEC.decode(buf) // serversideRep
         if (buf.isReadable && buf.getByte(buf.readerIndex()).toInt() and 0xFF == 0x0A) {

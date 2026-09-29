@@ -6,7 +6,6 @@ description: Scaffolds a new data class in IllyriaCore/src/data/ for structured 
 # Add a Data Class
 
 Use this skill when the user needs a new structured data type shared across the project (mechanics, enchantments, recipes, utilities, database tables, etc.).
-Use this skill when the user needs a new structured data type shared across the project (mechanics, enchantments, recipes, utilities, database tables, etc.).
 
 ## Before Writing Code
 
@@ -29,7 +28,7 @@ Use this skill when the user needs a new structured data type shared across the 
 
 - Use `val` only — no mutable `var` properties in data classes unless there is a strong reason.
 - Prefer primitive or existing platform/API types.
-- If the data class is used for lookups, consider adding a helper that converts a collection into a map (see `BuildSetupData.toMaterialMap()`).
+- If the data class is used for lookups, consider adding a companion object helper that converts a collection into a map (e.g., `fun Collection<Name>.toValueMap(): Map<K, Name>`).
 
 ## Documentation
 

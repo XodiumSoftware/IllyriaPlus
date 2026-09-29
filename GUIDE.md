@@ -14,7 +14,7 @@
 
 ## Prerequisites
 
-- [Paper](https://papermc.io/) Minecraft server 26.2
+- [Paper](https://papermc.io/) Minecraft server 26.3
 - Java 25
 
 ## Download Nightly Build
@@ -77,7 +77,7 @@ To quickly test a plugin:
 ./gradlew :IllyriaBridge:runServer
 ```
 
-This automatically downloads Paper 26.2 and starts a local test server with the plugin.
+This automatically downloads Paper 26.3 and starts a local test server with the plugin.
 
 ## Installation
 
