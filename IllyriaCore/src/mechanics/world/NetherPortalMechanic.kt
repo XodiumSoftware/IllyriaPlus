@@ -12,7 +12,7 @@ import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.mechanics.MechanicInterface
 import org.xodium.illyrialib.Utils.MM
 
-/** Prevents nether portals outside the spawn protection area from being created or entered. */
+/** Prevents portals outside the spawn protection area from being created or entered, and links spawn portals to their counterparts. */
 internal object NetherPortalMechanic : MechanicInterface {
     @EventHandler(ignoreCancelled = true)
     fun on(event: PortalCreateEvent) {
@@ -30,8 +30,11 @@ internal object NetherPortalMechanic : MechanicInterface {
             portalCancelledMessage(event.player)
             return
         }
-        if (event.cause != PlayerTeleportEvent.TeleportCause.NETHER_PORTAL) return
-        linkPortal(event)
+        when (event.cause) {
+            PlayerTeleportEvent.TeleportCause.NETHER_PORTAL -> linkPortal(event)
+            PlayerTeleportEvent.TeleportCause.END_PORTAL -> linkEndPortal(event)
+            else -> return
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -79,6 +82,21 @@ internal object NetherPortalMechanic : MechanicInterface {
         event.canCreatePortal = false
         event.searchRadius = 0
         event.to = targetWorld.spawnLocation
+    }
+
+    /**
+     * Redirects End portal teleports from the End to the Overworld spawn instead of the player's respawn point.
+     *
+     * @param event The [PlayerPortalEvent] to redirect.
+     */
+    private fun linkEndPortal(event: PlayerPortalEvent) {
+        if (event.from.world?.environment != World.Environment.THE_END) return
+        val overworld =
+            instance
+                .server
+                .worlds
+                .find { it.environment == World.Environment.NORMAL } ?: return
+        event.to = overworld.spawnLocation
     }
 
     /**
