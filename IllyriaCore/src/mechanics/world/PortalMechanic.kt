@@ -61,8 +61,8 @@ internal object PortalMechanic : MechanicInterface {
                     event,
                     World.Environment.NETHER,
                     IncendiumKeyItem,
-                    "<firewatch>You need the Incendium Key!</gradient>",
-                    "<gray>Find one to unlock the Nether</gray>",
+                    "<mango>You need the Incendium Key!</gradient>",
+                    "<red>Find one to unlock the Nether</red>",
                 )
             ) {
                 return
@@ -74,8 +74,8 @@ internal object PortalMechanic : MechanicInterface {
                 event,
                 World.Environment.THE_END,
                 NullscapeKeyItem,
-                "<gradient:#4B0082:#8A2BE2:#DA70D6>You need the Nullscape Key!</gradient>",
-                "<gray>Find one to unlock the End</gray>",
+                "<mango>You need the Nullscape Key!</gradient>",
+                "<red>Find one to unlock the End</red>",
             )
         }
     }
