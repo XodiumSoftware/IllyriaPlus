@@ -13,7 +13,10 @@ import org.xodium.illyriacore.Utils.World.toSurface
 import org.xodium.illyriacore.mechanics.MechanicInterface
 import org.xodium.illyrialib.Utils.MM
 
-/** Prevents portals outside the spawn protection area from being created or entered, and links spawn portals to their counterparts. */
+/**
+ * Restricts Overworld portals to the spawn protection area, while portals in the Nether can be
+ * created anywhere but always teleport players back to the Overworld spawn.
+ */
 internal object NetherPortalMechanic : MechanicInterface {
     @EventHandler(ignoreCancelled = true)
     fun on(event: PortalCreateEvent) {
@@ -31,10 +34,8 @@ internal object NetherPortalMechanic : MechanicInterface {
             portalCancelledMessage(event.player)
             return
         }
-        when (event.cause) {
-            PlayerTeleportEvent.TeleportCause.NETHER_PORTAL -> linkPortal(event)
-            PlayerTeleportEvent.TeleportCause.END_PORTAL -> linkEndPortal(event)
-            else -> return
+        if (event.cause == PlayerTeleportEvent.TeleportCause.NETHER_PORTAL) {
+            returnToSpawn(event)
         }
     }
 
@@ -47,56 +48,42 @@ internal object NetherPortalMechanic : MechanicInterface {
     }
 
     /**
-     * Determines if the given location is outside the spawn protection zone.
+     * Determines if the given location is an Overworld location outside the spawn protection zone.
+     * Portals in the Nether (or any other dimension) are never cancelled.
      *
      * @param location The location to check.
-     * @return `true` if the portal should be cancelled (outside spawn protection), `false` otherwise.
+     * @return `true` if the portal should be cancelled, `false` otherwise.
      */
     private fun cancelPortal(location: Location): Boolean {
         val world = location.world ?: return true
-        val spawn = world.spawnLocation
+        if (world.environment != World.Environment.NORMAL) return false
         val radius = instance.server.spawnRadius
-        return radius > 0 && location.distanceSquared(spawn) > radius * radius
+        return radius > 0 && location.distanceSquared(world.spawnLocation) > radius * radius
     }
 
     /**
-     * Links the portal teleport to the counterpart world's spawn location.
+     * Cancels Nether portal teleports originating in the Nether and teleports the player to the
+     * Overworld spawn instead, preventing vanilla portal search/creation at the destination.
+     * Portals in the Overworld (spawn-protected) teleport normally. The teleport is scheduled one
+     * tick later, as teleporting a player while they are still inside a portal in the same tick is
+     * unreliable. The destination Y coordinate is adjusted to the highest solid block to account
+     * for flat worlds with non-standard spawn heights.
      *
-     * Overworld spawn portals teleport to the Nether world spawn, and Nether spawn portals teleport
-     * to the Overworld spawn. The destination Y coordinate is adjusted to the highest solid block
-     * to account for flat worlds with non-standard spawn heights.
-     *
-     * @param event The [PlayerPortalEvent] to redirect.
+     * @param event The [PlayerPortalEvent] to cancel.
      */
-    private fun linkPortal(event: PlayerPortalEvent) {
-        val targetEnvironment =
-            when (event.from.world?.environment) {
-                World.Environment.NORMAL -> World.Environment.NETHER
-                World.Environment.NETHER -> World.Environment.NORMAL
-                else -> return
-            }
-        val targetWorld =
-            instance
-                .server
-                .worlds
-                .find { it.environment == targetEnvironment } ?: return
-        event.to = targetWorld.spawnLocation.toSurface()
-    }
-
-    /**
-     * Redirects End portal teleports from the End to the Overworld spawn instead of the player's respawn point.
-     * The destination Y coordinate is adjusted to the highest solid block.
-     *
-     * @param event The [PlayerPortalEvent] to redirect.
-     */
-    private fun linkEndPortal(event: PlayerPortalEvent) {
-        if (event.from.world?.environment != World.Environment.THE_END) return
+    private fun returnToSpawn(event: PlayerPortalEvent) {
+        if (event.from.world?.environment != World.Environment.NETHER) return
         val overworld =
             instance
                 .server
                 .worlds
                 .find { it.environment == World.Environment.NORMAL } ?: return
-        event.to = overworld.spawnLocation.toSurface()
+        event.isCancelled = true
+        val destination = overworld.spawnLocation.toSurface()
+        instance.server.scheduler.runTask(
+            instance,
+            Runnable { event.player.teleport(destination) },
+        )
     }
 
     /**
