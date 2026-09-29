@@ -55,5 +55,6 @@ Welcome to the official wiki for the **IllyriaRPG** Minecraft server.
 IllyriaRPG is a vanilla-plus Minecraft survival server with RPG flavor:
 
 - ✨ **Unique enchantments** like Vinemine (vein mining) and Embertread (lava walker)
+- 🔑 **Dimension-locked progression** — craftable keys required for Nether and End access
 - 🏷️ **Quality-of-life features** — nicknames, XP bottling, and more
 - 🗺️ **Mod support** for Xaero's maps and Fabric/JEI users
