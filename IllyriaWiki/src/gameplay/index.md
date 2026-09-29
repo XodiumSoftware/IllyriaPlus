@@ -28,6 +28,12 @@ World and gameplay modifications that set IllyriaRPG apart.
 <span class="card-desc">Doors and trapdoors with extended behavior</span>
 </a>
 
+<a class="card" href="portal-restrictions.html">
+<img class="card-icon" alt="" src="../img/item/ender_eye.png">
+<span class="card-title">Portal Restrictions</span>
+<span class="card-desc">Spawn-linked portal rules</span>
+</a>
+
 <a class="card" href="tameable.html">
 <img class="card-icon" alt="" src="../img/item/bone.png">
 <span class="card-title">Pet Transfer</span>
