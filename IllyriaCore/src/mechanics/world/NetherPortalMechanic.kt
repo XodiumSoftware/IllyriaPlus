@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerPortalEvent
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.event.world.PortalCreateEvent
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.xodium.illyriacore.Utils.World.toSurface
 import org.xodium.illyriacore.mechanics.MechanicInterface
 import org.xodium.illyrialib.Utils.MM
 
@@ -108,14 +109,3 @@ internal object NetherPortalMechanic : MechanicInterface {
             MM.deserialize("<firewatch>Portals cannot be created, use the one at spawn instead!</gradient>"),
         )
 }
-
-/**
- * Returns a copy of this location with the Y adjusted to the highest solid block's Y + 1 at the current X/Z.
- * If no solid block exists (e.g. flat world), falls back to the original Y.
- */
-private fun Location.toSurface(): Location =
-    clone().apply {
-        val world = world ?: return@apply
-        val surfaceY = world.getHighestBlockYAt(blockX, blockZ) + 1
-        y = maxOf(surfaceY, blockY).toDouble()
-    }
