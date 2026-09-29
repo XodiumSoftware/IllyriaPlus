@@ -97,7 +97,7 @@ internal class IllyriaCore : JavaPlugin() {
                 TreeMechanic,
                 RulesMechanic,
                 ResourcePackMechanic,
-                NetherPortalMechanic,
+                PortalMechanic,
             )
 
         logger.info(

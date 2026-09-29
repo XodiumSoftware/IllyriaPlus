@@ -1,23 +1,30 @@
 package org.xodium.illyriacore.mechanics.world
 
+import io.papermc.paper.datacomponent.DataComponentTypes
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityPortalEnterEvent
+import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerPortalEvent
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.event.world.PortalCreateEvent
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.Utils.World.toSurface
+import org.xodium.illyriacore.items.IncendiumKeyItem
+import org.xodium.illyriacore.items.ItemInterface
+import org.xodium.illyriacore.items.NullscapeKeyItem
 import org.xodium.illyriacore.mechanics.MechanicInterface
 import org.xodium.illyrialib.Utils.MM
 
 /**
  * Restricts Overworld portals to the spawn protection area, while portals in the Nether can be
  * created anywhere but always teleport players back to the Overworld spawn.
+ * Requires Incendium Key for Nether travel and Nullscape Key for End travel.
  */
-internal object NetherPortalMechanic : MechanicInterface {
+internal object PortalMechanic : MechanicInterface {
     @EventHandler(ignoreCancelled = true)
     fun on(event: PortalCreateEvent) {
         val location = event.blocks.firstOrNull()?.location ?: return
@@ -35,7 +42,24 @@ internal object NetherPortalMechanic : MechanicInterface {
             return
         }
         if (event.cause == PlayerTeleportEvent.TeleportCause.NETHER_PORTAL) {
+            if (!requireKey(
+                    event,
+                    World.Environment.NETHER,
+                    IncendiumKeyItem,
+                    "<firewatch>You need the Incendium Key to enter the Nether!</gradient>",
+                )
+            ) {
+                return
+            }
             returnToSpawn(event)
+        }
+        if (event.cause == PlayerTeleportEvent.TeleportCause.END_PORTAL) {
+            requireKey(
+                event,
+                World.Environment.THE_END,
+                NullscapeKeyItem,
+                "<gradient:#4B0082:#8A2BE2:#DA70D6>You need the Nullscape Key to enter the End!</gradient>",
+            )
         }
     }
 
@@ -44,6 +68,19 @@ internal object NetherPortalMechanic : MechanicInterface {
         if (cancelPortal(event.location)) {
             event.isCancelled = true
             portalCancelledMessage(event.entity as? Player ?: return)
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    fun on(event: PlayerInteractEvent) {
+        val block = event.clickedBlock ?: return
+        if (block.type != Material.TRIAL_SPAWNER) return
+
+        val item = event.item ?: return
+        val itemModel = item.getData(DataComponentTypes.ITEM_MODEL) ?: return
+
+        if (itemModel == IncendiumKeyItem.key || itemModel == NullscapeKeyItem.key) {
+            event.isCancelled = true
         }
     }
 
@@ -59,6 +96,37 @@ internal object NetherPortalMechanic : MechanicInterface {
         if (world.environment != World.Environment.NORMAL) return false
         val radius = instance.server.spawnRadius
         return radius > 0 && location.distanceSquared(world.spawnLocation) > radius * radius
+    }
+
+    /**
+     * Checks if a player traveling to a specific dimension has the required key item.
+     * If the player doesn't have the key, the portal travel is cancelled.
+     *
+     * @param event The [PlayerPortalEvent] to check.
+     * @param targetEnvironment The target world environment to check for.
+     * @param keyItem The required key item.
+     * @param errorMessage The MiniMessage formatted error message to display.
+     * @return `true` if the player can travel (has key or is not traveling to the target dimension), `false` otherwise.
+     */
+    private fun requireKey(
+        event: PlayerPortalEvent,
+        targetEnvironment: World.Environment,
+        keyItem: ItemInterface,
+        errorMessage: String,
+    ): Boolean {
+        val toWorld = event.to.world ?: return false
+
+        if (toWorld.environment != targetEnvironment) {
+            return true
+        }
+
+        if (!event.player.inventory.contains(keyItem())) {
+            event.isCancelled = true
+            event.player.sendActionBar(MM.deserialize(errorMessage))
+            return false
+        }
+
+        return true
     }
 
     /**
