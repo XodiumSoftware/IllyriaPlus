@@ -6,9 +6,9 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.Tag
 
 /** General utilities shared across the IllyriaPlus plugin modules. */
-public object Utils {
+object Utils {
     /** MiniMessage instance for parsing formatted strings with custom gradient aliases. */
-    public val MM: MiniMessage =
+    val MM: MiniMessage =
         MiniMessage
             .builder()
             .editTags {

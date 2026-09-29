@@ -37,6 +37,7 @@
 - [Elytra Trims](gameplay/elytra-trims.md)
 - [Entity Tweaks](gameplay/entity-tweaks.md)
 - [Openable Blocks](gameplay/openables.md)
+- [Portal Restrictions](gameplay/portal-restrictions.md)
 - [Pet Transfer](gameplay/tameable.md)
 - [Tree Mechanics](gameplay/trees.md)
 

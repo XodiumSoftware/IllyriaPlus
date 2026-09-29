@@ -107,7 +107,7 @@ internal object ChatMechanic : MechanicInterface {
                 MM.deserialize(JOIN_SUBTITLE),
             ),
         )
-        event.player.playSound(event.player.location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f)
+        event.player.playSound(event.player.location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 0.5f, 1.0f)
     }
 
     /**

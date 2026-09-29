@@ -72,32 +72,11 @@ tasks {
         relocate("io.github.retrooper", "${project.group}.libs.packetevents")
         relocate("org.xodium.illyrialib", "${project.group}.libs.illyrialib")
         minimize()
-        doFirst {
-            val keep = archiveFileName.get()
-            val base = archiveBaseName.get()
-            layout
-                .buildDirectory
-                .dir("libs")
-                .get()
-                .asFile
-                .listFiles()
-                ?.filter { it.isFile && it.name.startsWith("$base-") && it.name.endsWith(".jar") && it.name != keep }
-                ?.forEach { it.delete() }
-        }
     }
     jar { enabled = false }
     runServer {
-        dependsOn(":IllyriaBridge:shadowJar", "copyPluginJars")
         minecraftVersion(mcVersion)
         runDirectory = rootProject.layout.projectDirectory.dir(".server")
-    }
-
-    val copyPluginJars by registering(Copy::class) {
-        dependsOn(":IllyriaBridge:shadowJar")
-        from(
-            rootProject.layout.projectDirectory.dir("IllyriaBridge/build/libs"),
-        )
-        into(rootProject.layout.projectDirectory.dir(".server/plugins"))
     }
     withType<JavaCompile> { options.encoding = "UTF-8" }
     withType(AbstractRun::class) { jvmArgs("-XX:+AllowEnhancedClassRedefinition") }
