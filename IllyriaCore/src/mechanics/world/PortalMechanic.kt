@@ -1,6 +1,7 @@
 package org.xodium.illyriacore.mechanics.world
 
 import io.papermc.paper.datacomponent.DataComponentTypes
+import net.kyori.adventure.title.Title
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.Material
@@ -26,6 +27,12 @@ import org.xodium.illyrialib.Utils.MM
  * Requires Incendium Key for Nether travel and Nullscape Key for End travel.
  */
 internal object PortalMechanic : MechanicInterface {
+    /** Velocity applied when a player is rejected from a portal (pushed back). */
+    private const val PUSHBACK_STRENGTH = 1.5
+
+    /** Upward velocity component of the portal rejection pushback. */
+    private const val PUSHBACK_UPWARD = 0.5
+
     @EventHandler(ignoreCancelled = true)
     fun on(event: PortalCreateEvent) {
         val location = event.blocks.firstOrNull()?.location ?: return
@@ -47,7 +54,8 @@ internal object PortalMechanic : MechanicInterface {
                     event,
                     World.Environment.NETHER,
                     IncendiumKeyItem,
-                    "<firewatch>You need the Incendium Key to enter the Nether!</gradient>",
+                    "<firewatch>You need the Incendium Key!</gradient>",
+                    "<gray>Find one to unlock the Nether</gray>",
                 )
             ) {
                 return
@@ -59,7 +67,8 @@ internal object PortalMechanic : MechanicInterface {
                 event,
                 World.Environment.THE_END,
                 NullscapeKeyItem,
-                "<gradient:#4B0082:#8A2BE2:#DA70D6>You need the Nullscape Key to enter the End!</gradient>",
+                "<gradient:#4B0082:#8A2BE2:#DA70D6>You need the Nullscape Key!</gradient>",
+                "<gray>Find one to unlock the End</gray>",
             )
         }
     }
@@ -108,14 +117,16 @@ internal object PortalMechanic : MechanicInterface {
      * @param event The [PlayerPortalEvent] to check.
      * @param targetEnvironment The target world environment to check for.
      * @param keyItem The required key item.
-     * @param errorMessage The MiniMessage formatted error message to display.
+     * @param title The MiniMessage formatted title to display.
+     * @param subtitle The MiniMessage formatted subtitle to display.
      * @return `true` if the player can travel (has key, is in creative/spectator mode, or is not traveling to the target dimension), `false` otherwise.
      */
     private fun requireKey(
         event: PlayerPortalEvent,
         targetEnvironment: World.Environment,
         keyItem: ItemInterface,
-        errorMessage: String,
+        title: String,
+        subtitle: String,
     ): Boolean {
         if (event.player.gameMode == GameMode.CREATIVE || event.player.gameMode == GameMode.SPECTATOR) {
             return true
@@ -129,7 +140,19 @@ internal object PortalMechanic : MechanicInterface {
 
         if (!event.player.inventory.contains(keyItem())) {
             event.isCancelled = true
-            event.player.sendActionBar(MM.deserialize(errorMessage))
+            event.player.showTitle(
+                Title.title(
+                    MM.deserialize(title),
+                    MM.deserialize(subtitle),
+                ),
+            )
+            event.player.velocity =
+                event
+                    .player
+                    .location
+                    .direction
+                    .multiply(-PUSHBACK_STRENGTH)
+                    .setY(PUSHBACK_UPWARD)
             return false
         }
 
