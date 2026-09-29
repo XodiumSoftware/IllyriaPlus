@@ -11,10 +11,11 @@ Traveling to certain dimensions requires holding a special key item in your inve
 - **Nether** requires the **Incendium Key**
 - **The End** requires the **Nullscape Key**
 
-Attempting to enter a dimension without its key displays an error message and blocks the teleport.
-One key is **consumed** per successful trip to the dimension — returning to the Overworld does not
-consume additional keys. Players in creative or spectator mode are exempt from the key requirement
-and do not consume keys.
+Stepping into a portal without its key instantly rejects you: an on-screen warning appears, you
+are pushed back out of the portal, and a burst of portal particles plays. One key is **consumed**
+per successful trip to the dimension — returning to the Overworld does not consume additional
+keys. Players in creative or spectator mode are exempt from the key requirement and do not consume
+keys.
 
 Keys are craftable using Overworld materials (see [Recipes](../recipes/index.md)).
 

@@ -40,6 +40,12 @@ internal object PortalMechanic : MechanicInterface {
     /** Spread (offset radius) of the rejection particles around the player. */
     private const val REJECT_PARTICLE_SPREAD = 0.6
 
+    /**
+     * Portal cooldown (in ticks) applied after a rejection, so the player is not spammed with the
+     * rejection effect every tick while standing in a portal.
+     */
+    private const val REJECT_COOLDOWN_TICKS = 40
+
     @EventHandler(ignoreCancelled = true)
     fun on(event: PortalCreateEvent) {
         val location = event.blocks.firstOrNull()?.location ?: return
@@ -82,11 +88,62 @@ internal object PortalMechanic : MechanicInterface {
 
     @EventHandler(ignoreCancelled = true)
     fun on(event: EntityPortalEnterEvent) {
+        val player =
+            event.entity as? Player ?: run {
+                if (cancelPortal(event.location)) event.isCancelled = true
+                return
+            }
         if (cancelPortal(event.location)) {
             event.isCancelled = true
-            portalCancelledMessage(event.entity as? Player ?: return)
+            portalCancelledMessage(player)
+            return
         }
+
+        val blockType = event.location.block.type
+        if (player.gameMode == GameMode.CREATIVE || player.gameMode == GameMode.SPECTATOR) return
+        if (player.portalCooldown > 0) return
+
+        // Only check portals that lead to a key-gated dimension; other blocks (and other portal
+        // types) are ignored.
+        val portalInfo =
+            when (blockType) {
+                Material.NETHER_PORTAL ->
+                    PortalInfo(
+                        World.Environment.NETHER,
+                        IncendiumKeyItem,
+                        "<mango>You need the Incendium Key!</gradient>",
+                        "<red>Find one to unlock the Nether</red>",
+                    )
+
+                Material.END_PORTAL ->
+                    PortalInfo(
+                        World.Environment.THE_END,
+                        NullscapeKeyItem,
+                        "<mango>You need the Nullscape Key!</gradient>",
+                        "<red>Find one to unlock the End</red>",
+                    )
+
+                else -> return
+            }
+
+        // Only reject when traveling toward the gated dimension (e.g. a Nether portal in the
+        // Overworld). Traveling back from the Nether/End never requires a key.
+        val fromEnvironment = event.location.world?.environment ?: return
+        if (fromEnvironment == portalInfo.targetEnvironment) return
+
+        if (player.inventory.contains(portalInfo.keyItem())) return
+
+        player.portalCooldown = REJECT_COOLDOWN_TICKS
+        rejectPlayer(player, event.location, portalInfo.title, portalInfo.subtitle)
     }
+
+    /** Holds the key requirement data for a key-gated portal type. */
+    private data class PortalInfo(
+        val targetEnvironment: World.Environment,
+        val keyItem: ItemInterface,
+        val title: String,
+        val subtitle: String,
+    )
 
     @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerInteractEvent) {
@@ -147,28 +204,7 @@ internal object PortalMechanic : MechanicInterface {
 
         if (!event.player.inventory.contains(keyItem())) {
             event.isCancelled = true
-            event.player.showTitle(
-                Title.title(
-                    MM.deserialize(title),
-                    MM.deserialize(subtitle),
-                ),
-            )
-            event.player.velocity =
-                event
-                    .player
-                    .location
-                    .direction
-                    .multiply(-PUSHBACK_STRENGTH)
-                    .setY(PUSHBACK_UPWARD)
-            val particleCenter = event.player.location.add(0.0, 1.0, 0.0)
-            event.player.world.spawnParticle(
-                Particle.REVERSE_PORTAL,
-                particleCenter,
-                REJECT_PARTICLE_COUNT,
-                REJECT_PARTICLE_SPREAD,
-                REJECT_PARTICLE_SPREAD,
-                REJECT_PARTICLE_SPREAD,
-            )
+            rejectPlayer(event.player, event.from, title, subtitle)
             return false
         }
 
@@ -184,6 +220,61 @@ internal object PortalMechanic : MechanicInterface {
         }
 
         return true
+    }
+
+    /**
+     * Rejects a player from a portal: shows the key requirement as a title with subtitle, pushes
+     * them away from the portal, and bursts reverse-portal particles around them.
+     *
+     * The pushback direction is computed from the portal block toward the player (falling back to
+     * the inverse of the player's look direction when the player is centered on the block), so the
+     * player is always pushed out of the portal regardless of facing.
+     *
+     * @param player The player being rejected.
+     * @param portalLocation The location of the portal block the player entered.
+     * @param title The MiniMessage formatted title to display.
+     * @param subtitle The MiniMessage formatted subtitle to display.
+     */
+    private fun rejectPlayer(
+        player: Player,
+        portalLocation: Location,
+        title: String,
+        subtitle: String,
+    ) {
+        player.showTitle(
+            Title.title(
+                MM.deserialize(title),
+                MM.deserialize(subtitle),
+            ),
+        )
+        val away =
+            player
+                .location
+                .toVector()
+                .subtract(portalLocation.toCenterLocation().toVector())
+                .setY(0.0)
+        val direction =
+            if (away.lengthSquared() < 1.0e-6) {
+                player
+                    .location
+                    .direction
+                    .setY(0)
+                    .multiply(-1.0)
+            } else {
+                away.normalize()
+            }
+        player.velocity =
+            direction
+                .multiply(PUSHBACK_STRENGTH)
+                .setY(PUSHBACK_UPWARD)
+        player.world.spawnParticle(
+            Particle.REVERSE_PORTAL,
+            player.location.add(0.0, 1.0, 0.0),
+            REJECT_PARTICLE_COUNT,
+            REJECT_PARTICLE_SPREAD,
+            REJECT_PARTICLE_SPREAD,
+            REJECT_PARTICLE_SPREAD,
+        )
     }
 
     /**
