@@ -111,10 +111,6 @@ internal object MessagesMechanic : MechanicInterface {
 
 Enhances base gameplay with custom enchantments, items, and mechanics.
 
-### Wandering Trader Shop
-
-Wandering traders open a custom shop GUI instead of their vanilla trades. The stock is shared globally, persists across restarts, and starts empty — it is filled by players selling items via the Sell items button. Any item except emeralds and emerald blocks is accepted. Prices start at 2 emeralds per item and drift with supply and demand (every 32 net items bought or sold shifts the price by one emerald, clamped to 1-64, re-priced per item within bulk trades); selling pays out at half the current price. Left-click buys one unit, middle-click ten, right-click a hundred (capped by stock and balance). The shop view refreshes live for all players viewing it.
-
 ### Enchantments
 
 Custom enchantments are divided into two groups:

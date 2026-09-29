@@ -23,7 +23,6 @@
 |                     | foojay-resolver 1.0.0                            | Auto-download JVM toolchains       |
 |                     | ktlint 12.3.0                                    | Kotlin linting                     |
 | **Text Formatting** | MiniMessage                                      | Adventure API component-based text |
-| **GUI Framework**   | [InvUI](https://docs.xenondevs.xyz/invui/) 2.3.2 | Inventory window GUIs              |
 | **Code Style**      | ktlint                                           | Kotlin linting (IDE plugin)        |
 
 ### Paper API Resources

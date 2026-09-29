@@ -99,7 +99,6 @@ internal class IllyriaCore : JavaPlugin() {
                 TreeMechanic,
                 RulesMechanic,
                 ResourcePackMechanic,
-                WanderingTraderMechanic,
             )
 
         logger.info(
