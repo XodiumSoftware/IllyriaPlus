@@ -1,12 +1,14 @@
 package org.xodium.illyriacore.mechanics.world
 
 import org.bukkit.Location
+import org.bukkit.World
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityPortalEnterEvent
 import org.bukkit.event.player.PlayerPortalEvent
+import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.event.world.PortalCreateEvent
-import org.xodium.illyriacore.IllyriaCore
+import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.mechanics.MechanicInterface
 import org.xodium.illyrialib.Utils.MM
 
@@ -26,7 +28,10 @@ internal object NetherPortalMechanic : MechanicInterface {
         if (cancelPortal(event.from)) {
             event.isCancelled = true
             portalCancelledMessage(event.player)
+            return
         }
+        if (event.cause != PlayerTeleportEvent.TeleportCause.NETHER_PORTAL) return
+        linkPortal(event)
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -46,8 +51,34 @@ internal object NetherPortalMechanic : MechanicInterface {
     private fun cancelPortal(location: Location): Boolean {
         val world = location.world ?: return true
         val spawn = world.spawnLocation
-        val radius = IllyriaCore.instance.server.spawnRadius
+        val radius = instance.server.spawnRadius
         return radius > 0 && location.distanceSquared(spawn) > radius * radius
+    }
+
+    /**
+     * Links the portal teleport to the counterpart world's spawn location.
+     *
+     * Overworld spawn portals teleport to the Nether world spawn, and Nether spawn portals teleport
+     * to the Overworld spawn. This bypasses vanilla portal searching/creation to guarantee the pair
+     * always link to each other regardless of the overworld spawn offset.
+     *
+     * @param event The [PlayerPortalEvent] to redirect.
+     */
+    private fun linkPortal(event: PlayerPortalEvent) {
+        val targetEnvironment =
+            when (event.from.world?.environment) {
+                World.Environment.NORMAL -> World.Environment.NETHER
+                World.Environment.NETHER -> World.Environment.NORMAL
+                else -> return
+            }
+        val targetWorld =
+            instance
+                .server
+                .worlds
+                .find { it.environment == targetEnvironment } ?: return
+        event.canCreatePortal = false
+        event.searchRadius = 0
+        event.to = targetWorld.spawnLocation
     }
 
     /**
