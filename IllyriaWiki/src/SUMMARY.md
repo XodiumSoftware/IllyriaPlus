@@ -38,7 +38,6 @@
 - [Entity Tweaks](gameplay/entity-tweaks.md)
 - [Openable Blocks](gameplay/openables.md)
 - [Pet Transfer](gameplay/tameable.md)
-- [Tool Trims](gameplay/tool-trims.md)
 - [Tree Mechanics](gameplay/trees.md)
 
 # Recipes

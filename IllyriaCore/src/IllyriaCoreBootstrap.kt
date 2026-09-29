@@ -144,7 +144,9 @@ internal class IllyriaCoreBootstrap : PluginBootstrap {
             registerEventHandler(LifecycleEvents.TAGS.postFlatten(RegistryKey.ITEM)) { event ->
                 event.registrar().addToTag(
                     ItemTypeTagKeys.TRIMMABLE_ARMOR,
-                    listOf(ItemTypeKeys.ELYTRA),
+                    listOf(
+                        ItemTypeKeys.ELYTRA,
+                    ),
                 )
             }
 

@@ -20,5 +20,4 @@ folder.
 - Custom painting variants
 - Boss bar icons
 - Trimmed elytra textures (see [Elytra Trims](../gameplay/elytra-trims.md))
-- Trimmed tool sprites (see [Tool Trims](../gameplay/tool-trims.md))
 - UI and text overrides
