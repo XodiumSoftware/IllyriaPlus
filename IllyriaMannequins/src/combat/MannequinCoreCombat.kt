@@ -104,6 +104,7 @@ internal object MannequinCoreCombat : Listener {
         if (victim is Mannequin) {
             if (damager.uniqueId == victim.owner) return
             if (victim.combatMode == CombatMode.FLEEING) return
+            if (damager is Mannequin && damager.owner == victim.owner) return
             if ((isEngaged(victim) || isDefensive(victim)) && hasShield(victim)) {
                 event.isCancelled = true
                 damageShield(victim)
@@ -227,6 +228,7 @@ internal object MannequinCoreCombat : Listener {
         victim: LivingEntity,
     ) {
         if (victim.uniqueId == owner.uniqueId) return
+        if (victim is Mannequin && victim.owner == owner.uniqueId) return
         owner
             .world
             .entities
@@ -246,6 +248,7 @@ internal object MannequinCoreCombat : Listener {
         owner: Player,
         attacker: LivingEntity,
     ) {
+        if (attacker is Mannequin && attacker.owner == owner.uniqueId) return
         owner
             .world
             .entities
