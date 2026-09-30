@@ -6,7 +6,6 @@ plugins {
     kotlin("jvm")
 
     id("com.gradleup.shadow")
-    id("io.papermc.paperweight.userdev")
     id("xyz.jpenilla.run-paper")
     id("xyz.jpenilla.resource-factory-paper-convention")
     id("org.jlleitschuh.gradle.ktlint")
@@ -20,9 +19,9 @@ val buildNumber =
         .asText
         .map { it.trim() }
 
-group = "org.xodium.illyriaquests"
+group = "org.xodium.illyrianpcs"
 version = "$mcVersion+build.${buildNumber.get()}"
-description = "Questing system for the IllyriaPlus ecosystem"
+description = "NPC system for the IllyriaPlus ecosystem"
 
 repositories {
     mavenCentral()
@@ -32,7 +31,7 @@ repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("$mcVersion.build.+")
+    compileOnly("io.papermc.paper:paper-api:$mcVersion.build.+")
     compileOnly("com.google.code.gson:gson:2.14.0")
 
     implementation(project(":IllyriaLib"))
@@ -64,7 +63,7 @@ ktlint {
 
 tasks {
     shadowJar {
-        archiveBaseName.set("IllyriaQuests")
+        archiveBaseName.set("IllyriaNPCs")
         archiveClassifier.set("")
         relocate("org.xodium.illyrialib", "${project.group}.libs.illyrialib")
         minimize()
@@ -79,8 +78,8 @@ tasks {
 }
 
 paperPluginYaml {
-    main.set("org.xodium.illyriaquests.IllyriaQuests")
-    name.set("IllyriaQuests")
+    main.set("org.xodium.illyrianpcs.IllyriaNPCs")
+    name.set("IllyriaNPCs")
     website.set("https://github.com/XodiumSoftware/IllyriaPlus")
     authors.add("Xodium")
     apiVersion.set(mcVersion)
