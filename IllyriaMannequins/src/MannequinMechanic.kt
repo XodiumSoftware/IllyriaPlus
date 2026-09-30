@@ -19,7 +19,7 @@ internal object MannequinMechanic : Listener {
             event.registrar().register(
                 Commands
                     .literal("mannequin")
-                    .requires { it.sender is Player }
+                    .requires { it.sender is Player && it.sender.isOp }
                     .executes { ctx ->
                         spawnMannequin(ctx.source.sender as Player)
                         Command.SINGLE_SUCCESS
@@ -32,9 +32,8 @@ internal object MannequinMechanic : Listener {
 
     @EventHandler
     fun on(event: PlayerInteractAtEntityEvent) {
-        val entity = event.rightClicked as? Mannequin ?: return
-        // TODO: Open dialogue
-        instance.logger.info("${event.player.name} interacted with Mannequin")
+        val mannequin = event.rightClicked as? Mannequin ?: return
+        MannequinEditDialog.show(event.player, mannequin)
     }
 
     /**
