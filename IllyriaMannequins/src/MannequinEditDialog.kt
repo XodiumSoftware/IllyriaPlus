@@ -28,7 +28,7 @@ internal object MannequinEditDialog {
     private const val SKIN_LABEL = "<gray>Skin (player name)"
     private const val NAME_LABEL = "<gray>Name"
     private const val DESCRIPTION_LABEL = "<gray>Description"
-    private const val FOLLOW_LABEL = "<gray>Follow Players"
+    private const val FOLLOW_LABEL = "<gray>Follow"
     private const val MAIN_HAND_LABEL = "<gray>Main Hand"
     private const val DISCARD_BUTTON = "<red>Discard</red>"
     private const val SAVE_BUTTON = "<green>Save</green>"

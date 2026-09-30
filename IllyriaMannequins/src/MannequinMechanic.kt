@@ -20,14 +20,14 @@ internal object MannequinMechanic : Listener {
     /** The squared distance within which mannequins track players with their heads. */
     private const val TRACKING_RANGE_SQUARED = 64.0
 
-    /** The squared distance within which following mannequins move toward players. */
-    private const val FOLLOW_RANGE_SQUARED = 256.0
-
-    /** The squared distance at which a following mannequin stops moving toward its target. */
+    /** The squared distance at which a following mannequin stops moving toward its owner. */
     private const val FOLLOW_STOP_RANGE_SQUARED = 4.0
 
-    /** The movement speed in blocks per tick for following mannequins. */
-    private const val FOLLOW_SPEED = 0.075
+    /** The squared distance beyond which a following mannequin teleports to its owner. */
+    private const val FOLLOW_TELEPORT_RANGE_SQUARED = 144.0
+
+    /** The movement speed in blocks per tick for following mannequins (player walking speed). */
+    private const val FOLLOW_SPEED = 0.21585
 
     /** The interval in ticks at which mannequin head tracking updates. */
     private const val TRACKING_INTERVAL_TICKS = 2L
@@ -80,25 +80,31 @@ internal object MannequinMechanic : Listener {
                     target.eyeLocation.let { eyes ->
                         mannequin.lookAt(eyes.x(), eyes.y(), eyes.z(), LookAnchor.EYES)
                     }
-                    if (mannequin.following) followTarget(mannequin, target)
+                    if (mannequin.following) followOwner(mannequin)
                 }
         }
     }
 
     /**
-     * Moves a mannequin toward its target player if it is within follow range.
+     * Moves a mannequin toward its owner like a tamed wolf, teleporting when too far away.
      *
      * @param mannequin The mannequin to move.
-     * @param target The player to follow.
      */
-    private fun followTarget(
-        mannequin: Mannequin,
-        target: Player,
-    ) {
+    private fun followOwner(mannequin: Mannequin) {
+        val owner = mannequin.owner?.let { instance.server.getPlayer(it) } ?: return
+        if (!visible(owner, mannequin)) return
+        if (owner.world != mannequin.world) {
+            mannequin.teleport(owner.location)
+            return
+        }
         val here = mannequin.location
-        val distanceSquared = here.distanceSquared(target.location)
-        if (distanceSquared !in FOLLOW_STOP_RANGE_SQUARED..FOLLOW_RANGE_SQUARED) return
-        val step = target.location.toVector().subtract(here.toVector()).setY(0)
+        val distanceSquared = here.distanceSquared(owner.location)
+        if (distanceSquared <= FOLLOW_STOP_RANGE_SQUARED) return
+        if (distanceSquared > FOLLOW_TELEPORT_RANGE_SQUARED) {
+            mannequin.teleport(owner.location)
+            return
+        }
+        val step = owner.location.toVector().subtract(here.toVector()).setY(0)
         if (step.lengthSquared() == 0.0) return
         step.normalize().multiply(FOLLOW_SPEED)
         mannequin.teleport(
@@ -117,23 +123,24 @@ internal object MannequinMechanic : Listener {
      */
     private fun findNearestPlayer(mannequin: Mannequin): Player? =
         mannequin.world.players
-            .filter { trackableBy(it, mannequin) }
-            .minByOrNull { it.location.distanceSquared(mannequin.location) }
+            .filter {
+                visible(it, mannequin) &&
+                    it.location.distanceSquared(mannequin.location) <= TRACKING_RANGE_SQUARED
+            }.minByOrNull { it.location.distanceSquared(mannequin.location) }
 
     /**
-     * Checks if a player is trackable by a mannequin.
+     * Checks if a player is visible to a mannequin.
      *
      * @param player The player to check.
      * @param mannequin The mannequin doing the tracking.
-     * @return `true` if the player can be tracked.
+     * @return `true` if the player is visible to the mannequin.
      */
-    private fun trackableBy(
+    private fun visible(
         player: Player,
         mannequin: Entity,
     ): Boolean =
         !player.isDead &&
             player.isOnline &&
             player.uniqueId != mannequin.uniqueId &&
-            !player.isInvisible &&
-            player.location.distanceSquared(mannequin.location) <= TRACKING_RANGE_SQUARED
+            !player.isInvisible
 }
