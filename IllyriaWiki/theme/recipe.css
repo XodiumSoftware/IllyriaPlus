@@ -16,8 +16,7 @@
    ======================================================================== */
 
 .crafting-recipe,
-.furnace-recipe,
-.blast-furnace-recipe {
+.smelting-recipe {
     position: relative;
     display: inline-block;
     margin: 1rem 0;
@@ -34,18 +33,18 @@
     background-size: 260px 132px;
 }
 
-.furnace-recipe {
+/* All smelting-style recipes use the blast furnace GUI crop; the type block
+   above the progress bar communicates which station it actually needs. */
+.smelting-recipe {
     width: 210px;
     height: 130px;
-    background-image: url("/img/gui/furnace_workstation.png");
+    background-image: url("/img/gui/smelting_workstation.png");
     background-size: 210px 130px;
 }
 
-.blast-furnace-recipe {
-    width: 210px;
-    height: 130px;
-    background-image: url("/img/gui/blast_furnace_workstation.png");
-    background-size: 210px 130px;
+/* Recipes that burn the item show the lit flame under the input slot. */
+.smelting-recipe.lit {
+    background-image: url("/img/gui/smelting_workstation_lit.png");
 }
 
 /* Stonecutter recipes are shown as input slot | block model | output slot
@@ -99,22 +98,18 @@
    size is 32x32 px (16x16 logical, 2x scale). */
 
 .crafting-recipe img,
-.furnace-recipe img,
-.blast-furnace-recipe img,
+.smelting-recipe img,
 .crafting-recipe .crafting-item,
-.furnace-recipe .crafting-item,
-.blast-furnace-recipe .crafting-item {
+.smelting-recipe .crafting-item {
     position: absolute;
     width: 32px;
     height: 32px;
 }
 
 .crafting-recipe img,
-.furnace-recipe img,
-.blast-furnace-recipe img,
+.smelting-recipe img,
 .crafting-recipe .crafting-item img,
-.furnace-recipe .crafting-item img,
-.blast-furnace-recipe .crafting-item img {
+.smelting-recipe .crafting-item img {
     width: 32px;
     height: 32px;
     object-fit: contain;
@@ -136,11 +131,13 @@
     position: static !important;
 }
 
-.crafting-item[data-tooltip] {
+.crafting-item[data-tooltip],
+.furnace-type[data-tooltip] {
     cursor: help;
 }
 
-.crafting-item[data-tooltip]::after {
+.crafting-item[data-tooltip]::after,
+.furnace-type[data-tooltip]::after {
     content: attr(data-tooltip);
     position: absolute;
     z-index: 1000;
@@ -178,7 +175,8 @@
         visibility 80ms ease;
 }
 
-.crafting-item[data-tooltip]:hover::after {
+.crafting-item[data-tooltip]:hover::after,
+.furnace-type[data-tooltip]:hover::after {
     opacity: 1;
     visibility: visible;
 }
@@ -230,22 +228,42 @@
     top: 50px;
 }
 
-/* Furnace + blast-furnace (input top, fuel bottom, output right) */
+/* Recipe-block icon above the progress bar (bar spans x 105-153, y 49-55
+   in the 2x crop). Shares the .crafting-item tooltip styling. */
+.furnace-type,
+.smelting-recipe .crafting-item {
+    position: absolute;
+    display: block;
+}
 
-.furnace-recipe .pos-input,
-.blast-furnace-recipe .pos-input {
+.furnace-type {
+    left: 113px;
+    top: 7px;
+    width: 32px;
+    height: 32px;
+}
+
+.furnace-type img {
+    width: 32px;
+    height: 32px;
+    image-rendering: pixelated;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Smelting (input top, fuel bottom, output right) */
+
+.smelting-recipe .pos-input {
     left: 35px;
     top: 16px;
 }
 
-.furnace-recipe .pos-fuel,
-.blast-furnace-recipe .pos-fuel {
+.smelting-recipe .pos-fuel {
     left: 35px;
     top: 88px;
 }
 
-.furnace-recipe .pos-output,
-.blast-furnace-recipe .pos-output {
+.smelting-recipe .pos-output {
     left: 154px;
     top: 50px;
 }
@@ -255,8 +273,7 @@
    ======================================================================== */
 
 .crafting-recipe .crafting-item::before,
-.furnace-recipe .crafting-item::before,
-.blast-furnace-recipe .crafting-item::before,
+.smelting-recipe .crafting-item::before,
 .stonecutter-recipe .crafting-item::before {
     content: "";
     position: absolute;
@@ -270,8 +287,7 @@
 }
 
 .crafting-recipe .crafting-item:hover::before,
-.furnace-recipe .crafting-item:hover::before,
-.blast-furnace-recipe .crafting-item:hover::before,
+.smelting-recipe .crafting-item:hover::before,
 .stonecutter-recipe .crafting-item:hover::before {
     opacity: 1;
 }
@@ -305,4 +321,27 @@
     pointer-events: none;
 }
 
-/* (tooltips are now defined near the .crafting-item block above) */
+/* ========================================================================
+   Global font application
+   ======================================================================== */
+
+/* Apply IllyriaRP globally. */
+body {
+    font-family: "IllyriaRP", "Open Sans", sans-serif;
+}
+
+pre,
+code,
+tt {
+    font-family: var(--mono-font) !important;
+}
+
+/* Minecraft-style hard drop shadow on headings. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    text-shadow: 2px 2px 0 rgb(0 0 0 / 60%);
+}

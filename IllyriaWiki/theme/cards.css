@@ -35,12 +35,16 @@
     flex-direction: column;
     align-items: flex-start;
     padding: 1.5rem 1.75rem;
-    border: 1px solid var(--table-border-color);
-    border-radius: 10px;
+    border: 4px solid transparent;
+    border-image: url("/img/gui/tooltip_frame.png") 2 / 4px / 0 stretch;
+    border-radius: 0;
     background-color: var(--sidebar-bg);
     color: var(--fg);
     text-decoration: none;
-    transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+    transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease,
+        border-color 0.12s ease;
 }
 
 .card:hover {
@@ -77,4 +81,42 @@
     font-size: 1rem;
     color: var(--fg);
     opacity: 0.75;
+    width: 100%;
+}
+
+/* Recipe cards are not links: they hold a recipe render as the description. */
+.card.recipe-card {
+    cursor: default;
+}
+
+/* Recipe grid uses a fixed 4-column layout (not the auto-fill of Introduction). */
+.recipe-grid {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.card.recipe-card:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.card.recipe-card .card-title {
+    font-family: "IllyriaRP", monospace;
+    font-weight: normal;
+    /* Minecraft-style hard drop shadow */
+    text-shadow: 2px 2px 0 rgb(0 0 0 / 60%);
+    font-smooth: never;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: unset;
+}
+
+/* Footnote superscripts shrink inside the pixel font. */
+.card.recipe-card .card-title sup,
+.card.recipe-card .card-title .footnote-reference {
+    font-size: 0.6em;
+}
+
+.card.recipe-card .card-desc {
+    display: flex;
+    justify-content: center;
+    opacity: 1;
 }
