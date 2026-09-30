@@ -16,6 +16,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.MainHand
 import org.xodium.illyrialib.Utils.MM
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
+import org.xodium.illyriamannequins.MannequinPDC.following
 import org.xodium.illyriamannequins.MannequinPDC.owner
 
 /** Dialog for editing a mannequin's properties. */
@@ -27,7 +28,7 @@ internal object MannequinEditDialog {
     private const val SKIN_LABEL = "<gray>Skin (player name)"
     private const val NAME_LABEL = "<gray>Name"
     private const val DESCRIPTION_LABEL = "<gray>Description"
-    private const val IMMOVABLE_LABEL = "<gray>Immovable"
+    private const val FOLLOW_LABEL = "<gray>Follow Players"
     private const val MAIN_HAND_LABEL = "<gray>Main Hand"
     private const val DISCARD_BUTTON = "<red>Discard</red>"
     private const val SAVE_BUTTON = "<green>Save</green>"
@@ -37,7 +38,7 @@ internal object MannequinEditDialog {
         SKIN,
         NAME,
         DESCRIPTION,
-        IMMOVABLE,
+        FOLLOW,
         MAIN_HAND,
         ;
 
@@ -87,8 +88,8 @@ internal object MannequinEditDialog {
                                         .maxLength(4096)
                                         .build(),
                                     DialogInput
-                                        .bool(Input.IMMOVABLE.key, MM.deserialize(IMMOVABLE_LABEL))
-                                        .initial(mannequin.isImmovable)
+                                        .bool(Input.FOLLOW.key, MM.deserialize(FOLLOW_LABEL))
+                                        .initial(mannequin.following)
                                         .build(),
                                     DialogInput
                                         .singleOption(
@@ -128,8 +129,7 @@ internal object MannequinEditDialog {
                                 .action(
                                     DialogAction.customClick(
                                         { response, _ ->
-                                            mannequin.isImmovable =
-                                                response.getBoolean(Input.IMMOVABLE.key) ?: mannequin.isImmovable
+                                            response.getBoolean(Input.FOLLOW.key)?.let { mannequin.following = it }
                                             response.getText(Input.MAIN_HAND.key)?.let { hand ->
                                                 mannequin.mainHand =
                                                     MainHand.entries.first { it.name.lowercase() == hand }

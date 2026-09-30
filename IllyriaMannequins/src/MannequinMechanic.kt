@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
+import org.xodium.illyriamannequins.MannequinPDC.following
 import org.xodium.illyriamannequins.MannequinPDC.owner
 
 /** Manages the mannequin and its interactions. */
@@ -18,6 +19,15 @@ import org.xodium.illyriamannequins.MannequinPDC.owner
 internal object MannequinMechanic : Listener {
     /** The squared distance within which mannequins track players with their heads. */
     private const val TRACKING_RANGE_SQUARED = 64.0
+
+    /** The squared distance within which following mannequins move toward players. */
+    private const val FOLLOW_RANGE_SQUARED = 256.0
+
+    /** The squared distance at which a following mannequin stops moving toward its target. */
+    private const val FOLLOW_STOP_RANGE_SQUARED = 4.0
+
+    /** The movement speed in blocks per tick for following mannequins. */
+    private const val FOLLOW_SPEED = 0.075
 
     /** The interval in ticks at which mannequin head tracking updates. */
     private const val TRACKING_INTERVAL_TICKS = 2L
@@ -60,19 +70,43 @@ internal object MannequinMechanic : Listener {
     private fun spawnMannequin(player: Player) =
         player.world.spawn(player.location, Mannequin::class.java) { it.owner = player.uniqueId }
 
-    /** Makes all mannequins look at the nearest trackable player within range. */
+    /** Makes all mannequins track, and following mannequins approach, the nearest player. */
     private fun updateHeadTracking() {
         instance.server.worlds.forEach { world ->
             world.entities
                 .filterIsInstance<Mannequin>()
                 .forEach { mannequin ->
-                    findNearestPlayer(mannequin)
-                        ?.eyeLocation
-                        ?.let { playerEyes ->
-                            mannequin.lookAt(playerEyes.x(), playerEyes.y(), playerEyes.z(), LookAnchor.EYES)
-                        }
+                    val target = findNearestPlayer(mannequin) ?: return@forEach
+                    target.eyeLocation.let { eyes ->
+                        mannequin.lookAt(eyes.x(), eyes.y(), eyes.z(), LookAnchor.EYES)
+                    }
+                    if (mannequin.following) followTarget(mannequin, target)
                 }
         }
+    }
+
+    /**
+     * Moves a mannequin toward its target player if it is within follow range.
+     *
+     * @param mannequin The mannequin to move.
+     * @param target The player to follow.
+     */
+    private fun followTarget(
+        mannequin: Mannequin,
+        target: Player,
+    ) {
+        val here = mannequin.location
+        val distanceSquared = here.distanceSquared(target.location)
+        if (distanceSquared !in FOLLOW_STOP_RANGE_SQUARED..FOLLOW_RANGE_SQUARED) return
+        val step = target.location.toVector().subtract(here.toVector()).setY(0)
+        if (step.lengthSquared() == 0.0) return
+        step.normalize().multiply(FOLLOW_SPEED)
+        mannequin.teleport(
+            here.clone().add(step).apply {
+                yaw = here.yaw
+                pitch = here.pitch
+            },
+        )
     }
 
     /**
