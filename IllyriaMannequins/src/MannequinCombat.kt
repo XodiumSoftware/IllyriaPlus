@@ -2,13 +2,15 @@ package org.xodium.illyriamannequins
 
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Mannequin
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
+import org.xodium.illyriamannequins.MannequinPDC.owner
 import java.util.UUID
 
-/** Makes mannequins retaliate against entities that attack them. */
+/** Makes mannequins retaliate against attackers and fight their owner's targets. */
 @Suppress("UnstableApiUsage")
 internal object MannequinCombat : Listener {
     /** The squared distance within which a mannequin performs a melee attack. */
@@ -53,9 +55,68 @@ internal object MannequinCombat : Listener {
 
     @EventHandler
     fun on(event: EntityDamageByEntityEvent) {
-        val mannequin = event.entity as? Mannequin ?: return
         val damager = event.damager as? LivingEntity ?: return
-        targets[mannequin.uniqueId] = damager
+        val victim = event.entity as? LivingEntity ?: return
+        val mannequin = event.entity as? Mannequin
+        if (mannequin != null && damager.uniqueId != mannequin.owner) {
+            engage(mannequin, damager)
+        }
+        if (damager is Player) {
+            engageOwnerMannequins(damager, victim)
+        }
+        if (victim is Player) {
+            defendOwner(victim, damager)
+        }
+    }
+
+    /**
+     * Makes all mannequins owned by a player attack the player's attacker.
+     *
+     * @param owner The player whose mannequins to engage.
+     * @param attacker The entity attacking the player.
+     */
+    private fun defendOwner(
+        owner: Player,
+        attacker: LivingEntity,
+    ) {
+        owner
+            .world
+            .entities
+            .filterIsInstance<Mannequin>()
+            .filter { it.owner == owner.uniqueId && it.uniqueId != attacker.uniqueId }
+            .forEach { engage(it, attacker) }
+    }
+
+    /**
+     * Makes all mannequins owned by a player attack the player's victim.
+     *
+     * @param owner The player whose mannequins to engage.
+     * @param victim The entity the player attacked.
+     */
+    private fun engageOwnerMannequins(
+        owner: Player,
+        victim: LivingEntity,
+    ) {
+        if (victim.uniqueId == owner.uniqueId) return
+        owner
+            .world
+            .entities
+            .filterIsInstance<Mannequin>()
+            .filter { it.owner == owner.uniqueId && it.uniqueId != victim.uniqueId }
+            .forEach { engage(it, victim) }
+    }
+
+    /**
+     * Assigns a combat target to a mannequin and starts its attack cooldown.
+     *
+     * @param mannequin The mannequin to engage.
+     * @param target The entity to attack.
+     */
+    private fun engage(
+        mannequin: Mannequin,
+        target: LivingEntity,
+    ) {
+        targets[mannequin.uniqueId] = target
         cooldowns[mannequin.uniqueId] = ATTACK_COOLDOWN_TICKS
     }
 
