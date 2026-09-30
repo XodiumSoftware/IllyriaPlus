@@ -1,5 +1,6 @@
 package org.xodium.illyriamannequins
 
+import io.papermc.paper.datacomponent.item.ResolvableProfile
 import io.papermc.paper.dialog.Dialog
 import io.papermc.paper.registry.data.dialog.ActionButton
 import io.papermc.paper.registry.data.dialog.DialogBase
@@ -57,6 +58,10 @@ internal object MannequinEditDialog {
                                         .initial(mannequin.customName()?.let { MM.serialize(it) } ?: "")
                                         .build(),
                                     DialogInput
+                                        .text("skin", MM.deserialize("<gray>Skin (player name)"))
+                                        .initial(mannequin.profile?.name() ?: "")
+                                        .build(),
+                                    DialogInput
                                         .bool("immovable", MM.deserialize("<gray>Immovable"))
                                         .initial(mannequin.isImmovable)
                                         .build(),
@@ -91,6 +96,13 @@ internal object MannequinEditDialog {
                                                     mannequin.customName(MM.deserialize(name))
                                                     mannequin.isCustomNameVisible = true
                                                 }
+                                            }
+                                            response.getText("skin")?.let { skin ->
+                                                val profile = ResolvableProfile.resolvableProfile()
+                                                if (skin.isNotBlank()) {
+                                                    profile.name(skin)
+                                                }
+                                                mannequin.profile = profile.build()
                                             }
                                         },
                                         ClickCallback
