@@ -101,6 +101,8 @@ internal object MannequinCoreCombat : Listener {
             if ((isEngaged(victim) || isDefensive(victim)) && hasShield(victim)) {
                 event.isCancelled = true
                 damageShield(victim)
+            } else {
+                damageArmor(victim)
             }
             defending.remove(victim.uniqueId)
             engage(victim, damager)
@@ -193,6 +195,19 @@ internal object MannequinCoreCombat : Listener {
     private fun damageShield(mannequin: Mannequin) {
         mannequin.world.playSound(mannequin.location, Sound.ITEM_SHIELD_BLOCK, 1.0f, 1.0f)
         mannequin.damageItemStack(EquipmentSlot.OFF_HAND, 1)
+    }
+
+    /**
+     * Chips the durability of all armor worn by a mannequin.
+     *
+     * @param mannequin The mannequin whose armor to damage.
+     */
+    private fun damageArmor(mannequin: Mannequin) {
+        EquipmentSlot
+            .entries
+            .filter { it.isArmor }
+            .filterNot { mannequin.equipment.getItem(it).isEmpty }
+            .forEach { mannequin.damageItemStack(it, 1) }
     }
 
     /**
