@@ -16,7 +16,7 @@ internal class IllyriaNPCs : JavaPlugin() {
 
         instance = this
 
-        QuestNpcMechanic.register()
+        MannequinMechanic.register()
 
         UpdateChecker(this).check()
     }

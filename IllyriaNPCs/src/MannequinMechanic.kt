@@ -14,27 +14,21 @@ import org.xodium.illyrianpcs.IllyriaNPCs.Companion.instance
 
 /** Manages the quest mannequin NPC and its interactions. */
 @Suppress("UnstableApiUsage")
-internal object QuestNpcMechanic : Listener {
+internal object MannequinMechanic : Listener {
     private val NPC_NAME: Component = Component.text("Quest Giver")
 
-    /** Registers the quest command and event listeners. */
+    /** Registers the NPC command and event listeners. */
     fun register() {
         instance.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) { event ->
             event.registrar().register(
                 Commands
-                    .literal("quests")
-                    .then(
-                        Commands
-                            .literal("npc")
-                            .requires { it.sender is Player }
-                            .executes { ctx ->
-                                val player = ctx.source.sender as Player
-                                spawnNpc(player)
-                                Command.SINGLE_SUCCESS
-                            },
-                    ).build(),
-                "Quest management",
-                listOf("q"),
+                    .literal("npc")
+                    .requires { it.sender is Player }
+                    .executes { ctx ->
+                        spawnNpc(ctx.source.sender as Player)
+                        Command.SINGLE_SUCCESS
+                    }.build(),
+                "Spawn a mannequin NPC at your location",
             )
         }
         instance.server.pluginManager.registerEvents(this, instance)
