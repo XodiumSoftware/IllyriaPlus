@@ -37,6 +37,11 @@ internal object MannequinMechanic : Listener {
     fun on(event: PlayerInteractAtEntityEvent) {
         val mannequin = event.rightClicked as? Mannequin ?: return
         if (event.player.uniqueId != mannequin.owner) return
+        event.isCancelled = true
+        if (event.player.isSneaking) {
+            MannequinEquipment.swapItem(event, mannequin)
+            return
+        }
         MannequinEditDialog.show(event.player, mannequin)
     }
 

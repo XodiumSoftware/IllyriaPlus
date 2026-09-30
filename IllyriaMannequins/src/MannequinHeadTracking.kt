@@ -28,7 +28,8 @@ internal object MannequinHeadTracking {
     /** Makes all mannequins look at the nearest trackable player within range. */
     private fun updateHeadTracking() {
         instance.server.worlds.forEach { world ->
-            world.entities
+            world
+                .entities
                 .filterIsInstance<Mannequin>()
                 .forEach { mannequin ->
                     findNearestPlayer(mannequin)?.let { target ->
@@ -47,7 +48,9 @@ internal object MannequinHeadTracking {
      * @return The nearest trackable player within range, or `null`.
      */
     private fun findNearestPlayer(mannequin: Mannequin): Player? =
-        mannequin.world.players
+        mannequin
+            .world
+            .players
             .filter {
                 visible(it, mannequin) &&
                     it.location.distanceSquared(mannequin.location) <= TRACKING_RANGE_SQUARED

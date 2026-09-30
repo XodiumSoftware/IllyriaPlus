@@ -38,7 +38,8 @@ internal object MannequinFollowing {
     /** Makes all following mannequins move toward their owner. */
     private fun updateFollowing() {
         instance.server.worlds.forEach { world ->
-            world.entities
+            world
+                .entities
                 .filterIsInstance<Mannequin>()
                 .filter { it.following }
                 .forEach { followOwner(it) }
@@ -64,7 +65,12 @@ internal object MannequinFollowing {
             mannequin.teleport(owner.groundLocation())
             return
         }
-        val step = owner.location.toVector().subtract(here.toVector()).setY(0)
+        val step =
+            owner
+                .location
+                .toVector()
+                .subtract(here.toVector())
+                .setY(0)
         if (step.lengthSquared() == 0.0) return
         step.normalize().multiply(FOLLOW_SPEED)
         mannequin.isJumping = blockedAhead(mannequin, step)
@@ -82,10 +88,13 @@ internal object MannequinFollowing {
         mannequin: Mannequin,
         step: Vector,
     ): Boolean =
-        mannequin.location
+        mannequin
+            .location
             .clone()
             .add(step.clone().normalize().multiply(0.6))
-            .block.type.isSolid
+            .block
+            .type
+            .isSolid
 
     /**
      * Finds the nearest solid ground at or below a player's location for a mannequin to teleport to.
