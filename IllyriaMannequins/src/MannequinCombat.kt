@@ -1,11 +1,14 @@
 package org.xodium.illyriamannequins
 
+import org.bukkit.attribute.Attribute
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Mannequin
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.inventory.EquipmentSlot
+import org.bukkit.inventory.ItemStack
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
 import org.xodium.illyriamannequins.MannequinPDC.owner
 import java.util.UUID
@@ -27,6 +30,9 @@ internal object MannequinCombat : Listener {
 
     /** The interval in ticks between a mannequin's attacks. */
     private const val ATTACK_COOLDOWN_TICKS = 10
+
+    /** The unarmed melee damage dealt by a mannequin. */
+    private const val FIST_DAMAGE = 1.0
 
     /** The current retaliation target for each mannequin, keyed by entity UUID. */
     private val targets = mutableMapOf<UUID, LivingEntity>()
@@ -57,9 +63,9 @@ internal object MannequinCombat : Listener {
     fun on(event: EntityDamageByEntityEvent) {
         val damager = event.damager as? LivingEntity ?: return
         val victim = event.entity as? LivingEntity ?: return
-        val mannequin = event.entity as? Mannequin
-        if (mannequin != null && damager.uniqueId != mannequin.owner) {
-            engage(mannequin, damager)
+        val hitMannequin = event.entity as? Mannequin
+        if (hitMannequin != null && damager.uniqueId != hitMannequin.owner) {
+            engage(hitMannequin, damager)
         }
         if (damager is Player) {
             engageOwnerMannequins(damager, victim)
@@ -70,21 +76,35 @@ internal object MannequinCombat : Listener {
     }
 
     /**
-     * Makes all mannequins owned by a player attack the player's attacker.
+     * Makes a mannequin swing its arm and deal melee damage to its target.
      *
-     * @param owner The player whose mannequins to engage.
-     * @param attacker The entity attacking the player.
+     * @param mannequin The mannequin performing the attack.
+     * @param target The entity to damage.
      */
-    private fun defendOwner(
-        owner: Player,
-        attacker: LivingEntity,
+    private fun dealDamage(
+        mannequin: Mannequin,
+        target: LivingEntity,
     ) {
-        owner
-            .world
-            .entities
-            .filterIsInstance<Mannequin>()
-            .filter { it.owner == owner.uniqueId && it.uniqueId != attacker.uniqueId }
-            .forEach { engage(it, attacker) }
+        mannequin.swingMainHand()
+        target.damage(weaponDamage(mannequin.equipment.getItem(EquipmentSlot.HAND)), mannequin)
+    }
+
+    /**
+     * Computes the attack damage of an item stack from its default mainhand attributes.
+     *
+     * @param weapon The held item.
+     * @return The total attack damage, at minimum [FIST_DAMAGE].
+     */
+    private fun weaponDamage(weapon: ItemStack): Double {
+        if (weapon.isEmpty) return FIST_DAMAGE
+        val amount =
+            weapon
+                .type
+                .asItemType()
+                ?.getDefaultAttributeModifiers(EquipmentSlot.HAND)
+                ?.get(Attribute.ATTACK_DAMAGE)
+                ?.sumOf { it.amount } ?: 0.0
+        return FIST_DAMAGE + amount
     }
 
     /**
@@ -104,6 +124,24 @@ internal object MannequinCombat : Listener {
             .filterIsInstance<Mannequin>()
             .filter { it.owner == owner.uniqueId && it.uniqueId != victim.uniqueId }
             .forEach { engage(it, victim) }
+    }
+
+    /**
+     * Makes all mannequins owned by a player attack the player's attacker.
+     *
+     * @param owner The player whose mannequins to engage.
+     * @param attacker The entity attacking the player.
+     */
+    private fun defendOwner(
+        owner: Player,
+        attacker: LivingEntity,
+    ) {
+        owner
+            .world
+            .entities
+            .filterIsInstance<Mannequin>()
+            .filter { it.owner == owner.uniqueId && it.uniqueId != attacker.uniqueId }
+            .forEach { engage(it, attacker) }
     }
 
     /**
@@ -141,7 +179,7 @@ internal object MannequinCombat : Listener {
                 mannequin.velocity = mannequin.velocity.setX(0.0).setZ(0.0)
                 val cooldown = (cooldowns[uuid] ?: 0) - COMBAT_INTERVAL_TICKS.toInt()
                 if (cooldown <= 0) {
-                    mannequin.attack(target)
+                    dealDamage(mannequin, target)
                     cooldowns[uuid] = ATTACK_COOLDOWN_TICKS
                 } else {
                     cooldowns[uuid] = cooldown
