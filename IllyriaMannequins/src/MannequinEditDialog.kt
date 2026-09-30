@@ -160,7 +160,7 @@ internal object MannequinEditDialog {
                                                     if (mannequin.movementMode == MovementMode.STATIONARY) {
                                                         mannequin.location
                                                     } else {
-                                                        null
+                                                        mannequin.anchor
                                                     }
                                             }
                                             response.getText(Input.COMBAT_MODE.key)?.let { mode ->

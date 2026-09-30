@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
+import org.xodium.illyriamannequins.MannequinPDC.anchor
 import org.xodium.illyriamannequins.MannequinPDC.owner
 import org.xodium.illyriamannequins.combat.MannequinCoreCombat
 import org.xodium.illyriamannequins.combat.MannequinTridentCombat
@@ -59,6 +60,7 @@ internal object MannequinMechanic : Listener {
     private fun spawnMannequin(player: Player) =
         player.world.spawn(player.location, Mannequin::class.java) {
             it.owner = player.uniqueId
+            it.anchor = it.location
             it.isPersistent = true
             it.setAI(true)
         }

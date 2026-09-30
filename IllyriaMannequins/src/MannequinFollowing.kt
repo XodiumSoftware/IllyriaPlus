@@ -56,12 +56,16 @@ internal object MannequinFollowing {
 
     /**
      * Moves a mannequin toward its owner like a tamed wolf, teleporting when too far away.
+     * Falls back to the mannequin's anchor when the owner is untrackable.
      *
      * @param mannequin The mannequin to move.
      */
     private fun followOwner(mannequin: Mannequin) {
-        val owner = mannequin.owner?.let { instance.server.getPlayer(it) } ?: return
-        if (!owner.visibleTo(mannequin)) return
+        val owner = mannequin.owner?.let { instance.server.getPlayer(it) }
+        if (owner == null || !owner.visibleTo(mannequin)) {
+            returnToAnchor(mannequin)
+            return
+        }
         if (owner.world != mannequin.world) {
             mannequin.teleport(owner.location.groundLocation())
             return
