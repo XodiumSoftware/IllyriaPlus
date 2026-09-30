@@ -101,9 +101,7 @@ internal object MannequinEditDialog {
                                             CombatMode.entries.map { mode ->
                                                 SingleOptionDialogInput.OptionEntry.create(
                                                     mode.name.lowercase(),
-                                                    Component.text(
-                                                        mode.name.lowercase().replaceFirstChar { it.uppercase() },
-                                                    ),
+                                                    mode.display,
                                                     mannequin.combatMode == mode,
                                                 )
                                             },

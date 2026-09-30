@@ -1,8 +1,10 @@
 package org.xodium.illyriamannequins
 
+import net.kyori.adventure.text.Component
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Mannequin
 import org.bukkit.persistence.PersistentDataType
+import org.xodium.illyrialib.Utils.MM
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
 import java.util.UUID
 
@@ -63,13 +65,19 @@ internal object MannequinPDC {
 }
 
 /** The combat behavior mode of a mannequin. */
-internal enum class CombatMode {
+internal enum class CombatMode(
+    color: String,
+) {
     /** Attacks nearby monsters preemptively. */
-    AGGRESSIVE,
+    AGGRESSIVE("red"),
 
     /** Raises the shield and only fights back after being attacked. */
-    DEFENSIVE,
+    DEFENSIVE("yellow"),
 
     /** Ignores monsters and keeps following the owner. */
-    FLEEING,
+    FLEEING("green"),
+    ;
+
+    /** The colored display name of the mode. */
+    val display: Component = MM.deserialize("<$color>${name.lowercase().replaceFirstChar { it.uppercase() }}")
 }
