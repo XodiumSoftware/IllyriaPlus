@@ -39,7 +39,7 @@ World and gameplay modifications that set IllyriaRPG apart.
 <a class="card" href="portal-restrictions.html">
 <span class="card-header">
 <span class="card-title">Portal Restrictions</span>
-<img class="card-icon" alt="" src="../img/item/ender_eye.png">
+<img class="card-icon card-icon-atlas" alt="" src="../img/item/ender_eye.png">
 </span>
 <span class="card-desc">Spawn-protected Overworld portals</span>
 </a>
