@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
 import org.xodium.illyriamannequins.MannequinPDC.owner
 import org.xodium.illyriamannequins.combat.MannequinCoreCombat
+import org.xodium.illyriamannequins.combat.MannequinTridentCombat
 
 /** Manages the mannequin and its interactions. */
 @Suppress("UnstableApiUsage")
@@ -35,6 +36,7 @@ internal object MannequinMechanic : Listener {
         MannequinFollowing.register()
         MannequinHostility.register()
         MannequinCoreCombat.register()
+        MannequinTridentCombat.register()
     }
 
     @EventHandler

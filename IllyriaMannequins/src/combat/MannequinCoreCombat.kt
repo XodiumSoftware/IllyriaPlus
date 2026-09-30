@@ -289,6 +289,18 @@ internal object MannequinCoreCombat : Listener {
             if (hasShield(mannequin)) {
                 mannequin.startUsingItem(EquipmentSlot.OFF_HAND)
             }
+            val throwsTrident = MannequinTridentCombat.hasTrident(mannequin)
+            if (throwsTrident && distanceSquared > MannequinTridentCombat.THROW_RANGE_SQUARED) {
+                mannequin.velocity = mannequin.velocity.setX(0.0).setZ(0.0)
+                val cooldown = (cooldowns[uuid] ?: 0) - COMBAT_INTERVAL_TICKS.toInt()
+                if (cooldown <= 0) {
+                    MannequinTridentCombat.throwAt(mannequin, target)
+                    cooldowns[uuid] = ATTACK_COOLDOWN_TICKS
+                } else {
+                    cooldowns[uuid] = cooldown
+                }
+                continue
+            }
             val attackRange =
                 if (MannequinSpearCombat.hasSpear(mannequin)) {
                     MannequinSpearCombat.ATTACK_RANGE_SQUARED
