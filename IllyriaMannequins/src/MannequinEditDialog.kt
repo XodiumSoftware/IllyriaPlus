@@ -54,12 +54,17 @@ internal object MannequinEditDialog {
                             ).inputs(
                                 listOf(
                                     DialogInput
+                                        .text("skin", MM.deserialize("<gray>Skin (player name)"))
+                                        .initial(mannequin.profile?.name() ?: "")
+                                        .build(),
+                                    DialogInput
                                         .text("name", MM.deserialize("<gray>Name"))
                                         .initial(mannequin.customName()?.let { MM.serialize(it) } ?: "")
                                         .build(),
                                     DialogInput
-                                        .text("skin", MM.deserialize("<gray>Skin (player name)"))
-                                        .initial(mannequin.profile?.name() ?: "")
+                                        .text("description", MM.deserialize("<gray>Description"))
+                                        .initial(mannequin.description?.let { MM.serialize(it) } ?: "")
+                                        .maxLength(4096)
                                         .build(),
                                     DialogInput
                                         .bool("immovable", MM.deserialize("<gray>Immovable"))
@@ -96,6 +101,14 @@ internal object MannequinEditDialog {
                                                     mannequin.customName(MM.deserialize(name))
                                                     mannequin.isCustomNameVisible = true
                                                 }
+                                            }
+                                            response.getText("description")?.let { description ->
+                                                mannequin.description =
+                                                    if (description.isBlank()) {
+                                                        Mannequin.defaultDescription()
+                                                    } else {
+                                                        MM.deserialize(description)
+                                                    }
                                             }
                                             response.getText("skin")?.let { skin ->
                                                 val profile = ResolvableProfile.resolvableProfile()
