@@ -42,6 +42,9 @@ internal object MannequinCombat : Listener {
     /** The interval in ticks between a mannequin's attacks. */
     private const val ATTACK_COOLDOWN_TICKS = 10
 
+    /** The delay in ticks before a mannequin raises its shield again after swinging. */
+    private const val SHIELD_RAISE_DELAY_TICKS = 5L
+
     /** The unarmed melee damage dealt by a mannequin. */
     private const val FIST_DAMAGE = 1.0
 
@@ -153,7 +156,18 @@ internal object MannequinCombat : Listener {
                 mannequin.startUsingItem(EquipmentSlot.OFF_HAND)
             }
         } else {
-            defending.remove(mannequin.uniqueId)
+            disengage(mannequin)
+        }
+    }
+
+    /**
+     * Takes a mannequin out of the defensive state and lowers its shield.
+     *
+     * @param mannequin The mannequin to disengage from defense.
+     */
+    private fun disengage(mannequin: Mannequin) {
+        if (defending.remove(mannequin.uniqueId) && mannequin.isHandRaised) {
+            mannequin.clearActiveItem()
         }
     }
 
@@ -186,6 +200,7 @@ internal object MannequinCombat : Listener {
     private fun damageShield(mannequin: Mannequin) {
         val shield = mannequin.equipment.itemInOffHand
         val meta = shield.itemMeta as? Damageable ?: return
+        mannequin.world.playSound(mannequin.location, Sound.ITEM_SHIELD_BLOCK, 1.0f, 1.0f)
         meta.damage += 1
         if (meta.damage >= shield.type.maxDurability) {
             mannequin.equipment.setItemInOffHand(null)
@@ -197,6 +212,7 @@ internal object MannequinCombat : Listener {
 
     /**
      * Makes a mannequin swing its arm and deal melee damage to its target.
+     * Lowers the shield for the swing and raises it again after a short delay.
      *
      * @param mannequin The mannequin performing the attack.
      * @param target The entity to damage.
@@ -205,8 +221,23 @@ internal object MannequinCombat : Listener {
         mannequin: Mannequin,
         target: LivingEntity,
     ) {
+        val shieldUp = hasShield(mannequin) && mannequin.isHandRaised
+        if (shieldUp) {
+            mannequin.clearActiveItem()
+        }
         mannequin.swingMainHand()
         target.damage(weaponDamage(mannequin.equipment.getItem(EquipmentSlot.HAND)), mannequin)
+        if (shieldUp) {
+            instance.server.scheduler.runTaskLater(
+                instance,
+                Runnable {
+                    if (mannequin.isValid && hasShield(mannequin)) {
+                        mannequin.startUsingItem(EquipmentSlot.OFF_HAND)
+                    }
+                },
+                SHIELD_RAISE_DELAY_TICKS,
+            )
+        }
     }
 
     /**
@@ -289,12 +320,18 @@ internal object MannequinCombat : Listener {
             if (mannequin == null || target.isDead || target.world != mannequin.world) {
                 cooldowns.remove(uuid)
                 iterator.remove()
+                if (mannequin != null && mannequin.isHandRaised) {
+                    mannequin.clearActiveItem()
+                }
                 continue
             }
             val distanceSquared = mannequin.location.distanceSquared(target.location)
             if (distanceSquared > GIVE_UP_RANGE_SQUARED) {
                 cooldowns.remove(uuid)
                 iterator.remove()
+                if (mannequin.isHandRaised) {
+                    mannequin.clearActiveItem()
+                }
                 continue
             }
             if (hasShield(mannequin)) {
