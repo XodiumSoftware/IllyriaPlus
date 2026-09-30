@@ -122,8 +122,8 @@
 /* Items sit inside the slot interior of the GUI background. Slot interior
    size is 32x32 px (16x16 logical, 2x scale). */
 
-.crafting-recipe img:not(.burn-progress):not(.lit-flame),
-.smelting-recipe img:not(.burn-progress):not(.lit-flame),
+.crafting-recipe img:not(.burn-progress):not(.lit-flame):not(.xp-orb),
+.smelting-recipe img:not(.burn-progress):not(.lit-flame):not(.xp-orb),
 .crafting-recipe .crafting-item,
 .smelting-recipe .crafting-item {
     position: absolute;
@@ -131,8 +131,8 @@
     height: 32px;
 }
 
-.crafting-recipe img:not(.burn-progress):not(.lit-flame),
-.smelting-recipe img:not(.burn-progress):not(.lit-flame),
+.crafting-recipe img:not(.burn-progress):not(.lit-flame):not(.xp-orb),
+.smelting-recipe img:not(.burn-progress):not(.lit-flame):not(.xp-orb),
 .crafting-recipe .crafting-item img,
 .smelting-recipe .crafting-item img {
     width: 32px;
@@ -156,13 +156,18 @@
     position: static !important;
 }
 
+/* Tooltip host: the flame wrapper shares the standard tooltip styling. */
+.cook-time[data-tooltip],
 .crafting-item[data-tooltip],
-.furnace-type[data-tooltip] {
+.furnace-type[data-tooltip],
+.xp-gain[data-tooltip] {
     cursor: help;
 }
 
+.cook-time[data-tooltip]::after,
 .crafting-item[data-tooltip]::after,
-.furnace-type[data-tooltip]::after {
+.furnace-type[data-tooltip]::after,
+.xp-gain[data-tooltip]::after {
     content: attr(data-tooltip);
     position: absolute;
     z-index: 1000;
@@ -200,8 +205,10 @@
         visibility 80ms ease;
 }
 
+.cook-time[data-tooltip]:hover::after,
 .crafting-item[data-tooltip]:hover::after,
-.furnace-type[data-tooltip]:hover::after {
+.furnace-type[data-tooltip]:hover::after,
+.xp-gain[data-tooltip]:hover::after {
     opacity: 1;
     visibility: visible;
 }
@@ -273,15 +280,20 @@
 }
 
 /* Smelting flame (lit_progress sprite) overlaid on the empty flame outline
-   of the GUI background, tunable like every other position. */
-.smelting-recipe .lit-flame {
+   of the GUI background; hosts a tooltip via its .cook-time wrapper. */
+.smelting-recipe .cook-time {
     position: absolute;
-    left: 33px;
-    top: 34px;
+    left: 34px;
+    top: 53px;
+    width: 28px;
+    height: 28px;
+    display: block;
+}
+
+.smelting-recipe .cook-time img {
     width: 28px;
     height: 28px;
     image-rendering: pixelated;
-    pointer-events: none;
     user-select: none;
     -webkit-user-drag: none;
 }
@@ -296,6 +308,26 @@
     height: 32px;
     image-rendering: pixelated;
     pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Experience orb, floating at the top-right corner of the output slot.
+   Absolutely positioned so placement is tunable; hosts a tooltip via its
+   .xp-gain wrapper. */
+.smelting-recipe .xp-gain {
+    position: absolute;
+    left: 182px;
+    top: 34px;
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+.smelting-recipe .xp-gain img {
+    width: 16px;
+    height: 16px;
+    image-rendering: pixelated;
     user-select: none;
     -webkit-user-drag: none;
 }

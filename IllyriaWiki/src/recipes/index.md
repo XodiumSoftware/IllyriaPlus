@@ -44,7 +44,7 @@
 
 <div class="card recipe-card">
 <span class="card-title">Rotten Flesh to Leather<sup>[2]</sup></span>
-<span class="card-desc"><div class="smelting-recipe"><span class="furnace-type" data-tooltip="Works in any smelting block (furnace, smoker, campfire)"><img src="../img/method/smelting_animated.gif" alt="Furnace"></span><img class="lit-flame" src="../img/gui/lit_flame.png" alt=""><img class="burn-progress" src="../img/gui/burn_progress.png" alt=""><span class="crafting-item pos-input" data-tooltip="Rotten Flesh"><img src="../img/item/rotten_flesh.png" alt="Rotten Flesh"></span><span class="crafting-item pos-output" data-tooltip="Leather"><img src="../img/item/leather.png" alt="Leather"></span></div></span>
+<span class="card-desc"><div class="smelting-recipe"><span class="furnace-type" data-tooltip="Works in any smelting block (furnace, smoker, campfire)"><img src="../img/method/smelting_animated.gif" alt="Furnace"></span><span class="cook-time" data-tooltip="Smelting time: 10s (furnace) / 5s (smoker) / 30s (campfire)"><img class="lit-flame" src="../img/gui/lit_flame.png" alt=""></span><img class="burn-progress" src="../img/gui/burn_progress.png" alt=""><span class="crafting-item pos-input" data-tooltip="Rotten Flesh"><img src="../img/item/rotten_flesh.png" alt="Rotten Flesh"></span><span class="xp-gain" data-tooltip="Experience: 0.1 (furnace/smoker) - 0.05 (campfire)"><img class="xp-orb" src="../img/item/xp_orb.webp" alt=""></span><span class="crafting-item pos-output" data-tooltip="Leather"><img src="../img/item/leather.png" alt="Leather"></span></div></span>
 </div>
 
 <div class="card recipe-card">
@@ -54,7 +54,7 @@
 
 <div class="card recipe-card">
 <span class="card-title">Diamond Recycling<sup>[4]</sup></span>
-<span class="card-desc"><div class="smelting-recipe"><span class="furnace-type" data-tooltip="Only works in a blast furnace"><img src="../img/method/blast_furnace.png" alt="Blast Furnace"></span><img class="lit-flame" src="../img/gui/lit_flame.png" alt=""><img class="burn-progress" src="../img/gui/burn_progress.png" alt=""><span class="crafting-item pos-input" data-tooltip="Diamond Tool, Weapon, or Armor"><img src="../img/item/diamond_equipment_animated.gif" alt="Diamond Tool, Weapon, or Armor"></span><span class="crafting-item pos-output" data-tooltip="Diamond"><img src="../img/item/diamond.png" alt="Diamond"></span></div></span>
+<span class="card-desc"><div class="smelting-recipe"><span class="furnace-type" data-tooltip="Only works in a blast furnace"><img src="../img/method/blast_furnace.png" alt="Blast Furnace"></span><span class="cook-time" data-tooltip="Smelting time: 5s"><img class="lit-flame" src="../img/gui/lit_flame.png" alt=""></span><img class="burn-progress" src="../img/gui/burn_progress.png" alt=""><span class="crafting-item pos-input" data-tooltip="Diamond Tool, Weapon, or Armor"><img src="../img/item/diamond_equipment_animated.gif" alt="Diamond Tool, Weapon, or Armor"></span><span class="xp-gain" data-tooltip="Experience: 1.0"><img class="xp-orb" src="../img/item/xp_orb.webp" alt=""></span><span class="crafting-item pos-output" data-tooltip="Diamond"><img src="../img/item/diamond.png" alt="Diamond"></span></div></span>
 </div>
 
 <div class="card recipe-card">
