@@ -42,7 +42,7 @@ jobs:
     outputs:
       core: ${{ steps.filter.outputs.core }}
       bridge: ${{ steps.filter.outputs.bridge }}
-      npcs: ${{ steps.filter.outputs.npcs }}
+      mannequins: ${{ steps.filter.outputs.mannequins }}
       resourcepack: ${{ steps.filter.outputs.resourcepack }}
       wiki: ${{ steps.filter.outputs.wiki }}
       all: ${{ steps.filter.outputs.all }}
@@ -64,9 +64,9 @@ jobs:
               - "IllyriaBridge/src/**"
               - "IllyriaBridge/build.gradle.kts"
               - "IllyriaLib/**"
-            npcs:
-              - "IllyriaNPCs/src/**"
-              - "IllyriaNPCs/build.gradle.kts"
+            mannequins:
+              - "IllyriaMannequins/src/**"
+              - "IllyriaMannequins/build.gradle.kts"
               - "IllyriaLib/**"
             resourcepack:
               - "IllyriaResourcePack/**"
@@ -84,7 +84,7 @@ jobs:
     if: |
       needs.changes.outputs.core == 'true' ||
       needs.changes.outputs.bridge == 'true' ||
-      needs.changes.outputs.npcs == 'true' ||
+      needs.changes.outputs.mannequins == 'true' ||
       needs.changes.outputs.resourcepack == 'true' ||
       needs.changes.outputs.wiki == 'true' ||
       needs.changes.outputs.all == 'true'
@@ -94,10 +94,10 @@ jobs:
       - id: checkout
         uses: actions/checkout@v7.0.1
 
-      # --- Kotlin (IllyriaCore / IllyriaBridge / IllyriaNPCs) ---
+      # --- Kotlin (IllyriaCore / IllyriaBridge / IllyriaMannequins) ---
       - id: setup_java
         name: Setup Java
-        if: needs.changes.outputs.core == 'true' || needs.changes.outputs.bridge == 'true' || needs.changes.outputs.npcs == 'true' || needs.changes.outputs.all == 'true'
+        if: needs.changes.outputs.core == 'true' || needs.changes.outputs.bridge == 'true' || needs.changes.outputs.mannequins == 'true' || needs.changes.outputs.all == 'true'
         uses: actions/setup-java@v6.0.1
         with:
           java-version: 25.0.4+101.0.LTS
@@ -105,12 +105,12 @@ jobs:
 
       - id: setup_gradle
         name: Setup Gradle
-        if: needs.changes.outputs.core == 'true' || needs.changes.outputs.bridge == 'true' || needs.changes.outputs.npcs == 'true' || needs.changes.outputs.all == 'true'
+        if: needs.changes.outputs.core == 'true' || needs.changes.outputs.bridge == 'true' || needs.changes.outputs.mannequins == 'true' || needs.changes.outputs.all == 'true'
         uses: gradle/actions/setup-gradle@v6.4.0
 
       - id: run_ktlint
         name: Run ktlint
-        if: needs.changes.outputs.core == 'true' || needs.changes.outputs.bridge == 'true' || needs.changes.outputs.npcs == 'true' || needs.changes.outputs.all == 'true'
+        if: needs.changes.outputs.core == 'true' || needs.changes.outputs.bridge == 'true' || needs.changes.outputs.mannequins == 'true' || needs.changes.outputs.all == 'true'
         run: ./gradlew ktlintCheck
 
       # --- Wiki (markdown) ---
@@ -247,10 +247,10 @@ jobs:
           tag_name: nightly
           name: Nightly Build
 
-  build_npcs:
-    name: Build IllyriaNPCs
+  build_mannequins:
+    name: Build IllyriaMannequins
     needs: [changes, lint]
-    if: needs.changes.outputs.npcs == 'true' || needs.changes.outputs.all == 'true'
+    if: needs.changes.outputs.mannequins == 'true' || needs.changes.outputs.all == 'true'
     runs-on: ubuntu-latest
     environment:
       name: "${{ github.ref_name }}"
@@ -274,19 +274,19 @@ jobs:
 
       - id: build
         name: Build Plugin
-        run: ./gradlew :IllyriaNPCs:shadowJar
+        run: ./gradlew :IllyriaMannequins:shadowJar
 
       - id: upload_artifact
         name: Upload Artifact
         uses: actions/upload-artifact@v7.0.1
         with:
-          name: IllyriaNPCs
-          path: IllyriaNPCs/build/libs/*.jar
+          name: IllyriaMannequins
+          path: IllyriaMannequins/build/libs/*.jar
 
-  release_npcs:
-    name: Release IllyriaNPCs
-    needs: [changes, build_npcs]
-    if: github.ref == 'refs/heads/main' && (needs.changes.outputs.npcs == 'true' || needs.changes.outputs.all == 'true')
+  release_mannequins:
+    name: Release IllyriaMannequins
+    needs: [changes, build_mannequins]
+    if: github.ref == 'refs/heads/main' && (needs.changes.outputs.mannequins == 'true' || needs.changes.outputs.all == 'true')
     concurrency: nightly-release
     runs-on: ubuntu-latest
     environment:
@@ -296,10 +296,10 @@ jobs:
       contents: write
     steps:
       - id: download_artifact
-        name: Download IllyriaNPCs Artifact
+        name: Download IllyriaMannequins Artifact
         uses: actions/download-artifact@v8.0.1
         with:
-          name: IllyriaNPCs
+          name: IllyriaMannequins
           path: dist/
 
       - id: update_nightly_tag
@@ -313,12 +313,12 @@ jobs:
           GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
       - id: delete_old_assets
-        name: Delete Old IllyriaNPCs Assets
+        name: Delete Old IllyriaMannequins Assets
         run: |
           release_id=$(gh api repos/${{ github.repository }}/releases/tags/nightly --jq '.id' 2>/dev/null || echo "")
           if [ -n "$release_id" ]; then
             asset_ids=$(gh api repos/${{ github.repository }}/releases/$release_id/assets \
-              --jq '.[] | select(.name | startswith("IllyriaNPCs")) | .id' 2>/dev/null || echo "")
+              --jq '.[] | select(.name | startswith("IllyriaMannequins")) | .id' 2>/dev/null || echo "")
             for asset_id in $asset_ids; do
               gh api repos/${{ github.repository }}/releases/assets/$asset_id --method DELETE
             done

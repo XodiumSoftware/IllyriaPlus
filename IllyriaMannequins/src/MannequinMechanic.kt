@@ -1,0 +1,46 @@
+package org.xodium.illyriamannequins
+
+import com.mojang.brigadier.Command
+import io.papermc.paper.command.brigadier.Commands
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
+import org.bukkit.entity.Mannequin
+import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerInteractAtEntityEvent
+import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
+
+/** Manages the mannequin and its interactions. */
+@Suppress("UnstableApiUsage")
+internal object MannequinMechanic : Listener {
+    /** Registers the mannequin command and event listeners. */
+    fun register() {
+        instance.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) { event ->
+            event.registrar().register(
+                Commands
+                    .literal("mannequin")
+                    .requires { it.sender is Player }
+                    .executes { ctx ->
+                        spawnMannequin(ctx.source.sender as Player)
+                        Command.SINGLE_SUCCESS
+                    }.build(),
+                "Spawn a Mannequin at your location",
+            )
+        }
+        instance.server.pluginManager.registerEvents(this, instance)
+    }
+
+    @EventHandler
+    fun on(event: PlayerInteractAtEntityEvent) {
+        val entity = event.rightClicked as? Mannequin ?: return
+        // TODO: Open dialogue
+        instance.logger.info("${event.player.name} interacted with Mannequin")
+    }
+
+    /**
+     * Spawns a mannequin at the player's location.
+     *
+     * @param player The player to spawn the mannequin for.
+     */
+    private fun spawnMannequin(player: Player) = player.world.spawn(player.location, Mannequin::class.java)
+}

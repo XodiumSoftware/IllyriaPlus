@@ -19,9 +19,9 @@ val buildNumber =
         .asText
         .map { it.trim() }
 
-group = "org.xodium.illyrianpcs"
+group = "org.xodium.illyriamannequins"
 version = "$mcVersion+build.${buildNumber.get()}"
-description = "NPC system for the IllyriaPlus ecosystem"
+description = "Mannequin NPCs for the IllyriaPlus ecosystem"
 
 repositories {
     mavenCentral()
@@ -63,7 +63,7 @@ ktlint {
 
 tasks {
     shadowJar {
-        archiveBaseName.set("IllyriaNPCs")
+        archiveBaseName.set("IllyriaMannequins")
         archiveClassifier.set("")
         relocate("org.xodium.illyrialib", "${project.group}.libs.illyrialib")
         minimize()
@@ -78,8 +78,8 @@ tasks {
 }
 
 paperPluginYaml {
-    main.set("org.xodium.illyrianpcs.IllyriaNPCs")
-    name.set("IllyriaNPCs")
+    main.set("org.xodium.illyriamannequins.IllyriaMannequins")
+    name.set("IllyriaMannequins")
     website.set("https://github.com/XodiumSoftware/IllyriaPlus")
     authors.add("Xodium")
     apiVersion.set(mcVersion)
