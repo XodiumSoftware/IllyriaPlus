@@ -9,7 +9,7 @@ IllyriaRPG works with all vanilla clients, but enhances the experience for playe
 <a class="card" href="xaeros.html">
 <span class="card-header">
 <span class="card-title">Xaero's World Map / Minimap</span>
-<img class="card-icon" alt="" src="../img/item/ender_eye.png">
+<img class="card-icon card-icon-atlas" alt="" src="../img/item/ender_eye.png">
 </span>
 <span class="card-desc">Server-tracked waypoints & shared map data</span>
 </a>

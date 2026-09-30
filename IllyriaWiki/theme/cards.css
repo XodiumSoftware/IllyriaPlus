@@ -23,6 +23,14 @@
     margin-right: 0.35em;
 }
 
+/* Sprite-strip atlases (e.g. ender_eye): show only the first frame. */
+/* cover scales the strip so one frame fills the box; top crops to frame 1. */
+.mc-icon-atlas,
+img.card-icon-atlas {
+    object-fit: cover;
+    object-position: top;
+}
+
 .card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
