@@ -3,13 +3,16 @@ package org.xodium.illyriamannequins
 import org.bukkit.Material
 import org.bukkit.Tag
 import org.bukkit.entity.Mannequin
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.util.Vector
 
 /** Handles swapping items between a player and a mannequin's equipment slots. */
 @Suppress("UnstableApiUsage")
-internal object MannequinEquipment {
+internal object MannequinEquipment : Listener {
     /** The height in blocks of the boots slot on a mannequin. */
     private const val BOOTS_HEIGHT = 0.5
 
@@ -27,6 +30,22 @@ internal object MannequinEquipment {
 
     /** The maximum height in blocks at which a click can target an arm. */
     private const val ARM_MAX_HEIGHT = 1.45
+
+    @EventHandler
+    fun on(event: EntityDeathEvent) {
+        val mannequin = event.entity as? Mannequin ?: return
+        val equipment = mannequin.equipment
+        event.drops.addAll(
+            listOf(
+                equipment.helmet,
+                equipment.chestplate,
+                equipment.leggings,
+                equipment.boots,
+                equipment.itemInMainHand,
+                equipment.itemInOffHand,
+            ).filterNot { it.isEmpty },
+        )
+    }
 
     /**
      * Swaps the player's held item with the item in the mannequin slot matching the clicked body part.

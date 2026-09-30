@@ -30,6 +30,7 @@ internal object MannequinMechanic : Listener {
             )
         }
         instance.server.pluginManager.registerEvents(this, instance)
+        instance.server.pluginManager.registerEvents(MannequinEquipment, instance)
         MannequinHeadTracking.register()
         MannequinFollowing.register()
         MannequinHostility.register()
@@ -56,6 +57,7 @@ internal object MannequinMechanic : Listener {
     private fun spawnMannequin(player: Player) =
         player.world.spawn(player.location, Mannequin::class.java) {
             it.owner = player.uniqueId
+            it.isPersistent = true
             it.setAI(true)
         }
 }
