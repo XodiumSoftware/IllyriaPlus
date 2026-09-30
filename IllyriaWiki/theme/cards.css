@@ -23,6 +23,14 @@
     margin-right: 0.35em;
 }
 
+/* Sprite-strip atlases (e.g. ender_eye): show only the first frame. */
+/* cover scales the strip so one frame fills the box; top crops to frame 1. */
+.mc-icon-atlas,
+img.card-icon-atlas {
+    object-fit: cover;
+    object-position: top;
+}
+
 .card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -35,12 +43,16 @@
     flex-direction: column;
     align-items: flex-start;
     padding: 1.5rem 1.75rem;
-    border: 1px solid var(--table-border-color);
-    border-radius: 10px;
+    border: 4px solid transparent;
+    border-image: url("/img/gui/tooltip_frame.png") 2 / 4px / 0 stretch;
+    border-radius: 0;
     background-color: var(--sidebar-bg);
     color: var(--fg);
     text-decoration: none;
-    transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+    transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease,
+        border-color 0.12s ease;
 }
 
 .card:hover {
@@ -49,6 +61,36 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     text-decoration: none;
     color: var(--fg);
+}
+
+.card .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    margin-bottom: 0.4rem;
+}
+
+/* When the icon is next to the title, shrink it to an inline size. */
+.card .card-header .card-icon {
+    display: block;
+    font-size: 1.6rem;
+    line-height: 1;
+    margin-bottom: 0;
+}
+
+.card .card-header img.card-icon {
+    display: block;
+    height: 1.6rem;
+    width: 1.6rem;
+    image-rendering: pixelated;
+}
+
+.card .card-header .card-title {
+    display: block;
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin-bottom: 0;
 }
 
 .card .card-icon {
@@ -77,4 +119,47 @@
     font-size: 1rem;
     color: var(--fg);
     opacity: 0.75;
+    width: 100%;
+}
+
+/* Recipe cards are not links: they hold a recipe render as the description. */
+.card.recipe-card {
+    cursor: default;
+}
+
+/* Recipe grid uses a fixed 4-column layout (not the auto-fill of Introduction). */
+.recipe-grid {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.card.recipe-card:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.card.recipe-card .card-title {
+    font-family: "IllyriaRP", monospace;
+    font-weight: normal;
+    /* Minecraft-style hard drop shadow */
+    text-shadow: 2px 2px 0 rgb(0 0 0 / 60%);
+    font-smooth: never;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: unset;
+    /* Divider between title and recipe */
+    border-bottom: 2px solid var(--table-border-color);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    width: 100%;
+}
+
+/* Footnote superscripts shrink inside the pixel font. */
+.card.recipe-card .card-title sup,
+.card.recipe-card .card-title .footnote-reference {
+    font-size: 0.6em;
+}
+
+.card.recipe-card .card-desc {
+    display: flex;
+    justify-content: center;
+    opacity: 1;
 }

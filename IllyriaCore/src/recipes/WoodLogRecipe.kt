@@ -20,6 +20,7 @@ internal object WoodLogRecipe : RecipeInterface {
             Material.MANGROVE_WOOD to Material.MANGROVE_LOG,
             Material.CHERRY_WOOD to Material.CHERRY_LOG,
             Material.PALE_OAK_WOOD to Material.PALE_OAK_LOG,
+            Material.POPLAR_WOOD to Material.POPLAR_LOG,
             Material.CRIMSON_HYPHAE to Material.CRIMSON_STEM,
             Material.WARPED_HYPHAE to Material.WARPED_STEM,
             // Stripped Logs
@@ -32,6 +33,7 @@ internal object WoodLogRecipe : RecipeInterface {
             Material.STRIPPED_MANGROVE_WOOD to Material.STRIPPED_MANGROVE_LOG,
             Material.STRIPPED_CHERRY_WOOD to Material.STRIPPED_CHERRY_LOG,
             Material.STRIPPED_PALE_OAK_WOOD to Material.STRIPPED_PALE_OAK_LOG,
+            Material.STRIPPED_POPLAR_WOOD to Material.STRIPPED_POPLAR_LOG,
             Material.STRIPPED_CRIMSON_HYPHAE to Material.STRIPPED_CRIMSON_STEM,
             Material.STRIPPED_WARPED_HYPHAE to Material.STRIPPED_WARPED_STEM,
         )

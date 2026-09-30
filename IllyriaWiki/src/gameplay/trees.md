@@ -8,7 +8,7 @@ Planting and growing a sapling (or using bone meal) spawns a hand-crafted custom
 default vanilla tree. Each tree type has multiple structure variants chosen at random, so no two trees look exactly
 alike.
 
-## Supported Tree Types <img class="mc-icon" alt="" src="../img/item/oak_sapling.png">
+## Supported Tree Types
 
 <div class="recipe-table">
 
@@ -22,7 +22,7 @@ alike.
 |      <img class="mc-icon" alt="Dark Oak" title="Dark Oak" src="../img/item/dark_oak_sapling.png">      |       ✅        |
 |         <img class="mc-icon" alt="Cherry" title="Cherry" src="../img/item/cherry_sapling.png">         |       ✅        |
 |     <img class="mc-icon" alt="Mangrove" title="Mangrove" src="../img/item/mangrove_propagule.png">     |       ✅        |
-|            <img class="mc-icon" alt="Azalea" title="Azalea" src="../img/item/azalea.webp">             |       ✅        |
+|      <img class="mc-icon" alt="Pale Oak" title="Pale Oak" src="../img/item/pale_oak_sapling.png">      |       ✅        |
 | <img class="mc-icon" alt="Crimson Fungus" title="Crimson Fungus" src="../img/item/crimson_fungus.png"> |       ✅        |
 |  <img class="mc-icon" alt="Warped Fungus" title="Warped Fungus" src="../img/item/warped_fungus.png">   |       ✅        |
 |    <img class="mc-icon" alt="Red Mushroom" title="Red Mushroom" src="../img/item/red_mushroom.png">    |       ✅        |
@@ -36,4 +36,3 @@ alike.
 - Sapling growth behaves like vanilla — custom trees do not overwrite existing blocks such as stone or
   player-built structures
 - Fungi and huge mushrooms also grow as custom variants
-- Pale Oak is currently excluded due to an upstream Paper bug

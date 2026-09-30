@@ -1,0 +1,403 @@
+/* Pixel-perfect Minecraft recipe renders over the actual resource pack GUIs.
+   Each recipe is a fixed-size container whose background-image is a 2x-scaled
+   crop of the workstation GUI from IllyriaResourcePack. Items are placed as
+   absolutely-positioned <img> tags at the GUI slot interiors. */
+
+@font-face {
+    font-family: "IllyriaRP";
+    src: url("/fonts/IllyriaRP.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ========================================================================
+   Recipe containers
+   ======================================================================== */
+
+.crafting-recipe,
+.smelting-recipe {
+    position: relative;
+    display: inline-block;
+    margin: 1rem 0;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    /* Allow tooltips to escape the container's box */
+    overflow: visible;
+}
+
+.crafting-recipe {
+    width: 260px;
+    height: 132px;
+    background-image: url("/img/gui/crafting_table_workstation.png");
+    background-size: 260px 132px;
+}
+
+/* All smelting-style recipes use the lit blast furnace GUI crop; the type
+   block over the arrow communicates which station it actually needs. */
+.smelting-recipe {
+    width: 210px;
+    height: 130px;
+    background-image: url("/img/gui/smelting_workstation.png");
+    background-size: 210px 130px;
+}
+
+/* Stonecutter recipes: input slot | trade arrow + type icon | output slot,
+   on a flat panel matching the other GUI backgrounds (#382a25, the dominant
+   flat color of the workstation crops). The villager trade arrow sits
+   centered on the panel; the stonecutter icon is absolutely positioned
+   above it. Slots carry horizontal margins since the icon is out of flow. */
+.stonecutter-recipe {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    height: 130px;
+    margin: 1rem 0;
+    padding: 0 22px;
+    background: #382a25;
+    /* Allow tooltips to escape the container's box */
+    overflow: visible;
+    image-rendering: pixelated;
+}
+
+.stonecutter-recipe .trade-arrow {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 20px;
+    height: 18px;
+    transform: translate(-50%, -50%);
+    image-rendering: pixelated;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.stonecutter-recipe .crafting-item {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    width: 36px;
+    height: 36px;
+    padding: 2px;
+    background: url("/img/gui/slot.png") no-repeat;
+    background-size: 36px 36px;
+    /* Reserve room for the absolutely positioned type icon + arrow. */
+    margin: 0 24px;
+}
+
+.stonecutter-recipe .crafting-item img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Stonecutter block icon, absolutely positioned over the panel so its
+   placement is tunable like every other coordinate. */
+.stonecutter-recipe .furnace-type {
+    position: absolute;
+    display: block;
+    left: 90px;
+    top: 17px;
+    width: 32px;
+    height: 32px;
+}
+
+.stonecutter-recipe .furnace-type img {
+    width: 32px;
+    height: 32px;
+    image-rendering: pixelated;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* ========================================================================
+   Recipe items (and quantity overlays)
+   ======================================================================== */
+
+/* Items sit inside the slot interior of the GUI background. Slot interior
+   size is 32x32 px (16x16 logical, 2x scale). */
+
+.crafting-recipe img:not(.burn-progress):not(.lit-flame):not(.xp-orb),
+.smelting-recipe img:not(.burn-progress):not(.lit-flame):not(.xp-orb),
+.crafting-recipe .crafting-item,
+.smelting-recipe .crafting-item {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+}
+
+.crafting-recipe img:not(.burn-progress):not(.lit-flame):not(.xp-orb),
+.smelting-recipe img:not(.burn-progress):not(.lit-flame):not(.xp-orb),
+.crafting-recipe .crafting-item img,
+.smelting-recipe .crafting-item img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* ====================================================================
+   Tooltips (hosted on .crafting-item wrappers, since <img> is a replaced
+   element and cannot host pseudo-elements reliably across browsers)
+   ==================================================================== */
+
+.crafting-item {
+    display: block;
+}
+
+.crafting-item img {
+    position: static !important;
+}
+
+/* Tooltip host: the flame wrapper shares the standard tooltip styling. */
+.cook-time[data-tooltip],
+.crafting-item[data-tooltip],
+.furnace-type[data-tooltip],
+.xp-gain[data-tooltip] {
+    cursor: help;
+}
+
+.cook-time[data-tooltip]::after,
+.crafting-item[data-tooltip]::after,
+.furnace-type[data-tooltip]::after,
+.xp-gain[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    z-index: 1000;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    transform: translateX(-50%);
+
+    width: max-content;
+    max-width: 400px;
+    padding: 10px 14px;
+
+    color: #fff;
+    /* Resource-pack tooltip: warm near-black bg, thin brown border */
+    background: rgb(25 22 21 / 94%);
+    border: 4px solid transparent;
+    border-image: url("/img/gui/tooltip_frame.png") 2 / 4px / 0 stretch;
+
+    font-family: "IllyriaRP", sans-serif;
+    font-size: 1rem;
+    line-height: 1.4;
+    text-align: left;
+    white-space: normal;
+    /* Pixel font: do not smooth */
+    font-smooth: never;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: unset;
+    /* Minecraft-style hard drop shadow */
+    text-shadow: 2px 2px 0 rgb(0 0 0 / 60%);
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+        opacity 80ms ease,
+        visibility 80ms ease;
+}
+
+.cook-time[data-tooltip]:hover::after,
+.crafting-item[data-tooltip]:hover::after,
+.furnace-type[data-tooltip]:hover::after,
+.xp-gain[data-tooltip]:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ========================================================================
+   Slot coordinates (2x-scaled pixel positions)
+   ======================================================================== */
+
+/* Crafting (3x3 grid + output) */
+
+.crafting-recipe .pos-0-0 {
+    left: 15px;
+    top: 14px;
+}
+.crafting-recipe .pos-1-0 {
+    left: 51px;
+    top: 14px;
+}
+.crafting-recipe .pos-2-0 {
+    left: 87px;
+    top: 14px;
+}
+.crafting-recipe .pos-0-1 {
+    left: 15px;
+    top: 50px;
+}
+.crafting-recipe .pos-1-1 {
+    left: 51px;
+    top: 50px;
+}
+.crafting-recipe .pos-2-1 {
+    left: 87px;
+    top: 50px;
+}
+.crafting-recipe .pos-0-2 {
+    left: 15px;
+    top: 86px;
+}
+.crafting-recipe .pos-1-2 {
+    left: 51px;
+    top: 86px;
+}
+.crafting-recipe .pos-2-2 {
+    left: 87px;
+    top: 86px;
+}
+.crafting-recipe .pos-output {
+    left: 204px;
+    top: 50px;
+}
+
+/* Recipe-block icon centered over the smelting arrow (arrow spans roughly
+   x 105-153, y 49-55 in the 2x crop; icon centers on x=133, y=52). */
+.furnace-type {
+    position: absolute;
+    display: block;
+    left: 90px;
+    top: 28px;
+    width: 24px;
+    height: 24px;
+}
+
+.furnace-type img {
+    width: 24px;
+    height: 24px;
+    image-rendering: pixelated;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Smelting flame (lit_progress sprite) overlaid on the empty flame outline
+   of the GUI background; hosts a tooltip via its .cook-time wrapper. */
+.smelting-recipe .cook-time {
+    position: absolute;
+    left: 34px;
+    top: 53px;
+    width: 28px;
+    height: 28px;
+    display: block;
+}
+
+.smelting-recipe .cook-time img {
+    width: 28px;
+    height: 28px;
+    image-rendering: pixelated;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Smelting progress arrow (burn_progress sprite) overlaid on the empty
+   outline of the GUI background. Not a slot; no tooltip. */
+.smelting-recipe .burn-progress {
+    position: absolute;
+    left: 78px;
+    top: 48px;
+    width: 48px;
+    height: 32px;
+    image-rendering: pixelated;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Experience orb, floating at the top-right corner of the output slot.
+   Absolutely positioned so placement is tunable; hosts a tooltip via its
+   .xp-gain wrapper. */
+.smelting-recipe .xp-gain {
+    position: absolute;
+    left: 182px;
+    top: 34px;
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+.smelting-recipe .xp-gain img {
+    width: 16px;
+    height: 16px;
+    image-rendering: pixelated;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Smelting (input top, fuel bottom, output right) */
+
+.smelting-recipe .pos-input {
+    left: 33px;
+    top: 14px;
+}
+
+.smelting-recipe .pos-fuel {
+    left: 35px;
+    top: 88px;
+}
+
+.smelting-recipe .pos-output {
+    left: 153px;
+    top: 50px;
+}
+
+/* ========================================================================
+   Slot hover highlight (vanilla translucent-white overlay)
+   ======================================================================== */
+
+.crafting-recipe .crafting-item::before,
+.smelting-recipe .crafting-item::before,
+.stonecutter-recipe .crafting-item::before {
+    content: "";
+    position: absolute;
+    /* Vanilla highlight is 18x18 vs the 16x16 item: 2px overhang at 2x */
+    inset: -2px;
+    z-index: 1;
+    background: rgb(255 255 255 / 30%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 60ms ease;
+}
+
+.crafting-recipe .crafting-item:hover::before,
+.smelting-recipe .crafting-item:hover::before,
+.stonecutter-recipe .crafting-item:hover::before {
+    opacity: 1;
+}
+
+/* In the stonecutter panel the slot box is the item wrapper itself,
+   so the highlight fills the slot exactly. */
+.stonecutter-recipe .crafting-item::before {
+    inset: 0;
+}
+
+/* ========================================================================
+   Quantity overlay
+   ======================================================================== */
+
+.crafting-quantity {
+    position: absolute;
+    right: 0;
+    bottom: -2px;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    font-family: "IllyriaRP", monospace;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    text-shadow:
+        1px 1px 0 #000,
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000;
+    pointer-events: none;
+}
