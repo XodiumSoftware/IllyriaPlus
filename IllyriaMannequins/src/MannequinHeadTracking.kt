@@ -1,9 +1,9 @@
 package org.xodium.illyriamannequins
 
 import io.papermc.paper.entity.LookAnchor
-import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Mannequin
+import org.bukkit.entity.Monster
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
 
 /** Makes mannequins track the nearest entity with their heads. */
@@ -42,20 +42,27 @@ internal object MannequinHeadTracking {
     }
 
     /**
-     * Finds the nearest entity a mannequin should track with its head.
+     * Finds the entity a mannequin should track with its head.
+     * Prioritizes the nearest monster over the nearest entity overall.
      *
      * @param mannequin The mannequin to find a target entity for.
-     * @return The nearest trackable entity within range, or `null`.
+     * @return The entity to track, or `null`.
      */
-    private fun findNearestEntity(mannequin: Mannequin): LivingEntity? =
-        mannequin
-            .world
-            .entities
-            .filterIsInstance<LivingEntity>()
-            .filter {
-                trackable(it, mannequin) &&
-                    it.location.distanceSquared(mannequin.location) <= TRACKING_RANGE_SQUARED
-            }.minByOrNull { it.location.distanceSquared(mannequin.location) }
+    private fun findNearestEntity(mannequin: Mannequin): LivingEntity? {
+        val trackable =
+            mannequin
+                .world
+                .entities
+                .filterIsInstance<LivingEntity>()
+                .filter {
+                    trackable(it, mannequin) &&
+                        it.location.distanceSquared(mannequin.location) <= TRACKING_RANGE_SQUARED
+                }
+        return trackable
+            .filterIsInstance<Monster>()
+            .ifEmpty { trackable }
+            .minByOrNull { it.location.distanceSquared(mannequin.location) }
+    }
 
     /**
      * Checks if an entity is trackable by a mannequin.
@@ -66,7 +73,7 @@ internal object MannequinHeadTracking {
      */
     private fun trackable(
         entity: LivingEntity,
-        mannequin: Entity,
+        mannequin: Mannequin,
     ): Boolean =
         !entity.isDead &&
             entity.uniqueId != mannequin.uniqueId &&
