@@ -55,6 +55,36 @@
     color: var(--fg);
 }
 
+.card .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    margin-bottom: 0.4rem;
+}
+
+/* When the icon is next to the title, shrink it to an inline size. */
+.card .card-header .card-icon {
+    display: block;
+    font-size: 1.6rem;
+    line-height: 1;
+    margin-bottom: 0;
+}
+
+.card .card-header img.card-icon {
+    display: block;
+    height: 1.6rem;
+    width: 1.6rem;
+    image-rendering: pixelated;
+}
+
+.card .card-header .card-title {
+    display: block;
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin-bottom: 0;
+}
+
 .card .card-icon {
     display: block;
     font-size: 2.2rem;
