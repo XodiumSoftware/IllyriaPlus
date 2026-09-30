@@ -1,8 +1,7 @@
-package org.xodium.illyriamannequins
+package org.xodium.illyriamannequins.combat
 
 import org.bukkit.Material
 import org.bukkit.Sound
-import org.bukkit.attribute.Attribute
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Mannequin
 import org.bukkit.entity.Monster
@@ -11,7 +10,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.inventory.EquipmentSlot
-import org.bukkit.inventory.ItemStack
+import org.xodium.illyriamannequins.CombatMode
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
 import org.xodium.illyriamannequins.MannequinPDC.combatMode
 import org.xodium.illyriamannequins.MannequinPDC.owner
@@ -19,7 +18,7 @@ import java.util.UUID
 
 /** Makes mannequins defend against nearby monsters and retaliate when attacked. */
 @Suppress("UnstableApiUsage")
-internal object MannequinCombat : Listener {
+internal object MannequinCoreCombat : Listener {
     /** The squared distance within which a mannequin performs a melee attack. */
     private const val ATTACK_RANGE_SQUARED = 4.0
 
@@ -40,12 +39,6 @@ internal object MannequinCombat : Listener {
 
     /** The interval in ticks between a mannequin's attacks. */
     private const val ATTACK_COOLDOWN_TICKS = 10
-
-    /** The delay in ticks before a mannequin raises its shield again after swinging. */
-    private const val SHIELD_RAISE_DELAY_TICKS = 5L
-
-    /** The unarmed melee damage dealt by a mannequin. */
-    private const val FIST_DAMAGE = 1.0
 
     /** The current retaliation target for each mannequin, keyed by entity UUID. */
     private val targets = mutableMapOf<UUID, LivingEntity>()
@@ -72,18 +65,26 @@ internal object MannequinCombat : Listener {
      */
     fun isDefensive(mannequin: Mannequin): Boolean = mannequin.uniqueId in defending
 
+    /**
+     * Checks if a mannequin is holding a shield in its offhand.
+     *
+     * @param mannequin The mannequin to check.
+     * @return `true` if a shield is held.
+     */
+    fun hasShield(mannequin: Mannequin): Boolean = mannequin.equipment.itemInOffHand.type == Material.SHIELD
+
     /** Registers the combat task and event listeners. */
     fun register() {
         instance.server.pluginManager.registerEvents(this, instance)
         instance.server.scheduler.runTaskTimer(
             instance,
-            MannequinCombat::updateCombat,
+            MannequinCoreCombat::updateCombat,
             COMBAT_INTERVAL_TICKS,
             COMBAT_INTERVAL_TICKS,
         )
         instance.server.scheduler.runTaskTimer(
             instance,
-            MannequinCombat::scanForThreats,
+            MannequinCoreCombat::scanForThreats,
             SCAN_INTERVAL_TICKS,
             SCAN_INTERVAL_TICKS,
         )
@@ -112,7 +113,7 @@ internal object MannequinCombat : Listener {
         }
     }
 
-    /** Puts defensive-mode mannequins near monsters into a defensive state and clears it when safe. */
+    /** Puts passive mannequins near monsters into combat or a defensive state, and clears it when safe. */
     private fun scanForThreats() {
         instance.server.worlds.forEach { world ->
             world
@@ -184,69 +185,13 @@ internal object MannequinCombat : Listener {
             .minByOrNull { it.location.distanceSquared(mannequin.location) }
 
     /**
-     * Checks if a mannequin is holding a shield in its offhand.
-     *
-     * @param mannequin The mannequin to check.
-     * @return `true` if a shield is held.
-     */
-    private fun hasShield(mannequin: Mannequin): Boolean = mannequin.equipment.itemInOffHand.type == Material.SHIELD
-
-    /**
-     * Chips a mannequin's shield durability and breaks it when it reaches zero.
+     * Blocks a hit with a mannequin's shield, chipping its durability.
      *
      * @param mannequin The mannequin whose shield to damage.
      */
     private fun damageShield(mannequin: Mannequin) {
         mannequin.world.playSound(mannequin.location, Sound.ITEM_SHIELD_BLOCK, 1.0f, 1.0f)
         mannequin.damageItemStack(EquipmentSlot.OFF_HAND, 1)
-    }
-
-    /**
-     * Makes a mannequin swing its arm and deal melee damage to its target.
-     * Lowers the shield for the swing and raises it again after a short delay.
-     *
-     * @param mannequin The mannequin performing the attack.
-     * @param target The entity to damage.
-     */
-    private fun dealDamage(
-        mannequin: Mannequin,
-        target: LivingEntity,
-    ) {
-        val shieldUp = hasShield(mannequin) && mannequin.isHandRaised
-        if (shieldUp) {
-            mannequin.clearActiveItem()
-        }
-        mannequin.swingMainHand()
-        target.damage(weaponDamage(mannequin.equipment.getItem(EquipmentSlot.HAND)), mannequin)
-        if (shieldUp) {
-            instance.server.scheduler.runTaskLater(
-                instance,
-                Runnable {
-                    if (mannequin.isValid && hasShield(mannequin)) {
-                        mannequin.startUsingItem(EquipmentSlot.OFF_HAND)
-                    }
-                },
-                SHIELD_RAISE_DELAY_TICKS,
-            )
-        }
-    }
-
-    /**
-     * Computes the attack damage of an item stack from its default mainhand attributes.
-     *
-     * @param weapon The held item.
-     * @return The total attack damage, at minimum [FIST_DAMAGE].
-     */
-    private fun weaponDamage(weapon: ItemStack): Double {
-        if (weapon.isEmpty) return FIST_DAMAGE
-        val amount =
-            weapon
-                .type
-                .asItemType()
-                ?.getDefaultAttributeModifiers(EquipmentSlot.HAND)
-                ?.get(Attribute.ATTACK_DAMAGE)
-                ?.sumOf { it.amount } ?: 0.0
-        return FIST_DAMAGE + amount
     }
 
     /**
@@ -328,12 +273,23 @@ internal object MannequinCombat : Listener {
             if (hasShield(mannequin)) {
                 mannequin.startUsingItem(EquipmentSlot.OFF_HAND)
             }
-            if (distanceSquared <= ATTACK_RANGE_SQUARED) {
+            val attackRange =
+                if (MannequinSpearCombat.hasSpear(mannequin)) {
+                    MannequinSpearCombat.ATTACK_RANGE_SQUARED
+                } else {
+                    ATTACK_RANGE_SQUARED
+                }
+            if (distanceSquared <= attackRange) {
                 mannequin.velocity = mannequin.velocity.setX(0.0).setZ(0.0)
                 val cooldown = (cooldowns[uuid] ?: 0) - COMBAT_INTERVAL_TICKS.toInt()
                 if (cooldown <= 0) {
-                    dealDamage(mannequin, target)
-                    cooldowns[uuid] = ATTACK_COOLDOWN_TICKS
+                    if (MannequinSpearCombat.hasSpear(mannequin)) {
+                        MannequinSpearCombat.lunge(mannequin, target)
+                        cooldowns[uuid] = MannequinSpearCombat.cooldownTicks()
+                    } else {
+                        MannequinSwordCombat.dealDamage(mannequin, target)
+                        cooldowns[uuid] = ATTACK_COOLDOWN_TICKS
+                    }
                 } else {
                     cooldowns[uuid] = cooldown
                 }

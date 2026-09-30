@@ -10,6 +10,7 @@ import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
 import org.xodium.illyriamannequins.MannequinPDC.anchor
 import org.xodium.illyriamannequins.MannequinPDC.movementMode
 import org.xodium.illyriamannequins.MannequinPDC.owner
+import org.xodium.illyriamannequins.combat.MannequinCoreCombat
 
 /** Moves mannequins according to their movement mode: following the owner or returning to their anchor. */
 @Suppress("UnstableApiUsage")
@@ -42,8 +43,8 @@ internal object MannequinFollowing {
             world
                 .entities
                 .filterIsInstance<Mannequin>()
-                .filterNot { MannequinCombat.isEngaged(it) }
-                .filterNot { MannequinCombat.isDefensive(it) }
+                .filterNot { MannequinCoreCombat.isEngaged(it) }
+                .filterNot { MannequinCoreCombat.isDefensive(it) }
                 .forEach { mannequin ->
                     when (mannequin.movementMode) {
                         MovementMode.FOLLOWING -> followOwner(mannequin)

@@ -1,3 +1,2 @@
-- handle spears
 - add ui for equipment
 - handle bow and crossbow (depends on ui for equipment)
