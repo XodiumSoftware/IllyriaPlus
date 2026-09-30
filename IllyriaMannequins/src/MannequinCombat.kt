@@ -12,7 +12,6 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.Damageable
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
 import org.xodium.illyriamannequins.MannequinPDC.combatMode
 import org.xodium.illyriamannequins.MannequinPDC.owner
@@ -198,16 +197,8 @@ internal object MannequinCombat : Listener {
      * @param mannequin The mannequin whose shield to damage.
      */
     private fun damageShield(mannequin: Mannequin) {
-        val shield = mannequin.equipment.itemInOffHand
-        val meta = shield.itemMeta as? Damageable ?: return
         mannequin.world.playSound(mannequin.location, Sound.ITEM_SHIELD_BLOCK, 1.0f, 1.0f)
-        meta.damage += 1
-        if (meta.damage >= shield.type.maxDurability) {
-            mannequin.equipment.setItemInOffHand(null)
-            mannequin.world.playSound(mannequin.location, Sound.ITEM_SHIELD_BREAK, 1.0f, 1.0f)
-        } else {
-            shield.itemMeta = meta
-        }
+        mannequin.damageItemStack(EquipmentSlot.OFF_HAND, 1)
     }
 
     /**
