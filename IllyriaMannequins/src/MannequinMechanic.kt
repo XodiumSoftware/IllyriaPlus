@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
+import org.xodium.illyriamannequins.MannequinPDC.owner
 
 /** Manages the mannequin and its interactions. */
 @Suppress("UnstableApiUsage")
@@ -33,6 +34,7 @@ internal object MannequinMechanic : Listener {
     @EventHandler
     fun on(event: PlayerInteractAtEntityEvent) {
         val mannequin = event.rightClicked as? Mannequin ?: return
+        if (event.player.uniqueId != mannequin.owner) return
         MannequinEditDialog.show(event.player, mannequin)
     }
 
@@ -41,5 +43,6 @@ internal object MannequinMechanic : Listener {
      *
      * @param player The player to spawn the mannequin for.
      */
-    private fun spawnMannequin(player: Player) = player.world.spawn(player.location, Mannequin::class.java)
+    private fun spawnMannequin(player: Player) =
+        player.world.spawn(player.location, Mannequin::class.java) { it.owner = player.uniqueId }
 }

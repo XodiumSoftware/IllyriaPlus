@@ -11,6 +11,8 @@ import net.kyori.adventure.text.event.ClickCallback
 import org.bukkit.entity.Mannequin
 import org.bukkit.entity.Player
 import org.xodium.illyrialib.Utils.MM
+import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
+import org.xodium.illyriamannequins.MannequinPDC.owner
 
 /** Dialog for editing a mannequin's properties. */
 @Suppress("UnstableApiUsage")
@@ -34,17 +36,29 @@ internal object MannequinEditDialog {
                             .builder(MM.deserialize("<firewatch>Edit Mannequin</gradient>"))
                             .body(
                                 listOf(
-                                    DialogBody.plainMessage(MM.deserialize("<gray>Adjust the mannequin's properties.")),
+                                    DialogBody.plainMessage(
+                                        MM.deserialize(
+                                            "<gray>Owner: <white>${
+                                                mannequin.owner?.let {
+                                                    instance
+                                                        .server
+                                                        .getOfflinePlayer(
+                                                            it,
+                                                        ).name
+                                                } ?: "Unknown"
+                                            }",
+                                        ),
+                                    ),
                                 ),
                             ).inputs(
                                 listOf(
                                     DialogInput
-                                        .bool("immovable", MM.deserialize("<gray>Immovable"))
-                                        .initial(mannequin.isImmovable)
+                                        .text("name", MM.deserialize("<gray>Name"))
+                                        .initial(mannequin.customName()?.let { MM.serialize(it) } ?: "")
                                         .build(),
                                     DialogInput
-                                        .text("description", MM.deserialize("<gray>Description"))
-                                        .initial(mannequin.description?.let { MM.serialize(it) } ?: "")
+                                        .bool("immovable", MM.deserialize("<gray>Immovable"))
+                                        .initial(mannequin.isImmovable)
                                         .build(),
                                 ),
                             ).build(),
@@ -69,8 +83,15 @@ internal object MannequinEditDialog {
                                         { response, _ ->
                                             mannequin.isImmovable =
                                                 response.getBoolean("immovable") ?: mannequin.isImmovable
-                                            mannequin.description =
-                                                MM.deserialize(response.getText("description") ?: "")
+                                            response.getText("name")?.let { name ->
+                                                if (name.isBlank()) {
+                                                    mannequin.customName(null)
+                                                    mannequin.isCustomNameVisible = false
+                                                } else {
+                                                    mannequin.customName(MM.deserialize(name))
+                                                    mannequin.isCustomNameVisible = true
+                                                }
+                                            }
                                         },
                                         ClickCallback
                                             .Options
