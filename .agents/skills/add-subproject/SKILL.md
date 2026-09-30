@@ -10,12 +10,12 @@ Use this skill when the user wants to create a new plugin module in the IllyriaP
 ## Before Writing Code
 
 1. Ask the user:
-   - What is the module name? (e.g., `IllyriaQuests`, `IllyriaEconomy`)
-   - What is the description/purpose of the module?
-   - Does it need NMS access (paperweight userdev)? If yes, follow the IllyriaBridge pattern.
-   - Does it need PacketEvents or other extra dependencies?
-   - Does it need a bootstrap class (for registry access)?
-   - Does it need a `resources/` directory (e.g., for structures)?
+    - What is the module name? (e.g., `IllyriaQuests`, `IllyriaEconomy`)
+    - What is the description/purpose of the module?
+    - Does it need NMS access (paperweight userdev)? If yes, follow the IllyriaBridge pattern.
+    - Does it need PacketEvents or other extra dependencies?
+    - Does it need a bootstrap class (for registry access)?
+    - Does it need a `resources/` directory (e.g., for structures)?
 
 2. Convert the module name to camelCase for the package name (e.g., `IllyriaQuests` → `org.xodium.illyriaquests`).
 
@@ -23,12 +23,13 @@ Use this skill when the user wants to create a new plugin module in the IllyriaP
 
 1. Create the module directory: `IllyriaPlus/<ModuleName>/`
 2. Create subdirectories:
-   - `src/` — Kotlin source directory
-   - `resources/` — if the module needs bundled resources
+    - `src/` — Kotlin source directory
+    - `resources/` — if the module needs bundled resources
 3. Create `build.gradle.kts` (see template below).
 4. Create `src/<ModuleName>.kt` — main plugin class (see template below).
 5. If a bootstrap class is needed, create `src/<ModuleName>Bootstrap.kt`.
 6. Update `settings.gradle.kts` to include the new module.
+7. Update `.github/workflows/ci.yml` to include the new module (see CI section below).
 
 ## Build Configuration Template
 
@@ -146,6 +147,7 @@ package org.xodium.<modulename>
 
 import org.bukkit.plugin.java.JavaPlugin
 import org.xodium.illyrialib.UpdateChecker
+import org.xodium.illyrialib.Utils.validateServerVersion
 
 /** Main class of the plugin. */
 internal class <ModuleName> : JavaPlugin() {
@@ -155,13 +157,9 @@ internal class <ModuleName> : JavaPlugin() {
     }
 
     override fun onEnable() {
-        instance = this
+        if (!validateServerVersion()) return
 
-        if (!server.version.contains(pluginMeta.version.substringBefore("+"))) {
-            logger.severe("This plugin requires the following supported version: ${pluginMeta.version}.")
-            server.pluginManager.disablePlugin(this)
-            return
-        }
+        instance = this
 
         UpdateChecker(this).check()
     }
@@ -175,6 +173,33 @@ Append the module name (quoted, camelCase-preserved) to the `include()` call in 
 ```kotlin
 include("IllyriaLib", "IllyriaCore", "IllyriaBridge", ..., "<ModuleName>")
 ```
+
+## CI Workflow Changes
+
+In `.github/workflows/ci.yml`:
+
+### 1. Changes Filter
+
+Add a `<filtername>` output to the `changes` job and its path filter:
+
+```yaml
+outputs:
+    <filtername>: ${{ steps.filter.outputs.<filtername> }}
+
+# In the filters block:
+<filtername>:
+    - "<ModuleName>/src/**"
+    - "<ModuleName>/build.gradle.kts"
+    - "IllyriaLib/**"
+```
+
+### 2. Lint Job
+
+Add `needs.changes.outputs.<filtername> == 'true'` to the lint job's `if` condition and all Kotlin-related step conditions.
+
+### 3. Build & Release Jobs
+
+Add `build_<filtername>` and `release_<filtername>` jobs. Copy the pattern from `build_bridge` / `release_bridge`, replacing the module name and artifact path. Both jobs must have `needs: [changes, lint]` (build) or `needs: [changes, build_<filtername>]` (release).
 
 ## Validation
 

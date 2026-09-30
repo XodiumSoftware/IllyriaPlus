@@ -42,6 +42,7 @@ jobs:
     outputs:
       core: ${{ steps.filter.outputs.core }}
       bridge: ${{ steps.filter.outputs.bridge }}
+      quests: ${{ steps.filter.outputs.quests }}
       resourcepack: ${{ steps.filter.outputs.resourcepack }}
       wiki: ${{ steps.filter.outputs.wiki }}
       all: ${{ steps.filter.outputs.all }}
@@ -63,6 +64,10 @@ jobs:
               - "IllyriaBridge/src/**"
               - "IllyriaBridge/build.gradle.kts"
               - "IllyriaLib/**"
+            quests:
+              - "IllyriaQuests/src/**"
+              - "IllyriaQuests/build.gradle.kts"
+              - "IllyriaLib/**"
             resourcepack:
               - "IllyriaResourcePack/**"
             wiki:
@@ -79,6 +84,7 @@ jobs:
     if: |
       needs.changes.outputs.core == 'true' ||
       needs.changes.outputs.bridge == 'true' ||
+      needs.changes.outputs.quests == 'true' ||
       needs.changes.outputs.resourcepack == 'true' ||
       needs.changes.outputs.wiki == 'true' ||
       needs.changes.outputs.all == 'true'
@@ -88,10 +94,10 @@ jobs:
       - id: checkout
         uses: actions/checkout@v7.0.1
 
-      # --- Kotlin (IllyriaCore / IllyriaBridge) ---
+      # --- Kotlin (IllyriaCore / IllyriaBridge / IllyriaQuests) ---
       - id: setup_java
         name: Setup Java
-        if: needs.changes.outputs.core == 'true' || needs.changes.outputs.bridge == 'true' || needs.changes.outputs.all == 'true'
+        if: needs.changes.outputs.core == 'true' || needs.changes.outputs.bridge == 'true' || needs.changes.outputs.quests == 'true' || needs.changes.outputs.all == 'true'
         uses: actions/setup-java@v6.0.1
         with:
           java-version: 25.0.4+101.0.LTS
@@ -99,12 +105,12 @@ jobs:
 
       - id: setup_gradle
         name: Setup Gradle
-        if: needs.changes.outputs.core == 'true' || needs.changes.outputs.bridge == 'true' || needs.changes.outputs.all == 'true'
+        if: needs.changes.outputs.core == 'true' || needs.changes.outputs.bridge == 'true' || needs.changes.outputs.quests == 'true' || needs.changes.outputs.all == 'true'
         uses: gradle/actions/setup-gradle@v6.4.0
 
       - id: run_ktlint
         name: Run ktlint
-        if: needs.changes.outputs.core == 'true' || needs.changes.outputs.bridge == 'true' || needs.changes.outputs.all == 'true'
+        if: needs.changes.outputs.core == 'true' || needs.changes.outputs.bridge == 'true' || needs.changes.outputs.quests == 'true' || needs.changes.outputs.all == 'true'
         run: ./gradlew ktlintCheck
 
       # --- Wiki (markdown) ---
@@ -223,6 +229,96 @@ jobs:
           if [ -n "$release_id" ]; then
             asset_ids=$(gh api repos/${{ github.repository }}/releases/$release_id/assets \
               --jq '.[] | select(.name | startswith("IllyriaBridge")) | .id' 2>/dev/null || echo "")
+            for asset_id in $asset_ids; do
+              gh api repos/${{ github.repository }}/releases/assets/$asset_id --method DELETE
+            done
+          fi
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - id: create_release
+        name: Create Nightly Release
+        uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          prerelease: true
+          files: dist/*
+          tag_name: nightly
+          name: Nightly Build
+
+  build_quests:
+    name: Build IllyriaQuests
+    needs: [changes, lint]
+    if: needs.changes.outputs.quests == 'true' || needs.changes.outputs.all == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: "${{ github.ref_name }}"
+    steps:
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+
+      - id: setup_java
+        name: Setup Java
+        uses: actions/setup-java@v6.0.1
+        with:
+          java-version: 25.0.4+101.0.LTS
+          distribution: temurin
+
+      - id: setup_gradle
+        name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6.4.0
+
+      - id: build
+        name: Build Plugin
+        run: ./gradlew :IllyriaQuests:shadowJar
+
+      - id: upload_artifact
+        name: Upload Artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: IllyriaQuests
+          path: IllyriaQuests/build/libs/*.jar
+
+  release_quests:
+    name: Release IllyriaQuests
+    needs: [changes, build_quests]
+    if: github.ref == 'refs/heads/main' && (needs.changes.outputs.quests == 'true' || needs.changes.outputs.all == 'true')
+    concurrency: nightly-release
+    runs-on: ubuntu-latest
+    environment:
+      name: "${{ github.ref_name }}"
+      url: "${{ steps.create_release.outputs.url }}"
+    permissions:
+      contents: write
+    steps:
+      - id: download_artifact
+        name: Download IllyriaQuests Artifact
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: IllyriaQuests
+          path: dist/
+
+      - id: update_nightly_tag
+        name: Update Nightly Tag
+        run: |
+          gh api repos/${{ github.repository }}/git/refs/tags/nightly \
+            --method PATCH --field sha=${{ github.sha }} --field force=true 2>/dev/null || \
+          gh api repos/${{ github.repository }}/git/refs \
+            --method POST --field ref=refs/tags/nightly --field sha=${{ github.sha }}
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - id: delete_old_assets
+        name: Delete Old IllyriaQuests Assets
+        run: |
+          release_id=$(gh api repos/${{ github.repository }}/releases/tags/nightly --jq '.id' 2>/dev/null || echo "")
+          if [ -n "$release_id" ]; then
+            asset_ids=$(gh api repos/${{ github.repository }}/releases/$release_id/assets \
+              --jq '.[] | select(.name | startswith("IllyriaQuests")) | .id' 2>/dev/null || echo "")
             for asset_id in $asset_ids; do
               gh api repos/${{ github.repository }}/releases/assets/$asset_id --method DELETE
             done
