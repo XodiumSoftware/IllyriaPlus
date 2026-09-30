@@ -16,6 +16,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.MainHand
 import org.xodium.illyrialib.Utils.MM
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
+import org.xodium.illyriamannequins.MannequinPDC.combatMode
 import org.xodium.illyriamannequins.MannequinPDC.following
 import org.xodium.illyriamannequins.MannequinPDC.owner
 
@@ -29,6 +30,7 @@ internal object MannequinEditDialog {
     private const val NAME_LABEL = "<gray>Name"
     private const val DESCRIPTION_LABEL = "<gray>Description"
     private const val FOLLOW_LABEL = "<gray>Follow"
+    private const val COMBAT_MODE_LABEL = "<gray>Combat Mode"
     private const val MAIN_HAND_LABEL = "<gray>Main Hand"
     private const val DISCARD_BUTTON = "<red>Discard</red>"
     private const val SAVE_BUTTON = "<green>Save</green>"
@@ -39,6 +41,7 @@ internal object MannequinEditDialog {
         NAME,
         DESCRIPTION,
         FOLLOW,
+        COMBAT_MODE,
         MAIN_HAND,
         ;
 
@@ -93,6 +96,20 @@ internal object MannequinEditDialog {
                                         .build(),
                                     DialogInput
                                         .singleOption(
+                                            Input.COMBAT_MODE.key,
+                                            MM.deserialize(COMBAT_MODE_LABEL),
+                                            CombatMode.entries.map { mode ->
+                                                SingleOptionDialogInput.OptionEntry.create(
+                                                    mode.name.lowercase(),
+                                                    Component.text(
+                                                        mode.name.lowercase().replaceFirstChar { it.uppercase() },
+                                                    ),
+                                                    mannequin.combatMode == mode,
+                                                )
+                                            },
+                                        ).build(),
+                                    DialogInput
+                                        .singleOption(
                                             Input.MAIN_HAND.key,
                                             MM.deserialize(MAIN_HAND_LABEL),
                                             listOf(
@@ -130,6 +147,10 @@ internal object MannequinEditDialog {
                                     DialogAction.customClick(
                                         { response, _ ->
                                             response.getBoolean(Input.FOLLOW.key)?.let { mannequin.following = it }
+                                            response.getText(Input.COMBAT_MODE.key)?.let { mode ->
+                                                mannequin.combatMode =
+                                                    CombatMode.valueOf(mode.uppercase())
+                                            }
                                             response.getText(Input.MAIN_HAND.key)?.let { hand ->
                                                 mannequin.mainHand =
                                                     MainHand.entries.first { it.name.lowercase() == hand }

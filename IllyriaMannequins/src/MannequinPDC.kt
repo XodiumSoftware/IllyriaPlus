@@ -9,11 +9,27 @@ import java.util.UUID
 /** Provides access to [Mannequin]-specific persistent data. */
 @Suppress("Unused")
 internal object MannequinPDC {
-    /** The [NamespacedKey] used for storing the mannequin owner's UUID. */
-    private val OWNER_KEY = NamespacedKey(instance, "owner")
+    /** The [NamespacedKey] used for storing the mannequin's combat mode. */
+    private val COMBAT_MODE_KEY = NamespacedKey(instance, "combat_mode")
 
     /** The [NamespacedKey] used for storing whether the mannequin follows players. */
     private val FOLLOWING_KEY = NamespacedKey(instance, "following")
+
+    /** The [NamespacedKey] used for storing the mannequin owner's UUID. */
+    private val OWNER_KEY = NamespacedKey(instance, "owner")
+
+    /**
+     * Gets or sets the [Mannequin]'s combat mode.
+     *
+     * @return The [CombatMode], or [CombatMode.DEFENSIVE] if not set.
+     */
+    var Mannequin.combatMode: CombatMode
+        get() =
+            persistentDataContainer
+                .get(COMBAT_MODE_KEY, PersistentDataType.STRING)
+                ?.let { runCatching { CombatMode.valueOf(it) }.getOrNull() }
+                ?: CombatMode.DEFENSIVE
+        set(value) = persistentDataContainer.set(COMBAT_MODE_KEY, PersistentDataType.STRING, value.name)
 
     /**
      * Gets or sets whether the [Mannequin] follows nearby players.
@@ -44,4 +60,16 @@ internal object MannequinPDC {
                 persistentDataContainer.set(OWNER_KEY, PersistentDataType.STRING, value.toString())
             }
         }
+}
+
+/** The combat behavior mode of a mannequin. */
+internal enum class CombatMode {
+    /** Attacks nearby monsters preemptively. */
+    AGGRESSIVE,
+
+    /** Raises the shield and only fights back after being attacked. */
+    DEFENSIVE,
+
+    /** Ignores monsters and keeps following the owner. */
+    FLEEING,
 }

@@ -5,6 +5,7 @@ import org.bukkit.Sound
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Mannequin
+import org.bukkit.entity.Monster
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -13,10 +14,11 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
+import org.xodium.illyriamannequins.MannequinPDC.combatMode
 import org.xodium.illyriamannequins.MannequinPDC.owner
 import java.util.UUID
 
-/** Makes mannequins retaliate against attackers and fight their owner's targets. */
+/** Makes mannequins defend against nearby monsters and retaliate when attacked. */
 @Suppress("UnstableApiUsage")
 internal object MannequinCombat : Listener {
     /** The squared distance within which a mannequin performs a melee attack. */
@@ -31,6 +33,12 @@ internal object MannequinCombat : Listener {
     /** The interval in ticks at which mannequin combat updates. */
     private const val COMBAT_INTERVAL_TICKS = 2L
 
+    /** The interval in ticks at which mannequins scan for nearby threats. */
+    private const val SCAN_INTERVAL_TICKS = 20L
+
+    /** The radius in blocks within which mannequins detect nearby monsters. */
+    private const val SCAN_RADIUS = 12.0
+
     /** The interval in ticks between a mannequin's attacks. */
     private const val ATTACK_COOLDOWN_TICKS = 10
 
@@ -43,6 +51,9 @@ internal object MannequinCombat : Listener {
     /** The ticks since each mannequin's last attack, keyed by entity UUID. */
     private val cooldowns = mutableMapOf<UUID, Int>()
 
+    /** The mannequins currently in a defensive state, by entity UUID. */
+    private val defending = mutableSetOf<UUID>()
+
     /**
      * Checks if a mannequin is currently engaged in combat.
      *
@@ -50,6 +61,14 @@ internal object MannequinCombat : Listener {
      * @return `true` if the mannequin is retaliating against an attacker.
      */
     fun isEngaged(mannequin: Mannequin): Boolean = mannequin.uniqueId in targets
+
+    /**
+     * Checks if a mannequin is currently in a defensive state.
+     *
+     * @param mannequin The mannequin to check.
+     * @return `true` if the mannequin is defending against a nearby monster.
+     */
+    fun isDefensive(mannequin: Mannequin): Boolean = mannequin.uniqueId in defending
 
     /** Registers the combat task and event listeners. */
     fun register() {
@@ -60,6 +79,12 @@ internal object MannequinCombat : Listener {
             COMBAT_INTERVAL_TICKS,
             COMBAT_INTERVAL_TICKS,
         )
+        instance.server.scheduler.runTaskTimer(
+            instance,
+            MannequinCombat::scanForThreats,
+            SCAN_INTERVAL_TICKS,
+            SCAN_INTERVAL_TICKS,
+        )
     }
 
     @EventHandler
@@ -68,10 +93,12 @@ internal object MannequinCombat : Listener {
         val victim = event.entity as? LivingEntity ?: return
         if (victim is Mannequin) {
             if (damager.uniqueId == victim.owner) return
-            if (victim.uniqueId in targets && hasShield(victim)) {
+            if (victim.combatMode == CombatMode.FLEEING) return
+            if ((isEngaged(victim) || isDefensive(victim)) && hasShield(victim)) {
                 event.isCancelled = true
                 damageShield(victim)
             }
+            defending.remove(victim.uniqueId)
             engage(victim, damager)
             return
         }
@@ -82,6 +109,66 @@ internal object MannequinCombat : Listener {
             defendOwner(victim, damager)
         }
     }
+
+    /** Puts defensive-mode mannequins near monsters into a defensive state and clears it when safe. */
+    private fun scanForThreats() {
+        instance.server.worlds.forEach { world ->
+            world
+                .entities
+                .filterIsInstance<Mannequin>()
+                .filterNot { isEngaged(it) }
+                .forEach { mannequin ->
+                    if (!mannequin.isValid) {
+                        defending.remove(mannequin.uniqueId)
+                        return@forEach
+                    }
+                    when (mannequin.combatMode) {
+                        CombatMode.AGGRESSIVE -> engageNearestMonster(mannequin)
+                        CombatMode.DEFENSIVE -> updateDefensiveState(mannequin)
+                        CombatMode.FLEEING -> defending.remove(mannequin.uniqueId)
+                    }
+                }
+        }
+    }
+
+    /**
+     * Engages the nearest monster in scan range, if any.
+     *
+     * @param mannequin The mannequin to engage for.
+     */
+    private fun engageNearestMonster(mannequin: Mannequin) {
+        nearestMonster(mannequin)?.let { engage(mannequin, it) }
+    }
+
+    /**
+     * Puts a mannequin into a defensive stance while a monster is nearby.
+     *
+     * @param mannequin The mannequin to update.
+     */
+    private fun updateDefensiveState(mannequin: Mannequin) {
+        if (nearestMonster(mannequin) != null) {
+            defending.add(mannequin.uniqueId)
+            mannequin.velocity = mannequin.velocity.setX(0.0).setZ(0.0)
+            if (hasShield(mannequin)) {
+                mannequin.startUsingItem(EquipmentSlot.OFF_HAND)
+            }
+        } else {
+            defending.remove(mannequin.uniqueId)
+        }
+    }
+
+    /**
+     * Finds the nearest monster within scan range of a mannequin.
+     *
+     * @param mannequin The mannequin to scan around.
+     * @return The nearest [Monster], or `null`.
+     */
+    private fun nearestMonster(mannequin: Mannequin): Monster? =
+        mannequin
+            .getNearbyEntities(SCAN_RADIUS, SCAN_RADIUS, SCAN_RADIUS)
+            .filterIsInstance<Monster>()
+            .filterNot { it.isDead || it.isInvisible }
+            .minByOrNull { it.location.distanceSquared(mannequin.location) }
 
     /**
      * Checks if a mannequin is holding a shield in its offhand.
@@ -155,6 +242,7 @@ internal object MannequinCombat : Listener {
             .world
             .entities
             .filterIsInstance<Mannequin>()
+            .filterNot { it.combatMode == CombatMode.FLEEING }
             .filter { it.owner == owner.uniqueId && it.uniqueId != victim.uniqueId }
             .forEach { engage(it, victim) }
     }
@@ -173,6 +261,7 @@ internal object MannequinCombat : Listener {
             .world
             .entities
             .filterIsInstance<Mannequin>()
+            .filterNot { it.combatMode == CombatMode.FLEEING }
             .filter { it.owner == owner.uniqueId && it.uniqueId != attacker.uniqueId }
             .forEach { engage(it, attacker) }
     }
