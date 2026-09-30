@@ -53,6 +53,12 @@ internal object MannequinMechanic : Listener {
             TRACKING_INTERVAL_TICKS,
             TRACKING_INTERVAL_TICKS,
         )
+        instance.server.scheduler.runTaskTimer(
+            instance,
+            MannequinMechanic::updateFollowing,
+            TRACKING_INTERVAL_TICKS,
+            TRACKING_INTERVAL_TICKS,
+        )
     }
 
     @EventHandler
@@ -70,18 +76,28 @@ internal object MannequinMechanic : Listener {
     private fun spawnMannequin(player: Player) =
         player.world.spawn(player.location, Mannequin::class.java) { it.owner = player.uniqueId }
 
-    /** Makes all mannequins track, and following mannequins approach, the nearest player. */
+    /** Makes all mannequins look at the nearest trackable player within range. */
     private fun updateHeadTracking() {
         instance.server.worlds.forEach { world ->
             world.entities
                 .filterIsInstance<Mannequin>()
                 .forEach { mannequin ->
-                    val target = findNearestPlayer(mannequin) ?: return@forEach
-                    target.eyeLocation.let { eyes ->
-                        mannequin.lookAt(eyes.x(), eyes.y(), eyes.z(), LookAnchor.EYES)
+                    findNearestPlayer(mannequin)?.let { target ->
+                        target.eyeLocation.let { eyes ->
+                            mannequin.lookAt(eyes.x(), eyes.y(), eyes.z(), LookAnchor.EYES)
+                        }
                     }
-                    if (mannequin.following) followOwner(mannequin)
                 }
+        }
+    }
+
+    /** Makes all following mannequins move toward their owner. */
+    private fun updateFollowing() {
+        instance.server.worlds.forEach { world ->
+            world.entities
+                .filterIsInstance<Mannequin>()
+                .filter { it.following }
+                .forEach { followOwner(it) }
         }
     }
 
