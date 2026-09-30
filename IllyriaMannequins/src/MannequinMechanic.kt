@@ -2,7 +2,9 @@ package org.xodium.illyriamannequins
 
 import com.mojang.brigadier.Command
 import io.papermc.paper.command.brigadier.Commands
+import io.papermc.paper.entity.LookAnchor
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
+import org.bukkit.entity.Entity
 import org.bukkit.entity.Mannequin
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -14,6 +16,12 @@ import org.xodium.illyriamannequins.MannequinPDC.owner
 /** Manages the mannequin and its interactions. */
 @Suppress("UnstableApiUsage")
 internal object MannequinMechanic : Listener {
+    /** The squared distance within which mannequins track players with their heads. */
+    private const val TRACKING_RANGE_SQUARED = 64.0
+
+    /** The interval in ticks at which mannequin head tracking updates. */
+    private const val TRACKING_INTERVAL_TICKS = 2L
+
     /** Registers the mannequin command and event listeners. */
     fun register() {
         instance.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) { event ->
@@ -29,6 +37,12 @@ internal object MannequinMechanic : Listener {
             )
         }
         instance.server.pluginManager.registerEvents(this, instance)
+        instance.server.scheduler.runTaskTimer(
+            instance,
+            MannequinMechanic::updateHeadTracking,
+            TRACKING_INTERVAL_TICKS,
+            TRACKING_INTERVAL_TICKS,
+        )
     }
 
     @EventHandler
@@ -45,4 +59,47 @@ internal object MannequinMechanic : Listener {
      */
     private fun spawnMannequin(player: Player) =
         player.world.spawn(player.location, Mannequin::class.java) { it.owner = player.uniqueId }
+
+    /** Makes all mannequins look at the nearest trackable player within range. */
+    private fun updateHeadTracking() {
+        instance.server.worlds.forEach { world ->
+            world.entities
+                .filterIsInstance<Mannequin>()
+                .forEach { mannequin ->
+                    findNearestPlayer(mannequin)
+                        ?.eyeLocation
+                        ?.let { playerEyes ->
+                            mannequin.lookAt(playerEyes.x(), playerEyes.y(), playerEyes.z(), LookAnchor.EYES)
+                        }
+                }
+        }
+    }
+
+    /**
+     * Finds the nearest player a mannequin should track with its head.
+     *
+     * @param mannequin The mannequin to find a target player for.
+     * @return The nearest trackable player within range, or `null`.
+     */
+    private fun findNearestPlayer(mannequin: Mannequin): Player? =
+        mannequin.world.players
+            .filter { trackableBy(it, mannequin) }
+            .minByOrNull { it.location.distanceSquared(mannequin.location) }
+
+    /**
+     * Checks if a player is trackable by a mannequin.
+     *
+     * @param player The player to check.
+     * @param mannequin The mannequin doing the tracking.
+     * @return `true` if the player can be tracked.
+     */
+    private fun trackableBy(
+        player: Player,
+        mannequin: Entity,
+    ): Boolean =
+        !player.isDead &&
+            player.isOnline &&
+            player.uniqueId != mannequin.uniqueId &&
+            !player.isInvisible &&
+            player.location.distanceSquared(mannequin.location) <= TRACKING_RANGE_SQUARED
 }
