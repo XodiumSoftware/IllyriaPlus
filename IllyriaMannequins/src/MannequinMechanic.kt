@@ -31,6 +31,7 @@ internal object MannequinMechanic : Listener {
         instance.server.pluginManager.registerEvents(this, instance)
         MannequinHeadTracking.register()
         MannequinFollowing.register()
+        MannequinHostility.register()
     }
 
     @EventHandler
