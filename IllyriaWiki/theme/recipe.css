@@ -122,8 +122,8 @@
 /* Items sit inside the slot interior of the GUI background. Slot interior
    size is 32x32 px (16x16 logical, 2x scale). */
 
-.crafting-recipe img:not(.burn-progress),
-.smelting-recipe img:not(.burn-progress),
+.crafting-recipe img:not(.burn-progress):not(.lit-flame),
+.smelting-recipe img:not(.burn-progress):not(.lit-flame),
 .crafting-recipe .crafting-item,
 .smelting-recipe .crafting-item {
     position: absolute;
@@ -131,8 +131,8 @@
     height: 32px;
 }
 
-.crafting-recipe img:not(.burn-progress),
-.smelting-recipe img:not(.burn-progress),
+.crafting-recipe img:not(.burn-progress):not(.lit-flame),
+.smelting-recipe img:not(.burn-progress):not(.lit-flame),
 .crafting-recipe .crafting-item img,
 .smelting-recipe .crafting-item img {
     width: 32px;
@@ -268,6 +268,20 @@
     width: 24px;
     height: 24px;
     image-rendering: pixelated;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Smelting flame (lit_progress sprite) overlaid on the empty flame outline
+   of the GUI background, tunable like every other position. */
+.smelting-recipe .lit-flame {
+    position: absolute;
+    left: 33px;
+    top: 34px;
+    width: 28px;
+    height: 28px;
+    image-rendering: pixelated;
+    pointer-events: none;
     user-select: none;
     -webkit-user-drag: none;
 }

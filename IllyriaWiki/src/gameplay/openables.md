@@ -11,7 +11,7 @@ Extended behavior for doors and other openable blocks.
 
 ---
 
-## Double Door Sync <img class="mc-icon" alt="" src="../img/item/oak_door.png">
+## Double Door Sync
 
 Right-clicking one door of a **double door pair** automatically opens or closes the adjacent door in sync.
 No more manually clicking both doors.
@@ -23,7 +23,7 @@ No more manually clicking both doors.
 
 ---
 
-## Door Knocking <img class="mc-icon" alt="" src="../img/item/oak_door.png">
+## Door Knocking
 
 Announce your arrival by knocking on a door!
 
