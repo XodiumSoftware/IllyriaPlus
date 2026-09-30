@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD013 -->
+
 # Recipes
 
 <div class="card-grid recipe-grid">

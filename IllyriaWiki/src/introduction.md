@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD013 -->
+
 # IllyriaRPG Wiki
 
 Welcome to the official wiki for the **IllyriaRPG** Minecraft server.
