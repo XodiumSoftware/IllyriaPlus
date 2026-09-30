@@ -10,14 +10,14 @@ Use the `/mannequin` command (operator-only) to spawn a mannequin at your locati
 
 **Right-click** a mannequin you own to open the edit dialog, where you can change:
 
-| Setting     | Description                                                                 |
-| ----------- | --------------------------------------------------------------------------- |
-| Skin        | Player name whose skin the mannequin wears (leave blank for default)        |
-| Name        | Custom display name shown above its head                                    |
-| Description | Text shown below the name                                                   |
-| Follow      | Whether the mannequin follows you (see below)                               |
-| Combat Mode | How it reacts to nearby monsters: Aggressive, Defensive (default), Fleeing  |
-| Main Hand   | Which hand is dominant (left or right)                                      |
+| Setting     | Description                                                                      |
+| ----------- | -------------------------------------------------------------------------------- |
+| Skin        | Player name whose skin the mannequin wears (leave blank for default)             |
+| Name        | Custom display name shown above its head                                         |
+| Description | Text shown below the name                                                        |
+| Movement    | How it moves: Following (default), or Stationary (anchored to its location)      |
+| Combat Mode | How it reacts to nearby monsters: Aggressive, Defensive (default), Fleeing       |
+| Main Hand   | Which hand is dominant (left or right)                                           |
 
 ## Equipment
 
@@ -41,13 +41,18 @@ Use the `/mannequin` command (operator-only) to spawn a mannequin at your locati
 
 Mannequins turn their heads to look at the nearest living entity — players, animals, monsters — within 8 blocks.
 
-### Following
+### Movement
 
-When **Follow** is enabled, the mannequin walks behind you at walking speed:
+The **Movement** mode controls how the mannequin relates to its owner:
 
-- Stops when within 2 blocks of you.
-- Teleports to you when you stray more than 12 blocks away (or switch dimensions), landing on the nearest ground — never mid-air.
-- Pauses while fighting or defending (Combat Mode) and resumes afterwards.
+- **Following** *(default)* — walks behind you at walking speed:
+    - Stops when within 2 blocks of you.
+    - Teleports to you when you stray more than 12 blocks away (or switch dimensions), landing on the nearest ground — never mid-air.
+- **Stationary** — remembers the location where the mode was set as its anchor and returns to it after combat or if knocked away:
+    - Walks back to the anchor at walking speed.
+    - Teleports to the anchor when pushed more than 12 blocks away, landing on the nearest ground.
+
+Movement pauses while fighting or defending (see Combat) and resumes afterwards.
 
 ### Combat
 
