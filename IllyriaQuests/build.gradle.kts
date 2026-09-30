@@ -6,6 +6,7 @@ plugins {
     kotlin("jvm")
 
     id("com.gradleup.shadow")
+    id("io.papermc.paperweight.userdev")
     id("xyz.jpenilla.run-paper")
     id("xyz.jpenilla.resource-factory-paper-convention")
     id("org.jlleitschuh.gradle.ktlint")
@@ -31,7 +32,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:$mcVersion.build.+")
+    paperweight.paperDevBundle("$mcVersion.build.+")
     compileOnly("com.google.code.gson:gson:2.14.0")
 
     implementation(project(":IllyriaLib"))
