@@ -1,0 +1,22 @@
+/* Global font application. */
+
+/* Apply IllyriaRP globally. */
+body {
+    font-family: "IllyriaRP", "Open Sans", sans-serif;
+}
+
+pre,
+code,
+tt {
+    font-family: var(--mono-font) !important;
+}
+
+/* Minecraft-style hard drop shadow on headings. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    text-shadow: 2px 2px 0 rgb(0 0 0 / 60%);
+}

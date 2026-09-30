@@ -92,8 +92,8 @@
 /* Items sit inside the slot interior of the GUI background. Slot interior
    size is 32x32 px (16x16 logical, 2x scale). */
 
-.crafting-recipe img,
-.smelting-recipe img,
+.crafting-recipe img:not(.burn-progress),
+.smelting-recipe img:not(.burn-progress),
 .crafting-recipe .crafting-item,
 .smelting-recipe .crafting-item {
     position: absolute;
@@ -101,8 +101,8 @@
     height: 32px;
 }
 
-.crafting-recipe img,
-.smelting-recipe img,
+.crafting-recipe img:not(.burn-progress),
+.smelting-recipe img:not(.burn-progress),
 .crafting-recipe .crafting-item img,
 .smelting-recipe .crafting-item img {
     width: 32px;
@@ -226,16 +226,32 @@
 /* Recipe-block icon centered over the smelting arrow (arrow spans roughly
    x 105-153, y 49-55 in the 2x crop; icon centers on x=133, y=52). */
 .furnace-type {
-    left: 117px;
-    top: 36px;
-    width: 32px;
-    height: 32px;
+    position: absolute;
+    display: block;
+    left: 90px;
+    top: 28px;
+    width: 24px;
+    height: 24px;
 }
 
 .furnace-type img {
-    width: 32px;
+    width: 24px;
+    height: 24px;
+    image-rendering: pixelated;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Smelting progress arrow (burn_progress sprite) overlaid on the empty
+   outline of the GUI background. Not a slot; no tooltip. */
+.smelting-recipe .burn-progress {
+    position: absolute;
+    left: 78px;
+    top: 48px;
+    width: 48px;
     height: 32px;
     image-rendering: pixelated;
+    pointer-events: none;
     user-select: none;
     -webkit-user-drag: none;
 }
@@ -243,8 +259,8 @@
 /* Smelting (input top, fuel bottom, output right) */
 
 .smelting-recipe .pos-input {
-    left: 35px;
-    top: 16px;
+    left: 33px;
+    top: 14px;
 }
 
 .smelting-recipe .pos-fuel {
@@ -308,29 +324,4 @@
         1px -1px 0 #000,
         -1px 1px 0 #000;
     pointer-events: none;
-}
-
-/* ========================================================================
-   Global font application
-   ======================================================================== */
-
-/* Apply IllyriaRP globally. */
-body {
-    font-family: "IllyriaRP", "Open Sans", sans-serif;
-}
-
-pre,
-code,
-tt {
-    font-family: var(--mono-font) !important;
-}
-
-/* Minecraft-style hard drop shadow on headings. */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    text-shadow: 2px 2px 0 rgb(0 0 0 / 60%);
 }
