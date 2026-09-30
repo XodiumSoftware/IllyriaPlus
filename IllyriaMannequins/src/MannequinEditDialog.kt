@@ -16,8 +16,9 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.MainHand
 import org.xodium.illyrialib.Utils.MM
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
+import org.xodium.illyriamannequins.MannequinPDC.anchor
 import org.xodium.illyriamannequins.MannequinPDC.combatMode
-import org.xodium.illyriamannequins.MannequinPDC.following
+import org.xodium.illyriamannequins.MannequinPDC.movementMode
 import org.xodium.illyriamannequins.MannequinPDC.owner
 
 /** Dialog for editing a mannequin's properties. */
@@ -29,7 +30,7 @@ internal object MannequinEditDialog {
     private const val SKIN_LABEL = "<gray>Skin (player name)"
     private const val NAME_LABEL = "<gray>Name"
     private const val DESCRIPTION_LABEL = "<gray>Description"
-    private const val FOLLOW_LABEL = "<gray>Follow"
+    private const val FOLLOW_LABEL = "<gray>Movement"
     private const val COMBAT_MODE_LABEL = "<gray>Combat Mode"
     private const val MAIN_HAND_LABEL = "<gray>Main Hand"
     private const val DISCARD_BUTTON = "<red>Discard</red>"
@@ -40,7 +41,7 @@ internal object MannequinEditDialog {
         SKIN,
         NAME,
         DESCRIPTION,
-        FOLLOW,
+        MOVEMENT_MODE,
         COMBAT_MODE,
         MAIN_HAND,
         ;
@@ -91,9 +92,17 @@ internal object MannequinEditDialog {
                                         .maxLength(4096)
                                         .build(),
                                     DialogInput
-                                        .bool(Input.FOLLOW.key, MM.deserialize(FOLLOW_LABEL))
-                                        .initial(mannequin.following)
-                                        .build(),
+                                        .singleOption(
+                                            Input.MOVEMENT_MODE.key,
+                                            MM.deserialize(FOLLOW_LABEL),
+                                            MovementMode.entries.map { mode ->
+                                                SingleOptionDialogInput.OptionEntry.create(
+                                                    mode.name.lowercase(),
+                                                    mode.display,
+                                                    mannequin.movementMode == mode,
+                                                )
+                                            },
+                                        ).build(),
                                     DialogInput
                                         .singleOption(
                                             Input.COMBAT_MODE.key,
@@ -144,7 +153,16 @@ internal object MannequinEditDialog {
                                 .action(
                                     DialogAction.customClick(
                                         { response, _ ->
-                                            response.getBoolean(Input.FOLLOW.key)?.let { mannequin.following = it }
+                                            response.getText(Input.MOVEMENT_MODE.key)?.let { mode ->
+                                                mannequin.movementMode =
+                                                    MovementMode.valueOf(mode.uppercase())
+                                                mannequin.anchor =
+                                                    if (mannequin.movementMode == MovementMode.STATIONARY) {
+                                                        mannequin.location
+                                                    } else {
+                                                        null
+                                                    }
+                                            }
                                             response.getText(Input.COMBAT_MODE.key)?.let { mode ->
                                                 mannequin.combatMode =
                                                     CombatMode.valueOf(mode.uppercase())

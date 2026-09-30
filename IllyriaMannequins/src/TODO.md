@@ -1,3 +1,3 @@
+- handle spears
 - add ui for equipment
 - handle bow and crossbow (depends on ui for equipment)
-- add anchoring, we swap the following (bool) with a selectable [following/stationary] where when stationary it will remember that location upon mode set and then return to that location like an achor after combat or whatever.
