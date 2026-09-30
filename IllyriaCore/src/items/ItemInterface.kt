@@ -9,7 +9,7 @@ import org.xodium.illyriacore.Utils.toRegistryKeyFragment
 internal interface ItemInterface {
     /** The unique key identifying this item. */
     val key: NamespacedKey
-        get() = NamespacedKey(instance, javaClass.toRegistryKeyFragment<ItemInterface>())
+        get() = NamespacedKey(instance, javaClass.toRegistryKeyFragment("Item"))
 
     /**
      * Creates an [ItemStack] for this item.
