@@ -41,11 +41,17 @@ internal object MannequinCoreCombat : Listener {
     /** The interval in ticks between a mannequin's attacks. */
     private const val ATTACK_COOLDOWN_TICKS = 10
 
+    /** The interval in ticks a mannequin backs away from its target after striking. */
+    private const val RETREAT_TICKS = 6
+
     /** The current retaliation target for each mannequin, keyed by entity UUID. */
     private val targets = mutableMapOf<UUID, LivingEntity>()
 
     /** The ticks since each mannequin's last attack, keyed by entity UUID. */
     private val cooldowns = mutableMapOf<UUID, Int>()
+
+    /** The remaining retreat ticks for each mannequin after striking, keyed by entity UUID. */
+    private val retreats = mutableMapOf<UUID, Int>()
 
     /** The mannequins currently in a defensive state, by entity UUID. */
     private val defending = mutableSetOf<UUID>()
@@ -271,6 +277,7 @@ internal object MannequinCoreCombat : Listener {
             val mannequin = instance.server.getEntity(uuid) as? Mannequin
             if (mannequin == null || target.isDead || target.world != mannequin.world) {
                 cooldowns.remove(uuid)
+                retreats.remove(uuid)
                 iterator.remove()
                 if (mannequin != null && mannequin.isHandRaised) {
                     mannequin.clearActiveItem()
@@ -280,6 +287,7 @@ internal object MannequinCoreCombat : Listener {
             val distanceSquared = mannequin.location.distanceSquared(target.location)
             if (distanceSquared > GIVE_UP_RANGE_SQUARED) {
                 cooldowns.remove(uuid)
+                retreats.remove(uuid)
                 iterator.remove()
                 if (mannequin.isHandRaised) {
                     mannequin.clearActiveItem()
@@ -308,8 +316,17 @@ internal object MannequinCoreCombat : Listener {
                     ATTACK_RANGE_SQUARED
                 }
             if (distanceSquared <= attackRange) {
-                mannequin.velocity = mannequin.velocity.setX(0.0).setZ(0.0)
                 val cooldown = (cooldowns[uuid] ?: 0) - COMBAT_INTERVAL_TICKS.toInt()
+                val retreating = (retreats[uuid] ?: 0) > 0
+                if (retreating) {
+                    val away = mannequin.location.stepToward(target.location, CHASE_SPEED)
+                    if (away != null) {
+                        mannequin.velocity = away.apply { y = mannequin.velocity.y }
+                    }
+                    retreats[uuid] = retreats[uuid]!! - COMBAT_INTERVAL_TICKS.toInt()
+                } else {
+                    mannequin.velocity = mannequin.velocity.setX(0.0).setZ(0.0)
+                }
                 if (cooldown <= 0) {
                     if (MannequinSpearCombat.hasSpear(mannequin)) {
                         MannequinSpearCombat.lunge(mannequin, target)
@@ -318,6 +335,7 @@ internal object MannequinCoreCombat : Listener {
                         MannequinSwordCombat.dealDamage(mannequin, target)
                         cooldowns[uuid] = ATTACK_COOLDOWN_TICKS
                     }
+                    retreats[uuid] = RETREAT_TICKS
                 } else {
                     cooldowns[uuid] = cooldown
                 }
