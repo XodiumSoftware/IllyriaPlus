@@ -1,5 +1,7 @@
 package org.xodium.illyriamannequins
 
+import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Mannequin
@@ -9,6 +11,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.Damageable
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
 import org.xodium.illyriamannequins.MannequinPDC.owner
 import java.util.UUID
@@ -63,15 +66,45 @@ internal object MannequinCombat : Listener {
     fun on(event: EntityDamageByEntityEvent) {
         val damager = event.damager as? LivingEntity ?: return
         val victim = event.entity as? LivingEntity ?: return
-        val hitMannequin = event.entity as? Mannequin
-        if (hitMannequin != null && damager.uniqueId != hitMannequin.owner) {
-            engage(hitMannequin, damager)
+        if (victim is Mannequin) {
+            if (damager.uniqueId == victim.owner) return
+            if (victim.uniqueId in targets && hasShield(victim)) {
+                event.isCancelled = true
+                damageShield(victim)
+            }
+            engage(victim, damager)
+            return
         }
         if (damager is Player) {
             engageOwnerMannequins(damager, victim)
         }
         if (victim is Player) {
             defendOwner(victim, damager)
+        }
+    }
+
+    /**
+     * Checks if a mannequin is holding a shield in its offhand.
+     *
+     * @param mannequin The mannequin to check.
+     * @return `true` if a shield is held.
+     */
+    private fun hasShield(mannequin: Mannequin): Boolean = mannequin.equipment.itemInOffHand.type == Material.SHIELD
+
+    /**
+     * Chips a mannequin's shield durability and breaks it when it reaches zero.
+     *
+     * @param mannequin The mannequin whose shield to damage.
+     */
+    private fun damageShield(mannequin: Mannequin) {
+        val shield = mannequin.equipment.itemInOffHand
+        val meta = shield.itemMeta as? Damageable ?: return
+        meta.damage += 1
+        if (meta.damage >= shield.type.maxDurability) {
+            mannequin.equipment.setItemInOffHand(null)
+            mannequin.world.playSound(mannequin.location, Sound.ITEM_SHIELD_BREAK, 1.0f, 1.0f)
+        } else {
+            shield.itemMeta = meta
         }
     }
 
@@ -174,6 +207,9 @@ internal object MannequinCombat : Listener {
                 cooldowns.remove(uuid)
                 iterator.remove()
                 continue
+            }
+            if (hasShield(mannequin)) {
+                mannequin.startUsingItem(EquipmentSlot.OFF_HAND)
             }
             if (distanceSquared <= ATTACK_RANGE_SQUARED) {
                 mannequin.velocity = mannequin.velocity.setX(0.0).setZ(0.0)
