@@ -14,6 +14,7 @@ import org.xodium.illyriamannequins.CombatMode
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
 import org.xodium.illyriamannequins.MannequinPDC.combatMode
 import org.xodium.illyriamannequins.MannequinPDC.owner
+import org.xodium.illyriamannequins.Utils.stepToward
 import java.util.UUID
 
 /** Makes mannequins defend against nearby monsters and retaliate when attacked. */
@@ -295,14 +296,7 @@ internal object MannequinCoreCombat : Listener {
                 }
                 continue
             }
-            val step =
-                target
-                    .location
-                    .toVector()
-                    .subtract(mannequin.location.toVector())
-                    .setY(0)
-            if (step.lengthSquared() == 0.0) continue
-            step.normalize().multiply(CHASE_SPEED)
+            val step = target.location.stepToward(mannequin.location, CHASE_SPEED) ?: continue
             mannequin.velocity = step.apply { y = mannequin.velocity.y }
         }
     }

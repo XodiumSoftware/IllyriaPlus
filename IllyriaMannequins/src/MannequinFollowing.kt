@@ -1,15 +1,15 @@
 package org.xodium.illyriamannequins
 
-import org.bukkit.HeightMap
 import org.bukkit.Location
-import org.bukkit.entity.Entity
 import org.bukkit.entity.Mannequin
-import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
 import org.xodium.illyriamannequins.MannequinPDC.anchor
 import org.xodium.illyriamannequins.MannequinPDC.movementMode
 import org.xodium.illyriamannequins.MannequinPDC.owner
+import org.xodium.illyriamannequins.Utils.groundLocation
+import org.xodium.illyriamannequins.Utils.stepToward
+import org.xodium.illyriamannequins.Utils.visibleTo
 import org.xodium.illyriamannequins.combat.MannequinCoreCombat
 
 /** Moves mannequins according to their movement mode: following the owner or returning to their anchor. */
@@ -61,12 +61,12 @@ internal object MannequinFollowing {
      */
     private fun followOwner(mannequin: Mannequin) {
         val owner = mannequin.owner?.let { instance.server.getPlayer(it) } ?: return
-        if (!visible(owner, mannequin)) return
+        if (!owner.visibleTo(mannequin)) return
         if (owner.world != mannequin.world) {
-            mannequin.teleport(owner.groundLocation())
+            mannequin.teleport(owner.location.groundLocation())
             return
         }
-        moveToward(mannequin, owner.location, owner.groundLocation())
+        moveToward(mannequin, owner.location, owner.location.groundLocation())
     }
 
     /**
@@ -102,13 +102,7 @@ internal object MannequinFollowing {
             mannequin.teleport(teleportTarget)
             return
         }
-        val step =
-            destination
-                .toVector()
-                .subtract(here.toVector())
-                .setY(0)
-        if (step.lengthSquared() == 0.0) return
-        step.normalize().multiply(SPEED)
+        val step = destination.stepToward(here, SPEED) ?: return
         mannequin.isJumping = blockedAhead(mannequin, step)
         mannequin.velocity = step.apply { y = mannequin.velocity.y }
     }
@@ -131,40 +125,4 @@ internal object MannequinFollowing {
             .block
             .type
             .isSolid
-
-    /**
-     * Finds the nearest solid ground at or below a location's position for a mannequin to teleport to.
-     *
-     * @receiver The location whose ground to find.
-     * @return The [Location] on top of the highest motion-blocking block.
-     */
-    private fun Location.groundLocation(): Location =
-        world
-            .getHighestBlockAt(this, HeightMap.MOTION_BLOCKING_NO_LEAVES)
-            .location
-            .add(0.5, 1.0, 0.5)
-
-    /**
-     * Finds the nearest solid ground at or below a player's location for a mannequin to teleport to.
-     *
-     * @receiver The player whose ground to find.
-     * @return The [Location] on top of the highest motion-blocking block at the player's position.
-     */
-    private fun Player.groundLocation(): Location = location.groundLocation()
-
-    /**
-     * Checks if a player is visible to a mannequin.
-     *
-     * @param player The player to check.
-     * @param mannequin The mannequin doing the tracking.
-     * @return `true` if the player is visible to the mannequin.
-     */
-    private fun visible(
-        player: Player,
-        mannequin: Entity,
-    ): Boolean =
-        !player.isDead &&
-            player.isOnline &&
-            player.uniqueId != mannequin.uniqueId &&
-            !player.isInvisible
 }

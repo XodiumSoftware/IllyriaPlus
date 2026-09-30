@@ -6,6 +6,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Mannequin
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
+import org.xodium.illyriamannequins.Utils.stepToward
 
 /** Handles spear combat for mannequins: charging lunges with extended reach. */
 @Suppress("UnstableApiUsage")
@@ -35,23 +36,13 @@ internal object MannequinSpearCombat {
         mannequin: Mannequin,
         target: LivingEntity,
     ) {
-        val direction =
-            target
-                .location
-                .toVector()
-                .subtract(mannequin.location.toVector())
-                .setY(0)
-        if (direction.lengthSquared() == 0.0) return
+        val direction = target.location.stepToward(mannequin.location, LUNGE_VELOCITY) ?: return
         mannequin.swingMainHand()
         target.damage(
             weaponDamage(mannequin.equipment.getItem(EquipmentSlot.HAND)),
             mannequin,
         )
-        mannequin.velocity =
-            direction
-                .normalize()
-                .multiply(LUNGE_VELOCITY)
-                .apply { y = LUNGE_LIFT }
+        mannequin.velocity = direction.apply { y = LUNGE_LIFT }
     }
 
     /**
