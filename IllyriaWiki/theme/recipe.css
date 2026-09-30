@@ -33,18 +33,13 @@
     background-size: 260px 132px;
 }
 
-/* All smelting-style recipes use the blast furnace GUI crop; the type block
-   above the progress bar communicates which station it actually needs. */
+/* All smelting-style recipes use the lit blast furnace GUI crop; the type
+   block over the arrow communicates which station it actually needs. */
 .smelting-recipe {
     width: 210px;
     height: 130px;
     background-image: url("/img/gui/smelting_workstation.png");
     background-size: 210px 130px;
-}
-
-/* Recipes that burn the item show the lit flame under the input slot. */
-.smelting-recipe.lit {
-    background-image: url("/img/gui/smelting_workstation_lit.png");
 }
 
 /* Stonecutter recipes are shown as input slot | block model | output slot
@@ -228,17 +223,11 @@
     top: 50px;
 }
 
-/* Recipe-block icon above the progress bar (bar spans x 105-153, y 49-55
-   in the 2x crop). Shares the .crafting-item tooltip styling. */
-.furnace-type,
-.smelting-recipe .crafting-item {
-    position: absolute;
-    display: block;
-}
-
+/* Recipe-block icon centered over the smelting arrow (arrow spans roughly
+   x 105-153, y 49-55 in the 2x crop; icon centers on x=133, y=52). */
 .furnace-type {
-    left: 113px;
-    top: 7px;
+    left: 117px;
+    top: 36px;
     width: 32px;
     height: 32px;
 }
@@ -264,7 +253,7 @@
 }
 
 .smelting-recipe .pos-output {
-    left: 154px;
+    left: 153px;
     top: 50px;
 }
 

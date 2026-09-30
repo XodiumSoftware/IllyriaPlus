@@ -54,7 +54,7 @@
 
 <div class="card recipe-card">
 <span class="card-title">Diamond Recycling<sup>[4]</sup></span>
-<span class="card-desc"><div class="smelting-recipe lit"><span class="furnace-type" data-tooltip="Only works in a blast furnace"><img src="../img/method/blast_furnace.png" alt="Blast Furnace"></span><span class="crafting-item pos-input" data-tooltip="Diamond Tool, Weapon, or Armor"><img src="../img/item/diamond_equipment_animated.gif" alt="Diamond Tool, Weapon, or Armor"></span><span class="crafting-item pos-output" data-tooltip="Diamond"><img src="../img/item/diamond.png" alt="Diamond"></span></div></span>
+<span class="card-desc"><div class="smelting-recipe"><span class="furnace-type" data-tooltip="Only works in a blast furnace"><img src="../img/method/blast_furnace.png" alt="Blast Furnace"></span><span class="crafting-item pos-input" data-tooltip="Diamond Tool, Weapon, or Armor"><img src="../img/item/diamond_equipment_animated.gif" alt="Diamond Tool, Weapon, or Armor"></span><span class="crafting-item pos-output" data-tooltip="Diamond"><img src="../img/item/diamond.png" alt="Diamond"></span></div></span>
 </div>
 
 <div class="card recipe-card">
