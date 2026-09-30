@@ -59,7 +59,7 @@
 
 <div class="card recipe-card">
 <span class="card-title">Custom Paintings<sup>[5]</sup></span>
-<span class="card-desc"><div class="stonecutter-recipe"><span class="crafting-item" data-tooltip="Painting"><img src="../img/item/painting.png" alt="Painting"></span><img class="stonecutter-model" src="../img/method/stonecutter.png" alt="Stonecutter"><span class="crafting-item" data-tooltip="Custom Painting"><img src="../img/item/painting.png" alt="Custom Painting"></span></div></span>
+<span class="card-desc"><div class="stonecutter-recipe"><img class="trade-arrow" src="../img/gui/trade_arrow.png" alt=""><span class="crafting-item" data-tooltip="Painting"><img src="../img/item/painting.png" alt="Painting"></span><span class="furnace-type" data-tooltip="Only works in a stonecutter"><img src="../img/method/stonecutter.png" alt="Stonecutter"></span><span class="crafting-item" data-tooltip="Custom Painting (any variant)"><img src="../img/item/custom_painting_animated.gif" alt="Custom Painting"></span></div></span>
 </div>
 
 <div class="card recipe-card">

@@ -42,19 +42,36 @@
     background-size: 210px 130px;
 }
 
-/* Stonecutter recipes are shown as input slot | block model | output slot
-   on a flat panel in the GUI's background color (#281e1b, sampled from the
-   pack's stonecutter GUI texture). */
+/* Stonecutter recipes: input slot | trade arrow + type icon | output slot,
+   on a flat panel matching the other GUI backgrounds (#382a25, the dominant
+   flat color of the workstation crops). The villager trade arrow sits
+   centered on the panel; the stonecutter icon is absolutely positioned
+   above it. Slots carry horizontal margins since the icon is out of flow. */
 .stonecutter-recipe {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 18px;
+    box-sizing: border-box;
+    height: 130px;
     margin: 1rem 0;
-    padding: 16px 22px;
-    background: #281e1b;
+    padding: 0 22px;
+    background: #382a25;
     /* Allow tooltips to escape the container's box */
     overflow: visible;
     image-rendering: pixelated;
+}
+
+.stonecutter-recipe .trade-arrow {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 20px;
+    height: 18px;
+    transform: translate(-50%, -50%);
+    image-rendering: pixelated;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 .stonecutter-recipe .crafting-item {
@@ -66,6 +83,8 @@
     padding: 2px;
     background: url("/img/gui/slot.png") no-repeat;
     background-size: 36px 36px;
+    /* Reserve room for the absolutely positioned type icon + arrow. */
+    margin: 0 24px;
 }
 
 .stonecutter-recipe .crafting-item img {
@@ -77,9 +96,20 @@
     -webkit-user-drag: none;
 }
 
-.stonecutter-recipe .stonecutter-model {
-    width: 48px;
-    height: 48px;
+/* Stonecutter block icon, absolutely positioned over the panel so its
+   placement is tunable like every other coordinate. */
+.stonecutter-recipe .furnace-type {
+    position: absolute;
+    display: block;
+    left: 90px;
+    top: 17px;
+    width: 32px;
+    height: 32px;
+}
+
+.stonecutter-recipe .furnace-type img {
+    width: 32px;
+    height: 32px;
     image-rendering: pixelated;
     user-select: none;
     -webkit-user-drag: none;

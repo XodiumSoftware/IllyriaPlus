@@ -107,6 +107,11 @@
     font-smooth: never;
     -webkit-font-smoothing: none;
     -moz-osx-font-smoothing: unset;
+    /* Divider between title and recipe */
+    border-bottom: 2px solid var(--table-border-color);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    width: 100%;
 }
 
 /* Footnote superscripts shrink inside the pixel font. */
