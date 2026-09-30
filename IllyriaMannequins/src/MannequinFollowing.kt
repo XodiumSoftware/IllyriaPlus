@@ -42,6 +42,7 @@ internal object MannequinFollowing {
                 .entities
                 .filterIsInstance<Mannequin>()
                 .filter { it.following }
+                .filterNot { MannequinCombat.isEngaged(it) }
                 .forEach { followOwner(it) }
         }
     }

@@ -32,6 +32,7 @@ internal object MannequinMechanic : Listener {
         MannequinHeadTracking.register()
         MannequinFollowing.register()
         MannequinHostility.register()
+        MannequinCombat.register()
     }
 
     @EventHandler
