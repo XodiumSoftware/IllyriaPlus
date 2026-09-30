@@ -36,6 +36,7 @@
 - [Anti-Griefing](gameplay/anti-griefing.md)
 - [Elytra Trims](gameplay/elytra-trims.md)
 - [Entity Tweaks](gameplay/entity-tweaks.md)
+- [Mannequins](gameplay/mannequins.md)
 - [Openable Blocks](gameplay/openables.md)
 - [Portal Restrictions](gameplay/portal-restrictions.md)
 - [Spawn Protection](gameplay/spawn-protection.md)

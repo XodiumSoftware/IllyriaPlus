@@ -28,6 +28,14 @@ World and gameplay modifications that set IllyriaRPG apart.
 <span class="card-desc">QoL changes to mobs and ambient entities</span>
 </a>
 
+<a class="card" href="mannequins.html">
+<span class="card-header">
+<span class="card-title">Mannequins</span>
+<img class="card-icon" alt="" src="../img/item/armor_stand.png">
+</span>
+<span class="card-desc">Companion mannequins that follow, fight, and defend you</span>
+</a>
+
 <a class="card" href="openables.html">
 <span class="card-header">
 <span class="card-title">Openable Blocks</span>
