@@ -99,7 +99,7 @@ internal class IllyriaCore : JavaPlugin() {
                 ResourcePackMechanic,
                 SpawnProtectionMechanic,
                 PortalMechanic,
-                DimensionsMechanic,
+                LootMechanic,
             )
 
         logger.info(
