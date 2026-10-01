@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Mannequin
+import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.xodium.illyrialib.Utils.MM
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
@@ -20,6 +21,9 @@ internal object MannequinPDC {
 
     /** The [NamespacedKey] used for storing the mannequin's movement mode. */
     private val MOVEMENT_MODE_KEY = NamespacedKey(instance, "movement_mode")
+
+    /** The [NamespacedKey] used for storing the mannequin's arrow ammo stack. */
+    private val ARROWS_KEY = NamespacedKey(instance, "arrows")
 
     /** The [NamespacedKey] used for storing the mannequin owner's UUID. */
     private val OWNER_KEY = NamespacedKey(instance, "owner")
@@ -67,6 +71,24 @@ internal object MannequinPDC {
                 ?.let { runCatching { MovementMode.valueOf(it) }.getOrNull() }
                 ?: MovementMode.FOLLOWING
         set(value) = persistentDataContainer.set(MOVEMENT_MODE_KEY, PersistentDataType.STRING, value.name)
+
+    /**
+     * Gets or sets the [Mannequin]'s arrow ammo stack, consumed by bow and crossbow attacks.
+     *
+     * @return The arrow [ItemStack], or `null` if not set.
+     */
+    var Mannequin.arrows: ItemStack?
+        get() =
+            persistentDataContainer
+                .get(ARROWS_KEY, PersistentDataType.BYTE_ARRAY)
+                ?.let { runCatching { ItemStack.deserializeBytes(it) }.getOrNull() }
+        set(value) {
+            if (value == null || value.isEmpty) {
+                persistentDataContainer.remove(ARROWS_KEY)
+            } else {
+                persistentDataContainer.set(ARROWS_KEY, PersistentDataType.BYTE_ARRAY, value.serializeAsBytes())
+            }
+        }
 
     /**
      * Gets or sets the [Mannequin]'s owner UUID.
