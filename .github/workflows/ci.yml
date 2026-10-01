@@ -44,6 +44,7 @@ jobs:
     outputs:
       core: ${{ steps.filter.outputs.core }}
       bridge: ${{ steps.filter.outputs.bridge }}
+      seasons: ${{ steps.filter.outputs.seasons }}
       resourcepack: ${{ steps.filter.outputs.resourcepack }}
       wiki: ${{ steps.filter.outputs.wiki }}
       all: ${{ steps.filter.outputs.all }}
@@ -64,6 +65,10 @@ jobs:
             bridge:
               - "IllyriaBridge/src/**"
               - "IllyriaBridge/build.gradle.kts"
+              - "IllyriaLib/**"
+            seasons:
+              - "IllyriaSeasons/src/**"
+              - "IllyriaSeasons/build.gradle.kts"
               - "IllyriaLib/**"
             resourcepack:
               - "IllyriaResourcePack/**"
@@ -93,7 +98,7 @@ jobs:
       # --- Kotlin (IllyriaCore / IllyriaBridge) ---
       - id: setup_java
         name: Setup Java
-        if: needs.changes.outputs.core == 'true' || needs.changes.outputs.bridge == 'true' || needs.changes.outputs.all == 'true'
+        if: needs.changes.outputs.core == 'true' || needs.changes.outputs.bridge == 'true' || needs.changes.outputs.seasons == 'true' || needs.changes.outputs.all == 'true'
         uses: actions/setup-java@v6.0.1
         with:
           java-version: 25.0.4+101.0.LTS
@@ -101,12 +106,12 @@ jobs:
 
       - id: setup_gradle
         name: Setup Gradle
-        if: needs.changes.outputs.core == 'true' || needs.changes.outputs.bridge == 'true' || needs.changes.outputs.all == 'true'
+        if: needs.changes.outputs.core == 'true' || needs.changes.outputs.bridge == 'true' || needs.changes.outputs.seasons == 'true' || needs.changes.outputs.all == 'true'
         uses: gradle/actions/setup-gradle@v6.4.0
 
       - id: run_ktlint
         name: Run ktlint
-        if: needs.changes.outputs.core == 'true' || needs.changes.outputs.bridge == 'true' || needs.changes.outputs.all == 'true'
+        if: needs.changes.outputs.core == 'true' || needs.changes.outputs.bridge == 'true' || needs.changes.outputs.seasons == 'true' || needs.changes.outputs.all == 'true'
         run: ./gradlew ktlintCheck
 
       # --- Wiki (markdown) ---
@@ -229,6 +234,95 @@ jobs:
               gh api repos/${{ github.repository }}/releases/assets/$asset_id --method DELETE
             done
           fi
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - id: create_release
+        name: Create Nightly Release
+        uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          prerelease: true
+          files: dist/*
+          tag_name: nightly
+          name: Nightly Build
+
+  build_seasons:
+    name: Build IllyriaSeasons
+    needs: [changes, lint]
+    if: needs.changes.outputs.seasons == 'true' || needs.changes.outputs.all == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: "${{ github.ref_name }}"
+    steps:
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+
+      - id: setup_java
+        name: Setup Java
+        uses: actions/setup-java@v6.0.1
+        with:
+          java-version: 25.0.4+101.0.LTS
+          distribution: temurin
+
+      - id: setup_gradle
+        name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6.4.0
+
+      - id: build
+        name: Build Plugin
+        run: ./gradlew :IllyriaSeasons:shadowJar
+
+      - id: upload_artifact
+        name: Upload Artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: IllyriaSeasons
+          path: IllyriaSeasons/build/libs/*.jar
+
+  release_seasons:
+    name: Release IllyriaSeasons
+    needs: [changes, build_seasons]
+    if: github.ref == 'refs/heads/main' && (needs.changes.outputs.seasons == 'true' || needs.changes.outputs.all == 'true')
+    concurrency: nightly-release
+    runs-on: ubuntu-latest
+    environment:
+      name: "${{ github.ref_name }}"
+      url: https://github.com/${{ github.repository }}/releases/tag/nightly
+    permissions:
+      contents: write
+    steps:
+      - id: download_artifact
+        name: Download IllyriaSeasons Artifact
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: IllyriaSeasons
+          path: dist/
+
+      - id: update_nightly_tag
+        name: Update Nightly Tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin refs/tags/nightly:refs/tags/nightly || true
+          git tag -f nightly
+          git push -f origin refs/tags/nightly
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - id: delete_old_assets
+        name: Delete Old IllyriaSeasons Assets
+        run: |
+          release_id=$(gh api repos/${{ github.repository }}/releases/tags/nightly --jq .id)
+          gh api "repos/${{ github.repository }}/releases/${release_id}/assets" \
+            --jq '.[] | select(.name | startswith("IllyriaSeasons")) | .id' | \
+            while read -r asset_id; do
+              gh api -X DELETE "repos/${{ github.repository }}/releases/assets/${asset_id}"
+            done
         env:
           GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
