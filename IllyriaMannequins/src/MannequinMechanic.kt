@@ -11,6 +11,7 @@ import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
 import org.xodium.illyriamannequins.MannequinPDC.anchor
+import org.xodium.illyriamannequins.MannequinPDC.arrows
 import org.xodium.illyriamannequins.MannequinPDC.owner
 import org.xodium.illyriamannequins.combat.MannequinCoreCombat
 import org.xodium.illyriamannequins.combat.MannequinTridentCombat
@@ -43,13 +44,14 @@ internal object MannequinMechanic : Listener {
         val mannequin = event.entity as? Mannequin ?: return
         val equipment = mannequin.equipment
         event.drops.addAll(
-            listOf(
+            listOfNotNull(
                 equipment.helmet,
                 equipment.chestplate,
                 equipment.leggings,
                 equipment.boots,
                 equipment.itemInMainHand,
                 equipment.itemInOffHand,
+                mannequin.arrows,
             ).filterNot { it.isEmpty },
         )
     }
