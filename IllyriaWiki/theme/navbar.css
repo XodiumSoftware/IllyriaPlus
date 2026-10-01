@@ -107,3 +107,13 @@
 html.sidebar-visible #mdbook-sidebar-toggle::after {
     background-image: url("/img/gui/knowledge_book_open.png");
 }
+
+/* Add breathing room between parts in the table of contents. */
+.chapter li.part-title {
+    margin-top: 2rem;
+}
+
+/* No extra space before the very first part. */
+.chapter .chapter-item:has(> .part-title):first-of-type .part-title {
+    margin-top: 0;
+}
