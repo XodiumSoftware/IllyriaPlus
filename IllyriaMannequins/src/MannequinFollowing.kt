@@ -24,34 +24,21 @@ internal object MannequinFollowing {
     /** The movement speed in blocks per tick for moving mannequins (player walking speed). */
     private const val SPEED = 0.21585
 
-    /** The interval in ticks at which mannequin movement updates. */
-    private const val INTERVAL_TICKS = 2L
-
-    /** Registers the movement task. */
-    fun register() {
-        instance.server.scheduler.runTaskTimer(
-            instance,
-            MannequinFollowing::updateMovement,
-            INTERVAL_TICKS,
-            INTERVAL_TICKS,
-        )
-    }
-
-    /** Moves all mannequins according to their movement mode. */
-    private fun updateMovement() {
-        instance.server.worlds.forEach { world ->
-            world
-                .entities
-                .filterIsInstance<Mannequin>()
-                .filterNot { MannequinCoreCombat.isEngaged(it) }
-                .filterNot { MannequinCoreCombat.isDefensive(it) }
-                .forEach { mannequin ->
-                    when (mannequin.movementMode) {
-                        MovementMode.FOLLOWING -> followOwner(mannequin)
-                        MovementMode.STATIONARY -> returnToAnchor(mannequin)
-                    }
+    /**
+     * Moves each mannequin according to its movement mode.
+     *
+     * @param mannequins All mannequins across all worlds.
+     */
+    fun tick(mannequins: Collection<Mannequin>) {
+        mannequins
+            .filterNot { MannequinCoreCombat.isEngaged(it) }
+            .filterNot { MannequinCoreCombat.isDefensive(it) }
+            .forEach { mannequin ->
+                when (mannequin.movementMode) {
+                    MovementMode.FOLLOWING -> followOwner(mannequin)
+                    MovementMode.STATIONARY -> returnToAnchor(mannequin)
                 }
-        }
+            }
     }
 
     /**

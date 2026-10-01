@@ -32,9 +32,6 @@ internal object MannequinCoreCombat : Listener {
     /** The interval in ticks at which mannequin combat updates. */
     private const val COMBAT_INTERVAL_TICKS = 2L
 
-    /** The interval in ticks at which mannequins scan for nearby threats. */
-    private const val SCAN_INTERVAL_TICKS = 20L
-
     /** The radius in blocks within which mannequins detect nearby monsters. */
     private const val SCAN_RADIUS = 12.0
 
@@ -89,12 +86,6 @@ internal object MannequinCoreCombat : Listener {
             COMBAT_INTERVAL_TICKS,
             COMBAT_INTERVAL_TICKS,
         )
-        instance.server.scheduler.runTaskTimer(
-            instance,
-            MannequinCoreCombat::scanForThreats,
-            SCAN_INTERVAL_TICKS,
-            SCAN_INTERVAL_TICKS,
-        )
     }
 
     @EventHandler
@@ -123,22 +114,22 @@ internal object MannequinCoreCombat : Listener {
         }
     }
 
-    /** Puts passive mannequins near monsters into combat or a defensive state, and clears it when safe. */
-    private fun scanForThreats() {
+    /**
+     * Puts passive mannequins near monsters into combat or a defensive state, and clears it when safe.
+     *
+     * @param mannequins All mannequins across all worlds.
+     */
+    fun scanThreats(mannequins: Collection<Mannequin>) {
         defending.removeAll { uuid -> (instance.server.getEntity(uuid) as? Mannequin)?.isValid != true }
-        instance.server.worlds.forEach { world ->
-            world
-                .entities
-                .filterIsInstance<Mannequin>()
-                .filterNot { isEngaged(it) }
-                .forEach { mannequin ->
-                    when (mannequin.combatMode) {
-                        CombatMode.AGGRESSIVE -> engageNearestMonster(mannequin)
-                        CombatMode.DEFENSIVE -> updateDefensiveState(mannequin)
-                        CombatMode.FLEEING -> defending.remove(mannequin.uniqueId)
-                    }
+        mannequins
+            .filterNot { isEngaged(it) }
+            .forEach { mannequin ->
+                when (mannequin.combatMode) {
+                    CombatMode.AGGRESSIVE -> engageNearestMonster(mannequin)
+                    CombatMode.DEFENSIVE -> updateDefensiveState(mannequin)
+                    CombatMode.FLEEING -> defending.remove(mannequin.uniqueId)
                 }
-        }
+            }
     }
 
     /**

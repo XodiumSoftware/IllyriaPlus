@@ -4,7 +4,6 @@ import io.papermc.paper.entity.LookAnchor
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Mannequin
 import org.bukkit.entity.Monster
-import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
 
 /** Makes mannequins track the nearest entity with their heads. */
 @Suppress("UnstableApiUsage")
@@ -12,32 +11,18 @@ internal object MannequinHeadTracking {
     /** The squared distance within which mannequins track entities with their heads. */
     private const val TRACKING_RANGE_SQUARED = 64.0
 
-    /** The interval in ticks at which mannequin head tracking updates. */
-    private const val TRACKING_INTERVAL_TICKS = 2L
-
-    /** Registers the head tracking task. */
-    fun register() {
-        instance.server.scheduler.runTaskTimer(
-            instance,
-            MannequinHeadTracking::updateHeadTracking,
-            TRACKING_INTERVAL_TICKS,
-            TRACKING_INTERVAL_TICKS,
-        )
-    }
-
-    /** Makes all mannequins look at the nearest trackable entity within range. */
-    private fun updateHeadTracking() {
-        instance.server.worlds.forEach { world ->
-            world
-                .entities
-                .filterIsInstance<Mannequin>()
-                .forEach { mannequin ->
-                    findNearestEntity(mannequin)?.let { target ->
-                        target.eyeLocation.let { eyes ->
-                            mannequin.lookAt(eyes.x(), eyes.y(), eyes.z(), LookAnchor.EYES)
-                        }
-                    }
+    /**
+     * Makes each mannequin look at the nearest trackable entity within range.
+     *
+     * @param mannequins All mannequins across all worlds.
+     */
+    fun tick(mannequins: Collection<Mannequin>) {
+        mannequins.forEach { mannequin ->
+            findNearestEntity(mannequin)?.let { target ->
+                target.eyeLocation.let { eyes ->
+                    mannequin.lookAt(eyes.x(), eyes.y(), eyes.z(), LookAnchor.EYES)
                 }
+            }
         }
     }
 
