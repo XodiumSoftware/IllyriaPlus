@@ -2,11 +2,11 @@
 
 ## Server Information
 
-| Property    | Value                                                 |
-| ----------- | ----------------------------------------------------- |
-| Server IP   | `{{server_ip}}`                                       |
-| Version     | Java Edition {{mc_version}}                           |
-| Client Mods | Optional (see [Client Mod Support](../mods/index.md)) |
+| Property    | Value                                                       |
+| ----------- | ----------------------------------------------------------- |
+| Server IP   | <pre><code class="language-text">{{server_ip}}</code></pre> |
+| Version     | Java Edition {{mc_version}}                                 |
+| Client Mods | Optional (see [Client Mod Support](../mods/index.md))       |
 
 ## How to Join
 
