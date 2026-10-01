@@ -64,16 +64,6 @@
 <span class="card-desc"><div class="stonecutter-recipe"><img class="trade-arrow" src="../img/gui/trade_arrow.png" alt=""><span class="crafting-item" data-tooltip="Painting"><img src="../img/item/painting.png" alt="Painting"></span><span class="furnace-type" data-tooltip="Only works in a stonecutter"><img src="../img/method/stonecutter.png" alt="Stonecutter"></span><span class="crafting-item" data-tooltip="Custom Painting (any variant)"><img src="../img/item/custom_painting_animated.gif" alt="Custom Painting"></span></div></span>
 </div>
 
-<div class="card recipe-card">
-<span class="card-title">Incendium Key<sup>[6]</sup></span>
-<span class="card-desc"><div class="crafting-recipe"><span class="crafting-item pos-0-0" data-tooltip="Flint and Steel"><img src="../img/item/flint_and_steel.png" alt="Flint and Steel"></span><span class="crafting-item pos-1-0" data-tooltip="Flint and Steel"><img src="../img/item/flint_and_steel.png" alt="Flint and Steel"></span><span class="crafting-item pos-2-0" data-tooltip="Flint and Steel"><img src="../img/item/flint_and_steel.png" alt="Flint and Steel"></span><span class="crafting-item pos-1-1" data-tooltip="Diamond"><img src="../img/item/diamond.png" alt="Diamond"></span><span class="crafting-item pos-1-2" data-tooltip="Redstone"><img src="../img/item/redstone.png" alt="Redstone"></span><span class="crafting-item pos-output" data-tooltip="Incendium Key"><img src="../img/item/incendium_key.png" alt="Incendium Key"></span></div></span>
-</div>
-
-<div class="card recipe-card">
-<span class="card-title">Nullscape Key<sup>[6]</sup></span>
-<span class="card-desc"><div class="crafting-recipe"><span class="crafting-item pos-0-0" data-tooltip="Amethyst Shard"><img src="../img/item/amethyst_shard.png" alt="Amethyst Shard"></span><span class="crafting-item pos-1-0" data-tooltip="Amethyst Shard"><img src="../img/item/amethyst_shard.png" alt="Amethyst Shard"></span><span class="crafting-item pos-2-0" data-tooltip="Amethyst Shard"><img src="../img/item/amethyst_shard.png" alt="Amethyst Shard"></span><span class="crafting-item pos-1-1" data-tooltip="Ender Pearl"><img src="../img/item/ender_pearl.png" alt="Ender Pearl"></span><span class="crafting-item pos-1-2" data-tooltip="Obsidian"><img src="../img/item/obsidian_block.png" alt="Obsidian"></span><span class="crafting-item pos-output" data-tooltip="Nullscape Key"><img src="../img/item/nullscape_key.png" alt="Nullscape Key"></span></div></span>
-</div>
-
 </div>
 
 ---
@@ -83,4 +73,3 @@
 3. **Wood to Log** converts wood blocks (e.g. Oak Wood, Crimson Hyphae) back to 4 logs of the same type. Stripped variants also work.
 4. **Diamond Recycling** accepts any diamond tool, weapon, or armor piece (including horse and nautilus armor)
 5. **Custom Paintings** — place any Painting in the stonecutter to choose a custom variant
-6. **Dimension Keys** — custom items required for Nether/End portal travel; crafted from Overworld materials

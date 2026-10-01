@@ -17,7 +17,7 @@ per successful trip to the dimension — returning to the Overworld does not con
 keys. Players in creative or spectator mode are exempt from the key requirement and do not consume
 keys.
 
-Keys are craftable using Overworld materials (see [Recipes](../recipes/index.md)).
+Keys are found as rare loot in **Trial Chambers** vaults (both regular and ominous).
 
 ## Spawn Protection (Overworld)
 
