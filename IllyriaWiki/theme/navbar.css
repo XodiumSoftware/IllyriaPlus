@@ -1,0 +1,77 @@
+/* Replace the default navbar icons with Minecraft sprites. */
+
+#mdbook-search-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Hide the Font Awesome magnifying glass. */
+#mdbook-search-toggle > .fa-svg {
+    display: none;
+}
+
+/* Inject the spyglass sprite. */
+#mdbook-search-toggle::after {
+    content: "";
+    display: block;
+    width: 16px;
+    height: 16px;
+    background-image: url("/img/gui/spyglass.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    image-rendering: pixelated;
+}
+
+#mdbook-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Hide the Font Awesome palette. */
+#mdbook-theme-toggle > .fa-svg {
+    display: none;
+}
+
+/* Inject the brush sprite. */
+#mdbook-theme-toggle::after {
+    content: "";
+    display: block;
+    width: 16px;
+    height: 16px;
+    background-image: url("/img/gui/brush.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    image-rendering: pixelated;
+}
+
+/* Minecraft-flavoured theme popup. */
+.theme-popup {
+    border: 4px solid transparent;
+    border-image: url("/img/gui/tooltip_frame.png") 2 / 4px / 0 stretch;
+    border-radius: 0;
+    background-color: var(--bg);
+}
+
+.theme-popup .theme {
+    font-family: "IllyriaRP", "Open Sans", sans-serif;
+    color: var(--sidebar-fg);
+    text-shadow: 2px 2px 0 rgb(0 0 0 / 60%);
+}
+
+/* IllyriaRP for search input + results. */
+#mdbook-searchbar,
+#mdbook-searchresults-header,
+#mdbook-searchresults-outer {
+    font-family: "IllyriaRP", "Open Sans", sans-serif;
+    text-shadow: 2px 2px 0 rgb(0 0 0 / 60%);
+}
+
+#mdbook-searchbar {
+    border-radius: 0;
+    background-color: var(--sidebar-bg);
+    color: var(--sidebar-fg);
+    border: 4px solid transparent;
+    border-image: url("/img/gui/tooltip_frame.png") 2 / 4px / 0 stretch;
+}
