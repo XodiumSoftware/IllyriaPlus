@@ -35,7 +35,8 @@ internal object MannequinEditDialog {
     private const val MAIN_HAND_LABEL = "<gray>Main Hand"
     private const val DISCARD_BUTTON = "<red>Discard</red>"
     private const val EQUIPMENT_BUTTON = "<white>Equipment</white>"
-    private const val EQUIPMENT_TOOLTIP = "<gray>Open the equipment editor"
+    private const val EQUIPMENT_TOOLTIP =
+        "<gray>Open the equipment editor<br><dark_gray>(or shift right-click the mannequin)"
     private const val SAVE_BUTTON = "<green>Save</green>"
 
     /** Dialog input identifiers. */
