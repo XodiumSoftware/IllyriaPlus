@@ -1,6 +1,5 @@
 package org.xodium.illyriacore.mechanics.world
 
-import org.bukkit.NamespacedKey
 import org.bukkit.event.EventHandler
 import org.bukkit.event.world.LootGenerateEvent
 import org.bukkit.loot.LootTables
