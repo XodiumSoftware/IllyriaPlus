@@ -113,7 +113,7 @@ internal object MannequinEquipment : Listener {
      * @param slot The equipment slot to check against.
      * @return `true` if the material is armor valid for the slot.
      */
-    private fun isValidForSlot(
+    internal fun isValidForSlot(
         material: Material,
         slot: EquipmentSlot,
     ): Boolean =
