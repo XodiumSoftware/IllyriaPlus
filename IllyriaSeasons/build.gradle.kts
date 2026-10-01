@@ -28,12 +28,13 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-releases/")
     maven("https://repo.wyck.dev/releases")
+    maven("https://repo.wyck.dev/snapshots")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$mcVersion.build.+")
 
-    implementation("dev.wyck:wyck:3.4.0")
+    implementation("dev.wyck:wyck:4.0.0-2a40b8f")
     implementation(kotlin("stdlib"))
     implementation(project(":IllyriaLib"))
 }
