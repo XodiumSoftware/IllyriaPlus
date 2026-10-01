@@ -300,7 +300,10 @@ internal object MannequinCoreCombat : Listener {
         if (mannequin.arrows?.isEmpty != false) return false
         if (!mannequin.hasLineOfSight(target)) return false
 
-        if (distanceSquared < MannequinRangedCombat.STANDOFF_RANGE_SQUARED) {
+        val cooldown = (cooldowns[uuid] ?: 0) - COMBAT_INTERVAL_TICKS.toInt()
+        cooldowns[uuid] = maxOf(cooldown, 0)
+
+        if (distanceSquared < MannequinRangedCombat.STANDOFF_RANGE_SQUARED && cooldown > 0) {
             val away = target.location.stepToward(mannequin.location, MannequinRangedCombat.KITE_SPEED)
             if (away != null) {
                 mannequin.velocity = away.apply { y = mannequin.velocity.y }
@@ -309,12 +312,9 @@ internal object MannequinCoreCombat : Listener {
         }
 
         mannequin.velocity = mannequin.velocity.setX(0.0).setZ(0.0)
-        val cooldown = (cooldowns[uuid] ?: 0) - COMBAT_INTERVAL_TICKS.toInt()
         if (cooldown <= 0) {
             MannequinRangedCombat.fire(mannequin, target)
             cooldowns[uuid] = MannequinRangedCombat.cooldownTicks(mannequin)
-        } else {
-            cooldowns[uuid] = cooldown
         }
         return true
     }

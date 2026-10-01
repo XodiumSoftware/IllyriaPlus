@@ -17,7 +17,6 @@ import org.bukkit.inventory.meta.FireworkMeta
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.util.Vector
 import org.xodium.illyriamannequins.MannequinPDC.arrows
-import org.xodium.illyriamannequins.Utils.stepToward
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -125,8 +124,9 @@ internal object MannequinRangedCombat {
     ) {
         val origin = mannequin.eyeLocation.clone().add(0.0, -0.1, 0.0)
         val aimAt = target.eyeLocation.clone().subtract(0.0, target.eyeHeight * 0.35, 0.0)
-        val direction = aimAt.stepToward(origin, 1.0) ?: return
-        val base = direction.clone().normalize()
+        val base = aimAt.toVector().subtract(origin.toVector())
+        if (base.lengthSquared() == 0.0) return
+        base.normalize()
 
         val angles = if (multishot) doubleArrayOf(-MULTISHOT_SPREAD, 0.0, MULTISHOT_SPREAD) else doubleArrayOf(0.0)
         angles.forEach { angle ->
