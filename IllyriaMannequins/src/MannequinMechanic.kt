@@ -7,6 +7,7 @@ import org.bukkit.entity.Mannequin
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
 import org.xodium.illyriamannequins.MannequinPDC.anchor
@@ -32,10 +33,25 @@ internal object MannequinMechanic : Listener {
             )
         }
         instance.server.pluginManager.registerEvents(this, instance)
-        instance.server.pluginManager.registerEvents(MannequinDeathDrops, instance)
         MannequinTicker.register()
         MannequinCoreCombat.register()
         MannequinTridentCombat.register()
+    }
+
+    @EventHandler
+    fun on(event: EntityDeathEvent) {
+        val mannequin = event.entity as? Mannequin ?: return
+        val equipment = mannequin.equipment
+        event.drops.addAll(
+            listOf(
+                equipment.helmet,
+                equipment.chestplate,
+                equipment.leggings,
+                equipment.boots,
+                equipment.itemInMainHand,
+                equipment.itemInOffHand,
+            ).filterNot { it.isEmpty },
+        )
     }
 
     @EventHandler
