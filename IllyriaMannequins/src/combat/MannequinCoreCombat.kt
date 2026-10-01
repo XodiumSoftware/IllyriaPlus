@@ -125,16 +125,13 @@ internal object MannequinCoreCombat : Listener {
 
     /** Puts passive mannequins near monsters into combat or a defensive state, and clears it when safe. */
     private fun scanForThreats() {
+        defending.removeAll { uuid -> (instance.server.getEntity(uuid) as? Mannequin)?.isValid != true }
         instance.server.worlds.forEach { world ->
             world
                 .entities
                 .filterIsInstance<Mannequin>()
                 .filterNot { isEngaged(it) }
                 .forEach { mannequin ->
-                    if (!mannequin.isValid) {
-                        defending.remove(mannequin.uniqueId)
-                        return@forEach
-                    }
                     when (mannequin.combatMode) {
                         CombatMode.AGGRESSIVE -> engageNearestMonster(mannequin)
                         CombatMode.DEFENSIVE -> updateDefensiveState(mannequin)
