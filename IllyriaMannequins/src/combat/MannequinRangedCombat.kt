@@ -29,8 +29,8 @@ internal object MannequinRangedCombat {
     /** The squared distance within which a mannequin kites backward between shots instead of firing. */
     const val STANDOFF_RANGE_SQUARED = 64.0
 
-    /** The horizontal speed in blocks per tick at which a kiting mannequin backs away. */
-    const val KITE_SPEED = 0.216
+    /** The horizontal speed in blocks per tick at which a kiting mannequin backs away (player sprinting speed). */
+    const val KITE_SPEED = 0.2806
 
     /** The speed multiplier applied to launched arrows. */
     private const val ARROW_SPEED = 3.0
