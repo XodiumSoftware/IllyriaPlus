@@ -44,7 +44,7 @@ internal object MannequinMechanic : Listener {
         if (event.player.uniqueId != mannequin.owner) return
         event.isCancelled = true
         if (event.player.isSneaking) {
-            MannequinEquipment.swapItem(event, mannequin)
+            MannequinEquipmentUI.open(event.player, mannequin)
             return
         }
         MannequinEditDialog.show(event.player, mannequin)
