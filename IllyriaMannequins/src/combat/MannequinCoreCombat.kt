@@ -332,7 +332,7 @@ internal object MannequinCoreCombat : Listener {
                 val cooldown = (cooldowns[uuid] ?: 0) - COMBAT_INTERVAL_TICKS.toInt()
                 val retreating = (retreats[uuid] ?: 0) > 0
                 if (retreating) {
-                    val away = mannequin.location.stepToward(target.location, CHASE_SPEED)
+                    val away = target.location.stepToward(mannequin.location, CHASE_SPEED)
                     if (away != null) {
                         mannequin.velocity = away.apply { y = mannequin.velocity.y }
                     }
