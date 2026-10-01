@@ -1,6 +1,7 @@
 package org.xodium.illyriamannequins.combat
 
 import org.bukkit.Material
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Mannequin
 import org.bukkit.entity.Trident
@@ -41,13 +42,16 @@ internal object MannequinTridentCombat {
     }
 
     /**
-     * Checks if a mannequin is holding a trident in its main hand.
+     * Checks if a mannequin is holding a throwable trident in its main hand.
+     * Only tridents with Loyalty are throwable; non-Loyalty tridents are wielded as melee weapons.
      *
      * @param mannequin The mannequin to check.
-     * @return `true` if a trident is held.
+     * @return `true` if a Loyalty trident is held.
      */
-    fun hasTrident(mannequin: Mannequin): Boolean =
-        mannequin.equipment.getItem(EquipmentSlot.HAND).type == Material.TRIDENT
+    fun hasTrident(mannequin: Mannequin): Boolean {
+        val item = mannequin.equipment.getItem(EquipmentSlot.HAND)
+        return item.type == Material.TRIDENT && item.getEnchantmentLevel(Enchantment.LOYALTY) > 0
+    }
 
     /**
      * Makes a mannequin throw its held trident at a target.
