@@ -13,6 +13,15 @@ table {
     color: var(--inline-code-color);
 }
 
+/* Minecraft tooltip styling for blockquotes. */
+blockquote {
+    border: 4px solid transparent;
+    border-block-start: none;
+    border-block-end: none;
+    border-image: url("/img/gui/tooltip_frame.png") 2 / 4px / 0 stretch;
+    padding: 1px 16px;
+}
+
 /* Centers Method/Input/Output (or Base Item/Catalyst) columns in icon-driven tables. */
 
 .recipe-table table td:nth-child(2),
