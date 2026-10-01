@@ -19,8 +19,13 @@ internal class IllyriaSeasons : JavaPlugin() {
             return
         }
 
+        SeasonSystem.load()
         SeasonCommand.register(this)
 
         UpdateChecker(this).check()
+    }
+
+    override fun onDisable() {
+        SeasonSystem.save()
     }
 }
