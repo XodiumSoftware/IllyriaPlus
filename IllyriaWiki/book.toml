@@ -4,6 +4,8 @@ authors = ["illyrius666"]
 language = "en"
 
 [preprocessor.variables.variables]
+discord_invite = "https://discord.gg/jusYH9aYUh"
+github_repo = "https://github.com/XodiumSoftware/IllyriaPlus"
 mc_version = "26.3"
 server_ip = "play.illyria.cc"
 
