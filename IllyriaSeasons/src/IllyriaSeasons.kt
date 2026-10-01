@@ -32,6 +32,7 @@ internal class IllyriaSeasons : JavaPlugin() {
             }
 
         SeasonBiomes.register()
+        SeasonTracker.start()
         SeasonCommand.register(this)
 
         UpdateChecker(this).check()
@@ -39,5 +40,6 @@ internal class IllyriaSeasons : JavaPlugin() {
 
     override fun onDisable() {
         packetHandler.unregister()
+        SeasonTracker.stop()
     }
 }
