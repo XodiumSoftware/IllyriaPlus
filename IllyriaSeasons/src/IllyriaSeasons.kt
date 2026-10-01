@@ -32,8 +32,6 @@ internal class IllyriaSeasons : JavaPlugin() {
             }
 
         SeasonBiomes.register()
-        SeasonSystem.load()
-        SeasonAdvancementMechanic.start()
         SeasonCommand.register(this)
 
         UpdateChecker(this).check()
@@ -41,7 +39,5 @@ internal class IllyriaSeasons : JavaPlugin() {
 
     override fun onDisable() {
         packetHandler.unregister()
-        SeasonAdvancementMechanic.stop()
-        SeasonSystem.save()
     }
 }
