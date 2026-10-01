@@ -117,3 +117,14 @@ html.sidebar-visible #mdbook-sidebar-toggle::after {
 .chapter .chapter-item:has(> .part-title):first-of-type .part-title {
     margin-top: 0;
 }
+
+/* Minecraft tooltip styling for the "Copied!" popup. */
+.tooltiptext {
+    font-family: "IllyriaRP", "Open Sans", sans-serif;
+    border-radius: 0;
+    border: 4px solid transparent;
+    border-image: url("/img/gui/tooltip_frame.png") 2 / 4px / 0 stretch;
+    background-color: rgb(25 22 21 / 94%);
+    text-shadow: 2px 2px 0 rgb(0 0 0 / 60%);
+    padding: 6px 10px;
+}
