@@ -12,6 +12,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.xodium.illyriamannequins.CombatMode
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
+import org.xodium.illyriamannequins.MannequinPDC.arrows
 import org.xodium.illyriamannequins.MannequinPDC.combatMode
 import org.xodium.illyriamannequins.MannequinPDC.owner
 import org.xodium.illyriamannequins.Utils.stepToward
@@ -280,6 +281,44 @@ internal object MannequinCoreCombat : Listener {
         cooldowns[mannequin.uniqueId] = ATTACK_COOLDOWN_TICKS
     }
 
+    /**
+     * Runs the bow/crossbow branch of combat: kite if too close, stand still and shoot otherwise.
+     *
+     * @param mannequin The mannequin in ranged combat.
+     * @param target The current target.
+     * @param uuid The mannequin's unique id, used to update cooldowns.
+     * @param distanceSquared The squared distance to the target.
+     * @return `true` if the mannequin performed ranged behavior this tick (either kite or shoot).
+     */
+    private fun handleRanged(
+        mannequin: Mannequin,
+        target: LivingEntity,
+        uuid: UUID,
+        distanceSquared: Double,
+    ): Boolean {
+        if (distanceSquared > MannequinRangedCombat.ATTACK_RANGE_SQUARED) return false
+        if (mannequin.arrows?.isEmpty != false) return false
+        if (!mannequin.hasLineOfSight(target)) return false
+
+        if (distanceSquared < MannequinRangedCombat.STANDOFF_RANGE_SQUARED) {
+            val away = target.location.stepToward(mannequin.location, MannequinRangedCombat.KITE_SPEED)
+            if (away != null) {
+                mannequin.velocity = away.apply { y = mannequin.velocity.y }
+            }
+            return true
+        }
+
+        mannequin.velocity = mannequin.velocity.setX(0.0).setZ(0.0)
+        val cooldown = (cooldowns[uuid] ?: 0) - COMBAT_INTERVAL_TICKS.toInt()
+        if (cooldown <= 0) {
+            MannequinRangedCombat.fire(mannequin, target)
+            cooldowns[uuid] = MannequinRangedCombat.cooldownTicks(mannequin)
+        } else {
+            cooldowns[uuid] = cooldown
+        }
+        return true
+    }
+
     /** Makes all retaliating mannequins chase and attack their target. */
     private fun updateCombat() {
         val iterator = targets.entries.iterator()
@@ -297,6 +336,10 @@ internal object MannequinCoreCombat : Listener {
             }
             if (hasShield(mannequin)) {
                 mannequin.startUsingItem(EquipmentSlot.OFF_HAND)
+            }
+            if (MannequinRangedCombat.hasBow(mannequin)) {
+                val rangedAttack = handleRanged(mannequin, target, uuid, distanceSquared)
+                if (rangedAttack) continue
             }
             val throwsTrident = MannequinTridentCombat.hasTrident(mannequin)
             if (throwsTrident && distanceSquared > MannequinTridentCombat.THROW_RANGE_SQUARED) {
