@@ -33,7 +33,11 @@ internal object MannequinSwordCombat {
             instance.server.scheduler.runTaskLater(
                 instance,
                 Runnable {
-                    if (mannequin.isValid && MannequinCoreCombat.hasShield(mannequin)) {
+                    if (
+                        mannequin.isValid &&
+                        MannequinCoreCombat.hasShield(mannequin) &&
+                        (MannequinCoreCombat.isEngaged(mannequin) || MannequinCoreCombat.isDefensive(mannequin))
+                    ) {
                         mannequin.startUsingItem(EquipmentSlot.OFF_HAND)
                     }
                 },
