@@ -10,10 +10,10 @@ import org.bukkit.entity.Firework
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Mannequin
 import org.bukkit.entity.SpectralArrow
-import org.bukkit.entity.TippedArrow
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.FireworkMeta
+import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.util.Vector
 import org.xodium.illyriamannequins.MannequinPDC.arrows
 import org.xodium.illyriamannequins.Utils.stepToward
@@ -164,21 +164,36 @@ internal object MannequinRangedCombat {
                     .apply { shooter = mannequin }
             }
 
-            arrowStack.type == Material.TIPPED_ARROW -> {
-                world
-                    .spawnArrow(origin, direction, ARROW_SPEED.toFloat(), 0.0f, TippedArrow::class.java)
-                    .apply { shooter = mannequin }
-            }
-
             else -> {
                 world
                     .spawnArrow(origin, direction, ARROW_SPEED.toFloat(), 0.0f, Arrow::class.java)
                     .apply {
                         shooter = mannequin
                         pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
+                        if (arrowStack.type == Material.TIPPED_ARROW) {
+                            copyPotionEffects(arrowStack, this)
+                        }
                     }
             }
         }
+    }
+
+    /**
+     * Copies potion effects from a tipped arrow item onto a spawned [Arrow] entity.
+     *
+     * @param arrowStack The [Material.TIPPED_ARROW] stack to copy effects from.
+     * @param arrow The spawned arrow entity to apply effects to.
+     */
+    private fun copyPotionEffects(
+        arrowStack: ItemStack,
+        arrow: Arrow,
+    ) {
+        val meta = arrowStack.itemMeta as? PotionMeta ?: return
+        meta.basePotionType?.let { arrow.basePotionType = it }
+        meta.customEffects.forEach { effect ->
+            arrow.addCustomEffect(effect.type.createEffect(effect.duration, effect.amplifier), true)
+        }
+        meta.color?.let { arrow.color = it }
     }
 
     /**
