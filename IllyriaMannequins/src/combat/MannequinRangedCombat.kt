@@ -3,6 +3,7 @@ package org.xodium.illyriamannequins.combat
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Sound
+import org.bukkit.World
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.AbstractArrow
 import org.bukkit.entity.Arrow
@@ -149,8 +150,12 @@ internal object MannequinRangedCombat {
     ) {
         val world = mannequin.world
         val weaponType = mannequin.equipment.getItem(EquipmentSlot.HAND).type
-        when {
-            arrowStack.type == Material.FIREWORK_ROCKET && weaponType == Material.CROSSBOW -> {
+        when (arrowStack.type) {
+            Material.FIREWORK_ROCKET -> {
+                if (weaponType != Material.CROSSBOW) {
+                    spawnArrow(world, mannequin, origin, direction)
+                    return
+                }
                 world.spawn(origin, Firework::class.java) {
                     (arrowStack.itemMeta as? FireworkMeta)?.let { meta -> it.fireworkMeta = meta.clone() }
                     it.velocity = direction.clone().multiply(FIREWORK_SPEED)
@@ -158,25 +163,44 @@ internal object MannequinRangedCombat {
                 }
             }
 
-            arrowStack.type == Material.SPECTRAL_ARROW -> {
+            Material.SPECTRAL_ARROW -> {
                 world
                     .spawnArrow(origin, direction, ARROW_SPEED.toFloat(), 0.0f, SpectralArrow::class.java)
                     .apply { shooter = mannequin }
             }
 
+            Material.TIPPED_ARROW -> {
+                spawnArrow(world, mannequin, origin, direction) { copyPotionEffects(arrowStack, it) }
+            }
+
             else -> {
-                world
-                    .spawnArrow(origin, direction, ARROW_SPEED.toFloat(), 0.0f, Arrow::class.java)
-                    .apply {
-                        shooter = mannequin
-                        pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
-                        if (arrowStack.type == Material.TIPPED_ARROW) {
-                            copyPotionEffects(arrowStack, this)
-                        }
-                    }
+                spawnArrow(world, mannequin, origin, direction)
             }
         }
     }
+
+    /**
+     * Spawns a regular [Arrow] for a mannequin.
+     *
+     * @param world The world to spawn in.
+     * @param mannequin The shooter.
+     * @param origin The spawn location.
+     * @param direction The normalized launch direction.
+     * @param configure Additional configuration applied after the arrow is spawned.
+     */
+    private fun spawnArrow(
+        world: World,
+        mannequin: Mannequin,
+        origin: Location,
+        direction: Vector,
+        configure: (Arrow) -> Unit = {},
+    ) = world
+        .spawnArrow(origin, direction, ARROW_SPEED.toFloat(), 0.0f, Arrow::class.java)
+        .apply {
+            shooter = mannequin
+            pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
+            configure(this)
+        }
 
     /**
      * Copies potion effects from a tipped arrow item onto a spawned [Arrow] entity.
