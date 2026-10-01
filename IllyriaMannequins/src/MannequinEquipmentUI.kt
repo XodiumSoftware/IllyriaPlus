@@ -12,6 +12,7 @@ import xyz.xenondevs.invui.dsl.gui
 import xyz.xenondevs.invui.dsl.window
 import xyz.xenondevs.invui.gui.SlotElement
 import xyz.xenondevs.invui.inventory.VirtualInventory
+import xyz.xenondevs.invui.item.ItemBuilder
 
 /** Inventory GUI for editing a mannequin's equipment. */
 @OptIn(ExperimentalDslApi::class)
@@ -50,8 +51,6 @@ internal object MannequinEquipmentUI {
             upperGui by
                 gui(
                     "H C L B . M O . .",
-                    ". . . . . . . . .",
-                    ". . . . . . . . .",
                 ) {
                     'H' by SlotElement.InventoryLink(backing, 0)
                     'C' by SlotElement.InventoryLink(backing, 1)
@@ -59,7 +58,7 @@ internal object MannequinEquipmentUI {
                     'B' by SlotElement.InventoryLink(backing, 3)
                     'M' by SlotElement.InventoryLink(backing, 4)
                     'O' by SlotElement.InventoryLink(backing, 5)
-                    '.' by Material.GRAY_STAINED_GLASS_PANE
+                    '.' by ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true)
                 }
         }.open()
     }

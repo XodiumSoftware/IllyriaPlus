@@ -140,7 +140,7 @@ internal enum class MovementMode(
     FOLLOWING("blue"),
 
     /** Stays at its anchor location, returning to it after combat. */
-    STATIONARY("gray"),
+    STATIONARY("red"),
     ;
 
     /** The colored display name of the mode. */
