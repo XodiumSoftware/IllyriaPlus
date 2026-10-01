@@ -18,6 +18,7 @@ import org.xodium.illyriacore.mechanics.server.*
 import org.xodium.illyriacore.mechanics.world.*
 import org.xodium.illyriacore.recipes.*
 import org.xodium.illyrialib.UpdateChecker
+import org.xodium.illyrialib.Utils.validateServerVersion
 
 /** Main class of the plugin. */
 internal class IllyriaCore : JavaPlugin() {
@@ -44,13 +45,7 @@ internal class IllyriaCore : JavaPlugin() {
     }
 
     override fun onEnable() {
-        if (!server.version.contains(pluginMeta.version.substringBefore("+"))) {
-            logger.severe(
-                "This plugin requires the following supported version: ${pluginMeta.version}.",
-            )
-            server.pluginManager.disablePlugin(this)
-            return
-        }
+        if (!validateServerVersion()) return
 
         instance = this
 

@@ -7,6 +7,7 @@ import org.xodium.illyriabridge.bridges.FabricRecipeBridge
 import org.xodium.illyriabridge.bridges.XaeroMapBridge
 import org.xodium.illyriabridge.bridges.jade.JadeBridge
 import org.xodium.illyrialib.UpdateChecker
+import org.xodium.illyrialib.Utils.validateServerVersion
 
 /** Main class of the plugin. */
 internal class IllyriaBridge : JavaPlugin() {
@@ -19,12 +20,9 @@ internal class IllyriaBridge : JavaPlugin() {
         private set
 
     override fun onEnable() {
-        instance = this
+        if (!validateServerVersion()) return
 
-        if (!server.version.contains(pluginMeta.version.substringBefore("+"))) {
-            logger.severe("This plugin requires the following supported version: ${pluginMeta.version}.")
-            server.pluginManager.disablePlugin(this)
-        }
+        instance = this
 
         bridges =
             listOf(
