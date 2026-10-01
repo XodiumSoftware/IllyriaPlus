@@ -71,7 +71,10 @@ tasks {
         relocate("org.xodium.illyrialib", "${project.group}.libs.illyrialib")
     }
     jar { enabled = false }
-    runServer { minecraftVersion(mcVersion) }
+    runServer {
+        minecraftVersion(mcVersion)
+        runDirectory = rootProject.layout.projectDirectory.dir(".server")
+    }
     withType<JavaCompile> { options.encoding = "UTF-8" }
     withType(AbstractRun::class) { jvmArgs("-XX:+AllowEnhancedClassRedefinition") }
 }
