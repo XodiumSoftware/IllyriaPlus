@@ -56,8 +56,12 @@
 
 .theme-popup .theme {
     font-family: "IllyriaRP", "Open Sans", sans-serif;
-    color: var(--sidebar-fg);
-    text-shadow: 2px 2px 0 rgb(0 0 0 / 60%);
+    color: var(--fg);
+}
+
+.theme-popup .theme:hover,
+.theme-popup .theme.theme-selected {
+    color: var(--sidebar-active);
 }
 
 /* IllyriaRP for search input + results. */
