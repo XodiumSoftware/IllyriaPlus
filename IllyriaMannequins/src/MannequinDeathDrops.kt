@@ -5,9 +5,9 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 
-/** Handles equipment-related concerns for mannequins. */
+/** Drops a mannequin's equipment when it dies. */
 @Suppress("UnstableApiUsage")
-internal object MannequinEquipment : Listener {
+internal object MannequinDeathDrops : Listener {
     @EventHandler
     fun on(event: EntityDeathEvent) {
         val mannequin = event.entity as? Mannequin ?: return
