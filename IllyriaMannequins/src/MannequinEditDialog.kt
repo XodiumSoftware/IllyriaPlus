@@ -34,7 +34,8 @@ internal object MannequinEditDialog {
     private const val COMBAT_MODE_LABEL = "<gray>Combat Mode"
     private const val MAIN_HAND_LABEL = "<gray>Main Hand"
     private const val DISCARD_BUTTON = "<red>Discard</red>"
-    private const val EQUIPMENT_BUTTON = "<yellow>Equipment</yellow>"
+    private const val EQUIPMENT_BUTTON = "<white>Equipment</white>"
+    private const val EQUIPMENT_TOOLTIP = "<gray>Open the equipment editor"
     private const val SAVE_BUTTON = "<green>Save</green>"
 
     /** Dialog input identifiers. */
@@ -182,6 +183,7 @@ internal object MannequinEditDialog {
     ): ActionButton =
         ActionButton
             .builder(MM.deserialize(EQUIPMENT_BUTTON))
+            .tooltip(MM.deserialize(EQUIPMENT_TOOLTIP))
             .action(
                 DialogAction.customClick(
                     { _, _ -> MannequinEquipmentUI.open(player, mannequin) },
