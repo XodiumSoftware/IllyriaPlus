@@ -28,12 +28,15 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-releases/")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
+    maven("https://repo.xenondevs.xyz/releases")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$mcVersion.build.+")
     compileOnly("com.google.code.gson:gson:2.14.0")
 
+    implementation("xyz.xenondevs.invui:invui:2.5.1")
+    implementation("xyz.xenondevs.invui:invui-kotlin:2.5.1")
     implementation(project(":IllyriaLib"))
     implementation(kotlin("stdlib"))
 }
@@ -66,6 +69,7 @@ tasks {
         archiveBaseName.set("IllyriaMannequins")
         archiveClassifier.set("")
         relocate("org.xodium.illyrialib", "${project.group}.libs.illyrialib")
+        relocate("xyz.xenondevs.invui", "${project.group}.libs.invui")
         minimize()
     }
     jar { enabled = false }
