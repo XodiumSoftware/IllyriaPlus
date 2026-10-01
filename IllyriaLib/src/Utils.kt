@@ -5,10 +5,13 @@ package org.xodium.illyrialib
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import io.papermc.paper.command.brigadier.CommandSourceStack
+import io.papermc.paper.registry.TypedKey
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.Tag
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import kotlin.time.Duration
 
 /** General utilities shared across the IllyriaPlus plugin modules. */
 object Utils {
@@ -26,6 +29,31 @@ object Utils {
                     "rose" to "#F4C4F3:#FC67FA",
                 ).forEach { (name, colors) -> it.tag(name, Tag.preProcessParsed("<gradient:$colors>")) }
             }.build()
+
+    /** Converts a [Duration] to Minecraft ticks (20 ticks per second). */
+    fun Duration.toTicks(): Int = inWholeSeconds.toInt() * 20
+
+    /**
+     * Converts a snake_case string to Proper Case with spaces.
+     *
+     * @return The formatted string in Proper Case.
+     */
+    fun String.snakeToProperCase(): String =
+        split('_').joinToString(" ") { word -> word.replaceFirstChar { it.uppercase() } }
+
+    /**
+     * Converts a class name to a snake_case registry key fragment, removing a suffix.
+     *
+     * @return The generated registry key fragment.
+     */
+    inline fun <reified T> Class<*>.toRegistryKeyFragment(): String = toRegistryKeyFragment(T::class.simpleName ?: "")
+
+    fun Class<*>.toRegistryKeyFragment(suffix: String): String =
+        simpleName
+            .removeSuffix(suffix)
+            .split(Regex("(?=[A-Z])"))
+            .filter { it.isNotEmpty() }
+            .joinToString("_") { it.lowercase() }
 
     /** Command-related utilities. */
     object Command {
@@ -80,5 +108,16 @@ object Utils {
             }
             return this
         }
+    }
+
+    /** Enchantment-related utilities. */
+    object Enchantment {
+        /**
+         * Gets the display name of an enchantment key.
+         *
+         * @return The formatted display name as a Component.
+         */
+        fun TypedKey<org.bukkit.enchantments.Enchantment>.displayName(): Component =
+            MM.deserialize(value().snakeToProperCase())
     }
 }

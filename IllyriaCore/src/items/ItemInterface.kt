@@ -3,7 +3,7 @@ package org.xodium.illyriacore.items
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
-import org.xodium.illyriacore.Utils.toRegistryKeyFragment
+import org.xodium.illyrialib.Utils.toRegistryKeyFragment
 
 /** Represents a contract for an item within the system. */
 internal interface ItemInterface {

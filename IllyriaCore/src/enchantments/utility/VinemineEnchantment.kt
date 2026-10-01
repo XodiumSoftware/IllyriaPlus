@@ -10,8 +10,8 @@ import org.bukkit.block.BlockFace
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.inventory.EquipmentSlotGroup
-import org.xodium.illyriacore.Utils.Enchantment.displayName
 import org.xodium.illyriacore.enchantments.EnchantmentInterface
+import org.xodium.illyrialib.Utils.Enchantment.displayName
 
 /** Represents an object handling vinemine enchantment implementation within the system. */
 internal object VinemineEnchantment : EnchantmentInterface {

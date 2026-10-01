@@ -9,7 +9,7 @@ import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.Listener
 import org.xodium.illyriacore.IllyriaCore
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
-import org.xodium.illyriacore.Utils.toRegistryKeyFragment
+import org.xodium.illyrialib.Utils.toRegistryKeyFragment
 import kotlin.time.measureTime
 
 /** Represents a contract for enchantments within the system. */
