@@ -1,8 +1,8 @@
 <!-- markdownlint-disable MD013 -->
 
-# IllyriaRPG Wiki
+# Illyria Wiki
 
-Welcome to the official wiki for the **IllyriaRPG** Minecraft server.
+Welcome to the official wiki for the **Illyria** Minecraft server.
 
 ## Categories
 
@@ -68,7 +68,7 @@ Welcome to the official wiki for the **IllyriaRPG** Minecraft server.
 
 ## About the Server
 
-IllyriaRPG is a vanilla-plus Minecraft survival server with RPG flavor:
+Illyria is a vanilla-plus Minecraft survival server with RPG flavor:
 
 - <img class="mc-icon" alt="" src="img/item/enchanted_book.png"> **Unique enchantments** like Vinemine (vein mining) and Embertread (lava walker)
 - <img class="mc-icon" alt="" src="img/item/incendium_key.png"> **Dimension-locked progression** — craftable keys required for Nether and End access

@@ -1,6 +1,6 @@
 # Anti-Griefing
 
-IllyriaRPG has built-in protection against common griefing methods so your builds stay safe.
+Illyria has built-in protection against common griefing methods so your builds stay safe.
 
 ## Protections
 

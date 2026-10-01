@@ -1,6 +1,6 @@
 # Resource Pack
 
-IllyriaRPG uses a custom resource pack to enhance your experience with custom textures,
+Illyria uses a custom resource pack to enhance your experience with custom textures,
 and UI elements.
 
 ## Automatic Installation

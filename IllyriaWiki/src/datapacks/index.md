@@ -1,6 +1,6 @@
 # Datapacks
 
-IllyriaRPG runs curated datapacks to expand gameplay with new advancements and world generation.
+Illyria runs curated datapacks to expand gameplay with new advancements and world generation.
 
 ## Installed Datapacks
 

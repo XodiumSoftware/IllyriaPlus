@@ -1,6 +1,6 @@
 # Vanilla Enchantment Tweaks
 
-IllyriaRPG adjusts the behavior of several vanilla enchantments.
+Illyria adjusts the behavior of several vanilla enchantments.
 
 ## Fortune — Auto-Replant <img class="mc-icon" alt="" src="../img/item/wheat.png">
 

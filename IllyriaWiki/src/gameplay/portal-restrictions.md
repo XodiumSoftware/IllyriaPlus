@@ -1,6 +1,6 @@
 # Portal Restrictions
 
-IllyriaRPG restricts Overworld portal usage to the spawn protection area, while Nether portals can
+Illyria restricts Overworld portal usage to the spawn protection area, while Nether portals can
 be created anywhere but always lead back to the Overworld spawn. Additionally, dimension travel is
 gated behind special key items.
 

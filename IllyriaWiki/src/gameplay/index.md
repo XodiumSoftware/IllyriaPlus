@@ -1,6 +1,6 @@
 # Gameplay Changes
 
-World and gameplay modifications that set IllyriaRPG apart.
+World and gameplay modifications that set Illyria apart.
 
 <div class="card-grid">
 
