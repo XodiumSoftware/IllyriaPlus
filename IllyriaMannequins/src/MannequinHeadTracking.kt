@@ -34,19 +34,20 @@ internal object MannequinHeadTracking {
      * @return The entity to track, or `null`.
      */
     private fun findNearestEntity(mannequin: Mannequin): LivingEntity? {
+        val here = mannequin.location
         val trackable =
             mannequin
                 .world
                 .entities
                 .filterIsInstance<LivingEntity>()
-                .filter {
-                    trackable(it, mannequin) &&
-                        it.location.distanceSquared(mannequin.location) <= TRACKING_RANGE_SQUARED
-                }
+                .filter { trackable(it, mannequin) }
+                .map { it to it.location.distanceSquared(here) }
+                .filter { it.second <= TRACKING_RANGE_SQUARED }
         return trackable
-            .filterIsInstance<Monster>()
+            .filter { it.first is Monster }
             .ifEmpty { trackable }
-            .minByOrNull { it.location.distanceSquared(mannequin.location) }
+            .minByOrNull { it.second }
+            ?.first
     }
 
     /**
