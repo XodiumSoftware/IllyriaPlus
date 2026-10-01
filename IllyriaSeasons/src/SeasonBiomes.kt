@@ -4,6 +4,8 @@ import dev.wyck.biome.ClimateSettings
 import dev.wyck.biome.CustomBiome
 import dev.wyck.biome.TemperatureModifier
 import dev.wyck.keys.ResourceKey
+import dev.wyck.renderer.packet.data.BlockReplacement
+import org.bukkit.Material
 
 /**
  * Defines seasonal biome palettes for Wyck's packet-based biome rendering.
@@ -22,7 +24,10 @@ internal object SeasonBiomes {
             .grassColor("#32CD32")
             .waterColor("#4169E1")
             .climateSettings(ClimateSettings.of(true, 0.7f, TemperatureModifier.NONE, 0.4f))
-            .build()
+            .blockReplacements(
+                BlockReplacement.of(Material.OAK_LEAVES, Material.CHERRY_LEAVES),
+                BlockReplacement.of(Material.BIRCH_LEAVES, Material.CHERRY_LEAVES),
+            ).build()
     }
 
     val SUMMER: CustomBiome by lazy {
@@ -42,7 +47,11 @@ internal object SeasonBiomes {
             .grassColor("#CD853F")
             .waterColor("#4682B4")
             .climateSettings(ClimateSettings.of(true, 0.6f, TemperatureModifier.NONE, 0.5f))
-            .build()
+            .blockReplacements(
+                BlockReplacement.of(Material.OAK_LEAVES, Material.ORANGE_POPLAR_LEAVES),
+                BlockReplacement.of(Material.BIRCH_LEAVES, Material.YELLOW_POPLAR_LEAVES),
+                BlockReplacement.of(Material.SPRUCE_LEAVES, Material.RED_POPLAR_LEAVES),
+            ).build()
     }
 
     val WINTER: CustomBiome by lazy {
@@ -54,7 +63,12 @@ internal object SeasonBiomes {
             .grassColor("#C0E8C0")
             .waterColor("#B0C4DE")
             .climateSettings(ClimateSettings.of(true, 0.2f, TemperatureModifier.NONE, 0.3f))
-            .build()
+            .blockReplacements(
+                BlockReplacement.of(Material.GRASS_BLOCK, Material.SNOW_BLOCK),
+                BlockReplacement.of(Material.SHORT_GRASS, Material.SNOW),
+                BlockReplacement.of(Material.DIRT, Material.SNOW_BLOCK),
+                BlockReplacement.of(Material.DIRT_PATH, Material.SNOW_BLOCK),
+            ).build()
     }
 
     val biomes: List<CustomBiome> by lazy {
