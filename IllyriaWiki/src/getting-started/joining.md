@@ -4,7 +4,7 @@
 
 | Property    | Value                                                 |
 | ----------- | ----------------------------------------------------- |
-| Server IP   | `play.illyria.cc`                                     |
+| Server IP   | `{{server_ip}}`                                       |
 | Version     | Java Edition {{mc_version}}                           |
 | Client Mods | Optional (see [Client Mod Support](../mods/index.md)) |
 

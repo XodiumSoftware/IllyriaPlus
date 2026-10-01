@@ -5,6 +5,7 @@ language = "en"
 
 [preprocessor.variables.variables]
 mc_version = "26.3"
+server_ip = "play.illyria.cc"
 
 [output.html]
 site-url = "https://wiki.illyria.cc/"
