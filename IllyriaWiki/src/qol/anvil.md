@@ -4,12 +4,12 @@ Significant quality-of-life changes to anvils, including disenchanting and cost 
 
 ## Key Features
 
-| Feature             | Description                                             |
-| ------------------- | ------------------------------------------------------- |
-| No "Too Expensive!" | Cost cap removed — repair/enchant anything               |
-| Level Cap Bypass    | Exceed normal enchantment level limits                   |
-| Disenchant Item     | Extract enchantments back onto books                     |
-| MiniMessage Names   | Use formatting codes when renaming items                 |
+| Feature             | Description                                |
+| ------------------- | ------------------------------------------ |
+| No "Too Expensive!" | Cost cap removed — repair/enchant anything |
+| Level Cap Bypass    | Exceed normal enchantment level limits     |
+| Disenchant Item     | Extract enchantments back onto books       |
+| MiniMessage Names   | Use formatting codes when renaming items   |
 
 ---
 
@@ -60,10 +60,10 @@ When renaming items in an anvil, you can use **MiniMessage** formatting syntax f
 
 ### Examples
 
-| Input                              | Result                     |
-| ---------------------------------- | -------------------------- |
-| `<red>Flaming Sword</red>`           | Red, italic-free name      |
-| `<gradient:#FF0000:#0000FF>Blade</gradient>` | Gradient-colored name  |
-| `<bold><gold>Excalibur</gold></bold>` | Bold, gold name         |
+| Input                                        | Result                                                                                                                                              |
+| -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `<red>Flaming Sword</red>`                   | <span style="color:#FF5555">Flaming Sword</span>                                                                                                    |
+| `<gradient:#FF0000:#0000FF>Blade</gradient>` | <span style="background:linear-gradient(to right,#FF0000,#0000FF);-webkit-background-clip:text;background-clip:text;color:transparent">Blade</span> |
+| `<bold><gold>Excalibur</gold></bold>`        | <span style="color:#FFAA00;font-weight:bold">Excalibur</span>                                                                                       |
 
 > See the [MiniMessage docs](https://docs.papermc.io/adventure/minimessage/format/) for the full formatting syntax.
