@@ -11,6 +11,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.Tag
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
 import kotlin.time.Duration
 
 /** General utilities shared across the IllyriaPlus plugin modules. */
@@ -54,6 +55,21 @@ object Utils {
             .split(Regex("(?=[A-Z])"))
             .filter { it.isNotEmpty() }
             .joinToString("_") { it.lowercase() }
+
+    /**
+     * Validates that the server version matches the plugin's target version.
+     *
+     * Disables the plugin if the server version does not contain the target version
+     * substring (the version before the `+` in the version string).
+     *
+     * @param plugin The plugin instance.
+     */
+    fun Plugin.validateVersion() {
+        if (!server.version.contains(pluginMeta.version.substringBefore("+"))) {
+            logger.severe("This plugin requires the following supported version: ${pluginMeta.version}.")
+            server.pluginManager.disablePlugin(this)
+        }
+    }
 
     /** Command-related utilities. */
     object Command {
