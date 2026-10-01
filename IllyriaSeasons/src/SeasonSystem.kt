@@ -20,6 +20,9 @@ internal object SeasonSystem {
     /** Returns the current day within the current season (1-based, 1–30). */
     fun dayInSeason(): Int = ((day - 1) % 30) + 1
 
+    /** Currently active virtual biome in the packet handler. */
+    private var activeVirtualBiome: VirtualBiome? = null
+
     /** Loads the persisted seasonal state from disk. */
     fun load() {
         val file = File(IllyriaSeasons.instance.dataFolder, DATA_FILE)
@@ -76,23 +79,20 @@ internal object SeasonSystem {
         val handler = IllyriaSeasons.instance.packetHandler
         val updater = BiomeUpdater.of(IllyriaSeasons.instance)
 
-        // Remove previous season's virtual biome(s) and inject the current one.
-        previous?.let {
-            handler.removeBiome(SeasonBiomes.of(it).resourceKey())
-        }
-        handler.appendBiome(
+        // Remove the previously active virtual biome, then inject the current season's.
+        activeVirtualBiome?.let { handler.dismissBiome(it) }
+        val virtualBiome =
             VirtualBiome
                 .builder()
                 .biome(SeasonBiomes.of(season))
-                .build(),
-        )
+                .build()
+        handler.appendBiome(virtualBiome)
+        activeVirtualBiome = virtualBiome
 
         // Resend chunks so colors update immediately.
-        IllyriaSeasons
-            .instance
-            .server
-            .onlinePlayers
-            .forEach { updater.updateChunksForPlayer(it) }
+        IllyriaSeasons.instance.server.onlinePlayers.forEach {
+            updater.updateChunksForPlayer(it)
+        }
 
         IllyriaSeasons.instance.logger.info(
             "Season: ${previous?.name?.lowercase()} → ${season.name.lowercase()} " +
