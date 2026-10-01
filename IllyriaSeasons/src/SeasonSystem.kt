@@ -3,47 +3,39 @@ package org.xodium.illyriaseasons
 import dev.wyck.renderer.packet.PacketHandler
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
-import java.time.LocalDate
 
 /** Core seasonal state machine tracking the current position in the seasonal year. */
 internal object SeasonSystem {
     private const val DATA_FILE = "data.yml"
-    private const val KEY_DAY_OF_YEAR = "day-of-year"
+    private const val KEY_DAY = "day"
 
-    /** Start day-of-year (1-based); defaults to today's real-world date. */
-    private var dayOffset: Int = LocalDate.now().dayOfYear
+    /** Current day within the seasonal year (1-based, 1–120). */
+    var day: Int = 1
+        private set
 
     /** Returns a [PacketHandler] for injecting virtual seasonal biomes. Not yet wired. */
     @Suppress("unused")
     fun packetHandler(): PacketHandler = PacketHandler.of(IllyriaSeasons.instance)
 
     /**
-     * Returns the current day-of-year (1–365) within the seasonal year.
+     * Returns the current season.
      *
-     * @return current day-of-year
+     * @return The current [SeasonState].
      */
-    fun dayOfYear(): Int = ((dayOffset - 1).mod(SeasonState.DAYS_PER_YEAR)) + 1
+    fun currentSeason(): SeasonState = SeasonState.entries[((day - 1) / 30) % SeasonState.entries.size]
 
-    /** Advances the seasonal year to the start of the next season. */
-    fun advance() {
-        val season = SeasonState.of(dayOfYear())
-        val endOfSeason = season.lengthInDays - (SeasonState.progress(dayOfYear()) * season.lengthInDays).toInt()
-        dayOffset += endOfSeason
-        IllyriaSeasons.instance.logger.info(
-            "Advanced to ${
-                SeasonState.of(dayOfYear()).name.lowercase()
-            } (day ${dayOfYear()}/${SeasonState.DAYS_PER_YEAR})",
-        )
-    }
+    /**
+     * Returns the current day within the current season (1-based, 1–30).
+     *
+     * @return Day within the season.
+     */
+    fun dayInSeason(): Int = ((day - 1) % 30) + 1
 
     /** Loads the persisted seasonal state from disk. */
     fun load() {
         val file = File(IllyriaSeasons.instance.dataFolder, DATA_FILE)
         if (!file.exists()) return
-        dayOffset =
-            YamlConfiguration
-                .loadConfiguration(file)
-                .getInt(KEY_DAY_OF_YEAR, LocalDate.now().dayOfYear)
+        day = YamlConfiguration.loadConfiguration(file).getInt(KEY_DAY, 1)
     }
 
     /** Saves the current seasonal state to disk. */
@@ -52,17 +44,35 @@ internal object SeasonSystem {
         file.parentFile?.mkdirs()
         YamlConfiguration()
             .apply {
-                set(KEY_DAY_OF_YEAR, dayOfYear())
+                set(KEY_DAY, day)
             }.save(file)
     }
 
+    /** Advances the seasonal year by one Minecraft day. */
+    fun advance() {
+        day = (day % SeasonState.DAYS_PER_YEAR) + 1
+        if (day == 1 || dayInSeason() == 1) {
+            IllyriaSeasons.instance.logger.info(
+                "Advanced to ${currentSeason().name.lowercase()} " +
+                    "(day ${dayInSeason()}/${currentSeason().lengthInDays}, " +
+                    "day $day/${SeasonState.DAYS_PER_YEAR})",
+            )
+        }
+    }
+
+    /** Advances to the start of the next season. */
+    fun advanceSeason() {
+        val daysUntilNextSeason = currentSeason().lengthInDays - dayInSeason() + 1
+        day += daysUntilNextSeason
+    }
+
     /**
-     * Sets the seasonal day-of-year directly.
+     * Sets the season day directly.
      *
-     * @param day the day of year to set (1-based, 1–365)
+     * @param day The day within the seasonal year to set (1-based, 1–120).
      */
     fun setDay(day: Int) {
-        dayOffset = day.coerceIn(1, SeasonState.DAYS_PER_YEAR)
+        this.day = day.coerceIn(1, SeasonState.DAYS_PER_YEAR)
         save()
     }
 }

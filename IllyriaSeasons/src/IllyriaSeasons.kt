@@ -20,12 +20,14 @@ internal class IllyriaSeasons : JavaPlugin() {
         }
 
         SeasonSystem.load()
+        SeasonAdvancementMechanic.start()
         SeasonCommand.register(this)
 
         UpdateChecker(this).check()
     }
 
     override fun onDisable() {
+        SeasonAdvancementMechanic.stop()
         SeasonSystem.save()
     }
 }

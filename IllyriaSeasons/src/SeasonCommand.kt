@@ -26,20 +26,21 @@ internal object SeasonCommand {
             .literal("season")
             .requires { (it.sender as? Player)?.isOp == true }
             .executesCatching {
-                val dayOfYear = SeasonSystem.dayOfYear()
-                val season = SeasonState.of(dayOfYear)
-                val day = (SeasonState.progress(dayOfYear) * season.lengthInDays).toInt() + 1
+                val season = SeasonSystem.currentSeason()
                 it.source.sender.sendMessage(
                     MM.deserialize(
                         "<gray>It is currently <green>${
                             season.name.lowercase().replaceFirstChar(Char::uppercase)
                         }</green>, " +
-                            "day <yellow>$day</yellow> of <yellow>${season.lengthInDays}</yellow>.",
+                            "day <yellow>${SeasonSystem.dayInSeason()}</yellow>/" +
+                            "<yellow>${season.lengthInDays}</yellow> " +
+                            "(day <yellow>${SeasonSystem.day}</yellow>/" +
+                            "<yellow>${SeasonState.DAYS_PER_YEAR}</yellow>).",
                     ),
                 )
             }.then(
                 Commands.literal("next").executesCatching {
-                    SeasonSystem.advance()
+                    SeasonSystem.advanceSeason()
                     it.source.sender.sendMessage(
                         MM.deserialize("<gray>Skipped to the next season."),
                     )
