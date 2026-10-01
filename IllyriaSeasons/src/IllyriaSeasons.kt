@@ -31,6 +31,7 @@ internal class IllyriaSeasons : JavaPlugin() {
                 logger.info("Wyck packet handler registered (Netty injector)")
             }
 
+        SeasonBiomes.register()
         SeasonSystem.load()
         SeasonAdvancementMechanic.start()
         SeasonCommand.register(this)

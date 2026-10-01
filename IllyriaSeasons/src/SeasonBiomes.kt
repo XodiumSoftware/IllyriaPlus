@@ -61,6 +61,11 @@ internal object SeasonBiomes {
         listOf(SPRING, SUMMER, AUTUMN, WINTER)
     }
 
+    /** Registers all four seasonal biomes with Wyck's biome registry. */
+    fun register() {
+        biomes.forEach { it.register() }
+    }
+
     /** Maps [SeasonState] to its corresponding [CustomBiome]. */
     fun of(season: SeasonState): CustomBiome =
         when (season) {
