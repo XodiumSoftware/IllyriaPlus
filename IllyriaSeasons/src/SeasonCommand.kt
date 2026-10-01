@@ -4,14 +4,12 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
+import org.bukkit.entity.Player
 import org.xodium.illyrialib.Utils.Command.executesCatching
 import org.xodium.illyrialib.Utils.MM
 
 /** Provides the `/season` command for inspecting and controlling the seasonal cycle. */
 internal object SeasonCommand {
-    private const val NAME = "season"
-    private const val PERM = "illyriaseasons.command.season"
-
     /** Registers the `/season` command with Paper's modern command lifecycle. */
     @Suppress("UnstableApiUsage")
     fun register(plugin: IllyriaSeasons) {
@@ -19,15 +17,14 @@ internal object SeasonCommand {
             event.registrar().register(
                 build().build(),
                 "Inspects and controls the current season.",
-                listOf("seasons"),
             )
         }
     }
 
     private fun build(): LiteralArgumentBuilder<CommandSourceStack> =
         Commands
-            .literal(NAME)
-            .requires { it.sender.hasPermission(PERM) }
+            .literal("season")
+            .requires { (it.sender as? Player)?.isOp == true }
             .executesCatching {
                 val dayOfYear = SeasonSystem.dayOfYear()
                 val season = SeasonState.of(dayOfYear)
