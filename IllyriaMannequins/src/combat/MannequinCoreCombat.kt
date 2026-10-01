@@ -259,6 +259,26 @@ internal object MannequinCoreCombat : Listener {
     }
 
     /**
+     * Removes a mannequin from combat state and lowers its shield if raised.
+     *
+     * @param iterator The iterator over [targets] to remove the entry with.
+     * @param uuid The mannequin's unique id.
+     * @param mannequin The mannequin, or `null` if no longer present.
+     */
+    private fun disengage(
+        iterator: MutableIterator<MutableMap.MutableEntry<UUID, LivingEntity>>,
+        uuid: UUID,
+        mannequin: Mannequin?,
+    ) {
+        cooldowns.remove(uuid)
+        retreats.remove(uuid)
+        iterator.remove()
+        if (mannequin != null && mannequin.isHandRaised) {
+            mannequin.clearActiveItem()
+        }
+    }
+
+    /**
      * Assigns a combat target to a mannequin and starts its attack cooldown.
      *
      * @param mannequin The mannequin to engage.
@@ -279,22 +299,12 @@ internal object MannequinCoreCombat : Listener {
             val (uuid, target) = iterator.next()
             val mannequin = instance.server.getEntity(uuid) as? Mannequin
             if (mannequin == null || target.isDead || target.world != mannequin.world) {
-                cooldowns.remove(uuid)
-                retreats.remove(uuid)
-                iterator.remove()
-                if (mannequin != null && mannequin.isHandRaised) {
-                    mannequin.clearActiveItem()
-                }
+                disengage(iterator, uuid, mannequin)
                 continue
             }
             val distanceSquared = mannequin.location.distanceSquared(target.location)
             if (distanceSquared > GIVE_UP_RANGE_SQUARED) {
-                cooldowns.remove(uuid)
-                retreats.remove(uuid)
-                iterator.remove()
-                if (mannequin.isHandRaised) {
-                    mannequin.clearActiveItem()
-                }
+                disengage(iterator, uuid, mannequin)
                 continue
             }
             if (hasShield(mannequin)) {
