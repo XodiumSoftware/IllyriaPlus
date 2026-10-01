@@ -15,8 +15,8 @@
 #mdbook-search-toggle::after {
     content: "";
     display: block;
-    width: 16px;
-    height: 16px;
+    width: 24px;
+    height: 24px;
     background-image: url("/img/gui/spyglass.png");
     background-repeat: no-repeat;
     background-size: contain;
@@ -38,8 +38,8 @@
 #mdbook-theme-toggle::after {
     content: "";
     display: block;
-    width: 16px;
-    height: 16px;
+    width: 24px;
+    height: 24px;
     background-image: url("/img/gui/brush.png");
     background-repeat: no-repeat;
     background-size: contain;
@@ -78,4 +78,32 @@
     color: var(--sidebar-fg);
     border: 4px solid transparent;
     border-image: url("/img/gui/tooltip_frame.png") 2 / 4px / 0 stretch;
+}
+
+#mdbook-sidebar-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Hide the Font Awesome bars icon. */
+#mdbook-sidebar-toggle > .fa-svg {
+    display: none;
+}
+
+/* Inject the closed knowledge-book sprite (sidebar hidden). */
+#mdbook-sidebar-toggle::after {
+    content: "";
+    display: block;
+    width: 24px;
+    height: 24px;
+    background-image: url("/img/gui/knowledge_book_closed.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    image-rendering: pixelated;
+}
+
+/* Swap to the open variant when the sidebar is visible. */
+html.sidebar-visible #mdbook-sidebar-toggle::after {
+    background-image: url("/img/gui/knowledge_book_open.png");
 }
