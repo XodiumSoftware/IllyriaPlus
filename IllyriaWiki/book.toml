@@ -3,6 +3,9 @@ title = "Illyria Wiki"
 authors = ["illyrius666"]
 language = "en"
 
+[preprocessor.variables.variables]
+mc_version = "26.3"
+
 [output.html]
 site-url = "https://wiki.illyria.cc/"
 git-repository-url = "https://github.com/XodiumSoftware/IllyriaPlus"

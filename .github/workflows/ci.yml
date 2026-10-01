@@ -27,6 +27,8 @@ env:
   CARGO_TERM_COLOR: always
   # renovate: datasource=crate depName=mdbook
   MDBOOK_VERSION: "0.5.2"
+  # renovate: datasource=crate depName=mdbook-variables
+  MDBOOK_VARIABLES_VERSION: "0.4.1"
 
 permissions:
   contents: read
@@ -454,12 +456,19 @@ jobs:
         name: Cache mdBook
         uses: actions/cache@v6.1.0
         with:
-          path: ~/.cargo/bin/mdbook
-          key: ${{ runner.os }}-mdbook-${{ env.MDBOOK_VERSION }}
+          path: |
+            ~/.cargo/bin/mdbook
+            ~/.cargo/bin/mdbook-variables
+          key: ${{ runner.os }}-mdbook-${{ env.MDBOOK_VERSION }}-vars-${{ env.MDBOOK_VARIABLES_VERSION }}
 
       - id: install_mdbook
         name: Install mdBook
         run: cargo binstall mdbook@${{ env.MDBOOK_VERSION }} --no-confirm --force
+        shell: bash
+
+      - id: install_mdbook_variables
+        name: Install mdbook-variables
+        run: cargo binstall mdbook-variables@${{ env.MDBOOK_VARIABLES_VERSION }} --no-confirm --force
         shell: bash
 
       - id: build_book
