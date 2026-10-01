@@ -326,7 +326,7 @@ internal object MannequinCoreCombat : Listener {
                     if (away != null) {
                         mannequin.velocity = away.apply { y = mannequin.velocity.y }
                     }
-                    retreats[uuid] = retreats[uuid]!! - COMBAT_INTERVAL_TICKS.toInt()
+                    retreats[uuid] = (retreats[uuid] ?: 0) - COMBAT_INTERVAL_TICKS.toInt()
                 } else {
                     mannequin.velocity = mannequin.velocity.setX(0.0).setZ(0.0)
                 }
