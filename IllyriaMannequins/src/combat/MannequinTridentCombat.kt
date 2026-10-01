@@ -6,6 +6,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Mannequin
 import org.bukkit.entity.Trident
 import org.bukkit.inventory.EquipmentSlot
+import org.bukkit.inventory.ItemStack
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
 import org.xodium.illyriamannequins.Utils.stepToward
 import java.util.UUID
@@ -28,8 +29,21 @@ internal object MannequinTridentCombat {
     /** The interval in ticks to wait after throwing before the trident can be caught. */
     private const val CATCH_DELAY_TICKS = 60
 
-    /** Tridents thrown by mannequins, keyed by trident UUID with the throw timestamp. */
-    private val thrown = mutableMapOf<UUID, Pair<UUID, Long>>() // trident -> (mannequin, thrownAtWorldTime)
+    /** Tridents thrown by mannequins, keyed by trident UUID. */
+    private val thrown = mutableMapOf<UUID, ThrownTrident>()
+
+    /**
+     * A trident thrown by a mannequin.
+     *
+     * @property mannequin The unique id of the mannequin that threw the trident.
+     * @property thrownAt The world time when the trident was thrown.
+     * @property item A snapshot of the thrown trident, used to restore the mannequin's hand if tracking is lost.
+     */
+    private data class ThrownTrident(
+        val mannequin: UUID,
+        val thrownAt: Long,
+        val item: ItemStack,
+    )
 
     /** Registers the trident return task. */
     fun register() {
@@ -74,7 +88,12 @@ internal object MannequinTridentCombat {
                 it.shooter = mannequin
                 it.velocity = direction
             }
-        thrown[trident.uniqueId] = mannequin.uniqueId to mannequin.world.gameTime
+        thrown[trident.uniqueId] =
+            ThrownTrident(
+                mannequin = mannequin.uniqueId,
+                thrownAt = mannequin.world.gameTime,
+                item = tridentItem.clone(),
+            )
         mannequin.equipment.setItem(EquipmentSlot.HAND, null)
     }
 
@@ -82,21 +101,52 @@ internal object MannequinTridentCombat {
     private fun updateReturns() {
         val iterator = thrown.entries.iterator()
         while (iterator.hasNext()) {
-            val (tridentId, origin) = iterator.next()
-            val trident = instance.server.getEntity(tridentId) as? Trident
-            val mannequin = instance.server.getEntity(origin.first) as? Mannequin
-            if (trident == null || mannequin == null || trident.world != mannequin.world) {
+            val (tridentId, thrownTrident) = iterator.next()
+            val mannequin = instance.server.getEntity(thrownTrident.mannequin) as? Mannequin
+
+            // Mannequin is gone — nothing to restore the trident to.
+            if (mannequin == null) {
                 iterator.remove()
                 continue
             }
-            if (trident.world.gameTime - origin.second < CATCH_DELAY_TICKS) continue
-            val loyalty = trident.loyaltyLevel
-            if (loyalty <= 0) continue
+
+            val trident = instance.server.getEntity(tridentId) as? Trident
+            // Trident entity vanished (chunk unload, removal) — restore the mannequin's hand.
+            if (trident == null) {
+                restoreItem(mannequin, thrownTrident.item)
+                iterator.remove()
+                continue
+            }
+
+            // Mannequin crossed worlds — leave the trident behind and restore the mannequin's hand.
+            if (trident.world != mannequin.world) {
+                restoreItem(mannequin, thrownTrident.item)
+                iterator.remove()
+                continue
+            }
+
+            if (trident.world.gameTime - thrownTrident.thrownAt < CATCH_DELAY_TICKS) continue
+            if (trident.loyaltyLevel <= 0) continue
             if (trident.location.distanceSquared(mannequin.location) <= CATCH_RANGE_SQUARED) {
                 mannequin.equipment.setItem(EquipmentSlot.HAND, trident.itemStack)
                 trident.remove()
                 iterator.remove()
             }
+        }
+    }
+
+    /**
+     * Returns a trident snapshot to a mannequin's main hand if the slot is free.
+     *
+     * @param mannequin The mannequin to restore the item to.
+     * @param item The snapshot of the thrown trident.
+     */
+    private fun restoreItem(
+        mannequin: Mannequin,
+        item: ItemStack,
+    ) {
+        if (mannequin.equipment.getItem(EquipmentSlot.HAND).isEmpty) {
+            mannequin.equipment.setItem(EquipmentSlot.HAND, item)
         }
     }
 }
