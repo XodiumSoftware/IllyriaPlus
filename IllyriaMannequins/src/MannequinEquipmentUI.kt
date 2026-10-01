@@ -1,6 +1,7 @@
 package org.xodium.illyriamannequins
 
 import org.bukkit.Material
+import org.bukkit.Tag
 import org.bukkit.entity.Mannequin
 import org.bukkit.entity.Player
 import org.bukkit.inventory.EquipmentSlot
@@ -80,7 +81,7 @@ internal object MannequinEquipmentUI {
                 val newItem: ItemStack? = event.newItem
                 if (newItem != null && !newItem.isEmpty) {
                     val slot = SLOT_ORDER.getOrNull(event.slot)
-                    if (slot != null && slot.isArmor && !MannequinEquipment.isValidForSlot(newItem.type, slot)) {
+                    if (slot != null && slot.isArmor && !isValidForSlot(newItem.type, slot)) {
                         event.isCancelled = true
                     }
                 }
@@ -92,4 +93,23 @@ internal object MannequinEquipmentUI {
             }
         }
     }
+
+    /**
+     * Checks if a material is a valid armor type for an equipment slot.
+     *
+     * @param material The material to check.
+     * @param slot The equipment slot to check against.
+     * @return `true` if the material is armor valid for the slot.
+     */
+    private fun isValidForSlot(
+        material: Material,
+        slot: EquipmentSlot,
+    ): Boolean =
+        when (slot) {
+            EquipmentSlot.FEET -> Tag.ITEMS_FOOT_ARMOR.isTagged(material)
+            EquipmentSlot.LEGS -> Tag.ITEMS_LEG_ARMOR.isTagged(material)
+            EquipmentSlot.CHEST -> Tag.ITEMS_CHEST_ARMOR.isTagged(material)
+            EquipmentSlot.HEAD -> Tag.ITEMS_HEAD_ARMOR.isTagged(material) || material.isBlock
+            else -> false
+        }
 }
