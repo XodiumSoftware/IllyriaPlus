@@ -2,8 +2,11 @@ package org.xodium.illyriamannequins
 
 import org.bukkit.HeightMap
 import org.bukkit.Location
+import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
+import org.bukkit.inventory.EquipmentSlot
+import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
 
 /** Utility functions shared across mannequin behaviors. */
@@ -47,4 +50,23 @@ internal object Utils {
         if (step.lengthSquared() == 0.0) return null
         return step.normalize().multiply(speed)
     }
+
+    /**
+     * Computes the melee attack damage of a weapon from its default mainhand attributes.
+     *
+     * @return The total attack damage, at minimum 1.0 (fist damage).
+     */
+    fun ItemStack.meleeDamage(): Double {
+        if (isEmpty) return FIST_DAMAGE
+        val amount =
+            type
+                .asItemType()
+                ?.getDefaultAttributeModifiers(EquipmentSlot.HAND)
+                ?.get(Attribute.ATTACK_DAMAGE)
+                ?.sumOf { it.amount } ?: 0.0
+        return FIST_DAMAGE + amount
+    }
+
+    /** The unarmed melee damage dealt without a weapon. */
+    private const val FIST_DAMAGE = 1.0
 }

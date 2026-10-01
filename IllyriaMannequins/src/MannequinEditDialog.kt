@@ -140,7 +140,7 @@ internal object MannequinEditDialog {
                                 .builder(MM.deserialize(DISCARD_BUTTON))
                                 .action(
                                     DialogAction.customClick(
-                                        { _, _ -> Unit },
+                                        { _, _ -> },
                                         ClickCallback
                                             .Options
                                             .builder()
