@@ -34,6 +34,7 @@ internal object MannequinEditDialog {
     private const val COMBAT_MODE_LABEL = "<gray>Combat Mode"
     private const val MAIN_HAND_LABEL = "<gray>Main Hand"
     private const val DISCARD_BUTTON = "<red>Discard</red>"
+    private const val EQUIPMENT_BUTTON = "<yellow>Equipment</yellow>"
     private const val SAVE_BUTTON = "<green>Save</green>"
 
     /** Dialog input identifiers. */
@@ -135,77 +136,123 @@ internal object MannequinEditDialog {
                                 ),
                             ).build(),
                     ).type(
-                        DialogType.confirmation(
-                            ActionButton
-                                .builder(MM.deserialize(DISCARD_BUTTON))
-                                .action(
-                                    DialogAction.customClick(
-                                        { _, _ -> },
-                                        ClickCallback
-                                            .Options
-                                            .builder()
-                                            .uses(ClickCallback.UNLIMITED_USES)
-                                            .build(),
-                                    ),
-                                ).build(),
-                            ActionButton
-                                .builder(MM.deserialize(SAVE_BUTTON))
-                                .action(
-                                    DialogAction.customClick(
-                                        { response, _ ->
-                                            response.getText(Input.MOVEMENT_MODE.key)?.let { mode ->
-                                                mannequin.movementMode =
-                                                    MovementMode.valueOf(mode.uppercase())
-                                                mannequin.anchor =
-                                                    if (mannequin.movementMode == MovementMode.STATIONARY) {
-                                                        mannequin.location
-                                                    } else {
-                                                        mannequin.anchor
-                                                    }
-                                            }
-                                            response.getText(Input.COMBAT_MODE.key)?.let { mode ->
-                                                mannequin.combatMode =
-                                                    CombatMode.valueOf(mode.uppercase())
-                                            }
-                                            response.getText(Input.MAIN_HAND.key)?.let { hand ->
-                                                mannequin.mainHand =
-                                                    MainHand.entries.first { it.name.lowercase() == hand }
-                                            }
-                                            response.getText(Input.NAME.key)?.let { name ->
-                                                if (name.isBlank()) {
-                                                    mannequin.customName(null)
-                                                    mannequin.isCustomNameVisible = false
-                                                } else {
-                                                    mannequin.customName(MM.deserialize(name))
-                                                    mannequin.isCustomNameVisible = true
-                                                }
-                                            }
-                                            response.getText(Input.DESCRIPTION.key)?.let { description ->
-                                                mannequin.description =
-                                                    if (description.isBlank()) {
-                                                        Mannequin.defaultDescription()
-                                                    } else {
-                                                        MM.deserialize(description)
-                                                    }
-                                            }
-                                            response.getText(Input.SKIN.key)?.let { skin ->
-                                                val profile = ResolvableProfile.resolvableProfile()
-                                                if (skin.isNotBlank()) {
-                                                    profile.name(skin)
-                                                }
-                                                mannequin.profile = profile.build()
-                                            }
-                                        },
-                                        ClickCallback
-                                            .Options
-                                            .builder()
-                                            .uses(ClickCallback.UNLIMITED_USES)
-                                            .build(),
-                                    ),
-                                ).build(),
-                        ),
+                        DialogType
+                            .multiAction(
+                                listOf(
+                                    discardButton(),
+                                    equipmentButton(player, mannequin),
+                                    saveButton(mannequin),
+                                ),
+                            ).columns(3)
+                            .build(),
                     )
             },
         )
     }
+
+    /**
+     * Builds the discard button, which closes the dialog without applying changes.
+     *
+     * @return The discard [ActionButton].
+     */
+    private fun discardButton(): ActionButton =
+        ActionButton
+            .builder(MM.deserialize(DISCARD_BUTTON))
+            .action(
+                DialogAction.customClick(
+                    { _, _ -> },
+                    ClickCallback
+                        .Options
+                        .builder()
+                        .uses(ClickCallback.UNLIMITED_USES)
+                        .build(),
+                ),
+            ).build()
+
+    /**
+     * Builds the equipment button, which closes the dialog and opens the equipment GUI.
+     *
+     * @param player The player viewing the dialog.
+     * @param mannequin The mannequin whose equipment to edit.
+     * @return The equipment [ActionButton].
+     */
+    private fun equipmentButton(
+        player: Player,
+        mannequin: Mannequin,
+    ): ActionButton =
+        ActionButton
+            .builder(MM.deserialize(EQUIPMENT_BUTTON))
+            .action(
+                DialogAction.customClick(
+                    { _, _ -> MannequinEquipmentUI.open(player, mannequin) },
+                    ClickCallback
+                        .Options
+                        .builder()
+                        .uses(ClickCallback.UNLIMITED_USES)
+                        .build(),
+                ),
+            ).build()
+
+    /**
+     * Builds the save button, which applies all dialog inputs to the mannequin.
+     *
+     * @param mannequin The mannequin being edited.
+     * @return The save [ActionButton].
+     */
+    private fun saveButton(mannequin: Mannequin): ActionButton =
+        ActionButton
+            .builder(MM.deserialize(SAVE_BUTTON))
+            .action(
+                DialogAction.customClick(
+                    { response, _ ->
+                        response.getText(Input.MOVEMENT_MODE.key)?.let { mode ->
+                            mannequin.movementMode =
+                                MovementMode.valueOf(mode.uppercase())
+                            mannequin.anchor =
+                                if (mannequin.movementMode == MovementMode.STATIONARY) {
+                                    mannequin.location
+                                } else {
+                                    mannequin.anchor
+                                }
+                        }
+                        response.getText(Input.COMBAT_MODE.key)?.let { mode ->
+                            mannequin.combatMode =
+                                CombatMode.valueOf(mode.uppercase())
+                        }
+                        response.getText(Input.MAIN_HAND.key)?.let { hand ->
+                            mannequin.mainHand =
+                                MainHand.entries.first { it.name.lowercase() == hand }
+                        }
+                        response.getText(Input.NAME.key)?.let { name ->
+                            if (name.isBlank()) {
+                                mannequin.customName(null)
+                                mannequin.isCustomNameVisible = false
+                            } else {
+                                mannequin.customName(MM.deserialize(name))
+                                mannequin.isCustomNameVisible = true
+                            }
+                        }
+                        response.getText(Input.DESCRIPTION.key)?.let { description ->
+                            mannequin.description =
+                                if (description.isBlank()) {
+                                    Mannequin.defaultDescription()
+                                } else {
+                                    MM.deserialize(description)
+                                }
+                        }
+                        response.getText(Input.SKIN.key)?.let { skin ->
+                            val profile = ResolvableProfile.resolvableProfile()
+                            if (skin.isNotBlank()) {
+                                profile.name(skin)
+                            }
+                            mannequin.profile = profile.build()
+                        }
+                    },
+                    ClickCallback
+                        .Options
+                        .builder()
+                        .uses(ClickCallback.UNLIMITED_USES)
+                        .build(),
+                ),
+            ).build()
 }
