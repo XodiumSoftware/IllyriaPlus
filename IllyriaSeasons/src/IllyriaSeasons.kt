@@ -19,6 +19,8 @@ internal class IllyriaSeasons : JavaPlugin() {
             return
         }
 
+        SeasonCommand.register(this)
+
         UpdateChecker(this).check()
     }
 }
