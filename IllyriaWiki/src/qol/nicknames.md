@@ -13,11 +13,11 @@ Nicknames support full MiniMessage syntax — colors, gradients, bold, and more.
 
 ### Examples
 
-| Input                                       | Result                |
-| ------------------------------------------- | --------------------- |
-| `<red>Steve</red>`                          | Red name              |
-| `<gradient:#FF0000:#0000FF>Alex</gradient>` | Gradient-colored name |
-| `<bold><gold>Knight</gold></bold>`          | Bold, gold name       |
+| Input                                       | Result                                                                                                                                             |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `<red>Steve</red>`                          | <span style="color:#FF5555">Steve</span>                                                                                                           |
+| `<gradient:#FF0000:#0000FF>Alex</gradient>` | <span style="background:linear-gradient(to right,#FF0000,#0000FF);-webkit-background-clip:text;background-clip:text;color:transparent">Alex</span> |
+| `<bold><gold>Knight</gold></bold>`          | <span style="color:#FFAA00;font-weight:bold">Knight</span>                                                                                         |
 
 ### RGB Gradients Made Easy
 
