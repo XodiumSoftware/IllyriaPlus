@@ -121,7 +121,7 @@ internal object SeasonMechanic : MechanicInterface {
      *
      * @param world The world whose season to apply.
      */
-    private fun swapBiome(world: World) {
+    internal fun swapBiome(world: World) {
         val season = SeasonStateEnum.currentSeason(world)
         val handler = PacketHandler.of(instance)
         val updater = BiomeUpdater.of(instance)

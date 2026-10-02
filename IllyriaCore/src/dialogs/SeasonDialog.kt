@@ -4,19 +4,20 @@ import io.papermc.paper.dialog.Dialog
 import io.papermc.paper.registry.data.dialog.ActionButton
 import io.papermc.paper.registry.data.dialog.DialogBase
 import io.papermc.paper.registry.data.dialog.action.DialogAction
-import io.papermc.paper.registry.data.dialog.body.DialogBody
+import io.papermc.paper.registry.data.dialog.input.DialogInput
+import io.papermc.paper.registry.data.dialog.input.SingleOptionDialogInput.OptionEntry
 import io.papermc.paper.registry.data.dialog.type.DialogType
 import net.kyori.adventure.text.event.ClickCallback
 import org.bukkit.entity.Player
 import org.xodium.illyriacore.enums.SeasonStateEnum
+import org.xodium.illyriacore.mechanics.world.SeasonMechanic
 import org.xodium.illyrialib.Utils.MM
 
-/** Dialog showing the current season with a button to advance to the next one. */
+/** Dialog showing the current season with a dropdown and save/discard buttons. */
 internal object SeasonDialog : DialogInterface {
     override fun invoke(player: Player): Dialog {
         val world = player.world
         val current = SeasonStateEnum.currentSeason(world)
-        val next = current.next()
 
         return Dialog.create {
             it
@@ -24,41 +25,68 @@ internal object SeasonDialog : DialogInterface {
                 .base(
                     DialogBase
                         .builder(MM.deserialize("<firewatch>Seasons</gradient>"))
-                        .body(
+                        .inputs(
                             listOf(
-                                DialogBody.plainMessage(
-                                    MM.deserialize(
-                                        "<gray>Current season: <${current.color}>${
-                                            current.name
-                                                .lowercase()
-                                                .replaceFirstChar(Char::uppercase)
-                                        }</${current.color}>",
-                                    ),
-                                ),
+                                DialogInput
+                                    .singleOption(
+                                        "season",
+                                        MM.deserialize("<gray>Select season</gray>"),
+                                        SeasonStateEnum.entries.map { season ->
+                                            OptionEntry.create(
+                                                season.name.lowercase(),
+                                                MM.deserialize(
+                                                    "<${season.color}>${
+                                                        season.name
+                                                            .lowercase()
+                                                            .replaceFirstChar(Char::uppercase)
+                                                    }</${season.color}>",
+                                                ),
+                                                season == current,
+                                            )
+                                        },
+                                    ).width(200)
+                                    .labelVisible(true)
+                                    .build(),
                             ),
                         ).build(),
                 ).type(
-                    DialogType.notice(
+                    DialogType.confirmation(
                         ActionButton
-                            .builder(
-                                MM.deserialize(
-                                    "<${next.color}>Advance to ${
-                                        next.name
-                                            .lowercase()
-                                            .replaceFirstChar(Char::uppercase)
-                                    }</${next.color}>",
-                                ),
-                            ).action(
+                            .builder(MM.deserialize("<red>Discard</red>"))
+                            .action(
                                 DialogAction.customClick(
-                                    { _, _ ->
-                                        SeasonStateEnum.advanceSeason(world)
+                                    { _, _ -> },
+                                    ClickCallback
+                                        .Options
+                                        .builder()
+                                        .uses(ClickCallback.UNLIMITED_USES)
+                                        .build(),
+                                ),
+                            ).build(),
+                        ActionButton
+                            .builder(MM.deserialize("<green>Save</green>"))
+                            .action(
+                                DialogAction.customClick(
+                                    { response, _ ->
+                                        val selected =
+                                            response
+                                                .getText("season")
+                                                ?.let { id ->
+                                                    SeasonStateEnum.entries.firstOrNull { entry ->
+                                                        entry.name.lowercase() ==
+                                                            id
+                                                    }
+                                                } ?: return@customClick
+                                        if (selected == current) return@customClick
+                                        SeasonStateEnum.setSeason(world, selected)
+                                        SeasonMechanic.swapBiome(world)
                                         player.sendMessage(
                                             MM.deserialize(
-                                                "<gray>Skipped to <${next.color}>${
-                                                    next.name
+                                                "<gray>Season set to <${selected.color}>${
+                                                    selected.name
                                                         .lowercase()
                                                         .replaceFirstChar(Char::uppercase)
-                                                }</${next.color}>.",
+                                                }</${selected.color}>.",
                                             ),
                                         )
                                     },

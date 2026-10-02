@@ -84,5 +84,23 @@ internal enum class SeasonStateEnum(
             world.fullTime = targetTicks
             return seasonalDay(world)
         }
+
+        /**
+         * Sets the world to the start of the given season.
+         *
+         * @param world The world to modify.
+         * @param season The target [SeasonStateEnum].
+         * @return The new day of year (0-based) after setting.
+         */
+        fun setSeason(
+            world: World,
+            season: SeasonStateEnum,
+        ): Long {
+            val currentDay = seasonalDay(world)
+            val targetDay = season.ordinal * DAYS_PER_SEASON.toLong()
+            val daysToAdd = (DAYS_PER_YEAR + targetDay - currentDay) % DAYS_PER_YEAR
+            world.fullTime += daysToAdd * TICKS_PER_DAY
+            return seasonalDay(world)
+        }
     }
 }
