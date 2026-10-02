@@ -1,4 +1,4 @@
-package org.xodium.illyriacore.data
+package org.xodium.illyriacore.enums
 
 import org.bukkit.World
 
@@ -13,21 +13,23 @@ private const val DAYS_PER_SEASON: Int = 30
  * `world.fullTime` — no persistence needed.
  *
  * @property lengthInDays the duration of this season in Minecraft days
+ * @property color the MiniMessage color used to represent this season in UI text
  */
-internal enum class SeasonState(
+internal enum class SeasonStateEnum(
     val lengthInDays: Int,
+    val color: String,
 ) {
-    SPRING(DAYS_PER_SEASON),
-    SUMMER(DAYS_PER_SEASON),
-    AUTUMN(DAYS_PER_SEASON),
-    WINTER(DAYS_PER_SEASON),
+    SPRING(DAYS_PER_SEASON, "green"),
+    SUMMER(DAYS_PER_SEASON, "yellow"),
+    AUTUMN(DAYS_PER_SEASON, "red"),
+    WINTER(DAYS_PER_SEASON, "aqua"),
     ;
 
     /** The season that follows this one. */
-    fun next(): SeasonState = entries[(ordinal + 1) % entries.size]
+    fun next(): SeasonStateEnum = entries[(ordinal + 1) % entries.size]
 
     /** The season that precedes this one. */
-    fun previous(): SeasonState = entries[(ordinal + entries.size - 1) % entries.size]
+    fun previous(): SeasonStateEnum = entries[(ordinal + entries.size - 1) % entries.size]
 
     companion object {
         /** Total Minecraft days in the seasonal year (4 × 30 days). */
@@ -43,9 +45,9 @@ internal enum class SeasonState(
          * Returns the current season for the given world.
          *
          * @param world The world to check.
-         * @return The current [SeasonState].
+         * @return The current [SeasonStateEnum].
          */
-        fun currentSeason(world: World): SeasonState {
+        fun currentSeason(world: World): SeasonStateEnum {
             val totalDays = world.fullTime / TICKS_PER_DAY
             return entries[((totalDays + SEASONAL_OFFSET / TICKS_PER_DAY) % DAYS_PER_YEAR / DAYS_PER_SEASON).toInt()]
         }

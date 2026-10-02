@@ -8,14 +8,14 @@ import io.papermc.paper.registry.data.dialog.body.DialogBody
 import io.papermc.paper.registry.data.dialog.type.DialogType
 import net.kyori.adventure.text.event.ClickCallback
 import org.bukkit.entity.Player
-import org.xodium.illyriacore.data.SeasonState
+import org.xodium.illyriacore.enums.SeasonStateEnum
 import org.xodium.illyrialib.Utils.MM
 
 /** Dialog showing the current season with a button to advance to the next one. */
 internal object SeasonDialog : DialogInterface {
     override fun invoke(player: Player): Dialog {
         val world = player.world
-        val current = SeasonState.currentSeason(world)
+        val current = SeasonStateEnum.currentSeason(world)
         val next = current.next()
 
         return Dialog.create {
@@ -51,7 +51,7 @@ internal object SeasonDialog : DialogInterface {
                             ).action(
                                 DialogAction.customClick(
                                     { _, _ ->
-                                        SeasonState.advanceSeason(world)
+                                        SeasonStateEnum.advanceSeason(world)
                                         player.sendMessage(
                                             MM.deserialize(
                                                 "<gray>Skipped to <${next.color}>${
@@ -73,14 +73,4 @@ internal object SeasonDialog : DialogInterface {
                 )
         }
     }
-
-    /** MiniMessage color used to represent this season in dialog text. */
-    private val SeasonState.color: String
-        get() =
-            when (this) {
-                SeasonState.SPRING -> "green"
-                SeasonState.SUMMER -> "yellow"
-                SeasonState.AUTUMN -> "red"
-                SeasonState.WINTER -> "aqua"
-            }
 }
