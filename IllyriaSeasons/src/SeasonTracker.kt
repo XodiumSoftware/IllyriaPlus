@@ -15,12 +15,11 @@ internal object SeasonTracker {
 
     /** Starts the season tracker task. */
     fun start() {
-        val plugin = IllyriaSeasons.instance
         task =
-            plugin.server.scheduler.runTaskTimer(
-                plugin,
+            IllyriaSeasons.instance.server.scheduler.runTaskTimer(
+                IllyriaSeasons.instance,
                 Runnable {
-                    val world = plugin.server.worlds.firstOrNull() ?: return@Runnable
+                    val world = IllyriaSeasons.instance.server.worlds.firstOrNull() ?: return@Runnable
                     val currentSeasonDay = (world.fullTime / TICKS_PER_DAY) % SeasonState.DAYS_PER_YEAR
                     if (currentSeasonDay != lastSeasonDay && lastSeasonDay >= 0) {
                         swapBiome(world)

@@ -11,7 +11,8 @@ internal class IllyriaSeasons : JavaPlugin() {
     companion object {
         lateinit var instance: IllyriaSeasons
             private set
-        const val NAMESPACE = "illyriaseasons"
+
+        val ID = IllyriaSeasons::class.java.simpleName.lowercase()
     }
 
     /** Wyck packet handler for injecting virtual seasonal biomes. */
@@ -26,7 +27,6 @@ internal class IllyriaSeasons : JavaPlugin() {
         packetHandler =
             PacketHandler.of(this, PacketHandler.Injector.NETTY).also {
                 it.register()
-                logger.info("Wyck packet handler registered (Netty injector)")
             }
 
         SeasonBiomes.register()

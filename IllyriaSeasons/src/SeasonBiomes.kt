@@ -18,7 +18,7 @@ internal object SeasonBiomes {
     val SPRING: CustomBiome by lazy {
         CustomBiome
             .builder()
-            .resourceKey(ResourceKey.of(IllyriaSeasons.NAMESPACE, "spring"))
+            .resourceKey(ResourceKey.of(IllyriaSeasons.ID, "spring"))
             .foliageColor("#7CFC00")
             .dryFoliageColor("#6B8E23")
             .grassColor("#32CD32")
@@ -33,7 +33,7 @@ internal object SeasonBiomes {
     val SUMMER: CustomBiome by lazy {
         CustomBiome
             .builder()
-            .resourceKey(ResourceKey.of(IllyriaSeasons.NAMESPACE, "summer"))
+            .resourceKey(ResourceKey.of(IllyriaSeasons.ID, "summer"))
             .climateSettings(ClimateSettings.of(true, 0.8f, TemperatureModifier.NONE, 0.5f))
             .build()
     }
@@ -41,7 +41,7 @@ internal object SeasonBiomes {
     val AUTUMN: CustomBiome by lazy {
         CustomBiome
             .builder()
-            .resourceKey(ResourceKey.of(IllyriaSeasons.NAMESPACE, "autumn"))
+            .resourceKey(ResourceKey.of(IllyriaSeasons.ID, "autumn"))
             .foliageColor("#D2691E")
             .dryFoliageColor("#8B4513")
             .grassColor("#CD853F")
@@ -57,7 +57,7 @@ internal object SeasonBiomes {
     val WINTER: CustomBiome by lazy {
         CustomBiome
             .builder()
-            .resourceKey(ResourceKey.of(IllyriaSeasons.NAMESPACE, "winter"))
+            .resourceKey(ResourceKey.of(IllyriaSeasons.ID, "winter"))
             .foliageColor("#F0F0F0")
             .dryFoliageColor("#E0E0E0")
             .grassColor("#C0E8C0")
