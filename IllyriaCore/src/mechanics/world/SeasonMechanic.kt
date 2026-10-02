@@ -5,11 +5,11 @@ import dev.wyck.biome.CustomBiome
 import dev.wyck.biome.TemperatureModifier
 import dev.wyck.keys.ResourceKey
 import dev.wyck.renderer.packet.PacketHandler
-import dev.wyck.renderer.packet.data.BlockReplacement
+
 import dev.wyck.renderer.packet.data.VirtualBiome
 import dev.wyck.renderer.updater.BiomeUpdater
 import io.papermc.paper.command.brigadier.Commands
-import org.bukkit.Material
+
 import org.bukkit.World
 import org.xodium.illyriacore.IllyriaCore
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
@@ -46,51 +46,39 @@ internal object SeasonMechanic : MechanicInterface {
             SeasonStateEnum.SPRING to
                 CustomBiome
                     .builder()
-                    .resourceKey(ResourceKey.of(IllyriaCore.ID, "spring"))
+                    .resourceKey(ResourceKey.of(IllyriaCore.ID, SeasonStateEnum.SPRING.name.lowercase()))
                     .foliageColor("#7CFC00")
                     .dryFoliageColor("#6B8E23")
                     .grassColor("#32CD32")
                     .waterColor("#4169E1")
                     .climateSettings(ClimateSettings.of(true, 0.7f, TemperatureModifier.NONE, 0.4f))
-                    .blockReplacements(
-                        BlockReplacement.of(Material.OAK_LEAVES, Material.CHERRY_LEAVES),
-                        BlockReplacement.of(Material.BIRCH_LEAVES, Material.CHERRY_LEAVES),
-                    ).build(),
+                    .build(),
             SeasonStateEnum.SUMMER to
                 CustomBiome
                     .builder()
-                    .resourceKey(ResourceKey.of(IllyriaCore.ID, "summer"))
+                    .resourceKey(ResourceKey.of(IllyriaCore.ID, SeasonStateEnum.SUMMER.name.lowercase()))
                     .climateSettings(ClimateSettings.of(true, 0.8f, TemperatureModifier.NONE, 0.5f))
                     .build(),
             SeasonStateEnum.AUTUMN to
                 CustomBiome
                     .builder()
-                    .resourceKey(ResourceKey.of(IllyriaCore.ID, "autumn"))
+                    .resourceKey(ResourceKey.of(IllyriaCore.ID, SeasonStateEnum.AUTUMN.name.lowercase()))
                     .foliageColor("#D2691E")
                     .dryFoliageColor("#8B4513")
                     .grassColor("#CD853F")
                     .waterColor("#4682B4")
                     .climateSettings(ClimateSettings.of(true, 0.6f, TemperatureModifier.NONE, 0.5f))
-                    .blockReplacements(
-                        BlockReplacement.of(Material.OAK_LEAVES, Material.ORANGE_POPLAR_LEAVES),
-                        BlockReplacement.of(Material.BIRCH_LEAVES, Material.YELLOW_POPLAR_LEAVES),
-                        BlockReplacement.of(Material.SPRUCE_LEAVES, Material.RED_POPLAR_LEAVES),
-                    ).build(),
+                    .build(),
             SeasonStateEnum.WINTER to
                 CustomBiome
                     .builder()
-                    .resourceKey(ResourceKey.of(IllyriaCore.ID, "winter"))
+                    .resourceKey(ResourceKey.of(IllyriaCore.ID, SeasonStateEnum.WINTER.name.lowercase()))
                     .foliageColor("#F0F0F0")
                     .dryFoliageColor("#E0E0E0")
                     .grassColor("#C0E8C0")
                     .waterColor("#B0C4DE")
                     .climateSettings(ClimateSettings.of(true, 0.2f, TemperatureModifier.NONE, 0.3f))
-                    .blockReplacements(
-                        BlockReplacement.of(Material.GRASS_BLOCK, Material.SNOW_BLOCK),
-                        BlockReplacement.of(Material.SHORT_GRASS, Material.SNOW),
-                        BlockReplacement.of(Material.DIRT, Material.SNOW_BLOCK),
-                        BlockReplacement.of(Material.DIRT_PATH, Material.SNOW_BLOCK),
-                    ).build(),
+                    .build(),
         )
     }
 
