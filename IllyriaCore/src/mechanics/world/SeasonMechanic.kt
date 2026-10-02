@@ -5,9 +5,11 @@ import dev.wyck.biome.CustomBiome
 import dev.wyck.biome.TemperatureModifier
 import dev.wyck.keys.ResourceKey
 import dev.wyck.renderer.packet.PacketHandler
+
 import dev.wyck.renderer.packet.data.VirtualBiome
 import dev.wyck.renderer.updater.BiomeUpdater
 import io.papermc.paper.command.brigadier.Commands
+import org.bukkit.Material
 import org.bukkit.World
 import org.xodium.illyriacore.IllyriaCore
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
@@ -103,11 +105,14 @@ internal object SeasonMechanic : MechanicInterface {
         val updater = BiomeUpdater.of(instance)
 
         activeVirtualBiome?.let { packetHandler.dismissBiome(it) }
-        val virtualBiome =
+        val builder =
             VirtualBiome
                 .builder()
                 .biome(biomes.getValue(season))
-                .build()
+        if (season == SeasonStateEnum.WINTER) {
+            builder.replacement(Material.WATER, Material.ICE)
+        }
+        val virtualBiome = builder.build()
         packetHandler.appendBiome(virtualBiome)
         activeVirtualBiome = virtualBiome
 

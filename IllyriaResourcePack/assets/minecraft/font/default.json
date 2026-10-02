@@ -1,0 +1,32 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "illyriacore:item/seasons/spring.png",
+            "ascent": 8,
+            "height": 8,
+            "chars": [""]
+        },
+        {
+            "type": "bitmap",
+            "file": "illyriacore:item/seasons/summer.png",
+            "ascent": 8,
+            "height": 8,
+            "chars": [""]
+        },
+        {
+            "type": "bitmap",
+            "file": "illyriacore:item/seasons/autumn.png",
+            "ascent": 8,
+            "height": 8,
+            "chars": [""]
+        },
+        {
+            "type": "bitmap",
+            "file": "illyriacore:item/seasons/winter.png",
+            "ascent": 8,
+            "height": 8,
+            "chars": [""]
+        }
+    ]
+}

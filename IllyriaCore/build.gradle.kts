@@ -38,6 +38,7 @@ dependencies {
 
     implementation(project(":IllyriaLib"))
     implementation(kotlin("stdlib"))
+
     implementation("com.github.retrooper:packetevents-spigot:2.14.0")
     implementation("dev.wyck:wyck-vanilla:4.0.0-837d6ec")
 }
@@ -71,6 +72,7 @@ tasks {
         dependsOn(processResources)
         archiveBaseName.set("IllyriaCore")
         archiveClassifier.set("")
+
         relocate("com.github.retrooper", "${project.group}.libs.packetevents")
         relocate("io.github.retrooper", "${project.group}.libs.packetevents")
         relocate("org.xodium.illyrialib", "${project.group}.libs.illyrialib")
