@@ -24,9 +24,10 @@ import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
-import org.xodium.illyriacore.Utils.Command.playerExecuted
 import org.xodium.illyriacore.data.CommandData
 import org.xodium.illyriacore.mechanics.MechanicInterface
+import org.xodium.illyrialib.Utils.Command.playerExecuted
+import org.xodium.illyrialib.Utils.Command.requiresPlayer
 import org.xodium.illyrialib.Utils.MM
 
 /** Represents a mechanic handling chat formatting within the system. */
@@ -48,7 +49,7 @@ internal object ChatMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("whisper")
-                    .requires { it.sender.hasPermission(perms[0]) }
+                    .requiresPlayer { hasPermission(perms[0]) }
                     .then(
                         Commands
                             .argument("target", ArgumentTypes.player())

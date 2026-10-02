@@ -16,11 +16,12 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
-import org.xodium.illyriacore.Utils.Command.playerExecuted
 import org.xodium.illyriacore.data.CommandData
 import org.xodium.illyriacore.mechanics.MechanicInterface
 import org.xodium.illyriacore.mechanics.server.TabListMechanic.tablist
 import org.xodium.illyriacore.pdcs.PlayerPDC.nickname
+import org.xodium.illyrialib.Utils.Command.playerExecuted
+import org.xodium.illyrialib.Utils.Command.requiresPlayer
 import org.xodium.illyrialib.Utils.MM
 
 /** Represents a mechanic handling player nicknames within the system. */
@@ -30,7 +31,7 @@ internal object NicknameMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("nickname")
-                    .requires { it.sender.hasPermission(perms[0]) }
+                    .requiresPlayer { hasPermission(perms[0]) }
                     .playerExecuted { player, _ -> player.showDialog(nicknameDialog(player)) },
                 "Opens the nickname dialog",
                 listOf("nick"),

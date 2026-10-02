@@ -10,9 +10,10 @@ import org.bukkit.event.EventPriority
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
-import org.xodium.illyriacore.Utils.Command.playerExecuted
 import org.xodium.illyriacore.data.CommandData
 import org.xodium.illyriacore.mechanics.MechanicInterface
+import org.xodium.illyrialib.Utils.Command.playerExecuted
+import org.xodium.illyrialib.Utils.Command.requiresPlayer
 import org.xodium.illyrialib.Utils.MM
 import java.net.URI
 
@@ -41,7 +42,7 @@ internal object ResourcePackMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("reloadresourcepack")
-                    .requires { it.sender.hasPermission(perms[0]) }
+                    .requiresPlayer { hasPermission(perms[0]) }
                     .playerExecuted { player, _ ->
                         player.sendActionBar(
                             MM.deserialize("<green>Reloading IllyriaCore resource pack for all online players..."),

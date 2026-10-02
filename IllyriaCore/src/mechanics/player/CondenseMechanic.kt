@@ -7,9 +7,10 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
-import org.xodium.illyriacore.Utils.Command.playerExecuted
 import org.xodium.illyriacore.data.CommandData
 import org.xodium.illyriacore.mechanics.MechanicInterface
+import org.xodium.illyrialib.Utils.Command.playerExecuted
+import org.xodium.illyrialib.Utils.Command.requiresPlayer
 import org.xodium.illyrialib.Utils.MM
 
 /** Represents a mechanic handling item condensing within the system. */
@@ -43,7 +44,7 @@ internal object CondenseMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("condense")
-                    .requires { it.sender.hasPermission(perms[0]) }
+                    .requiresPlayer { hasPermission(perms[0]) }
                     .playerExecuted { player, _ -> player.condense(reverse = false) },
                 "Condenses all applicable items in your inventory into their block form",
                 listOf("cn"),
@@ -51,7 +52,7 @@ internal object CondenseMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("uncondense")
-                    .requires { it.sender.hasPermission(perms[0]) }
+                    .requiresPlayer { hasPermission(perms[0]) }
                     .playerExecuted { player, _ -> player.condense(reverse = true) },
                 "Uncondenses all applicable blocks in your inventory into their item form",
                 listOf("ucn"),

@@ -17,10 +17,11 @@ import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.Utils
 import org.xodium.illyriacore.Utils.Block.center
-import org.xodium.illyriacore.Utils.Command.playerExecuted
 import org.xodium.illyriacore.Utils.Player.getContainersAround
 import org.xodium.illyriacore.data.CommandData
 import org.xodium.illyriacore.mechanics.MechanicInterface
+import org.xodium.illyrialib.Utils.Command.playerExecuted
+import org.xodium.illyrialib.Utils.Command.requiresPlayer
 import org.xodium.illyrialib.Utils.MM
 
 /** Represents a mechanic handling inventory interactions within the system. */
@@ -47,7 +48,7 @@ internal object InventoryMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("search")
-                    .requires { it.sender.hasPermission(perms[0]) }
+                    .requiresPlayer { hasPermission(perms[0]) }
                     .then(
                         Commands
                             .argument("material", ArgumentTypes.itemStack())
@@ -61,7 +62,7 @@ internal object InventoryMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("unload")
-                    .requires { it.sender.hasPermission(perms[1]) }
+                    .requiresPlayer { hasPermission(perms[1]) }
                     .playerExecuted { player, _ -> unloadInventory(player) },
                 "Unload inventory into nearby chests",
                 listOf("invunload", "unloadinv", "invu", "uinv", "u"),
