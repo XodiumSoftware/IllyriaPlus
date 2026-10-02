@@ -44,7 +44,6 @@ internal object CondenseMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("condense")
-                    .requiresPlayer { hasPermission(perms[0]) }
                     .playerExecuted { player, _ -> player.condense(reverse = false) },
                 "Condenses all applicable items in your inventory into their block form",
                 listOf("cn"),
@@ -52,24 +51,9 @@ internal object CondenseMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("uncondense")
-                    .requiresPlayer { hasPermission(perms[1]) }
                     .playerExecuted { player, _ -> player.condense(reverse = true) },
                 "Uncondenses all applicable blocks in your inventory into their item form",
                 listOf("ucn"),
-            ),
-        )
-
-    override val perms: List<Permission> =
-        listOf(
-            Permission(
-                "${instance.javaClass.simpleName}.condense".lowercase(),
-                "Allows to condense items",
-                PermissionDefault.TRUE,
-            ),
-            Permission(
-                "${instance.javaClass.simpleName}.uncondense".lowercase(),
-                "Allows to uncondense items",
-                PermissionDefault.TRUE,
             ),
         )
 

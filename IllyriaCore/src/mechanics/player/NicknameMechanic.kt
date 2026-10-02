@@ -31,19 +31,9 @@ internal object NicknameMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("nickname")
-                    .requiresPlayer { hasPermission(perms[0]) }
                     .playerExecuted { player, _ -> player.showDialog(nicknameDialog(player)) },
                 "Opens the nickname dialog",
                 listOf("nick"),
-            ),
-        )
-
-    override val perms =
-        listOf(
-            Permission(
-                "${instance.javaClass.simpleName}.nickname".lowercase(),
-                "Allows to change your nickname",
-                PermissionDefault.TRUE,
             ),
         )
 

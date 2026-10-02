@@ -49,7 +49,6 @@ internal object ChatMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("whisper")
-                    .requiresPlayer { hasPermission(perms[0]) }
                     .then(
                         Commands
                             .argument("target", ArgumentTypes.player())
@@ -73,15 +72,6 @@ internal object ChatMechanic : MechanicInterface {
                     ),
                 "This command allows you to whisper to players",
                 listOf("w", "msg", "tell", "tellraw"),
-            ),
-        )
-
-    override val perms =
-        listOf(
-            Permission(
-                "${instance.javaClass.simpleName}.whisper".lowercase(),
-                "Allows use of the whisper command",
-                PermissionDefault.TRUE,
             ),
         )
 

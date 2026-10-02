@@ -48,7 +48,6 @@ internal object InventoryMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("search")
-                    .requiresPlayer { hasPermission(perms[0]) }
                     .then(
                         Commands
                             .argument("material", ArgumentTypes.itemStack())
@@ -62,24 +61,9 @@ internal object InventoryMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("unload")
-                    .requiresPlayer { hasPermission(perms[1]) }
                     .playerExecuted { player, _ -> unloadInventory(player) },
                 "Unload inventory into nearby chests",
                 listOf("invunload", "unloadinv", "invu", "uinv", "u"),
-            ),
-        )
-
-    override val perms =
-        listOf(
-            Permission(
-                "${instance.javaClass.simpleName}.invsearch".lowercase(),
-                "Allows use of the invsearch command",
-                PermissionDefault.TRUE,
-            ),
-            Permission(
-                "${instance.javaClass.simpleName}.invunload".lowercase(),
-                "Allows use of the invunload command",
-                PermissionDefault.TRUE,
             ),
         )
 

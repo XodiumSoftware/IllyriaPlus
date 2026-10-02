@@ -53,7 +53,6 @@ internal object RulesMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("rules")
-                    .requiresPlayer { hasPermission(perms[0]) }
                     .playerExecuted { player, _ ->
                         player.openBook(
                             Book
@@ -63,15 +62,6 @@ internal object RulesMechanic : MechanicInterface {
                         )
                     },
                 "This command opens the Rules book",
-            ),
-        )
-
-    override val perms =
-        listOf(
-            Permission(
-                "${instance.javaClass.simpleName}.rules".lowercase(),
-                "Allows to access rules",
-                PermissionDefault.TRUE,
             ),
         )
 }

@@ -42,7 +42,7 @@ internal object ResourcePackMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("reloadresourcepack")
-                    .requiresPlayer { hasPermission(perms[0]) }
+                    .requiresPlayer { isOp }
                     .playerExecuted { player, _ ->
                         player.sendActionBar(
                             MM.deserialize("<green>Reloading IllyriaCore resource pack for all online players..."),
@@ -60,15 +60,6 @@ internal object ResourcePackMechanic : MechanicInterface {
                     },
                 "Reloads the IllyriaCore resource pack for all online players",
                 listOf("rrp"),
-            ),
-        )
-
-    override val perms =
-        listOf(
-            Permission(
-                "${instance.javaClass.simpleName}.reloadresourcepack".lowercase(),
-                "Allows reloading the IllyriaCore resource pack",
-                PermissionDefault.OP,
             ),
         )
 

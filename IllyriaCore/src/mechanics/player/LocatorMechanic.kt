@@ -28,7 +28,6 @@ internal object LocatorMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("locator")
-                    .requiresPlayer { hasPermission(perms[0]) }
                     .playerExecuted { player, _ -> player.locator() }
                     .then(
                         Commands
@@ -49,15 +48,6 @@ internal object LocatorMechanic : MechanicInterface {
                     ),
                 "Allows players to personalise their locator bar",
                 listOf("lc"),
-            ),
-        )
-
-    override val perms =
-        listOf(
-            Permission(
-                "${instance.javaClass.simpleName}.locator".lowercase(),
-                "Allows use of the locator command",
-                PermissionDefault.TRUE,
             ),
         )
 
