@@ -71,11 +71,12 @@ tasks {
         dependsOn(processResources)
         archiveBaseName.set("IllyriaCore")
         archiveClassifier.set("")
-        relocate("dev.wyck", "${project.group}.libs.wyck")
         relocate("com.github.retrooper", "${project.group}.libs.packetevents")
         relocate("io.github.retrooper", "${project.group}.libs.packetevents")
         relocate("org.xodium.illyrialib", "${project.group}.libs.illyrialib")
-        minimize()
+        minimize {
+            exclude(dependency("dev.wyck:.*:.*"))
+        }
     }
     jar { enabled = false }
     runServer {
