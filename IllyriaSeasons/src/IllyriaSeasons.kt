@@ -30,7 +30,7 @@ internal class IllyriaSeasons : JavaPlugin() {
 
         SeasonBiomes.register()
         SeasonTracker.start()
-        SeasonCommand.register(this)
+        logger.info("Registered SeasonCommand in ${SeasonCommand.register(this)}ms")
 
         UpdateChecker(this).check()
     }
