@@ -105,6 +105,17 @@ object Utils {
         }
 
         /**
+         * Restricts a command to players matching the given [predicate].
+         *
+         * @param predicate Condition the [Player] must satisfy.
+         * @return The modified [ArgumentBuilder].
+         */
+        fun <T : ArgumentBuilder<CommandSourceStack, T>> T.requiresPlayer(predicate: Player.() -> Boolean): T {
+            requires { ((it.sender as? Player)?.predicate()) == true }
+            return this
+        }
+
+        /**
          * Executes a command restricted to players.
          *
          * @param action Execution logic with player context.
