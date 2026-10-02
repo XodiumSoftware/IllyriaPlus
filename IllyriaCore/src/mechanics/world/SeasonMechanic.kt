@@ -5,7 +5,6 @@ import dev.wyck.biome.CustomBiome
 import dev.wyck.biome.TemperatureModifier
 import dev.wyck.keys.ResourceKey
 import dev.wyck.renderer.packet.PacketHandler
-
 import dev.wyck.renderer.packet.data.VirtualBiome
 import dev.wyck.renderer.updater.BiomeUpdater
 import io.papermc.paper.command.brigadier.Commands
@@ -116,6 +115,9 @@ internal object SeasonMechanic : MechanicInterface {
         packetHandler.appendBiome(virtualBiome)
         activeVirtualBiome = virtualBiome
 
-        instance.server.onlinePlayers.forEach { updater.updateChunksForPlayer(it) }
+        instance.server.onlinePlayers.forEach {
+            updater.updateChunksForPlayer(it)
+            SeasonHudRenderer.render(it, season)
+        }
     }
 }
