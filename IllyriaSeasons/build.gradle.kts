@@ -34,7 +34,7 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$mcVersion.build.+")
 
-    implementation("dev.wyck:wyck:4.0.0-2a40b8f")
+    implementation("dev.wyck:wyck-runtime:4.0.0-2a40b8f")
     implementation(kotlin("stdlib"))
     implementation(project(":IllyriaLib"))
 }
