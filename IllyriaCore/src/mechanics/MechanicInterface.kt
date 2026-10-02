@@ -28,7 +28,6 @@ internal interface MechanicInterface : Listener {
      *
      * @return The time taken to register the feature in milliseconds.
      */
-    @Suppress("UnstableApiUsage")
     fun register(): Long =
         measureTime {
             instance.server.pluginManager.addPermissions(perms)

@@ -1,6 +1,7 @@
 package org.xodium.illyriaseasons
 
 import dev.wyck.renderer.packet.PacketHandler
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import org.bukkit.plugin.java.JavaPlugin
 import org.xodium.illyrialib.UpdateChecker
 import org.xodium.illyrialib.Utils.validateVersion
@@ -30,7 +31,11 @@ internal class IllyriaSeasons : JavaPlugin() {
 
         SeasonBiomes.register()
         SeasonTracker.start()
-        SeasonCommand(this)
+
+        lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {
+            val (n, d, a) = SeasonCommand()
+            it.registrar().register(n.build(), d, a)
+        }
 
         UpdateChecker(this).check()
     }

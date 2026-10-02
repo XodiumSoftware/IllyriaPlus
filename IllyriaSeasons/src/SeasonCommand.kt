@@ -1,15 +1,15 @@
 package org.xodium.illyriaseasons
 
 import io.papermc.paper.command.brigadier.Commands
-import org.xodium.illyrialib.CommandInterface
 import org.xodium.illyrialib.Utils.Command.playerExecuted
 import org.xodium.illyrialib.Utils.Command.requiresPlayer
 import org.xodium.illyrialib.Utils.MM
 import org.xodium.illyrialib.data.CommandData
+import org.xodium.illyrialib.interfaces.CommandInterface
 
 /** Provides the `/season` command for inspecting and controlling the seasonal cycle. */
 internal object SeasonCommand : CommandInterface {
-    override fun onRegister(): CommandData =
+    override fun invoke(): CommandData =
         CommandData(
             Commands
                 .literal("season")
