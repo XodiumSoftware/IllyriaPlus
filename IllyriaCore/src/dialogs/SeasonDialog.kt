@@ -9,6 +9,7 @@ import io.papermc.paper.registry.data.dialog.input.SingleOptionDialogInput.Optio
 import io.papermc.paper.registry.data.dialog.type.DialogType
 import net.kyori.adventure.text.event.ClickCallback
 import org.bukkit.entity.Player
+import org.xodium.illyriacore.enums.GlyphEnum
 import org.xodium.illyriacore.enums.SeasonStateEnum
 import org.xodium.illyriacore.mechanics.world.SeasonMechanic
 import org.xodium.illyrialib.Utils.MM
@@ -39,7 +40,7 @@ internal object SeasonDialog : DialogInterface {
                                                         season.name
                                                             .lowercase()
                                                             .replaceFirstChar(Char::uppercase)
-                                                    }</${season.color}>",
+                                                    }</${season.color}> ${GlyphEnum.of(season)}",
                                                 ),
                                                 season == current,
                                             )
