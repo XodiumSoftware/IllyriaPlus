@@ -5,11 +5,11 @@ import net.kyori.adventure.inventory.Book
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
-import org.xodium.illyriacore.data.CommandData
 import org.xodium.illyriacore.mechanics.MechanicInterface
 import org.xodium.illyrialib.Utils.Command.playerExecuted
 import org.xodium.illyrialib.Utils.Command.requiresPlayer
 import org.xodium.illyrialib.Utils.MM
+import org.xodium.illyrialib.data.CommandData
 
 /** Represents a mechanic handling rules functionality within the system. */
 internal object RulesMechanic : MechanicInterface {

@@ -4,7 +4,7 @@ import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import org.bukkit.event.Listener
 import org.bukkit.permissions.Permission
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
-import org.xodium.illyriacore.data.CommandData
+import org.xodium.illyrialib.data.CommandData
 import kotlin.time.measureTime
 
 /** Represents a contract for a mechanic within the system. */
@@ -12,7 +12,7 @@ internal interface MechanicInterface : Listener {
     /**
      * Retrieves a list of command data associated with the mechanic.
      *
-     * @return A [Collection] of [org.xodium.illyriacore.data.CommandData] objects representing the commands for the mechanic.
+     * @return A [Collection] of [org.xodium.illyrialib.data.CommandData] objects representing the commands for the mechanic.
      */
     val cmds: Collection<CommandData> get() = emptyList()
 
