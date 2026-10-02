@@ -11,7 +11,6 @@ import dev.wyck.renderer.updater.BiomeUpdater
 import io.papermc.paper.command.brigadier.Commands
 import org.bukkit.Material
 import org.bukkit.World
-import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriacore.IllyriaCore
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.Utils.Schedule.schedule
@@ -39,7 +38,6 @@ internal object SeasonMechanic : MechanicInterface {
             ),
         )
 
-    private var task: BukkitTask? = null
     private var lastSeasonDay: Long = -1L
     private var activeVirtualBiome: VirtualBiome? = null
 
@@ -99,23 +97,21 @@ internal object SeasonMechanic : MechanicInterface {
     override fun register(): Long =
         super.register() +
             measureTime {
-                task =
-                    schedule(period = CHECK_INTERVAL) {
-                        val world = instance.server.worlds.firstOrNull() ?: return@schedule
-                        val currentSeasonDay = (world.fullTime / TICKS_PER_DAY) % SeasonStateEnum.DAYS_PER_YEAR
-                        if (currentSeasonDay != lastSeasonDay && lastSeasonDay >= 0) {
-                            swapBiome(world)
-                            lastSeasonDay = currentSeasonDay
-                        } else if (lastSeasonDay < 0) {
-                            lastSeasonDay = currentSeasonDay
-                            swapBiome(world)
-                        }
+                schedule(period = CHECK_INTERVAL) {
+                    val world = instance.server.worlds.firstOrNull() ?: return@schedule
+                    val currentSeasonDay = (world.fullTime / TICKS_PER_DAY) % SeasonStateEnum.DAYS_PER_YEAR
+                    if (currentSeasonDay != lastSeasonDay && lastSeasonDay >= 0) {
+                        swapBiome(world)
+                        lastSeasonDay = currentSeasonDay
+                    } else if (lastSeasonDay < 0) {
+                        lastSeasonDay = currentSeasonDay
+                        swapBiome(world)
                     }
+                }
             }.inWholeMilliseconds
 
     override fun onDisable() {
-        task?.cancel()
-        task = null
+        activeVirtualBiome?.let { PacketHandler.of(instance).dismissBiome(it) }
         activeVirtualBiome = null
         lastSeasonDay = -1L
     }
