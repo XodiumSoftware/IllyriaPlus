@@ -12,7 +12,6 @@ import net.kyori.adventure.text.TextReplacementConfig
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import net.kyori.adventure.title.Title
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -20,7 +19,6 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerQuitEvent
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.mechanics.MechanicInterface
 import org.xodium.illyrialib.Utils.Command.playerExecuted
@@ -78,17 +76,12 @@ internal object ChatMechanic : MechanicInterface {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PlayerJoinEvent) = handleJoin(event)
 
-    @EventHandler
-    fun on(event: PlayerQuitEvent) = handleQuit(event)
-
     /**
      * Handles player join chat mechanics.
      *
      * @param event The PlayerJoinEvent triggered when a player joins.
      */
     private fun handleJoin(event: PlayerJoinEvent) {
-        instance.server.onlinePlayers.forEach { it.addCustomChatCompletions(listOf("@${event.player.name}")) }
-        syncMentionCompletions(event.player)
         event.player.showTitle(
             Title.title(
                 MM.deserialize(JOIN_TITLE, Placeholder.component("player", event.player.displayName())),
@@ -96,24 +89,6 @@ internal object ChatMechanic : MechanicInterface {
             ),
         )
         event.player.playSound(event.player.location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 0.5f, 1.0f)
-    }
-
-    /**
-     * Handles player quit chat mechanics.
-     *
-     * @param event The PlayerQuitEvent triggered when a player quits.
-     */
-    private fun handleQuit(event: PlayerQuitEvent) {
-        instance.server.onlinePlayers.forEach { it.removeCustomChatCompletions(listOf("@${event.player.name}")) }
-    }
-
-    /**
-     * Adds @-prefixed names for all online players to the given player's chat completions.
-     *
-     * @param player The player to update completions for.
-     */
-    private fun syncMentionCompletions(player: Player) {
-        player.addCustomChatCompletions(instance.server.onlinePlayers.map { "@${it.name}" })
     }
 
     /**
@@ -138,8 +113,7 @@ internal object ChatMechanic : MechanicInterface {
                         "message",
                         message
                             .replaceItemPlaceholder(player)
-                            .replacePosPlaceholder(player)
-                            .replaceMentions(player),
+                            .replacePosPlaceholder(player),
                     ),
                 )
 
@@ -189,52 +163,6 @@ internal object ChatMechanic : MechanicInterface {
                     ),
                 ).build(),
         )
-
-    /**
-     * Replaces @mentions with a highlighted component and sends a title notification.
-     *
-     * @param player The player sending the message.
-     * @return The message with @mentions replaced.
-     */
-    private fun Component.replaceMentions(player: Player): Component {
-        val plain = PlainTextComponentSerializer.plainText().serialize(this)
-        val mentions = "(?<!\\w)@\\w+(?!\\w)".toRegex().findAll(plain).map { it.value }.toSet()
-
-        if (mentions.isEmpty()) return this
-
-        var result = this
-
-        val notified = mutableSetOf<Player>()
-
-        for (mention in mentions) {
-            val name = mention.removePrefix("@")
-            val target = instance.server.onlinePlayers.find { it.name.equals(name, ignoreCase = true) }
-
-            if (target != null && target != player && target !in notified) {
-                target.showTitle(
-                    Title.title(
-                        MM.deserialize("<red>Mentioned</red>"),
-                        MM.deserialize(
-                            "<white><player> mentioned you in the chat!</white>",
-                            Placeholder.component("player", player.displayName()),
-                        ),
-                    ),
-                )
-                notified.add(target)
-            }
-
-            result =
-                result.replaceText(
-                    TextReplacementConfig
-                        .builder()
-                        .matchLiteral(mention)
-                        .replacement(MM.deserialize("<yellow>$mention</yellow>"))
-                        .build(),
-                )
-        }
-
-        return result
-    }
 
     /**
      * Handles the whisper command.
