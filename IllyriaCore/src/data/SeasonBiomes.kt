@@ -6,6 +6,7 @@ import dev.wyck.biome.TemperatureModifier
 import dev.wyck.keys.ResourceKey
 import dev.wyck.renderer.packet.data.BlockReplacement
 import org.bukkit.Material
+import org.xodium.illyriacore.IllyriaCore
 
 /**
  * Defines seasonal biome palettes for Wyck's packet-based biome rendering.
@@ -18,7 +19,7 @@ internal object SeasonBiomes {
     val SPRING: CustomBiome by lazy {
         CustomBiome
             .builder()
-            .resourceKey(ResourceKey.of(IllyriaSeasons.ID, "spring"))
+            .resourceKey(ResourceKey.of(IllyriaCore.ID, "spring"))
             .foliageColor("#7CFC00")
             .dryFoliageColor("#6B8E23")
             .grassColor("#32CD32")
@@ -33,7 +34,7 @@ internal object SeasonBiomes {
     val SUMMER: CustomBiome by lazy {
         CustomBiome
             .builder()
-            .resourceKey(ResourceKey.of(IllyriaSeasons.ID, "summer"))
+            .resourceKey(ResourceKey.of(IllyriaCore.ID, "summer"))
             .climateSettings(ClimateSettings.of(true, 0.8f, TemperatureModifier.NONE, 0.5f))
             .build()
     }
@@ -41,7 +42,7 @@ internal object SeasonBiomes {
     val AUTUMN: CustomBiome by lazy {
         CustomBiome
             .builder()
-            .resourceKey(ResourceKey.of(IllyriaSeasons.ID, "autumn"))
+            .resourceKey(ResourceKey.of(IllyriaCore.ID, "autumn"))
             .foliageColor("#D2691E")
             .dryFoliageColor("#8B4513")
             .grassColor("#CD853F")
@@ -57,7 +58,7 @@ internal object SeasonBiomes {
     val WINTER: CustomBiome by lazy {
         CustomBiome
             .builder()
-            .resourceKey(ResourceKey.of(IllyriaSeasons.ID, "winter"))
+            .resourceKey(ResourceKey.of(IllyriaCore.ID, "winter"))
             .foliageColor("#F0F0F0")
             .dryFoliageColor("#E0E0E0")
             .grassColor("#C0E8C0")

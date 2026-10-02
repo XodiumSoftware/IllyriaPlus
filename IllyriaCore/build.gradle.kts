@@ -39,7 +39,7 @@ dependencies {
     implementation(project(":IllyriaLib"))
     implementation(kotlin("stdlib"))
     implementation("com.github.retrooper:packetevents-spigot:2.14.0")
-    implementation("dev.wyck:wyck-runtime:4.0.0-2a40b8f")
+    implementation("dev.wyck:wyck-vanilla:4.0.0-837d6ec")
 }
 
 java {

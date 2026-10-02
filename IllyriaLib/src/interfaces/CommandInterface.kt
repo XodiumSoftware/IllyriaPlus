@@ -1,7 +1,5 @@
 package org.xodium.illyrialib.interfaces
 
-import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
-import org.bukkit.plugin.Plugin
 import org.xodium.illyrialib.data.CommandData
 
 /** Represents a contract for a command within the system. */

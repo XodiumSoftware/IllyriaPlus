@@ -95,6 +95,7 @@ internal class IllyriaCore : JavaPlugin() {
                 SpawnProtectionMechanic,
                 PortalMechanic,
                 LootMechanic,
+                SeasonMechanic,
             )
 
         logger.info(

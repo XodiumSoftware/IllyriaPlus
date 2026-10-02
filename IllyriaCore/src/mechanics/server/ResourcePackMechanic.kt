@@ -7,8 +7,6 @@ import net.kyori.adventure.resource.ResourcePackInfo
 import net.kyori.adventure.resource.ResourcePackRequest
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
-import org.bukkit.permissions.Permission
-import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.mechanics.MechanicInterface
 import org.xodium.illyrialib.Utils.Command.playerExecuted
