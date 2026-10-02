@@ -1,11 +1,15 @@
 package org.xodium.illyriacore.mechanics.world
 
+import dev.wyck.biome.ClimateSettings
 import dev.wyck.biome.CustomBiome
+import dev.wyck.biome.TemperatureModifier
+import dev.wyck.keys.ResourceKey
 import dev.wyck.renderer.packet.PacketHandler
 import dev.wyck.renderer.packet.data.VirtualBiome
 import dev.wyck.renderer.updater.BiomeUpdater
 import io.papermc.paper.command.brigadier.Commands
 import org.bukkit.World
+import org.xodium.illyriacore.IllyriaCore
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.Utils.Schedule.schedule
 import org.xodium.illyriacore.dialogs.SeasonDialog
@@ -34,14 +38,41 @@ internal object SeasonMechanic : MechanicInterface {
 
     private var lastSeasonDay: Long = -1L
     private var activeVirtualBiome: VirtualBiome? = null
+    private lateinit var packetHandler: PacketHandler
 
     private val biomes: Map<SeasonStateEnum, CustomBiome> by lazy {
-        TODO()
+        mapOf(
+            SeasonStateEnum.SPRING to
+                CustomBiome
+                    .builder()
+                    .resourceKey(ResourceKey.of(IllyriaCore.ID, SeasonStateEnum.SPRING.name.lowercase()))
+                    .climateSettings(ClimateSettings.of(true, 0.7f, TemperatureModifier.NONE, 0.5f))
+                    .register(),
+            SeasonStateEnum.SUMMER to
+                CustomBiome
+                    .builder()
+                    .resourceKey(ResourceKey.of(IllyriaCore.ID, SeasonStateEnum.SUMMER.name.lowercase()))
+                    .climateSettings(ClimateSettings.of(false, 0.8f, TemperatureModifier.NONE, 0.0f))
+                    .register(),
+            SeasonStateEnum.AUTUMN to
+                CustomBiome
+                    .builder()
+                    .resourceKey(ResourceKey.of(IllyriaCore.ID, SeasonStateEnum.AUTUMN.name.lowercase()))
+                    .climateSettings(ClimateSettings.of(true, 0.6f, TemperatureModifier.NONE, 0.6f))
+                    .register(),
+            SeasonStateEnum.WINTER to
+                CustomBiome
+                    .builder()
+                    .resourceKey(ResourceKey.of(IllyriaCore.ID, SeasonStateEnum.WINTER.name.lowercase()))
+                    .climateSettings(ClimateSettings.of(true, 0.0f, TemperatureModifier.NONE, 0.4f))
+                    .register(),
+        )
     }
 
     override fun register(): Long =
         super.register() +
             measureTime {
+                packetHandler = PacketHandler.of(instance).register()
                 schedule(period = CHECK_INTERVAL) {
                     val world = instance.server.worlds.firstOrNull() ?: return@schedule
                     val currentSeasonDay = (world.fullTime / TICKS_PER_DAY) % SeasonStateEnum.DAYS_PER_YEAR
@@ -56,28 +87,28 @@ internal object SeasonMechanic : MechanicInterface {
             }.inWholeMilliseconds
 
     override fun onDisable() {
-        activeVirtualBiome?.let { PacketHandler.of(instance).dismissBiome(it) }
+        activeVirtualBiome?.let { packetHandler.dismissBiome(it) }
         activeVirtualBiome = null
         lastSeasonDay = -1L
+        packetHandler.unregister()
     }
 
     /**
-     * Swaps the active virtual biome to the current season's palette.
+     * Swaps the active virtual biome to the current season's climate settings.
      *
      * @param world The world whose season to apply.
      */
     internal fun swapBiome(world: World) {
         val season = SeasonStateEnum.currentSeason(world)
-        val handler = PacketHandler.of(instance)
         val updater = BiomeUpdater.of(instance)
 
-        activeVirtualBiome?.let { handler.dismissBiome(it) }
+        activeVirtualBiome?.let { packetHandler.dismissBiome(it) }
         val virtualBiome =
             VirtualBiome
                 .builder()
                 .biome(biomes.getValue(season))
                 .build()
-        handler.appendBiome(virtualBiome)
+        packetHandler.appendBiome(virtualBiome)
         activeVirtualBiome = virtualBiome
 
         instance.server.onlinePlayers.forEach { updater.updateChunksForPlayer(it) }
