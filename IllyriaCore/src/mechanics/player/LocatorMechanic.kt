@@ -7,13 +7,10 @@ import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Color
 import org.bukkit.entity.Player
-import org.bukkit.permissions.Permission
-import org.bukkit.permissions.PermissionDefault
-import org.xodium.illyriacore.IllyriaCore.Companion.instance
-import org.xodium.illyriacore.Utils.Command.playerExecuted
-import org.xodium.illyriacore.data.CommandData
 import org.xodium.illyriacore.mechanics.MechanicInterface
+import org.xodium.illyrialib.Utils.Command.playerExecuted
 import org.xodium.illyrialib.Utils.MM
+import org.xodium.illyrialib.data.CommandData
 
 /** Represents a mechanic handling locator functionality within the system. */
 internal object LocatorMechanic : MechanicInterface {
@@ -27,7 +24,6 @@ internal object LocatorMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("locator")
-                    .requires { it.sender.hasPermission(perms[0]) }
                     .playerExecuted { player, _ -> player.locator() }
                     .then(
                         Commands
@@ -48,15 +44,6 @@ internal object LocatorMechanic : MechanicInterface {
                     ),
                 "Allows players to personalise their locator bar",
                 listOf("lc"),
-            ),
-        )
-
-    override val perms =
-        listOf(
-            Permission(
-                "${instance.javaClass.simpleName}.locator".lowercase(),
-                "Allows use of the locator command",
-                PermissionDefault.TRUE,
             ),
         )
 
