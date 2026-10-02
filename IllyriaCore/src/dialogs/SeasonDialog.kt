@@ -80,7 +80,7 @@ internal object SeasonDialog : DialogInterface {
                                         if (selected == current) return@customClick
                                         SeasonStateEnum.setSeason(world, selected)
                                         SeasonMechanic.swapBiome(world)
-                                        player.sendMessage(
+                                        player.sendActionBar(
                                             MM.deserialize(
                                                 "<gray>Season set to <${selected.color}>${
                                                     selected.name
