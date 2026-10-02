@@ -28,6 +28,8 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-releases/")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
+    maven("https://repo.wyck.dev/releases")
+    maven("https://repo.wyck.dev/snapshots")
 }
 
 dependencies {
@@ -37,6 +39,7 @@ dependencies {
     implementation(project(":IllyriaLib"))
     implementation(kotlin("stdlib"))
     implementation("com.github.retrooper:packetevents-spigot:2.14.0")
+    implementation("dev.wyck:wyck-runtime:4.0.0-2a40b8f")
 }
 
 java {
@@ -68,6 +71,7 @@ tasks {
         dependsOn(processResources)
         archiveBaseName.set("IllyriaCore")
         archiveClassifier.set("")
+        relocate("dev.wyck", "${project.group}.libs.wyck")
         relocate("com.github.retrooper", "${project.group}.libs.packetevents")
         relocate("io.github.retrooper", "${project.group}.libs.packetevents")
         relocate("org.xodium.illyrialib", "${project.group}.libs.illyrialib")

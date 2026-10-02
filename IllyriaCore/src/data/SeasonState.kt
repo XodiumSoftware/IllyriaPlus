@@ -1,4 +1,4 @@
-package org.xodium.illyriaseasons
+package org.xodium.illyriacore.data
 
 import org.bukkit.World
 

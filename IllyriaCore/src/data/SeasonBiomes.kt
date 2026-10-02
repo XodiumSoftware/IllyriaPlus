@@ -1,4 +1,4 @@
-package org.xodium.illyriaseasons
+package org.xodium.illyriacore.data
 
 import dev.wyck.biome.ClimateSettings
 import dev.wyck.biome.CustomBiome
