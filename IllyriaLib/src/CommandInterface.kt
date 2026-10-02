@@ -28,8 +28,8 @@ interface CommandInterface {
      * @param plugin The plugin performing registration.
      */
     operator fun invoke(plugin: Plugin) {
-        plugin.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) { event ->
-            event.onRegister()
+        plugin.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {
+            it.onRegister()
         }
     }
 }
