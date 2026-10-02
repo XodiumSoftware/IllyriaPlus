@@ -1,26 +1,26 @@
 package org.xodium.illyrialib
 
-import io.papermc.paper.command.brigadier.Commands
-import io.papermc.paper.plugin.lifecycle.event.registrar.ReloadableRegistrarEvent
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import org.bukkit.plugin.Plugin
+import org.xodium.illyrialib.data.CommandData
 
 /** Represents a contract for a command within the system. */
 interface CommandInterface {
     /**
-     * Builds and submits this command against the active [Commands] registrar.
+     * Builds this command's definition.
      *
-     * Implementations typically write the full registration inline, e.g.:
+     * Implementations typically return a [CommandData] bundling the command's
+     * literal argument builder, description and aliases:
      * ```kotlin
-     * override fun ReloadableRegistrarEvent<Commands>.onRegister() {
-     *     registrar().register(
-     *         Commands.literal("example").playerExecuted { _, _ -> }.build(),
-     *         "Description.",
-     *     )
-     * }
+     * override fun onRegister() = CommandData(
+     *     Commands.literal("example").playerExecuted { _, _ -> },
+     *     "Description.",
+     * )
      * ```
+     *
+     * @return The [CommandData] describing this command.
      */
-    fun ReloadableRegistrarEvent<Commands>.onRegister()
+    fun onRegister(): CommandData
 
     /**
      * Registers this command with the server.
@@ -28,8 +28,9 @@ interface CommandInterface {
      * @param plugin The plugin performing registration.
      */
     operator fun invoke(plugin: Plugin) {
+        val (builder, description, aliases) = onRegister()
         plugin.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {
-            it.onRegister()
+            it.registrar().register(builder.build(), description, aliases)
         }
     }
 }
