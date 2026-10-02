@@ -1,17 +1,11 @@
 package org.xodium.illyriacore.mechanics.world
 
-import dev.wyck.biome.ClimateSettings
 import dev.wyck.biome.CustomBiome
-import dev.wyck.biome.TemperatureModifier
-import dev.wyck.keys.ResourceKey
 import dev.wyck.renderer.packet.PacketHandler
-
 import dev.wyck.renderer.packet.data.VirtualBiome
 import dev.wyck.renderer.updater.BiomeUpdater
 import io.papermc.paper.command.brigadier.Commands
-
 import org.bukkit.World
-import org.xodium.illyriacore.IllyriaCore
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.Utils.Schedule.schedule
 import org.xodium.illyriacore.dialogs.SeasonDialog
