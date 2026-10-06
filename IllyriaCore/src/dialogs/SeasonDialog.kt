@@ -87,7 +87,7 @@ internal object SeasonDialog : DialogInterface {
                                                     selected.name
                                                         .lowercase()
                                                         .replaceFirstChar(Char::uppercase)
-                                                }</${selected.color}>.",
+                                                }</${selected.color}> ${GlyphEnum.of(selected)}",
                                             ),
                                         )
                                     },

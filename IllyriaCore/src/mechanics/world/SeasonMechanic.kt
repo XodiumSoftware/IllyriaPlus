@@ -16,6 +16,7 @@ import org.xodium.illyriacore.Utils.Schedule.schedule
 import org.xodium.illyriacore.dialogs.SeasonDialog
 import org.xodium.illyriacore.enums.SeasonStateEnum
 import org.xodium.illyriacore.mechanics.MechanicInterface
+import org.xodium.illyriacore.mechanics.server.TabListMechanic
 import org.xodium.illyrialib.Utils.Command.playerExecuted
 import org.xodium.illyrialib.Utils.Command.requiresPlayer
 import org.xodium.illyrialib.data.CommandData
@@ -117,7 +118,7 @@ internal object SeasonMechanic : MechanicInterface {
 
         instance.server.onlinePlayers.forEach {
             updater.updateChunksForPlayer(it)
-            SeasonHudRenderer.render(it, season)
+            TabListMechanic.tablist(it)
         }
     }
 }
