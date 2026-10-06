@@ -25,7 +25,7 @@ internal object TabListMechanic : MechanicInterface {
     private val FOOTER: List<String> =
         listOf(
             "",
-            "<mango>Season:</mango> <season_name> <season_icon>",
+            "<mango>Season:</gradient> <season_name> <season_icon>",
             "<mango_r><st>─────────────────</st></gradient><mango><st>─────────────────</st></gradient>",
         )
 
