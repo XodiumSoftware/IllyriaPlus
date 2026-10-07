@@ -17,14 +17,14 @@ Use this skill when the user wants to add a new custom glyph (icon, symbol, or s
 ## Steps
 
 1. Ask the user for:
-    - The glyph name (e.g., `winter`, `raid`)
+    - The glyph name (e.g., `raid`, `crown`)
     - The texture file path or source location
     - The Unicode private-use character to assign (e.g., `\uE900`)
     - The desired `ascent` and `height` values (optional; use reasonable defaults — `ascent: 8`, `height: 8` for inline text glyphs; `ascent: 13`, `height: 36` for big bossbar icons)
 
 2. Make the texture available under the resource pack. Either:
     - Place a copy at `IllyriaResourcePack/assets/illyriacore/textures/font/{name}.png`, or
-    - Reference an existing texture path directly (e.g., `illyriacore:item/seasons/winter.png`) — no copy needed
+    - Reference an existing texture path directly (e.g., `illyriacore:item/icons/raid.png`) — no copy needed
 
 3. Open `IllyriaResourcePack/assets/minecraft/font/default.json` (create it if missing with a top-level `"providers": []` array) and append a new bitmap provider:
 
@@ -45,10 +45,10 @@ Use this skill when the user wants to add a new custom glyph (icon, symbol, or s
     - For a raid event: `"event.minecraft.raid": "\uE9XX"`
     - Also add empty strings for raid sub-keys if needed (`raid.raiders_remaining`, `raid.victory`, `raid.defeat`)
 
-5. (Optional) For glyphs used from plugin code, add an entry to the Kotlin glyph enum (e.g., `GlyphEnum`) so it can be interpolated into MiniMessage strings:
+5. (Optional) For glyphs used from plugin code, add an entry to a Kotlin glyph enum (e.g., `IllyriaCore/src/enums/GlyphEnum.kt`) so it can be interpolated into MiniMessage strings:
 
     ```kotlin
-    WINTER("\uE904"),
+    RAID("\uE9XX"),
     ```
 
 6. Run `./gradlew shadowJar` to verify the project still builds (resource pack files are not compiled, but this catches accidental Kotlin edits).
