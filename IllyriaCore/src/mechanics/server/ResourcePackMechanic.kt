@@ -7,13 +7,12 @@ import net.kyori.adventure.resource.ResourcePackInfo
 import net.kyori.adventure.resource.ResourcePackRequest
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
-import org.bukkit.permissions.Permission
-import org.bukkit.permissions.PermissionDefault
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
-import org.xodium.illyriacore.Utils.Command.playerExecuted
-import org.xodium.illyriacore.data.CommandData
 import org.xodium.illyriacore.mechanics.MechanicInterface
+import org.xodium.illyrialib.Utils.Command.playerExecuted
+import org.xodium.illyrialib.Utils.Command.requiresPlayer
 import org.xodium.illyrialib.Utils.MM
+import org.xodium.illyrialib.data.CommandData
 import java.net.URI
 
 /** Represents a mechanic that sends the IllyriaCore resource pack to joining players. */
@@ -41,7 +40,7 @@ internal object ResourcePackMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("reloadresourcepack")
-                    .requires { it.sender.hasPermission(perms[0]) }
+                    .requiresPlayer { isOp }
                     .playerExecuted { player, _ ->
                         player.sendActionBar(
                             MM.deserialize("<green>Reloading IllyriaCore resource pack for all online players..."),
@@ -59,15 +58,6 @@ internal object ResourcePackMechanic : MechanicInterface {
                     },
                 "Reloads the IllyriaCore resource pack for all online players",
                 listOf("rrp"),
-            ),
-        )
-
-    override val perms =
-        listOf(
-            Permission(
-                "${instance.javaClass.simpleName}.reloadresourcepack".lowercase(),
-                "Allows reloading the IllyriaCore resource pack",
-                PermissionDefault.OP,
             ),
         )
 

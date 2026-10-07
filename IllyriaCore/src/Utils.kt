@@ -2,11 +2,6 @@
 
 package org.xodium.illyriacore
 
-import com.mojang.brigadier.builder.ArgumentBuilder
-import com.mojang.brigadier.context.CommandContext
-import io.papermc.paper.command.brigadier.CommandSourceStack
-import io.papermc.paper.registry.TypedKey
-import net.kyori.adventure.text.Component
 import org.bukkit.Chunk
 import org.bukkit.Location
 import org.bukkit.NamespacedKey
@@ -22,47 +17,9 @@ import org.bukkit.entity.Tameable
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
-import org.xodium.illyrialib.Utils.MM
-import kotlin.time.Duration
 
 /** General utilities. */
 internal object Utils {
-    /** Converts a [Duration] to Minecraft ticks (20 ticks per second). */
-    fun Duration.toTicks(): Int = inWholeSeconds.toInt() * 20
-
-    /**
-     * Converts a snake_case string to Proper Case with spaces.
-     *
-     * @return The formatted string in Proper Case.
-     */
-    fun String.snakeToProperCase(): String =
-        split('_').joinToString(" ") { word -> word.replaceFirstChar { it.uppercase() } }
-
-    /**
-     * Converts a class name to a snake_case registry key fragment, removing a suffix.
-     *
-     * @return The generated registry key fragment.
-     */
-    inline fun <reified T> Class<*>.toRegistryKeyFragment(): String = toRegistryKeyFragment(T::class.simpleName ?: "")
-
-    fun Class<*>.toRegistryKeyFragment(suffix: String): String =
-        simpleName
-            .removeSuffix(suffix)
-            .split(Regex("(?=[A-Z])"))
-            .filter { it.isNotEmpty() }
-            .joinToString("_") { it.lowercase() }
-
-    /** Enchantment-related utilities. */
-    object Enchantment {
-        /**
-         * Gets the display name of an enchantment key.
-         *
-         * @return The formatted display name as a Component.
-         */
-        fun TypedKey<org.bukkit.enchantments.Enchantment>.displayName(): Component =
-            MM.deserialize(value().snakeToProperCase())
-    }
-
     /** Item-related utilities. */
     object Item {
         /**
@@ -104,61 +61,6 @@ internal object Utils {
                         )
                     }
                 }
-    }
-
-    /** Command-related utilities. */
-    object Command {
-        /**
-         * Adds a safe execution handler with error logging.
-         *
-         * @param action Command execution logic.
-         * @return The modified ArgumentBuilder.
-         */
-        fun <T : ArgumentBuilder<CommandSourceStack, T>> T.executesCatching(
-            action: (CommandContext<CommandSourceStack>) -> Unit,
-        ): T {
-            executes { ctx ->
-                runCatching { action(ctx) }
-                    .onFailure {
-                        instance.logger.severe(
-                            """
-                            Command error: ${it.message}
-                            ${it.stackTraceToString()}
-                            """.trimIndent(),
-                        )
-                        (ctx.source.sender as? org.bukkit.entity.Player)?.sendActionBar(
-                            MM.deserialize("<red>An error has occurred. Check server logs for details."),
-                        )
-                    }
-                com
-                    .mojang
-                    .brigadier
-                    .Command
-                    .SINGLE_SUCCESS
-            }
-            return this
-        }
-
-        /**
-         * Executes a command restricted to players.
-         *
-         * @param action Execution logic with player context.
-         * @return The modified ArgumentBuilder.
-         */
-        fun <T : ArgumentBuilder<CommandSourceStack, T>> T.playerExecuted(
-            action: (org.bukkit.entity.Player, CommandContext<CommandSourceStack>) -> Unit,
-        ): T {
-            executesCatching {
-                action(
-                    it.source.sender as? org.bukkit.entity.Player ?: run {
-                        instance.logger.warning("Command can only be executed by a Player!")
-                        return@executesCatching
-                    },
-                    it,
-                )
-            }
-            return this
-        }
     }
 
     /** World-related utilities. */

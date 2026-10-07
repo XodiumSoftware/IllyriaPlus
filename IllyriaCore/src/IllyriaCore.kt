@@ -18,6 +18,7 @@ import org.xodium.illyriacore.mechanics.server.*
 import org.xodium.illyriacore.mechanics.world.*
 import org.xodium.illyriacore.recipes.*
 import org.xodium.illyrialib.UpdateChecker
+import org.xodium.illyrialib.Utils.validateVersion
 
 /** Main class of the plugin. */
 internal class IllyriaCore : JavaPlugin() {
@@ -44,13 +45,7 @@ internal class IllyriaCore : JavaPlugin() {
     }
 
     override fun onEnable() {
-        if (!server.version.contains(pluginMeta.version.substringBefore("+"))) {
-            logger.severe(
-                "This plugin requires the following supported version: ${pluginMeta.version}.",
-            )
-            server.pluginManager.disablePlugin(this)
-            return
-        }
+        validateVersion()
 
         instance = this
 
@@ -82,12 +77,10 @@ internal class IllyriaCore : JavaPlugin() {
                 EnderchestMechanic,
                 XpMechanic,
                 AnvilMechanic,
-                HuskMechanic,
                 SilenceMechanic,
                 HeadMechanic,
                 ChatMechanic,
                 InventoryMechanic,
-                BatMechanic,
                 SpawnEggMechanic,
                 GriefingMechanic,
                 CondenseMechanic,
@@ -100,6 +93,7 @@ internal class IllyriaCore : JavaPlugin() {
                 SpawnProtectionMechanic,
                 PortalMechanic,
                 LootMechanic,
+                SeasonMechanic,
             )
 
         logger.info(
