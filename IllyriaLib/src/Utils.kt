@@ -61,8 +61,6 @@ object Utils {
      *
      * Disables the plugin if the server version does not contain the target version
      * substring (the version before the `+` in the version string).
-     *
-     * @param plugin The plugin instance.
      */
     fun Plugin.validateVersion() {
         if (!server.version.contains(pluginMeta.version.substringBefore("+"))) {

@@ -38,7 +38,7 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
 
     /** The block data providers advertised in the handshake; request indices refer to this list. */
     internal val blockProviders =
-        listOf<JadeBlockProvider>(
+        listOf(
             JadeBeehive,
             JadeBrewingStand,
             JadeCommandBlock,
@@ -54,7 +54,7 @@ internal object JadeBridge : BridgeInterface, PluginMessageListener {
 
     /** The entity data providers advertised in the handshake; request indices refer to this list. */
     internal val entityProviders =
-        listOf<JadeEntityProvider>(
+        listOf(
             JadeAnimalOwner,
             JadeEntityHealth,
             JadeEntityItemStorage,

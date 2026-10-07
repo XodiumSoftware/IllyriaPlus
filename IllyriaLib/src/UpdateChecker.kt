@@ -15,7 +15,7 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-import java.util.UUID
+import java.util.*
 import kotlin.io.path.createDirectories
 import kotlin.io.path.writeBytes
 
@@ -27,7 +27,6 @@ import kotlin.io.path.writeBytes
  *
  * @property plugin The plugin to check updates for.
  */
-@Suppress("UnstableApiUsage")
 class UpdateChecker(
     private val plugin: JavaPlugin,
 ) : Listener {
