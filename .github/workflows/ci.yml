@@ -184,7 +184,7 @@ jobs:
 
       - id: upload_artifact
         name: Upload Artifact
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: IllyriaBridge
           path: IllyriaBridge/build/libs/*.jar
@@ -274,7 +274,7 @@ jobs:
 
       - id: upload_artifact
         name: Upload Artifact
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: IllyriaCore
           path: IllyriaCore/build/libs/*.jar
@@ -372,7 +372,7 @@ jobs:
 
       - id: upload_artifact
         name: Upload Artifact
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: IllyriaResourcePack
           path: /tmp/pack.zip
