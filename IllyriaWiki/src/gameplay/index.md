@@ -36,14 +36,6 @@ World and gameplay modifications that set Illyria apart.
 <span class="card-desc">Doors and trapdoors with extended behavior</span>
 </a>
 
-<a class="card" href="portal-restrictions.html">
-<span class="card-header">
-<span class="card-title">Portal Restrictions</span>
-<img class="card-icon card-icon-atlas" alt="" src="../img/item/ender_eye.png">
-</span>
-<span class="card-desc">Spawn-protected Overworld portals</span>
-</a>
-
 <a class="card" href="spawn-protection.html">
 <span class="card-header">
 <span class="card-title">Spawn Protection</span>

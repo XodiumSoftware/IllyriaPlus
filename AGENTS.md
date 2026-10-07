@@ -73,7 +73,6 @@ IllyriaPlus/                    # Repo root (Gradle aggregator, no code)
 │   │   ├── IllyriaCoreBootstrap.kt # Bootstrap class
 │   │   ├── Utils.kt                # Core-only utility functions
 │   │   ├── mechanics/              # Feature mechanics (entity, player, server, world subfolders)
-│   │   ├── items/                  # Custom item implementations (ItemInterface)
 │   │   ├── enchantments/           # Enchantment implementations
 │   │   │   ├── utility/            # Custom utility enchantments (registered in bootstrap)
 │   │   │   └── vanilla/            # Vanilla enchantment behavior overrides
@@ -106,7 +105,6 @@ IllyriaPlus/                    # Repo root (Gradle aggregator, no code)
 - All mechanics are Kotlin `object` singletons implementing `MechanicInterface` (extends Bukkit `Listener`)
 - All enchantments are Kotlin `object` singletons implementing `EnchantmentInterface` (extends Bukkit `Listener`)
 - All recipes are Kotlin `object` singletons implementing `RecipeInterface`
-- All items are Kotlin `object` singletons implementing `ItemInterface`
 - Modules self-register in `IllyriaCore.onEnable()` via their `register()` function
 - **There is no file-based configuration and no nested `Config` object** — all settings are compile-time constants declared directly in each module object
 - To disable a module, remove it from the corresponding list in `IllyriaCore.onEnable()`
@@ -239,18 +237,6 @@ GitHub Actions workflows in `.github/workflows/`:
 5. Register commands/permissions by overriding `cmds` and `perms` if needed
 6. In `IllyriaCore.kt`, add `YourMechanic` to the `mechanics` list in `onEnable()`
 7. Add KDoc comments explaining the mechanic's purpose and features
-
-### Adding an Item
-
-1. Create new file in `IllyriaCore/src/items/YourItem.kt`
-2. Implement `ItemInterface` as an `object`
-3. The `NamespacedKey` is auto-generated from the class name (strips "Item" suffix, converts to snake_case)
-4. In `invoke()`, build the `ItemStack` using `ItemStack.of()`, set `DataComponentTypes.CUSTOM_NAME` with MiniMessage formatting, and set `DataComponentTypes.ITEM_MODEL` to `key`
-5. If custom texture needed:
-    - Create model: `IllyriaResourcePack/assets/illyriacore/models/item/<item_name>.json`
-    - Add texture: `IllyriaResourcePack/assets/illyriacore/textures/item/<item_name>.png`
-    - Create/update override: `IllyriaResourcePack/assets/minecraft/items/<base_material>.json`
-6. Add KDoc comment explaining the item's purpose
 
 ### Adding a Recipe
 

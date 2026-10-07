@@ -63,22 +63,6 @@ internal object Utils {
                 }
     }
 
-    /** World-related utilities. */
-    object World {
-        /**
-         * Returns a copy of this location with the Y adjusted to the highest solid block's Y + 1 at the current X/Z.
-         * If no solid block exists (e.g. flat world), falls back to the original Y.
-         *
-         * @return A new [Location] at surface level.
-         */
-        fun Location.toSurface(): Location =
-            clone().apply {
-                val world = world ?: return@apply
-                val surfaceY = world.getHighestBlockYAt(blockX, blockZ) + 1
-                y = maxOf(surfaceY, blockY).toDouble()
-            }
-    }
-
     /** Block-related utilities. */
     object Block {
         /**

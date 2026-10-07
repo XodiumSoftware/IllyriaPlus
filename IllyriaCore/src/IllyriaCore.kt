@@ -91,8 +91,6 @@ internal class IllyriaCore : JavaPlugin() {
                 RulesMechanic,
                 ResourcePackMechanic,
                 SpawnProtectionMechanic,
-                PortalMechanic,
-                LootMechanic,
             )
 
         logger.info(
