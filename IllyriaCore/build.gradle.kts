@@ -28,19 +28,15 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-releases/")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
-    maven("https://repo.wyck.dev/releases")
-    maven("https://repo.wyck.dev/snapshots")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$mcVersion.build.+")
-    compileOnly("com.google.code.gson:gson:2.14.0")
 
     implementation(project(":IllyriaLib"))
     implementation(kotlin("stdlib"))
 
     implementation("com.github.retrooper:packetevents-spigot:2.14.0")
-    implementation("dev.wyck:wyck-vanilla:4.0.0-837d6ec")
 }
 
 java {
@@ -76,9 +72,7 @@ tasks {
         relocate("com.github.retrooper", "${project.group}.libs.packetevents")
         relocate("io.github.retrooper", "${project.group}.libs.packetevents")
         relocate("org.xodium.illyrialib", "${project.group}.libs.illyrialib")
-        minimize {
-            exclude(dependency("dev.wyck:.*:.*"))
-        }
+        minimize()
     }
     jar { enabled = false }
     runServer {
