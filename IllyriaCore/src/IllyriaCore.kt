@@ -77,7 +77,6 @@ internal class IllyriaCore : JavaPlugin() {
                 EnderchestMechanic,
                 XpMechanic,
                 AnvilMechanic,
-                HuskMechanic,
                 SilenceMechanic,
                 HeadMechanic,
                 ChatMechanic,

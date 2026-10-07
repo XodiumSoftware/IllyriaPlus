@@ -2,14 +2,6 @@
 
 Quality-of-life adjustments to mobs and ambient entities.
 
-## Husk <img class="mc-icon" alt="" src="../img/item/husk_spawn_egg.png">
-
-Husks drop extra sand, with a bonus for camel jockeys.
-
-- **Husk:** drops **0–2 Sand** on death
-- **Husk riding a Camel:** drops **0–3 Sand** on death
-- **Looting** adds **+1 per level** on a regular husk, **+2 per level** on a camel-riding husk
-
 ## Silencing Mobs <img class="mc-icon" alt="" src="../img/item/amethyst_shard.png">
 
 Silence any non-hostile mob by clicking it with an **Amethyst Shard**.
