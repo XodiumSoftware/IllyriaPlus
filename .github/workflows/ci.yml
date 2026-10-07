@@ -203,7 +203,7 @@ jobs:
     steps:
       - id: download_artifact
         name: Download IllyriaBridge Artifact
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@v8.0.2
         with:
           name: IllyriaBridge
           path: dist/
@@ -293,7 +293,7 @@ jobs:
     steps:
       - id: download_artifact
         name: Download IllyriaCore Artifact
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@v8.0.2
         with:
           name: IllyriaCore
           path: dist/
@@ -391,7 +391,7 @@ jobs:
     steps:
       - id: download_artifact
         name: Download IllyriaResourcePack Artifact
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@v8.0.2
         with:
           name: IllyriaResourcePack
           path: dist/
