@@ -40,7 +40,7 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     implementation("com.github.retrooper:packetevents-spigot:2.14.0")
-    implementation("dev.wyck:wyck-vanilla:4.0.0-837d6ec")
+    implementation("dev.wyck:wyck-vanilla:4.0.0-8904c40")
 }
 
 java {
