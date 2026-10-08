@@ -1,4 +1,4 @@
-@file:Suppress("Unused")
+@file:Suppress("Unused", "UnstableApiUsage")
 
 package org.xodium.illyrialib
 

@@ -30,6 +30,7 @@ internal interface MechanicInterface : Listener {
      */
     fun register(): Long =
         measureTime {
+            @Suppress("UnstableApiUsage")
             instance.server.pluginManager.addPermissions(perms)
             instance.server.pluginManager.registerEvents(this, instance)
             instance.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {
