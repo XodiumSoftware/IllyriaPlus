@@ -40,19 +40,24 @@
 
 ## Quick Commands
 
+Uses [just](https://github.com/casey/just) as the command runner. Run `just` to list all recipes.
+
 ```bash
 # Build all plugin JARs (outputs in <module>/build/libs/)
-./gradlew shadowJar
+just build
 
 # Run a module's local test server (auto-downloads Paper 26.3)
-./gradlew :IllyriaCore:runServer
-./gradlew :IllyriaBridge:runServer
+just run
+just run-bridge
 
 # Run linting
-./gradlew ktlintCheck
+just lint
 
 # Fix linting issues
-./gradlew ktlintFormat
+just format
+
+# Build and run IllyriaCore test server
+just dev
 ```
 
 ## Project Structure

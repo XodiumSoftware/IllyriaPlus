@@ -5,90 +5,43 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.builder.LiteralArgumentBuilder.literal
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
-import net.kyori.adventure.text.Component
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.java.JavaPlugin
 import org.xodium.illyrialib.Utils.MM
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-import java.util.*
 import kotlin.io.path.createDirectories
 import kotlin.io.path.writeBytes
 
 /**
  * Checks GitHub nightly releases for newer builds of a plugin.
- *
- * Each plugin creates its own instance, keeping per-plugin notification
- * state, listener registration, and update command cleanly separated.
- *
- * @property plugin The plugin to check updates for.
  */
-class UpdateChecker(
-    private val plugin: JavaPlugin,
-) : Listener {
-    private companion object {
-        private const val REPO = "XodiumSoftware/IllyriaPlus"
-        private const val RELEASE_URL = "https://api.github.com/repos/$REPO/releases/tags/nightly"
-        private const val ASSET_SUFFIX = ".jar"
-        private const val UPDATE_COMMAND = "update"
-    }
+object UpdateChecker {
+    private const val REPO = "XodiumSoftware/IllyriaPlus"
+    private const val RELEASE_URL = "https://api.github.com/repos/$REPO/releases/tags/nightly"
+    private const val ASSET_SUFFIX = ".jar"
+    private const val UPDATE_COMMAND = "update"
 
-    private val name: String get() = plugin::class.simpleName ?: "Unknown"
-    private val commandName: String get() = "${name.lowercase()}-$UPDATE_COMMAND"
     private val httpClient: HttpClient =
         HttpClient
             .newBuilder()
             .followRedirects(HttpClient.Redirect.NORMAL)
             .build()
 
-    @Volatile
-    private var updateMessage: Component? = null
-
-    private val notifiedOps = mutableSetOf<UUID>()
-
-    /** Checks asynchronously whether a newer build is available and logs the result. */
-    fun check() {
-        registerCommand()
-        plugin.server.pluginManager.registerEvents(this, plugin)
-        runCheck()
+    /** Registers the update command. */
+    fun register(plugin: JavaPlugin) {
+        registerCommand(plugin)
     }
 
-    /**
-     * Runs the asynchronous update check without re-registering the command or listener.
-     */
-    private fun runCheck() {
-        val currentVersion = plugin.pluginMeta.version
-        plugin.server.scheduler.runTaskAsynchronously(
-            plugin,
-            Runnable {
-                try {
-                    val latestVersion = fetchLatestVersion() ?: return@Runnable
-                    if (isNewer(currentVersion, latestVersion)) {
-                        plugin.logger.warning(
-                            "A new nightly build is available: $latestVersion (current: $currentVersion). " +
-                                "Download: https://github.com/$REPO/releases/tag/nightly",
-                        )
-                        notifyOps(latestVersion, currentVersion)
-                    } else {
-                        plugin.logger.info("No newer nightly build available (current: $currentVersion).")
-                    }
-                } catch (e: Exception) {
-                    plugin.logger.warning("Failed to check for updates: ${e.message}")
-                }
-            },
-        )
-    }
 
     /**
      * Fetches the latest version string from the nightly release assets.
      *
      * @return The version string (e.g. `26.2+build.881`), or `null` if not found.
      */
-    private fun fetchLatestVersion(): String? {
+    private fun fetchLatestVersion(plugin: JavaPlugin): String? {
+        val name = plugin::class.simpleName ?: "Unknown"
         val request =
             HttpRequest
                 .newBuilder(URI.create(RELEASE_URL))
@@ -107,49 +60,10 @@ class UpdateChecker(
         return null
     }
 
-    @EventHandler
-    fun on(event: PlayerJoinEvent) {
-        val player = event.player
-        if (!player.isOp || !notifiedOps.add(player.uniqueId)) return
-        runCheck()
-        updateMessage?.let { player.sendMessage(it) }
-    }
-
-    /**
-     * Sends a chat notification to all online OP players about a newer available build.
-     *
-     * @param latest The latest available version string
-     * @param current The currently installed version string
-     */
-    private fun notifyOps(
-        latest: String,
-        current: String,
-    ) {
-        val component =
-            MM.deserialize(
-                "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
-                    "<yellow>Update available:</yellow> " +
-                    "<green>$latest</green> <gray>(current: $current)</gray> " +
-                    "<click:run_command:'/$commandName'>" +
-                    "<mango>[<b>Update Now</b>]</gradient></click>",
-            )
-        updateMessage = component
-        plugin.server.scheduler.runTask(
-            plugin,
-            Runnable {
-                plugin
-                    .server
-                    .onlinePlayers
-                    .filter { it.isOp }
-                    .forEach {
-                        if (notifiedOps.add(it.uniqueId)) it.sendMessage(component)
-                    }
-            },
-        )
-    }
-
     /** Registers the update download command. */
-    private fun registerCommand() {
+    private fun registerCommand(plugin: JavaPlugin) {
+        val name = plugin::class.simpleName ?: "Unknown"
+        val commandName = "${name.lowercase()}-$UPDATE_COMMAND"
         plugin.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) { event ->
             event.registrar().register(
                 literal<CommandSourceStack>(commandName)
@@ -160,7 +74,7 @@ class UpdateChecker(
                                     "<yellow>Downloading update...</yellow>",
                             ),
                         )
-                        downloadUpdate { success, version ->
+                        downloadUpdate(plugin) { success, version ->
                             if (success) {
                                 ctx.source.sender.sendMessage(
                                     MM.deserialize(
@@ -190,12 +104,16 @@ class UpdateChecker(
      *
      * @param callback Invoked with `true` and the downloaded version on success, `false` on failure.
      */
-    private fun downloadUpdate(callback: (Boolean, String) -> Unit) {
+    private fun downloadUpdate(
+        plugin: JavaPlugin,
+        callback: (Boolean, String) -> Unit,
+    ) {
+        val name = plugin::class.simpleName ?: "Unknown"
         plugin.server.scheduler.runTaskAsynchronously(
             plugin,
             Runnable {
                 try {
-                    val version = fetchLatestVersion() ?: throw IllegalStateException("No release found")
+                    val version = fetchLatestVersion(plugin) ?: throw IllegalStateException("No release found")
                     val assetUrl =
                         "https://github.com/$REPO/releases/download/nightly/$name-$version$ASSET_SUFFIX"
                     val request =
