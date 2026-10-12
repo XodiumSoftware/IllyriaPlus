@@ -34,13 +34,13 @@ object UpdateChecker {
         registerCommand(plugin)
     }
 
-
     /**
-     * Fetches the latest version string from the nightly release assets.
+     * Fetches the download URL for the latest plugin JAR from the nightly release assets.
      *
-     * @return The version string (e.g. `26.2+build.881`), or `null` if not found.
+     * @param plugin The plugin to match assets for
+     * @return The asset download URL, or `null` if not found
      */
-    private fun fetchLatestVersion(plugin: JavaPlugin): String? {
+    private fun fetchLatestAssetUrl(plugin: JavaPlugin): String? {
         val name = plugin::class.simpleName ?: "Unknown"
         val request =
             HttpRequest
@@ -52,9 +52,10 @@ object UpdateChecker {
         val assets = root.getAsJsonArray("assets") ?: return null
 
         for (asset in assets) {
-            val assetName = asset.asJsonObject.get("name").asString
+            val obj = asset.asJsonObject
+            val assetName = obj.get("name").asString
             if (assetName.startsWith("$name-") && assetName.endsWith(ASSET_SUFFIX)) {
-                return assetName.removePrefix("$name-").removeSuffix(ASSET_SUFFIX)
+                return obj.get("browser_download_url").asString
             }
         }
         return null
@@ -74,12 +75,12 @@ object UpdateChecker {
                                     "<yellow>Downloading update...</yellow>",
                             ),
                         )
-                        downloadUpdate(plugin) { success, version ->
+                        downloadUpdate(plugin) { success, fileName ->
                             if (success) {
                                 ctx.source.sender.sendMessage(
                                     MM.deserialize(
                                         "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
-                                            "<green>Successfully downloaded $version.</green> " +
+                                            "<green>Successfully downloaded $fileName.</green> " +
                                             "<gray>Restart the server to apply.</gray>",
                                     ),
                                 )
@@ -113,9 +114,7 @@ object UpdateChecker {
             plugin,
             Runnable {
                 try {
-                    val version = fetchLatestVersion(plugin) ?: throw IllegalStateException("No release found")
-                    val assetUrl =
-                        "https://github.com/$REPO/releases/download/nightly/$name-$version$ASSET_SUFFIX"
+                    val assetUrl = fetchLatestAssetUrl(plugin) ?: throw IllegalStateException("No release found")
                     val request =
                         HttpRequest
                             .newBuilder(URI.create(assetUrl))
@@ -135,11 +134,12 @@ object UpdateChecker {
                             .resolve("update")
                     updateDir.createDirectories()
 
-                    val jarFile = updateDir.resolve("$name-$version.jar")
+                    val jarName = assetUrl.substringAfterLast('/')
+                    val jarFile = updateDir.resolve(jarName)
                     jarFile.writeBytes(response.body())
 
-                    plugin.logger.info("Downloaded $name-$version.jar to plugins/update/")
-                    callback(true, version)
+                    plugin.logger.info("Downloaded $jarName to plugins/update/")
+                    callback(true, jarName)
                 } catch (e: Exception) {
                     plugin.logger.warning("Failed to download update: ${e.message}")
                     callback(false, "")
@@ -147,29 +147,4 @@ object UpdateChecker {
             },
         )
     }
-
-    /**
-     * Compares the current version with the latest version, determining if the latest is newer.
-     * Extraction is done by grabbing the numeric build number after `+build.`.
-     *
-     * @param current The currently installed version string
-     * @param latest The latest available version string
-     * @return `true` if the latest build number is greater than the current build number
-     */
-    private fun isNewer(
-        current: String,
-        latest: String,
-    ): Boolean {
-        val currentBuild = extractBuildNumber(current)
-        val latestBuild = extractBuildNumber(latest)
-        return latestBuild > currentBuild
-    }
-
-    /**
-     * Extracts the numeric build number from a version string like `26.2+build.881`.
-     *
-     * @param version The version string to parse
-     * @return The build number, or `0` if it cannot be parsed
-     */
-    private fun extractBuildNumber(version: String): Int = version.substringAfter("+build.").toIntOrNull() ?: 0
 }
