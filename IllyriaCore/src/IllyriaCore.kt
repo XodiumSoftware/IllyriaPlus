@@ -115,7 +115,7 @@ internal class IllyriaCore : JavaPlugin() {
             }ms",
         )
 
-        UpdateChecker(this).check()
+        UpdateChecker.register(this)
     }
 
     override fun onDisable() {
