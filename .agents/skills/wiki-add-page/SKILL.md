@@ -7,6 +7,11 @@ description: Scaffolds a new page in IllyriaWiki following the wiki's structure,
 
 Use this skill when the user wants to document a new server feature, enchantment, weapon, recipe group, or mechanic in the wiki.
 
+**Prerequisite**: The wiki is now in a separate repository. Clone it as a sibling directory:
+```bash
+git clone git@github.com:XodiumSoftware/illyria-wiki.git ../IllyriaWiki
+```
+
 ## Before Writing
 
 1. Ask the user:
@@ -18,7 +23,7 @@ Use this skill when the user wants to document a new server feature, enchantment
 
 ## File Conventions
 
-- Path: `IllyriaWiki/src/<section>/<kebab-case-name>.md` (e.g. `enchantments/vinemine.md`)
+- Path: `../IllyriaWiki/src/<section>/<kebab-case-name>.md` (e.g. `enchantments/vinemine.md`)
 - Filenames are lowercase kebab-case, matching existing siblings
 - Start with `# Title`, then a one-sentence summary paragraph
 - Use a two-column property table when the feature has structured metadata:
@@ -37,13 +42,13 @@ Use this skill when the user wants to document a new server feature, enchantment
 
 ## Register in SUMMARY.md
 
-1. Open `IllyriaWiki/src/SUMMARY.md`
+1. Open `../IllyriaWiki/src/SUMMARY.md`
 2. Add `- [Title](<section>/<file>.md)` under the matching `# Section` heading
 3. Keep entries within a section sorted: Overview first, then alphabetically by title
 
 ## Lint and Build
 
-1. Run `npx markdownlint-cli2 --config .markdownlint.json "IllyriaWiki/src/**/*.md"` from the repo root
-2. Run `mdbook build IllyriaWiki` from the repo root to verify it compiles
+1. Run `npx markdownlint-cli2 --config ../IllyriaWiki/.markdownlint.json "../IllyriaWiki/src/**/*.md"` from the repo root
+2. Run `mdbook build ../IllyriaWiki` from the repo root to verify it compiles
 
 After finishing, summarize the files changed and ask the user if they want to commit.

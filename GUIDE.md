@@ -111,6 +111,8 @@ internal object MessagesMechanic : MechanicInterface {
 
 Enhances base gameplay with custom enchantments, items, and mechanics.
 
+For detailed player guides and documentation, see the **[Illyria Wiki](https://github.com/XodiumSoftware/illyria-wiki)**.
+
 ### Enchantments
 
 Custom enchantments are divided into two groups:

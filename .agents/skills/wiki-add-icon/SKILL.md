@@ -7,6 +7,11 @@ description: Adds a Minecraft texture icon to an IllyriaWiki page by copying it 
 
 Use this skill when the user wants to show an in-game item/block/method icon next to text in a wiki page (e.g. the crafting method icons in `src/recipes/index.md`).
 
+**Prerequisite**: The wiki is now in a separate repository. Clone it as a sibling directory:
+```bash
+git clone git@github.com:XodiumSoftware/illyria-wiki.git ../IllyriaWiki
+```
+
 ## Icon Source
 
 Icons come from the project's resource pack: `IllyriaResourcePack/assets/minecraft/textures/`.
@@ -20,7 +25,7 @@ Use `find_path` with a glob like `IllyriaPlus/IllyriaResourcePack/assets/minecra
 ## Steps
 
 1. Locate the texture in the resource pack.
-2. Copy it into the wiki under `IllyriaWiki/src/img/<category>/<name>.png`, where `<category>` groups by use (e.g. `method` for crafting stations). Create the folder if needed. Strip suffixes like `_front`/`_side` from the destination filename (e.g. `furnace_front.png` → `furnace.png`).
+2. Copy it into the wiki under `../IllyriaWiki/src/img/<category>/<name>.png`, where `<category>` groups by use (e.g. `method` for crafting stations). Create the folder if needed. Strip suffixes like `_front`/`_side` from the destination filename (e.g. `furnace_front.png` → `furnace.png`).
 3. In the Markdown page, reference it as:
 
    ```html
@@ -33,7 +38,7 @@ Use `find_path` with a glob like `IllyriaPlus/IllyriaResourcePack/assets/minecra
 
 ## Verify
 
-1. `mdbook build IllyriaWiki` — confirm the image lands in `book/img/<category>/`
-2. `npx markdownlint-cli2 --config .markdownlint.json "IllyriaWiki/src/**/*.md"` from the repo root — must pass with 0 issues
+1. `mdbook build ../IllyriaWiki` — confirm the image lands in `../IllyriaWiki/book/img/<category>/`
+2. `npx markdownlint-cli2 --config ../IllyriaWiki/.markdownlint.json "../IllyriaWiki/src/**/*.md"` from the repo root — must pass with 0 issues
 
 After finishing, summarize the files changed and ask the user if they want to commit.

@@ -7,6 +7,11 @@ description: Synchronizes IllyriaWiki pages with the current plugin codebase aft
 
 Use this skill after code changes to keep the wiki truthful: new enchantment/mechanic/recipe/weapon objects in the plugin must have matching wiki pages, and removed features must be removed from the wiki.
 
+**Prerequisite**: The wiki is now in a separate repository. Clone it as a sibling directory:
+```bash
+git clone git@github.com:XodiumSoftware/illyria-wiki.git ../IllyriaWiki
+```
+
 ## Trigger
 
 Load this skill when:
@@ -22,14 +27,14 @@ Do **not** use it for `GUIDE.md` or `README.md` — that's the `update-plugin-do
    - `IllyriaCore/src/IllyriaCore.kt` — `mechanics`, `enchantments`, `recipes`
    - `IllyriaCore/src/IllyriaCoreBootstrap.kt` — custom enchantments registered into the Paper registry
 
-2. Read `IllyriaWiki/src/SUMMARY.md` for the documented pages.
+2. Read `../IllyriaWiki/src/SUMMARY.md` for the documented pages.
 
 3. Diff code vs. wiki:
    - **New object in code, no wiki page** → create one (use the `wiki-add-page` skill's conventions)
-   - **Wiki page exists, object removed from code** → remove the page and its `SUMMARY.md` entry; check for inbound links from other pages with `grep` (e.g. `grep -r "name.md" IllyriaWiki/src/`) and fix them
+   - **Wiki page exists, object removed from code** → remove the page and its `SUMMARY.md` entry; check for inbound links from other pages with `grep` (e.g. `grep -r "name.md" ../IllyriaWiki/src/`) and fix them
    - **Behavior changed in code** → update the page's Effect/Notes/property tables to match
 
-4. Verify the introduction page (`src/introduction.md`) still describes the feature set accurately; update its card grid or About bullets if a whole category was added/removed.
+4. Verify the introduction page (`../IllyriaWiki/src/introduction.md`) still describes the feature set accurately; update its card grid or About bullets if a whole category was added/removed.
 
 ## Section Mapping
 
@@ -47,7 +52,7 @@ Use judgment for edge cases — ask the user if a feature's placement is ambiguo
 
 ## Verify
 
-1. `npx markdownlint-cli2 --config .markdownlint.json "IllyriaWiki/src/**/*.md"` — 0 issues
-2. `mdbook build IllyriaWiki` — builds without warnings about missing files referenced in `SUMMARY.md`
+1. `npx markdownlint-cli2 --config ../IllyriaWiki/.markdownlint.json "../IllyriaWiki/src/**/*.md"` — 0 issues
+2. `mdbook build ../IllyriaWiki` — builds without warnings about missing files referenced in `SUMMARY.md`
 
 After finishing, summarize what wiki pages were added/updated/removed and ask the user if they want to commit.
