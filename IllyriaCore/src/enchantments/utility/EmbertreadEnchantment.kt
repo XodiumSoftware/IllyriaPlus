@@ -7,8 +7,8 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
-import org.xodium.illyriacore.Utils.Enchantment.displayName
 import org.xodium.illyriacore.enchantments.EnchantmentInterface
+import org.xodium.illyrialib.Utils.Enchantment.displayName
 
 /** Represents an object handling embertread enchantment implementation within the system. */
 internal object EmbertreadEnchantment : EnchantmentInterface {

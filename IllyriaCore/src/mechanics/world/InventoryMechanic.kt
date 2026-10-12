@@ -12,16 +12,13 @@ import org.bukkit.block.Container
 import org.bukkit.block.Lidded
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import org.bukkit.permissions.Permission
-import org.bukkit.permissions.PermissionDefault
-import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.Utils
 import org.xodium.illyriacore.Utils.Block.center
-import org.xodium.illyriacore.Utils.Command.playerExecuted
 import org.xodium.illyriacore.Utils.Player.getContainersAround
-import org.xodium.illyriacore.data.CommandData
 import org.xodium.illyriacore.mechanics.MechanicInterface
+import org.xodium.illyrialib.Utils.Command.playerExecuted
 import org.xodium.illyrialib.Utils.MM
+import org.xodium.illyrialib.data.CommandData
 
 /** Represents a mechanic handling inventory interactions within the system. */
 internal object InventoryMechanic : MechanicInterface {
@@ -47,7 +44,6 @@ internal object InventoryMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("search")
-                    .requires { it.sender.hasPermission(perms[0]) }
                     .then(
                         Commands
                             .argument("material", ArgumentTypes.itemStack())
@@ -61,24 +57,9 @@ internal object InventoryMechanic : MechanicInterface {
             CommandData(
                 Commands
                     .literal("unload")
-                    .requires { it.sender.hasPermission(perms[1]) }
                     .playerExecuted { player, _ -> unloadInventory(player) },
                 "Unload inventory into nearby chests",
                 listOf("invunload", "unloadinv", "invu", "uinv", "u"),
-            ),
-        )
-
-    override val perms =
-        listOf(
-            Permission(
-                "${instance.javaClass.simpleName}.invsearch".lowercase(),
-                "Allows use of the invsearch command",
-                PermissionDefault.TRUE,
-            ),
-            Permission(
-                "${instance.javaClass.simpleName}.invunload".lowercase(),
-                "Allows use of the invunload command",
-                PermissionDefault.TRUE,
             ),
         )
 

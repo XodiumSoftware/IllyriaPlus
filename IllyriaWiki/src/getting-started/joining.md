@@ -2,15 +2,15 @@
 
 ## Server Information
 
-| Property    | Value                                                 |
-| ----------- | ----------------------------------------------------- |
-| Server IP   | `play.illyria.cc`                                     |
-| Version     | Java Edition 26.3                                     |
-| Client Mods | Optional (see [Client Mod Support](../mods/index.md)) |
+| Property    | Value                                                       |
+| ----------- | ----------------------------------------------------------- |
+| Server IP   | <pre><code class="language-text">{{server_ip}}</code></pre> |
+| Version     | Java Edition {{mc_version}}                                 |
+| Client Mods | Optional (see [Client Mod Support](../mods/index.md))       |
 
 ## How to Join
 
-1. Launch Minecraft Java Edition 26.3
+1. Launch Minecraft Java Edition {{mc_version}}
 2. Go to **Multiplayer → Add Server**
 3. Enter the server address
 4. Join and accept the resource pack prompt

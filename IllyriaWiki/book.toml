@@ -1,7 +1,13 @@
 [book]
-title = "IllyriaRPG Wiki"
+title = "Illyria Wiki"
 authors = ["illyrius666"]
 language = "en"
+
+[preprocessor.variables.variables]
+discord_invite = "https://discord.gg/jusYH9aYUh"
+github_repo = "https://github.com/XodiumSoftware/IllyriaPlus"
+mc_version = "26.3"
+server_ip = "play.illyria.cc"
 
 [output.html]
 site-url = "https://wiki.illyria.cc/"
@@ -9,4 +15,6 @@ git-repository-url = "https://github.com/XodiumSoftware/IllyriaPlus"
 edit-url-template = "https://github.com/XodiumSoftware/IllyriaPlus/edit/main/IllyriaWiki/{path}"
 hash-files = true
 smart-punctuation = true
-additional-css = ["theme/cards.css","theme/recipe.css","theme/fonts.css"]
+default-theme = "rust"
+preferred-dark-theme = "ayu"
+additional-css = ["theme/cards.css","theme/recipe.css","theme/fonts.css","theme/pager.css","theme/navbar.css"]

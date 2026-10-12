@@ -5,3 +5,7 @@
 # URLs from .html to .md so the link check validates the actual sources.
 
 remap = ["file://(.*)/IllyriaWiki/src/(.*)\\.html file://$1/IllyriaWiki/src/$2.md"]
+
+# mdBook template variables (e.g., {{github_repo}}) are resolved at build time,
+# not during raw file scanning. Exclude them from link checking.
+exclude = ["%7B%7B.*%7D%7D"]
