@@ -37,7 +37,6 @@ internal class IllyriaCore : JavaPlugin() {
     lateinit var enchantments: List<EnchantmentInterface>
         private set
 
-    @Suppress("UnstableApiUsage")
     override fun onLoad() {
         PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this))
         PacketEvents.getAPI().settings.reEncodeByDefault(false)
