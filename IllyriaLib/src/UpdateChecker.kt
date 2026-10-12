@@ -29,45 +29,12 @@ object UpdateChecker {
             .followRedirects(HttpClient.Redirect.NORMAL)
             .build()
 
-    /** Registers the update command. */
-    fun register(plugin: JavaPlugin) {
-        registerCommand(plugin)
-    }
-
-    /**
-     * Fetches the download URL for the latest plugin JAR from the nightly release assets.
-     *
-     * @param plugin The plugin to match assets for
-     * @return The asset download URL, or `null` if not found
-     */
-    private fun fetchLatestAssetUrl(plugin: JavaPlugin): String? {
-        val name = plugin::class.simpleName ?: "Unknown"
-        val request =
-            HttpRequest
-                .newBuilder(URI.create(RELEASE_URL))
-                .header("Accept", "application/vnd.github+json")
-                .build()
-        val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-        val root = JsonParser.parseString(response.body()).asJsonObject
-        val assets = root.getAsJsonArray("assets") ?: return null
-
-        for (asset in assets) {
-            val obj = asset.asJsonObject
-            val assetName = obj.get("name").asString
-            if (assetName.startsWith("$name-") && assetName.endsWith(ASSET_SUFFIX)) {
-                return obj.get("browser_download_url").asString
-            }
-        }
-        return null
-    }
-
     /** Registers the update download command. */
-    private fun registerCommand(plugin: JavaPlugin) {
-        val name = plugin::class.simpleName ?: "Unknown"
-        val commandName = "${name.lowercase()}-$UPDATE_COMMAND"
+    fun register(plugin: JavaPlugin) {
+        val name = plugin.name
         plugin.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) { event ->
             event.registrar().register(
-                literal<CommandSourceStack>(commandName)
+                literal<CommandSourceStack>("${name.lowercase()}-$UPDATE_COMMAND")
                     .executes { ctx ->
                         ctx.source.sender.sendMessage(
                             MM.deserialize(
@@ -75,23 +42,21 @@ object UpdateChecker {
                                     "<yellow>Downloading update...</yellow>",
                             ),
                         )
-                        downloadUpdate(plugin) { success, fileName ->
-                            if (success) {
-                                ctx.source.sender.sendMessage(
+                        downloadUpdate(plugin, name) { success, fileName ->
+                            ctx.source.sender.sendMessage(
+                                if (success) {
                                     MM.deserialize(
                                         "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
                                             "<green>Successfully downloaded $fileName.</green> " +
                                             "<gray>Restart the server to apply.</gray>",
-                                    ),
-                                )
-                            } else {
-                                ctx.source.sender.sendMessage(
+                                    )
+                                } else {
                                     MM.deserialize(
                                         "<mango>[</gradient><firewatch>$name</gradient><mango>]</gradient> " +
                                             "<red>Failed to download update. Check console for details.</red>",
-                                    ),
-                                )
-                            }
+                                    )
+                                },
+                            )
                         }
                         Command.SINGLE_SUCCESS
                     }.build(),
@@ -103,24 +68,21 @@ object UpdateChecker {
     /**
      * Downloads the latest plugin JAR from the GitHub nightly release into the server's plugins/update folder.
      *
-     * @param callback Invoked with `true` and the downloaded version on success, `false` on failure.
+     * @param plugin The plugin instance for scheduling and file resolution
+     * @param name The plugin simple name used to match the release asset
+     * @param callback Invoked with `true` and the downloaded file name on success, `false` on failure.
      */
     private fun downloadUpdate(
         plugin: JavaPlugin,
+        name: String,
         callback: (Boolean, String) -> Unit,
     ) {
-        val name = plugin::class.simpleName ?: "Unknown"
         plugin.server.scheduler.runTaskAsynchronously(
             plugin,
             Runnable {
                 try {
-                    val assetUrl = fetchLatestAssetUrl(plugin) ?: throw IllegalStateException("No release found")
-                    val request =
-                        HttpRequest
-                            .newBuilder(URI.create(assetUrl))
-                            .header("Accept", "application/vnd.github+json")
-                            .build()
-                    val response = httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray())
+                    val assetUrl = fetchLatestAssetUrl(name) ?: throw IllegalStateException("No release found")
+                    val response = httpClient.send(get(assetUrl), HttpResponse.BodyHandlers.ofByteArray())
 
                     if (response.statusCode() != 200) {
                         throw IllegalStateException("Download failed with status ${response.statusCode()}")
@@ -135,8 +97,7 @@ object UpdateChecker {
                     updateDir.createDirectories()
 
                     val jarName = assetUrl.substringAfterLast('/')
-                    val jarFile = updateDir.resolve(jarName)
-                    jarFile.writeBytes(response.body())
+                    updateDir.resolve(jarName).writeBytes(response.body())
 
                     plugin.logger.info("Downloaded $jarName to plugins/update/")
                     callback(true, jarName)
@@ -147,4 +108,30 @@ object UpdateChecker {
             },
         )
     }
+
+    /**
+     * Fetches the download URL for the latest plugin JAR from the nightly release assets.
+     *
+     * @param name The plugin simple name used to match the release asset
+     * @return The asset download URL, or `null` if not found
+     */
+    private fun fetchLatestAssetUrl(name: String): String? {
+        val response = httpClient.send(get(RELEASE_URL), HttpResponse.BodyHandlers.ofString())
+        val assets = JsonParser.parseString(response.body()).asJsonObject.getAsJsonArray("assets") ?: return null
+
+        return assets
+            .map { it.asJsonObject }
+            .firstOrNull {
+                val assetName = it.get("name").asString
+                assetName.startsWith("$name-") && assetName.endsWith(ASSET_SUFFIX)
+            }?.get("browser_download_url")
+            ?.asString
+    }
+
+    /** Builds a GET request with the GitHub Accept header. */
+    private fun get(url: String): HttpRequest =
+        HttpRequest
+            .newBuilder(URI.create(url))
+            .header("Accept", "application/vnd.github+json")
+            .build()
 }
