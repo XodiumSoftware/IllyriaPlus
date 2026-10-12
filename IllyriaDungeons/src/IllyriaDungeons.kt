@@ -15,6 +15,6 @@ internal class IllyriaDungeons : JavaPlugin() {
 
         validateVersion()
 
-        UpdateChecker(this).check()
+        UpdateChecker.register(this)
     }
 }
