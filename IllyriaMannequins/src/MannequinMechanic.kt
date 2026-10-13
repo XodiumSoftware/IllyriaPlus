@@ -32,6 +32,16 @@ internal object MannequinMechanic : Listener {
                     }.build(),
                 "Spawn a Mannequin at your location",
             )
+            event.registrar().register(
+                Commands
+                    .literal("mannequins")
+                    .requires { it.sender is Player }
+                    .executes { ctx ->
+                        MannequinListUI.open(ctx.source.sender as Player)
+                        Command.SINGLE_SUCCESS
+                    }.build(),
+                "List all of your mannequins",
+            )
         }
         instance.server.pluginManager.registerEvents(this, instance)
         MannequinTicker.register()
