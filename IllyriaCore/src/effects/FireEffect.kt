@@ -13,14 +13,16 @@ internal object FireEffect : EffectInterface {
     private const val OFFSET = 0.4
 
     override fun spawn(location: Location) {
-        Particle.FLAME
+        Particle
+            .FLAME
             .builder()
             .location(location)
             .count(FLAME_COUNT)
             .offset(OFFSET, OFFSET, OFFSET)
             .spawn()
 
-        Particle.SMOKE
+        Particle
+            .SMOKE
             .builder()
             .location(location)
             .count(SMOKE_COUNT)

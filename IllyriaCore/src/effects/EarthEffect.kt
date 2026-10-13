@@ -17,7 +17,8 @@ internal object EarthEffect : EffectInterface {
     private val DUST_COLOR: Color = Color.fromRGB(121, 85, 58)
 
     override fun spawn(location: Location) {
-        Particle.DUST
+        Particle
+            .DUST
             .builder()
             .location(location)
             .count(DUST_COUNT)
@@ -25,7 +26,8 @@ internal object EarthEffect : EffectInterface {
             .data(Particle.DustOptions(DUST_COLOR, DUST_SIZE))
             .spawn()
 
-        Particle.BLOCK_CRUMBLE
+        Particle
+            .BLOCK_CRUMBLE
             .builder()
             .location(location)
             .count(BLOCK_COUNT)

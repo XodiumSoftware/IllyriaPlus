@@ -13,14 +13,16 @@ internal object WaterEffect : EffectInterface {
     private const val OFFSET = 0.4
 
     override fun spawn(location: Location) {
-        Particle.SPLASH
+        Particle
+            .SPLASH
             .builder()
             .location(location)
             .count(SPLASH_COUNT)
             .offset(OFFSET, OFFSET, OFFSET)
             .spawn()
 
-        Particle.DRIPPING_WATER
+        Particle
+            .DRIPPING_WATER
             .builder()
             .location(location)
             .count(DRIP_COUNT)

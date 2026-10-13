@@ -13,14 +13,16 @@ internal object AirEffect : EffectInterface {
     private const val OFFSET = 0.5
 
     override fun spawn(location: Location) {
-        Particle.CLOUD
+        Particle
+            .CLOUD
             .builder()
             .location(location)
             .count(CLOUD_COUNT)
             .offset(OFFSET, OFFSET, OFFSET)
             .spawn()
 
-        Particle.SWEEP_ATTACK
+        Particle
+            .SWEEP_ATTACK
             .builder()
             .location(location)
             .count(GUST_COUNT)
