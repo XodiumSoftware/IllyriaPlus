@@ -65,7 +65,11 @@ internal object NicknameDialog : DialogInterface {
                             .builder(MM.deserialize("<green>Save</green>"))
                             .action(
                                 DialogAction.customClick(
-                                    { response, _ -> player.nickname(response.getText("nickname") ?: "") },
+                                    { response, _ ->
+                                        (response.getText("nickname") ?: "")
+                                            .takeIf { name -> name != player.nickname }
+                                            ?.let { name -> player.nickname(name) }
+                                    },
                                     ClickCallback
                                         .Options
                                         .builder()

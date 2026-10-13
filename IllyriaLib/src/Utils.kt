@@ -29,6 +29,7 @@ object Utils {
                     "deep-ocean" to "#13547a:#80d0c7",
                     "rose" to "#F4C4F3:#FC67FA",
                 ).forEach { (name, colors) -> it.tag(name, Tag.preProcessParsed("<gradient:$colors>")) }
+                it.tag("brown", Tag.preProcessParsed("<color:#8B4513>"))
             }.build()
 
     /** Converts a [Duration] to Minecraft ticks (20 ticks per second). */
