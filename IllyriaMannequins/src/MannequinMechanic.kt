@@ -2,7 +2,10 @@ package org.xodium.illyriamannequins
 
 import com.mojang.brigadier.Command
 import io.papermc.paper.command.brigadier.Commands
+import io.papermc.paper.command.brigadier.argument.ArgumentTypes
+import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
+import org.bukkit.Location
 import org.bukkit.entity.Mannequin
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -27,9 +30,25 @@ internal object MannequinMechanic : Listener {
                     .literal("mannequins")
                     .requires { it.sender is Player }
                     .executes { ctx ->
-                        MannequinListUI.open(ctx.source.sender as Player)
+                        val player = ctx.source.sender as Player
+                        MannequinListUI.open(player, player)
                         Command.SINGLE_SUCCESS
-                    }.build(),
+                    }.then(
+                        Commands
+                            .argument("player", ArgumentTypes.player())
+                            .requires { it.sender.isOp }
+                            .executes { ctx ->
+                                val viewer = ctx.source.sender as Player
+                                val target =
+                                    ctx
+                                        .getArgument("player", PlayerSelectorArgumentResolver::class.java)
+                                        .resolve(ctx.source)
+                                        .singleOrNull()
+                                        ?: return@executes Command.SINGLE_SUCCESS
+                                MannequinListUI.open(viewer, target)
+                                Command.SINGLE_SUCCESS
+                            },
+                    ).build(),
                 "List all of your mannequins",
             )
         }
@@ -69,15 +88,18 @@ internal object MannequinMechanic : Listener {
     }
 
     /**
-     * Spawns a mannequin at the player's location.
+     * Spawns a mannequin at the given location, owned by the given player.
      *
-     * @param player The player to spawn the mannequin for.
+     * @param location The location to spawn the mannequin at.
+     * @param owner The player to own the spawned mannequin.
      */
-    fun spawnMannequin(player: Player) =
-        player.world.spawn(player.location, Mannequin::class.java) {
-            it.owner = player.uniqueId
-            it.anchor = it.location
-            it.isPersistent = true
-            it.setAI(true)
-        }
+    fun spawnMannequin(
+        location: Location,
+        owner: Player,
+    ) = location.world.spawn(location, Mannequin::class.java) {
+        it.owner = owner.uniqueId
+        it.anchor = it.location
+        it.isPersistent = true
+        it.setAI(true)
+    }
 }

@@ -31,6 +31,7 @@ import java.util.Locale
 @Suppress("UnstableApiUsage")
 internal object MannequinListUI {
     private const val TITLE = "<firewatch>Your Mannequins</gradient>"
+    private const val OTHER_TITLE_PREFIX = "<firewatch>Mannequins of </gradient><white>"
     private const val UNNAMED_PREFIX = "NPC "
     private const val LOCATION_LABEL = "<gray>Location: <white>%s %d %d %d"
     private const val MOVEMENT_LABEL = "<gray>Movement: "
@@ -45,24 +46,29 @@ internal object MannequinListUI {
     private const val EMPTY_TEXT = "<dark_gray>No mannequins"
 
     /**
-     * Opens the mannequin list GUI for the given player.
+     * Opens the mannequin list GUI.
      *
-     * Lists all mannequins owned by the player across all worlds. Left-clicking a
-     * mannequin opens the edit dialog; operators can shift-right-click to teleport.
+     * Lists all mannequins owned by [target] across all worlds, shown to [viewer].
+     * Left-clicking a mannequin opens the edit dialog; operators can shift-right-click
+     * to teleport.
      *
-     * @param player The player to show the GUI to.
+     * @param viewer The player to show the GUI to.
+     * @param target The player whose mannequins to list.
      */
-    fun open(player: Player) {
+    fun open(
+        viewer: Player,
+        target: Player,
+    ) {
         val mannequins =
             instance
                 .server
                 .worlds
                 .flatMap { it.entities.filterIsInstance<Mannequin>() }
-                .filter { it.owner == player.uniqueId }
+                .filter { it.owner == target.uniqueId }
                 .sortedBy { it.customName()?.let(MM::serialize) ?: it.uniqueId.toString() }
 
-        window(player) {
-            title by MM.deserialize(TITLE)
+        window(viewer) {
+            title by MM.deserialize(if (viewer == target) TITLE else "$OTHER_TITLE_PREFIX${target.name}")
             upperGui by
                 pagedItemsGui(
                     "# # # # # # # # #",
@@ -75,11 +81,11 @@ internal object MannequinListUI {
                     'x' by Markers.CONTENT_LIST_SLOT_HORIZONTAL
                     '<' by pageButton(PREVIOUS_TITLE) { it - 1 }
                     '>' by pageButton(NEXT_TITLE) { it + 1 }
-                    '+' by spawnButton(player)
+                    '+' by spawnButton(viewer, target)
 
                     val items =
                         mannequins
-                            .mapIndexed { index, mannequin -> mannequinItem(mannequin, index + 1, player.isOp) }
+                            .mapIndexed { index, mannequin -> mannequinItem(mannequin, index + 1, viewer.isOp) }
                             .toMutableList()
                     if (items.isEmpty()) {
                         items +=
@@ -247,11 +253,15 @@ internal object MannequinListUI {
     /**
      * Builds the spawn button [Item]. Non-op viewers see plain black glass instead.
      *
-     * @param player The viewing player (checked for op status on click).
+     * @param viewer The player viewing the GUI (checked for op status).
+     * @param target The player the spawned mannequin will belong to.
      * @return The spawn [Item].
      */
-    private fun spawnButton(player: Player): Item =
-        if (player.isOp) {
+    private fun spawnButton(
+        viewer: Player,
+        target: Player,
+    ): Item =
+        if (viewer.isOp) {
             Item
                 .builder()
                 .setItemProvider(
@@ -262,7 +272,7 @@ internal object MannequinListUI {
                     ),
                 ).addClickHandler { _, click ->
                     click.player.closeInventory()
-                    MannequinMechanic.spawnMannequin(click.player)
+                    MannequinMechanic.spawnMannequin(click.player.location, target)
                 }.build()
         } else {
             Item.simple(ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true))
