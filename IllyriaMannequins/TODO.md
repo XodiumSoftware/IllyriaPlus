@@ -1,3 +1,2 @@
-- Way to handle multiple mannequins at the same time.
-- Group combat. (depends on 3)
+- Group combat.
 - way to get mannequin in survival.
