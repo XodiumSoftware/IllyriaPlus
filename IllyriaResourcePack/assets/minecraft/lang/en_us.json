@@ -194,5 +194,22 @@
     "subtitles.item.totem.use": "Crucifix of Resurrection activates",
     "advancements.adventure.totem_of_undying.description": "Use an Crucifix of Resurrection to cheat death",
 
-    "biome.minecraft.the_end": "The End"
+    "biome.minecraft.the_end": "The End",
+
+    "enchantment.level.1": "§f\uDB80\uDE28§r§r",
+    "enchantment.level.2": "§f\uDB80\uDE29§r§r",
+    "enchantment.level.3": "§f\uDB80\uDE2A§r§r",
+    "enchantment.level.4": "§f\uDB80\uDE2B§r§r",
+    "enchantment.level.5": "§f\uDB80\uDE2C§r§r",
+    "enchantment.level.6": "§f\uDB80\uDE2D§r§r",
+    "enchantment.level.7": "§f\uDB80\uDE2E§r§r",
+    "enchantment.level.8": "§f\uDB80\uDE2F§r§r",
+    "enchantment.level.9": "§f\uDB80\uDE30§r§r",
+    "enchantment.level.10": "§f\uDB80\uDE31§r§r",
+    "potion.potency.0": "§r",
+    "potion.potency.1": "§f\uDB80\uDE29§r§r",
+    "potion.potency.2": "§f\uDB80\uDE2A§r§r",
+    "potion.potency.3": "§f\uDB80\uDE2B§r§r",
+    "potion.potency.4": "§f\uDB80\uDE2C§r§r",
+    "potion.potency.5": "§f\uDB80\uDE2D§r§r"
 }
