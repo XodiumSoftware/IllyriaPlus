@@ -23,12 +23,17 @@
 ## Table of Contents
 
 - [Guide](GUIDE.md)
+- [Documentation](#documentation)
 - [Built With](#built-with)
 - [Code of Conduct][code_of_conduct_url]
 - [Contributing][contributing_url]
 - [License][license_url]
 - [Requirements](#requirements)
 - [Security][security_url]
+
+## Documentation
+
+Player guides and feature documentation are maintained in a separate repository: **[Illyria Wiki](https://github.com/XodiumSoftware/illyria-wiki)**.
 
 ## Requirements
 

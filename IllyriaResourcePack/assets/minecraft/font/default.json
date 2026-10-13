@@ -1,0 +1,27 @@
+{
+    "providers": [
+        {
+            "type": "reference",
+            "id": "minecraft:include/numerals"
+        },
+        {
+            "type": "reference",
+            "id": "minecraft:include/enchantments"
+        },
+        {
+            "type": "reference",
+            "id": "minecraft:include/effects"
+        },
+        {
+            "type": "space",
+            "advances": {
+                "󎀀": -90,
+                "󎀁": 2,
+                "󎀂": -54,
+                "󎀃": 54,
+                "󎀄": -30,
+                "󎀅": -131
+            }
+        }
+    ]
+}
