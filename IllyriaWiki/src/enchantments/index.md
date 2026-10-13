@@ -1,6 +1,6 @@
 # Enchantments
 
-IllyriaRPG adds four custom enchantments obtainable through the enchanting table,
+Illyria adds four custom enchantments obtainable through the enchanting table,
 anvils, and villager trading — just like vanilla enchantments.
 
 <div class="card-grid">

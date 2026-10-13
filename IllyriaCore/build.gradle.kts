@@ -32,10 +32,10 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$mcVersion.build.+")
-    compileOnly("com.google.code.gson:gson:2.14.0")
 
     implementation(project(":IllyriaLib"))
     implementation(kotlin("stdlib"))
+
     implementation("com.github.retrooper:packetevents-spigot:2.14.0")
 }
 
@@ -68,6 +68,7 @@ tasks {
         dependsOn(processResources)
         archiveBaseName.set("IllyriaCore")
         archiveClassifier.set("")
+
         relocate("com.github.retrooper", "${project.group}.libs.packetevents")
         relocate("io.github.retrooper", "${project.group}.libs.packetevents")
         relocate("org.xodium.illyrialib", "${project.group}.libs.illyrialib")

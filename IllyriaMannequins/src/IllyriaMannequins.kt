@@ -2,7 +2,7 @@ package org.xodium.illyriamannequins
 
 import org.bukkit.plugin.java.JavaPlugin
 import org.xodium.illyrialib.UpdateChecker
-import org.xodium.illyrialib.Utils.validateServerVersion
+import org.xodium.illyrialib.Utils.validateVersion
 
 /** Main class of the plugin. */
 internal class IllyriaMannequins : JavaPlugin() {
@@ -12,12 +12,12 @@ internal class IllyriaMannequins : JavaPlugin() {
     }
 
     override fun onEnable() {
-        if (!validateServerVersion()) return
+        validateVersion()
 
         instance = this
 
         MannequinMechanic.register()
 
-        UpdateChecker(this).check()
+        UpdateChecker.register(this)
     }
 }

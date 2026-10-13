@@ -177,7 +177,7 @@ internal fun componentPayload(text: String): ByteArray {
  */
 internal fun itemStoragePayload(
     uid: String,
-    stacks: List<net.minecraft.world.item.ItemStack>,
+    stacks: List<ItemStack>,
 ): ByteArray {
     val buf = RegistryFriendlyByteBuf(Unpooled.buffer(), registryAccess(null))
 

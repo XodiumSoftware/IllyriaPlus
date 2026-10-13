@@ -7,7 +7,7 @@ import org.xodium.illyriabridge.bridges.FabricRecipeBridge
 import org.xodium.illyriabridge.bridges.XaeroMapBridge
 import org.xodium.illyriabridge.bridges.jade.JadeBridge
 import org.xodium.illyrialib.UpdateChecker
-import org.xodium.illyrialib.Utils.validateServerVersion
+import org.xodium.illyrialib.Utils.validateVersion
 
 /** Main class of the plugin. */
 internal class IllyriaBridge : JavaPlugin() {
@@ -20,9 +20,9 @@ internal class IllyriaBridge : JavaPlugin() {
         private set
 
     override fun onEnable() {
-        if (!validateServerVersion()) return
-
         instance = this
+
+        validateVersion()
 
         bridges =
             listOf(
@@ -36,7 +36,7 @@ internal class IllyriaBridge : JavaPlugin() {
             "Registered: ${bridges.size} bridge(s) | Took ${bridges.sumOf { it.register() }}ms",
         )
 
-        UpdateChecker(this).check()
+        UpdateChecker.register(this)
     }
 
     override fun onDisable() {

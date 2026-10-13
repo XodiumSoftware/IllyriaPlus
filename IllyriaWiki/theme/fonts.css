@@ -1,14 +1,20 @@
 /* Global font application. */
 
 /* Apply IllyriaRP globally. */
+html,
 body {
     font-family: "IllyriaRP", "Open Sans", sans-serif;
 }
 
 pre,
-code,
+pre code,
 tt {
     font-family: var(--mono-font) !important;
+}
+
+/* Inline code (commands, keys) uses the pixel font. */
+code {
+    font-family: "IllyriaRP", monospace;
 }
 
 /* Minecraft-style hard drop shadow on headings. */

@@ -147,7 +147,7 @@ package org.xodium.<modulename>
 
 import org.bukkit.plugin.java.JavaPlugin
 import org.xodium.illyrialib.UpdateChecker
-import org.xodium.illyrialib.Utils.validateServerVersion
+import org.xodium.illyrialib.Utils.validateVersion
 
 /** Main class of the plugin. */
 internal class <ModuleName> : JavaPlugin() {
@@ -157,11 +157,11 @@ internal class <ModuleName> : JavaPlugin() {
     }
 
     override fun onEnable() {
-        if (!validateServerVersion()) return
+        validateVersion()
 
         instance = this
 
-        UpdateChecker(this).check()
+        UpdateChecker.register(this)
     }
 }
 ```

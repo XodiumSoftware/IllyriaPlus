@@ -1,6 +1,6 @@
 # Client Mod Support
 
-IllyriaRPG works with all vanilla clients, but enhances the experience for players using certain mods.
+Illyria works with all vanilla clients, but enhances the experience for players using certain mods.
 
 ## Supported Mods
 
