@@ -14,15 +14,6 @@ import xyz.xenondevs.invui.window.Window
  * Black-stained-glass-pane border, 2x2 grid of bending-type buttons in the center.
  */
 internal object BendingSelectGui {
-    /** Maps each [BendingTypeEnum] to its display item material. */
-    private val TYPE_ITEMS =
-        mapOf(
-            BendingTypeEnum.AIR to Material.WHITE_CONCRETE,
-            BendingTypeEnum.EARTH to Material.BROWN_CONCRETE,
-            BendingTypeEnum.FIRE to Material.RED_CONCRETE,
-            BendingTypeEnum.WATER to Material.BLUE_CONCRETE,
-        )
-
     /**
      * Opens the bending selection GUI for the given [player].
      *
@@ -57,7 +48,7 @@ internal object BendingSelectGui {
         return Item
             .builder()
             .setItemProvider(
-                ItemBuilder(TYPE_ITEMS.getValue(type))
+                ItemBuilder(type.material)
                     .setName("<${type.color}>$label</${type.color}>")
                     .addMiniMessageLoreLines(
                         listOf(
