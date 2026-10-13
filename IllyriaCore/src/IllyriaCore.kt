@@ -69,6 +69,7 @@ internal class IllyriaCore : JavaPlugin() {
 
         mechanics =
             listOf(
+                BendingMechanic,
                 NicknameMechanic,
                 LocatorMechanic,
                 OpenableMechanic,
