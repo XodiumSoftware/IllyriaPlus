@@ -43,8 +43,8 @@ internal object BendingDialog : DialogInterface {
                                             SingleOptionDialogInput.OptionEntry.create(
                                                 type.name,
                                                 MM.deserialize(
-                                                    "<sprite:items:${type.material.key.key}> " +
-                                                        "<${type.color}>$label</${type.color}>",
+                                                    "<sprite:item/${type.material.key.key}> " +
+                                                        "<${type.color}>$label</reset>",
                                                 ),
                                                 player.bendingType == type,
                                             )
