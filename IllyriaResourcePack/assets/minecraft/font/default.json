@@ -9,6 +9,10 @@
             "id": "minecraft:include/enchantments"
         },
         {
+            "type": "reference",
+            "id": "minecraft:include/effects"
+        },
+        {
             "type": "space",
             "advances": {
                 "󎀀": -90,
