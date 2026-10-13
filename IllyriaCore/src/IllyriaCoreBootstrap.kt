@@ -4,7 +4,6 @@ import io.papermc.paper.plugin.bootstrap.BootstrapContext
 import io.papermc.paper.plugin.bootstrap.PluginBootstrap
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import io.papermc.paper.registry.RegistryKey
-import io.papermc.paper.registry.TypedKey
 import io.papermc.paper.registry.event.RegistryEvents
 import io.papermc.paper.registry.keys.ItemTypeKeys
 import io.papermc.paper.registry.keys.tags.BannerPatternTagKeys
@@ -15,7 +14,6 @@ import io.papermc.paper.registry.tag.TagKey
 import io.papermc.paper.tag.TagEntry
 import net.kyori.adventure.key.Key
 import org.xodium.illyriacore.banners.MoxvallixBanners
-import org.xodium.illyriacore.dialogs.BendingDialog
 import org.xodium.illyriacore.enchantments.utility.EmbertreadEnchantment
 import org.xodium.illyriacore.enchantments.utility.NimbusEnchantment
 import org.xodium.illyriacore.enchantments.utility.TetherEnchantment
@@ -142,19 +140,6 @@ internal class IllyriaCoreBootstrap : PluginBootstrap {
                 },
             )
             ctx.logger.info("Registered: ${BANNERS.size} banner pattern(s).")
-
-            registerEventHandler(
-                RegistryEvents.DIALOG.compose().newHandler { event ->
-                    event.registry().register(
-                        TypedKey.create(RegistryKey.DIALOG, BendingDialog.DIALOG_KEY),
-                    ) { builder ->
-                        builder
-                            .base(BendingDialog.base)
-                            .type(BendingDialog.type)
-                    }
-                },
-            )
-            ctx.logger.info("Registered bending dialog.")
 
             registerEventHandler(LifecycleEvents.TAGS.postFlatten(RegistryKey.ITEM)) { event ->
                 event.registrar().addToTag(
