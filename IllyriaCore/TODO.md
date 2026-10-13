@@ -1,0 +1,4 @@
+- fix skip dialog if player already has a bending type, not possible due to player pdc not ready before bootstrap completion.
+- add bending leveling
+- add bending type icons
+- add bending type behind players name in tablist, chat, nameplate, etc
