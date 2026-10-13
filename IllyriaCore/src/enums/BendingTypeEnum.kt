@@ -7,8 +7,8 @@ internal enum class BendingTypeEnum(
     val color: String,
     val material: Material,
 ) {
-    AIR("white", Material.WHITE_WOOL),
-    EARTH("brown", Material.BROWN_WOOL),
-    FIRE("red", Material.RED_WOOL),
-    WATER("blue", Material.BLUE_WOOL),
+    AIR("white", Material.WIND_CHARGE),
+    EARTH("brown", Material.MUD),
+    FIRE("red", Material.FIRE_CHARGE),
+    WATER("blue", Material.HEART_OF_THE_SEA),
 }

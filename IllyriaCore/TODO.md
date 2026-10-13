@@ -1,3 +1,3 @@
 - add bending leveling
 - add bending type icons
-- add bending type behind players name in tablist, chat, nameplate, etc
+- add bending type icon behind players name in tablist, chat, nameplate, etc
