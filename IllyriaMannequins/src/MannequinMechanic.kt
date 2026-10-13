@@ -24,16 +24,6 @@ internal object MannequinMechanic : Listener {
         instance.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) { event ->
             event.registrar().register(
                 Commands
-                    .literal("mannequin")
-                    .requires { it.sender is Player && it.sender.isOp }
-                    .executes { ctx ->
-                        spawnMannequin(ctx.source.sender as Player)
-                        Command.SINGLE_SUCCESS
-                    }.build(),
-                "Spawn a Mannequin at your location",
-            )
-            event.registrar().register(
-                Commands
                     .literal("mannequins")
                     .requires { it.sender is Player }
                     .executes { ctx ->
@@ -83,7 +73,7 @@ internal object MannequinMechanic : Listener {
      *
      * @param player The player to spawn the mannequin for.
      */
-    private fun spawnMannequin(player: Player) =
+    fun spawnMannequin(player: Player) =
         player.world.spawn(player.location, Mannequin::class.java) {
             it.owner = player.uniqueId
             it.anchor = it.location

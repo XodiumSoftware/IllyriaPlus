@@ -41,6 +41,7 @@ internal object MannequinListUI {
     private const val TELEPORT_HINT_OP = "<yellow>Shift-right-click to teleport"
     private const val PREVIOUS_TITLE = "<red>Previous Page"
     private const val NEXT_TITLE = "<green>Next Page"
+    private const val SPAWN_TITLE = "<green>Spawn Mannequin"
     private const val EMPTY_TEXT = "<dark_gray>No mannequins"
 
     /**
@@ -68,12 +69,13 @@ internal object MannequinListUI {
                     "# x x x x x x x #",
                     "# x x x x x x x #",
                     "# x x x x x x x #",
-                    "# # # < # > # # #",
+                    "# # # < + > # # #",
                 ) {
                     '#' by ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true)
                     'x' by Markers.CONTENT_LIST_SLOT_HORIZONTAL
                     '<' by pageButton(PREVIOUS_TITLE) { it - 1 }
                     '>' by pageButton(NEXT_TITLE) { it + 1 }
+                    '+' by spawnButton(player)
 
                     val items =
                         mannequins
@@ -243,6 +245,30 @@ internal object MannequinListUI {
     }
 
     /**
+     * Builds the spawn button [Item]. Non-op viewers see plain black glass instead.
+     *
+     * @param player The viewing player (checked for op status on click).
+     * @return The spawn [Item].
+     */
+    private fun spawnButton(player: Player): Item =
+        if (player.isOp) {
+            Item
+                .builder()
+                .setItemProvider(
+                    ItemWrapper(
+                        ItemBuilder(Material.NETHER_STAR)
+                            .setName(MM.deserialize(SPAWN_TITLE))
+                            .build(),
+                    ),
+                ).addClickHandler { _, click ->
+                    click.player.closeInventory()
+                    MannequinMechanic.spawnMannequin(click.player)
+                }.build()
+        } else {
+            Item.simple(ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true))
+        }
+
+    /**
      * Builds a [BoundItem] that turns the bound [PagedGui] to a new page.
      *
      * @param title The MiniMessage title shown on the button.
@@ -256,8 +282,12 @@ internal object MannequinListUI {
         BoundItem
             .pagedBuilder()
             .setItemProvider { _, gui ->
-                ItemBuilder(if (isValidPage(gui, target(gui.page))) Material.ARROW else Material.BARRIER)
-                    .setName(MM.deserialize(title))
+                if (isValidPage(gui, target(gui.page))) {
+                    ItemBuilder(Material.ARROW)
+                        .setName(MM.deserialize(title))
+                } else {
+                    ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideTooltip(true)
+                }
             }.addClickHandler { _, gui, _ ->
                 val next = target(gui.page)
                 if (isValidPage(gui, next)) {
