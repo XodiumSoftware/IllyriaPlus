@@ -28,7 +28,7 @@ internal object BendingDialog : DialogInterface {
                                 DialogBody.plainMessage(
                                     MM.deserialize(
                                         "<yellow>Choose the <red>bending type</red> you wish to master. " +
-                                            "This choice is <red>permanent</red> — choose wisely.",
+                                            "Changing it later will <red>reset your progress</red>.",
                                     ),
                                 ),
                             ),
