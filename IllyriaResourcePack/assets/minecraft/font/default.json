@@ -5,6 +5,10 @@
             "id": "minecraft:include/numerals"
         },
         {
+            "type": "reference",
+            "id": "minecraft:include/enchantments"
+        },
+        {
             "type": "space",
             "advances": {
                 "󎀀": -90,
