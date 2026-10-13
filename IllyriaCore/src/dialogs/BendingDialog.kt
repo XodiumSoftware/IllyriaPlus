@@ -42,7 +42,10 @@ internal object BendingDialog : DialogInterface {
                                             val label = type.name.lowercase().replaceFirstChar(Char::uppercase)
                                             SingleOptionDialogInput.OptionEntry.create(
                                                 type.name,
-                                                MM.deserialize("<${type.color}>$label</${type.color}>"),
+                                                MM.deserialize(
+                                                    "<sprite:items:${type.material.key.key}> " +
+                                                        "<${type.color}>$label</${type.color}>",
+                                                ),
                                                 player.bendingType == type,
                                             )
                                         },
