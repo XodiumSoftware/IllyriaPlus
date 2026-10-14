@@ -1,12 +1,12 @@
-package org.xodium.illyriacore.projectiles
+package org.xodium.illyriabending.projectiles
 
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.FallingBlock
 import org.bukkit.entity.Player
 import org.bukkit.persistence.PersistentDataType
-import org.xodium.illyriacore.IllyriaCore.Companion.instance
-import org.xodium.illyriacore.enums.BendingTypeEnum
+import org.xodium.illyriabending.IllyriaBending.Companion.instance
+import org.xodium.illyriabending.enums.BendingTypeEnum
 import java.util.UUID
 
 /** Earth-bending projectile: lobs a falling-block boulder that grows faster and hits harder per level. */

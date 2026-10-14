@@ -1,13 +1,13 @@
-package org.xodium.illyriacore.advancements
+package org.xodium.illyriabending.advancements
 
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import org.xodium.illyriacore.Utils.toRoman
-import org.xodium.illyriacore.enums.BendingTypeEnum
-import org.xodium.illyriacore.pdcs.PlayerPDC.MAX_BENDING_LEVEL
-import org.xodium.illyriacore.pdcs.PlayerPDC.MIN_BENDING_LEVEL
+import org.xodium.illyriabending.enums.BendingTypeEnum
+import org.xodium.illyriabending.pdcs.PlayerPDC.MAX_BENDING_LEVEL
+import org.xodium.illyriabending.pdcs.PlayerPDC.MIN_BENDING_LEVEL
+import org.xodium.illyriabending.toRoman
 
 /**
  * Owns the `bending` advancement tab and its tree of advancements. The tab is built once

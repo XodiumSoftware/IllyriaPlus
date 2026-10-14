@@ -1,10 +1,10 @@
-package org.xodium.illyriacore.projectiles
+package org.xodium.illyriabending.projectiles
 
 import org.bukkit.entity.Player
 import org.bukkit.entity.WindCharge
 import org.bukkit.util.Vector
-import org.xodium.illyriacore.enums.BendingTypeEnum
-import org.xodium.illyriacore.pdcs.ProjectilePDC.tagDamage
+import org.xodium.illyriabending.enums.BendingTypeEnum
+import org.xodium.illyriabending.pdcs.ProjectilePDC.tagDamage
 
 /** Air-bending projectile: launches [WindCharge] gusts, more at higher levels. */
 internal object AirProjectile : ProjectileInterface {

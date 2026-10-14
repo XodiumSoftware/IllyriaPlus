@@ -1,7 +1,7 @@
-package org.xodium.illyriacore.projectiles
+package org.xodium.illyriabending.projectiles
 
 import org.bukkit.entity.Player
-import org.xodium.illyriacore.enums.BendingTypeEnum
+import org.xodium.illyriabending.enums.BendingTypeEnum
 
 /** Represents a contract for a bending projectile within the system. */
 internal interface ProjectileInterface {

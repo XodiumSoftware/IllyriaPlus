@@ -1,11 +1,11 @@
-package org.xodium.illyriacore.enums
+package org.xodium.illyriabending.enums
 
 import org.bukkit.Material
-import org.xodium.illyriacore.projectiles.AirProjectile
-import org.xodium.illyriacore.projectiles.EarthProjectile
-import org.xodium.illyriacore.projectiles.FireProjectile
-import org.xodium.illyriacore.projectiles.ProjectileInterface
-import org.xodium.illyriacore.projectiles.WaterProjectile
+import org.xodium.illyriabending.projectiles.AirProjectile
+import org.xodium.illyriabending.projectiles.EarthProjectile
+import org.xodium.illyriabending.projectiles.FireProjectile
+import org.xodium.illyriabending.projectiles.ProjectileInterface
+import org.xodium.illyriabending.projectiles.WaterProjectile
 
 /** Default kill thresholds to reach levels 2-5, indexed by `currentLevel - 1`. */
 private val DEFAULT_KILL_THRESHOLDS = intArrayOf(5, 15, 40, 100)

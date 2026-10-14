@@ -1,4 +1,4 @@
-package org.xodium.illyriacore.dialogs
+package org.xodium.illyriabending.dialogs
 
 import io.papermc.paper.dialog.Dialog
 import io.papermc.paper.registry.data.dialog.ActionButton
@@ -11,10 +11,10 @@ import io.papermc.paper.registry.data.dialog.type.DialogType
 import net.kyori.adventure.text.event.ClickCallback
 import net.kyori.adventure.title.Title
 import org.bukkit.entity.Player
-import org.xodium.illyriacore.advancements.BendingAdvancement
-import org.xodium.illyriacore.enums.BendingTypeEnum
-import org.xodium.illyriacore.pdcs.PlayerPDC.bendingType
-import org.xodium.illyriacore.pdcs.PlayerPDC.hasBendingType
+import org.xodium.illyriabending.advancements.BendingAdvancement
+import org.xodium.illyriabending.enums.BendingTypeEnum
+import org.xodium.illyriabending.pdcs.PlayerPDC.bendingType
+import org.xodium.illyriabending.pdcs.PlayerPDC.hasBendingType
 import org.xodium.illyrialib.Utils.MM
 
 /** Dialog for selecting a player's bending type. */

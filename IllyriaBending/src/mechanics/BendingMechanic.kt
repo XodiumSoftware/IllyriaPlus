@@ -1,4 +1,4 @@
-package org.xodium.illyriacore.mechanics.player
+package org.xodium.illyriabending.mechanics
 
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import io.papermc.paper.command.brigadier.Commands
@@ -15,17 +15,17 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.EquipmentSlot
-import org.xodium.illyriacore.advancements.BendingAdvancement
-import org.xodium.illyriacore.dialogs.BendingDialog
-import org.xodium.illyriacore.mechanics.MechanicInterface
-import org.xodium.illyriacore.pdcs.PlayerPDC.MAX_BENDING_LEVEL
-import org.xodium.illyriacore.pdcs.PlayerPDC.MIN_BENDING_LEVEL
-import org.xodium.illyriacore.pdcs.PlayerPDC.bendingKills
-import org.xodium.illyriacore.pdcs.PlayerPDC.bendingLevel
-import org.xodium.illyriacore.pdcs.PlayerPDC.bendingType
-import org.xodium.illyriacore.pdcs.PlayerPDC.hasBendingType
-import org.xodium.illyriacore.pdcs.ProjectilePDC.taggedDamage
-import org.xodium.illyriacore.projectiles.EarthProjectile.shooterUuid
+import org.xodium.illyriabending.MechanicInterface
+import org.xodium.illyriabending.advancements.BendingAdvancement
+import org.xodium.illyriabending.dialogs.BendingDialog
+import org.xodium.illyriabending.pdcs.PlayerPDC.MAX_BENDING_LEVEL
+import org.xodium.illyriabending.pdcs.PlayerPDC.MIN_BENDING_LEVEL
+import org.xodium.illyriabending.pdcs.PlayerPDC.bendingKills
+import org.xodium.illyriabending.pdcs.PlayerPDC.bendingLevel
+import org.xodium.illyriabending.pdcs.PlayerPDC.bendingType
+import org.xodium.illyriabending.pdcs.PlayerPDC.hasBendingType
+import org.xodium.illyriabending.pdcs.ProjectilePDC.taggedDamage
+import org.xodium.illyriabending.projectiles.EarthProjectile.shooterUuid
 import org.xodium.illyrialib.Utils.Command.playerExecuted
 import org.xodium.illyrialib.Utils.Command.requiresPlayer
 import org.xodium.illyrialib.Utils.Command.resolvePlayerArg

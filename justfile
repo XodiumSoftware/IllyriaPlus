@@ -20,5 +20,9 @@ lint:
 format:
     ./gradlew ktlintFormat
 
+# Run IllyriaBending test server
+run-bending *args:
+    ./gradlew :IllyriaBending:runServer {{ args }}
+
 # Build and run IllyriaCore test server
 dev *args: build (run args)

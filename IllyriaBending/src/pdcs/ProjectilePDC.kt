@@ -1,9 +1,9 @@
-package org.xodium.illyriacore.pdcs
+package org.xodium.illyriabending.pdcs
 
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Entity
 import org.bukkit.persistence.PersistentDataType
-import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.xodium.illyriabending.IllyriaBending.Companion.instance
 
 /**
  * Helpers for tagging bending projectiles with their per-level scaled damage, so damage-event

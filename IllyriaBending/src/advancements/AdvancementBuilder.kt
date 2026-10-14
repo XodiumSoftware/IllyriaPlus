@@ -1,4 +1,4 @@
-package org.xodium.illyriacore.advancements
+package org.xodium.illyriabending.advancements
 
 import com.fren_gor.ultimateAdvancementAPI.AdvancementTab
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement
@@ -7,7 +7,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.RootAdvancement
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType
 import org.bukkit.Material
-import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.xodium.illyriabending.IllyriaBending.Companion.instance
 
 /**
  * Fluent builder for an advancement tab, its root, and the whole tree of children.
