@@ -152,10 +152,10 @@ internal object BendingAdvancement {
     }
 
     /** The row (y-position) on the advancement tab for a given element's main chain. */
-    private fun rowOf(type: BendingTypeEnum): Float = (BendingTypeEnum.entries.indexOf(type) + 1).toFloat()
+    private fun rowOf(type: BendingTypeEnum): Float = (BendingTypeEnum.entries.indexOf(type) * 2 + 1).toFloat()
 
-    /** The row (y-position) for a given sub-branch chain. */
-    private fun subRowOf(type: BendingTypeEnum): Float = rowOf(type) + BendingTypeEnum.entries.size
+    /** The row (y-position) for a given element's sub-branch: sits directly below its parent. */
+    private fun subRowOf(type: BendingTypeEnum): Float = rowOf(type) + 1f
 
     /** Applies the common display configuration for an element at a given level. */
     private fun AdvancementBuilder.AdvancementScope.display(

@@ -181,22 +181,19 @@ internal object AdvancementBuilder {
             key: String,
             parentOverride: Advancement? = null,
         ): BaseAdvancement {
-            val self =
-                BaseAdvancement(
-                    key,
-                    AdvancementDisplay(
-                        icon,
-                        title,
-                        frame,
-                        showToast,
-                        announceChat,
-                        x,
-                        y,
-                        description,
-                    ),
-                    parentOverride ?: parent,
-                    maxProgression,
+            val display =
+                AdvancementDisplay(
+                    icon,
+                    title,
+                    frame,
+                    showToast,
+                    announceChat,
+                    x,
+                    y,
+                    description,
                 )
+            val effectiveParent = parentOverride ?: parent
+            val self = BaseAdvancement(key, display, effectiveParent, maxProgression)
             nestedChildren.forEach { (childKey, childScope) ->
                 childScope.build(childKey, self).also { sink.add(it) }
             }
