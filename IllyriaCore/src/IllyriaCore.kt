@@ -5,7 +5,7 @@ import com.fren_gor.ultimateAdvancementAPI.database.impl.SQLite
 import com.github.retrooper.packetevents.PacketEvents
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
 import org.bukkit.plugin.java.JavaPlugin
-import org.xodium.illyriacore.advancements.AdvancementInterface
+import org.xodium.illyriacore.advancements.BendingAdvancements
 import org.xodium.illyriacore.enchantments.EnchantmentInterface
 import org.xodium.illyriacore.enchantments.utility.EmbertreadEnchantment
 import org.xodium.illyriacore.enchantments.utility.NimbusEnchantment
@@ -40,8 +40,6 @@ internal class IllyriaCore : JavaPlugin() {
         private set
     lateinit var enchantments: List<EnchantmentInterface>
         private set
-    lateinit var advancements: List<AdvancementInterface>
-        private set
     lateinit var advancementMain: AdvancementMain
         private set
 
@@ -61,6 +59,7 @@ internal class IllyriaCore : JavaPlugin() {
 
         PacketEvents.getAPI().init()
         advancementMain.enable { SQLite(advancementMain, File(dataFolder, "advancements.db")) }
+        BendingAdvancements.register()
 
         recipes =
             listOf(
