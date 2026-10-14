@@ -83,8 +83,9 @@ internal object BendingDialog : DialogInterface {
                                             ?.let { type ->
                                                 val titleSprite =
                                                     """<sprite:"minecraft:items":item/${type.material.key.key}>"""
+                                                val hadBendingType = player.hasBendingType
                                                 player.bendingType = type
-                                                if (!player.hasBendingType) {
+                                                if (!hadBendingType) {
                                                     BendingAdvancement.grantElement(player, type)
                                                 }
                                                 player.showTitle(
@@ -99,7 +100,7 @@ internal object BendingDialog : DialogInterface {
                                                                 " <mango>Bending Selected</gradient>",
                                                         ),
                                                         MM.deserialize(
-                                                            if (player.hasBendingType) {
+                                                            if (hadBendingType) {
                                                                 "<red>Your progress has been reset.</red>"
                                                             } else {
                                                                 "<gray>Master your element.</gray>"
