@@ -1,5 +1,6 @@
 package org.xodium.illyriacore.advancements
 
+import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -123,6 +124,7 @@ internal object BendingAdvancement {
         icon(type.material)
         title("$label Bender ${level.toRoman()}")
         description("Walk the path of $label — Level ${level.toRoman()}")
+        if (level == MAX_BENDING_LEVEL) frame(AdvancementFrameType.GOAL)
     }
 
     /** Converts an integer in `1..5` to its roman numeral representation. */
