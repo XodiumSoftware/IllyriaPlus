@@ -1,13 +1,20 @@
 package org.xodium.illyriacore.projectiles
 
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.entity.FallingBlock
 import org.bukkit.entity.Player
+import org.bukkit.persistence.PersistentDataType
+import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.enums.BendingTypeEnum
+import java.util.UUID
 
 /** Earth-bending projectile: lobs a falling-block boulder that grows faster and hits harder per level. */
 internal object EarthProjectile : ProjectileInterface {
     override val type = BendingTypeEnum.EARTH
+
+    /** [NamespacedKey] used to tag the boulder with its launcher's UUID for kill attribution. */
+    private val SHOOTER_KEY = NamespacedKey(instance, "earth_boulder_shooter")
 
     /** The material the boulder is made of. */
     private val BOULDER_MATERIAL: Material = Material.MUD
@@ -24,6 +31,26 @@ internal object EarthProjectile : ProjectileInterface {
     /** Maximum damage a boulder can deal to a single entity, indexed by `level - 1`. */
     private val MAX_DAMAGE_BY_LEVEL = intArrayOf(6, 8, 10, 12, 15)
 
+    /**
+     * Tags this boulder with the given player's UUID so damage events can attribute kills
+     * back to the launcher.
+     */
+    private fun FallingBlock.tagShooter(player: Player) {
+        persistentDataContainer.set(
+            SHOOTER_KEY,
+            PersistentDataType.STRING,
+            player.uniqueId.toString(),
+        )
+    }
+
+    /**
+     * Resolves the tagged shooter UUID on this boulder, or `null` if untagged.
+     */
+    fun FallingBlock.shooterUuid(): UUID? =
+        persistentDataContainer
+            .get(SHOOTER_KEY, PersistentDataType.STRING)
+            ?.let { runCatching { UUID.fromString(it) }.getOrNull() }
+
     override fun launch(
         player: Player,
         level: Int,
@@ -38,6 +65,7 @@ internal object EarthProjectile : ProjectileInterface {
             boulder.maxDamage = MAX_DAMAGE_BY_LEVEL[index]
             boulder.dropItem = false
             boulder.cancelDrop = true
+            boulder.tagShooter(player)
         }
     }
 }

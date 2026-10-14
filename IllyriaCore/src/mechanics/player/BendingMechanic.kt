@@ -5,7 +5,13 @@ import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes
 import io.papermc.paper.event.player.PlayerArmSwingEvent
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
+import org.bukkit.Bukkit
+import org.bukkit.entity.FallingBlock
+import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
+import org.bukkit.entity.Projectile
 import org.bukkit.event.EventHandler
+import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.EquipmentSlot
@@ -14,9 +20,12 @@ import org.xodium.illyriacore.dialogs.BendingDialog
 import org.xodium.illyriacore.mechanics.MechanicInterface
 import org.xodium.illyriacore.pdcs.PlayerPDC.MAX_BENDING_LEVEL
 import org.xodium.illyriacore.pdcs.PlayerPDC.MIN_BENDING_LEVEL
+import org.xodium.illyriacore.pdcs.PlayerPDC.bendingKills
 import org.xodium.illyriacore.pdcs.PlayerPDC.bendingLevel
 import org.xodium.illyriacore.pdcs.PlayerPDC.bendingType
 import org.xodium.illyriacore.pdcs.PlayerPDC.hasBendingType
+import org.xodium.illyriacore.pdcs.ProjectilePDC.taggedDamage
+import org.xodium.illyriacore.projectiles.EarthProjectile.shooterUuid
 import org.xodium.illyrialib.Utils.Command.playerExecuted
 import org.xodium.illyrialib.Utils.Command.requiresPlayer
 import org.xodium.illyrialib.Utils.Command.resolvePlayerArg
@@ -131,5 +140,27 @@ internal object BendingMechanic : MechanicInterface {
         if (last != null && now - last < type.cooldownTicks * TICK_MS) return
         lastCastMs[player.uniqueId] = now
         type.projectile.launch(player, player.bendingLevel)
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    fun on(event: EntityDamageByEntityEvent) {
+        val victim = event.entity as? LivingEntity ?: return
+        val damager = event.damager
+        val shooter =
+            when (damager) {
+                is FallingBlock -> damager.shooterUuid()?.let(Bukkit::getPlayer)
+                is Projectile -> damager.shooter as? Player
+                else -> null
+            } ?: return
+        val type = shooter.bendingType ?: return
+        damager.taggedDamage()?.let { event.damage = it.toDouble() }
+        if (victim.health - event.finalDamage > 0) return
+        shooter.bendingKills += 1
+        val currentLevel = shooter.bendingLevel
+        if (currentLevel >= MAX_BENDING_LEVEL) return
+        val threshold = type.killThresholds.getOrNull(currentLevel - 1) ?: return
+        if (shooter.bendingKills < threshold) return
+        shooter.bendingLevel = currentLevel + 1
+        BendingAdvancement.grantLevels(shooter, type, currentLevel + 1)
     }
 }

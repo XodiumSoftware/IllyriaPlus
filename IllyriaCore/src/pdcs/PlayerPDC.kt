@@ -18,6 +18,9 @@ internal object PlayerPDC {
     /** The [NamespacedKey] used for storing bending level data. */
     private val BENDING_LEVEL_KEY = NamespacedKey(instance, "bending_level")
 
+    /** The [NamespacedKey] used for storing bending kill-count data. */
+    private val BENDING_KILLS_KEY = NamespacedKey(instance, "bending_kills")
+
     /** The default bending level when none is stored. */
     private const val DEFAULT_BENDING_LEVEL = 1
 
@@ -86,5 +89,17 @@ internal object PlayerPDC {
                 PersistentDataType.INTEGER,
                 value.coerceIn(MIN_BENDING_LEVEL, MAX_BENDING_LEVEL),
             )
+        }
+
+    /**
+     * Gets or sets a [Player]'s total projectile kill count for their current bending type
+     * in their persistent data container. Used to gate bending level progression.
+     *
+     * @return The number of kills, or `0` if none is set.
+     */
+    var Player.bendingKills: Int
+        get() = persistentDataContainer.getOrDefault(BENDING_KILLS_KEY, PersistentDataType.INTEGER, 0)
+        set(value) {
+            persistentDataContainer.set(BENDING_KILLS_KEY, PersistentDataType.INTEGER, value.coerceAtLeast(0))
         }
 }
