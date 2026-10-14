@@ -47,4 +47,11 @@ internal object PlayerPDC {
                 persistentDataContainer.set(BENDING_TYPE_KEY, PersistentDataType.STRING, value.name)
             }
         }
+
+    /**
+     * Whether the [Player] has a bending type set in their persistent data container.
+     *
+     * @return `true` if the [Player] has chosen a [BendingTypeEnum], `false` otherwise.
+     */
+    val Player.hasBendingType: Boolean get() = bendingType != null
 }

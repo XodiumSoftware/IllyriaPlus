@@ -11,8 +11,10 @@ import io.papermc.paper.registry.data.dialog.type.DialogType
 import net.kyori.adventure.text.event.ClickCallback
 import net.kyori.adventure.title.Title
 import org.bukkit.entity.Player
+import org.xodium.illyriacore.advancements.BendingAdvancement
 import org.xodium.illyriacore.enums.BendingTypeEnum
 import org.xodium.illyriacore.pdcs.PlayerPDC.bendingType
+import org.xodium.illyriacore.pdcs.PlayerPDC.hasBendingType
 import org.xodium.illyrialib.Utils.MM
 
 /** Dialog for selecting a player's bending type. */
@@ -79,10 +81,12 @@ internal object BendingDialog : DialogInterface {
                                             ?.let(BendingTypeEnum::valueOf)
                                             ?.takeIf { type -> type != player.bendingType }
                                             ?.let { type ->
-                                                val hadBending = player.bendingType != null
                                                 val titleSprite =
                                                     """<sprite:"minecraft:items":item/${type.material.key.key}>"""
                                                 player.bendingType = type
+                                                if (!player.hasBendingType) {
+                                                    BendingAdvancement.grantElement(player, type)
+                                                }
                                                 player.showTitle(
                                                     Title.title(
                                                         MM.deserialize(
@@ -95,7 +99,7 @@ internal object BendingDialog : DialogInterface {
                                                                 " <mango>Bending Selected</gradient>",
                                                         ),
                                                         MM.deserialize(
-                                                            if (hadBending) {
+                                                            if (player.hasBendingType) {
                                                                 "<red>Your progress has been reset.</red>"
                                                             } else {
                                                                 "<gray>Master your element.</gray>"
