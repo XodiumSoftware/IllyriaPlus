@@ -15,7 +15,7 @@ internal enum class BendingTypeEnum(
     private val launchFn: (Player) -> Unit,
 ) {
     AIR("white", Material.WIND_CHARGE, 20L, { it.launchProjectile(WindCharge::class.java) }),
-    EARTH("brown", Material.RESIN_CLUMP, 60L, ::launchEarthBoulder),
+    EARTH("brown", Material.RESIN_CLUMP, 60L, { launchEarthBoulder(it) }),
     FIRE("red", Material.FIRE_CHARGE, 20L, { it.launchProjectile(SmallFireball::class.java) }),
     WATER("blue", Material.HEART_OF_THE_SEA, 30L, { it.launchProjectile(Snowball::class.java) }),
     ;

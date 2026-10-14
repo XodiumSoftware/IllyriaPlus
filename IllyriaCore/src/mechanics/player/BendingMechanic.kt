@@ -26,8 +26,11 @@ internal object BendingMechanic : MechanicInterface {
     private const val RESET_SENDER_MSG = "<green>Reset bending type for <gold><target></gold>."
     private const val RESET_TARGET_MSG = "<green>Your bending type has been reset."
 
-    /** Last successful cast time per player, in server ticks. */
-    private val lastCastTick = mutableMapOf<UUID, Long>()
+    /** Wall-clock milliseconds per Minecraft tick. */
+    private const val TICK_MS = 50L
+
+    /** Last successful cast time per player, in epoch milliseconds. */
+    private val lastCastMs = mutableMapOf<UUID, Long>()
 
     override val cmds =
         listOf(
@@ -74,19 +77,20 @@ internal object BendingMechanic : MechanicInterface {
 
     @EventHandler
     fun on(event: PlayerQuitEvent) {
-        lastCastTick.remove(event.player.uniqueId)
+        lastCastMs.remove(event.player.uniqueId)
     }
 
     @EventHandler
     fun on(event: PlayerArmSwingEvent) {
         if (event.hand != EquipmentSlot.HAND) return
         val player = event.player
+        if (!player.inventory.itemInMainHand.isEmpty) return
         val type = player.bendingType ?: return
         if (player.inventory.itemInOffHand.type != type.material) return
-        val now = player.world.fullTime
-        val last = lastCastTick[player.uniqueId]
-        if (last != null && now - last < type.cooldownTicks) return
-        lastCastTick[player.uniqueId] = now
+        val now = System.currentTimeMillis()
+        val last = lastCastMs[player.uniqueId]
+        if (last != null && now - last < type.cooldownTicks * TICK_MS) return
+        lastCastMs[player.uniqueId] = now
         type.launch(player)
     }
 }
