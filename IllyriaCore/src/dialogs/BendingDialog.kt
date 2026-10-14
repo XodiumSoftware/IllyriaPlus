@@ -44,8 +44,8 @@ internal object BendingDialog : DialogInterface {
                                             SingleOptionDialogInput.OptionEntry.create(
                                                 type.name,
                                                 MM.deserialize(
-                                                    "<sprite:item/${type.material.key.key}> " +
-                                                        "<${type.color}>$label</reset>",
+                                                    """<sprite:"minecraft:items":item/${type.material.key.key}>""" +
+                                                        " <${type.color}>$label</reset>",
                                                 ),
                                                 player.bendingType == type,
                                             )
@@ -80,19 +80,23 @@ internal object BendingDialog : DialogInterface {
                                             ?.takeIf { type -> type != player.bendingType }
                                             ?.let { type ->
                                                 val hadBending = player.bendingType != null
+                                                val titleSprite =
+                                                    """<sprite:"minecraft:items":item/${type.material.key.key}>"""
                                                 player.bendingType = type
                                                 player.showTitle(
                                                     Title.title(
                                                         MM.deserialize(
-                                                            "<${type.color}>" +
-                                                                type.name
+                                                            titleSprite +
+                                                                " <${type.color}>" +
+                                                                type
+                                                                    .name
                                                                     .lowercase()
                                                                     .replaceFirstChar(Char::uppercase) +
-                                                                " Bending Selected",
+                                                                " <mango>Bending Selected</gradient>",
                                                         ),
                                                         MM.deserialize(
                                                             if (hadBending) {
-                                                                "<gray>Your progress has been reset.</gray>"
+                                                                "<red>Your progress has been reset.</red>"
                                                             } else {
                                                                 "<gray>Master your element.</gray>"
                                                             },
