@@ -15,6 +15,18 @@ internal object PlayerPDC {
     /** The [NamespacedKey] used for storing bending type data. */
     private val BENDING_TYPE_KEY = NamespacedKey(instance, "bending_type")
 
+    /** The [NamespacedKey] used for storing bending level data. */
+    private val BENDING_LEVEL_KEY = NamespacedKey(instance, "bending_level")
+
+    /** The default bending level when none is stored. */
+    private const val DEFAULT_BENDING_LEVEL = 1
+
+    /** The minimum allowed bending level. */
+    const val MIN_BENDING_LEVEL = 1
+
+    /** The maximum allowed bending level. */
+    const val MAX_BENDING_LEVEL = 5
+
     /**
      * Gets or sets a [Player]'s nickname in their persistent data container.
      *
@@ -54,4 +66,25 @@ internal object PlayerPDC {
      * @return `true` if the [Player] has chosen a [BendingTypeEnum], `false` otherwise.
      */
     val Player.hasBendingType: Boolean get() = bendingType != null
+
+    /**
+     * Gets or sets a [Player]'s bending level in their persistent data container. Values are
+     * clamped to `[MIN_BENDING_LEVEL, MAX_BENDING_LEVEL]` on write.
+     *
+     * @return The [Player]'s bending level, or [DEFAULT_BENDING_LEVEL] if none is set.
+     */
+    var Player.bendingLevel: Int
+        get() =
+            persistentDataContainer.getOrDefault(
+                BENDING_LEVEL_KEY,
+                PersistentDataType.INTEGER,
+                DEFAULT_BENDING_LEVEL,
+            )
+        set(value) {
+            persistentDataContainer.set(
+                BENDING_LEVEL_KEY,
+                PersistentDataType.INTEGER,
+                value.coerceIn(MIN_BENDING_LEVEL, MAX_BENDING_LEVEL),
+            )
+        }
 }

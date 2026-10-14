@@ -5,6 +5,7 @@ package org.xodium.illyrialib
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import io.papermc.paper.command.brigadier.CommandSourceStack
+import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver
 import io.papermc.paper.registry.TypedKey
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
@@ -134,6 +135,22 @@ object Utils {
             }
             return this
         }
+
+        /**
+         * Resolves a `player` argument from this context to a single online [Player], sending
+         * an error action bar to [sender] if the target is not online or resolves to multiple
+         * players.
+         *
+         * @param sender The player executing the command.
+         * @return The resolved [Player], or `null` if resolution failed.
+         */
+        fun CommandContext<CommandSourceStack>.resolvePlayerArg(sender: Player): Player? =
+            getArgument("target", PlayerSelectorArgumentResolver::class.java)
+                .resolve(source)
+                .singleOrNull()
+                ?: sender
+                    .sendActionBar(MM.deserialize("<red>That player is not online!"))
+                    .let { null }
     }
 
     /** Enchantment-related utilities. */
