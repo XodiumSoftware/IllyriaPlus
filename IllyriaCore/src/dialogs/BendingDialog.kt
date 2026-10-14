@@ -85,9 +85,8 @@ internal object BendingDialog : DialogInterface {
                                                     """<sprite:"minecraft:items":item/${type.material.key.key}>"""
                                                 val hadBendingType = player.hasBendingType
                                                 player.bendingType = type
-                                                if (!hadBendingType) {
-                                                    BendingAdvancement.grantElement(player, type)
-                                                }
+                                                BendingAdvancement.revokeElements(player)
+                                                BendingAdvancement.grantElement(player, type)
                                                 player.showTitle(
                                                     Title.title(
                                                         MM.deserialize(

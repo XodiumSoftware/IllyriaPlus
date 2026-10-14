@@ -68,4 +68,15 @@ internal object BendingAdvancement {
     ) {
         elementAdvancements[type]?.grant(player)
     }
+
+    /**
+     * Revokes all element advancements from the player. Used when the player's bending type
+     * is reset so they can re-earn the advancement on their next pick. No-ops if no
+     * advancements have been registered yet.
+     *
+     * @param player The player to revoke the advancements from.
+     */
+    fun revokeElements(player: Player) {
+        elementAdvancements.values.forEach { it.revoke(player) }
+    }
 }

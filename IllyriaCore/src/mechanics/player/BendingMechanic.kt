@@ -45,6 +45,7 @@ internal object BendingMechanic : MechanicInterface {
                                                     MM.deserialize(PLAYER_IS_NOT_ONLINE_MSG),
                                                 )
                                         target.bendingType = null
+                                        BendingAdvancement.revokeElements(target)
                                         player.sendActionBar(
                                             MM.deserialize(
                                                 RESET_SENDER_MSG,
