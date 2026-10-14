@@ -1,8 +1,11 @@
 package org.xodium.illyriacore
 
+import com.fren_gor.ultimateAdvancementAPI.AdvancementMain
+import com.fren_gor.ultimateAdvancementAPI.database.impl.SQLite
 import com.github.retrooper.packetevents.PacketEvents
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
 import org.bukkit.plugin.java.JavaPlugin
+import org.xodium.illyriacore.advancements.AdvancementInterface
 import org.xodium.illyriacore.enchantments.EnchantmentInterface
 import org.xodium.illyriacore.enchantments.utility.EmbertreadEnchantment
 import org.xodium.illyriacore.enchantments.utility.NimbusEnchantment
@@ -19,6 +22,7 @@ import org.xodium.illyriacore.mechanics.world.*
 import org.xodium.illyriacore.recipes.*
 import org.xodium.illyrialib.UpdateChecker
 import org.xodium.illyrialib.Utils.validateVersion
+import java.io.File
 
 /** Main class of the plugin. */
 internal class IllyriaCore : JavaPlugin() {
@@ -36,11 +40,18 @@ internal class IllyriaCore : JavaPlugin() {
         private set
     lateinit var enchantments: List<EnchantmentInterface>
         private set
+    lateinit var advancements: List<AdvancementInterface>
+        private set
+    lateinit var advancementMain: AdvancementMain
+        private set
 
     override fun onLoad() {
         PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this))
         PacketEvents.getAPI().settings.reEncodeByDefault(false)
         PacketEvents.getAPI().load()
+
+        advancementMain = AdvancementMain(this)
+        advancementMain.load()
     }
 
     override fun onEnable() {
@@ -49,6 +60,7 @@ internal class IllyriaCore : JavaPlugin() {
         instance = this
 
         PacketEvents.getAPI().init()
+        advancementMain.enable { SQLite(advancementMain, File(dataFolder, "advancements.db")) }
 
         recipes =
             listOf(
@@ -120,6 +132,10 @@ internal class IllyriaCore : JavaPlugin() {
     }
 
     override fun onDisable() {
+        if (::advancementMain.isInitialized) {
+            runCatching { advancementMain.disable() }
+                .onFailure { logger.warning("Failed to disable UltimateAdvancementAPI: ${it.message}") }
+        }
         if (::mechanics.isInitialized) {
             mechanics.forEach { mechanic ->
                 runCatching { mechanic.onDisable() }

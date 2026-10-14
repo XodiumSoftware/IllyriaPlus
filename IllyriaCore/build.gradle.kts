@@ -28,6 +28,7 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-releases/")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
+    maven("https://nexus.frengor.com/repository/public/")
 }
 
 dependencies {
@@ -37,6 +38,7 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     implementation("com.github.retrooper:packetevents-spigot:2.14.0")
+    implementation("com.frengor:ultimateadvancementapi-shadeable:2.8.2")
 }
 
 java {
@@ -71,8 +73,11 @@ tasks {
 
         relocate("com.github.retrooper", "${project.group}.libs.packetevents")
         relocate("io.github.retrooper", "${project.group}.libs.packetevents")
+        relocate("com.fren_gor.ultimateAdvancementAPI", "${project.group}.libs.ultimateadvancementapi")
         relocate("org.xodium.illyrialib", "${project.group}.libs.illyrialib")
-        minimize()
+        minimize {
+            exclude(dependency("com.frengor:ultimateadvancementapi-shadeable:.*"))
+        }
     }
     jar { enabled = false }
     runServer {
