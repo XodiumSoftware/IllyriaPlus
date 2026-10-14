@@ -20,6 +20,22 @@ import org.xodium.illyriacore.IllyriaCore.Companion.instance
 
 /** General utilities. */
 internal object Utils {
+    /**
+     * Converts an integer to its Roman numeral representation. Supports values in `1..5`;
+     * anything outside that range falls back to the number's decimal string.
+     *
+     * @return The Roman numeral (I, II, III, IV, V) or the decimal string.
+     */
+    fun Int.toRoman(): String =
+        when (this) {
+            1 -> "I"
+            2 -> "II"
+            3 -> "III"
+            4 -> "IV"
+            5 -> "V"
+            else -> toString()
+        }
+
     /** Item-related utilities. */
     object Item {
         /**
