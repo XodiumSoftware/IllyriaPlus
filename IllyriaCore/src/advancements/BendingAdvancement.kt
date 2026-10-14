@@ -12,10 +12,7 @@ import org.xodium.illyriacore.enums.BendingTypeEnum
 internal object BendingAdvancement {
     private const val ADVANCEMENT_KEY_PREFIX = "_1"
 
-    /** Advancement granted the first time a player commits to a bending type. */
-    private var choosePath: BaseAdvancement? = null
-
-    /** Per-element advancement granted alongside [choosePath] matching the player's pick. */
+    /** Per-element advancement granted when the player commits to a bending type. */
     private val elementAdvancements = mutableMapOf<BendingTypeEnum, BaseAdvancement>()
 
     /** The registered tab handle, available after [register] has been called. */
@@ -31,19 +28,11 @@ internal object BendingAdvancement {
         tab =
             AdvancementBuilder
                 .tab("bending")
-                .icon(Material.WIND_CHARGE)
+                .icon(Material.NETHER_STAR)
                 .title("Bending")
-                .description("Master the elements")
+                .description("Choose Your Path [/bending]")
                 .background("textures/block/blue_ice.png")
                 .root {
-                    choosePath =
-                        advancement("choose_path") {
-                            icon(Material.NETHER_STAR)
-                            title("Choose Your Path")
-                            description("Commit to a bending type (/bending)")
-                            at(1f, 0f)
-                        }
-
                     BendingTypeEnum.entries.forEachIndexed { index, type ->
                         val label = type.name.lowercase().replaceFirstChar(Char::uppercase)
                         elementAdvancements[type] =
@@ -58,13 +47,12 @@ internal object BendingAdvancement {
     }
 
     /**
-     * Grants the "Choose Your Path" advancement to the given player. No-ops if the
-     * advancement hasn't been registered yet.
+     * Grants the tab's root advancement. No-ops if the tab hasn't been registered yet.
      *
      * @param player The player to grant the advancement to.
      */
-    fun grantChoosePath(player: Player) {
-        choosePath?.grant(player)
+    fun grantRoot(player: Player) {
+        tab?.rootAdvancement?.grant(player)
     }
 
     /**

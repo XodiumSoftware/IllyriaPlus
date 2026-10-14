@@ -24,6 +24,6 @@ internal object BendingMechanic : MechanicInterface {
 
     @EventHandler
     fun on(event: PlayerJoinEvent) {
-        if (!event.player.hasBendingType) BendingAdvancement.grantChoosePath(event.player)
+        if (!event.player.hasBendingType) BendingAdvancement.grantRoot(event.player)
     }
 }
