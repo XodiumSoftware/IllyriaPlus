@@ -9,6 +9,7 @@ import io.papermc.paper.registry.data.dialog.input.DialogInput
 import io.papermc.paper.registry.data.dialog.input.SingleOptionDialogInput
 import io.papermc.paper.registry.data.dialog.type.DialogType
 import net.kyori.adventure.text.event.ClickCallback
+import net.kyori.adventure.title.Title
 import org.bukkit.entity.Player
 import org.xodium.illyriacore.enums.BendingTypeEnum
 import org.xodium.illyriacore.pdcs.PlayerPDC.bendingType
@@ -77,7 +78,28 @@ internal object BendingDialog : DialogInterface {
                                             .getText("bending_type")
                                             ?.let(BendingTypeEnum::valueOf)
                                             ?.takeIf { type -> type != player.bendingType }
-                                            ?.let { type -> player.bendingType = type }
+                                            ?.let { type ->
+                                                val hadBending = player.bendingType != null
+                                                player.bendingType = type
+                                                player.showTitle(
+                                                    Title.title(
+                                                        MM.deserialize(
+                                                            "<${type.color}>" +
+                                                                type.name
+                                                                    .lowercase()
+                                                                    .replaceFirstChar(Char::uppercase) +
+                                                                " Bending Selected",
+                                                        ),
+                                                        MM.deserialize(
+                                                            if (hadBending) {
+                                                                "<gray>Your progress has been reset.</gray>"
+                                                            } else {
+                                                                "<gray>Master your element.</gray>"
+                                                            },
+                                                        ),
+                                                    ),
+                                                )
+                                            }
                                     },
                                     ClickCallback
                                         .Options
