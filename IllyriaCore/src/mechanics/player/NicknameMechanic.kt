@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.event.player.PlayerToggleSneakEvent
 import org.xodium.illyriacore.dialogs.NicknameDialog
 import org.xodium.illyriacore.dialogs.NicknameDialog.nickname
 import org.xodium.illyriacore.mechanics.MechanicInterface
@@ -40,6 +41,13 @@ internal object NicknameMechanic : MechanicInterface {
         event.player.passengers
             .filterIsInstance<TextDisplay>()
             .forEach { it.remove() }
+    }
+
+    @EventHandler
+    fun on(event: PlayerToggleSneakEvent) {
+        event.player.passengers
+            .filterIsInstance<TextDisplay>()
+            .forEach { it.isVisibleByDefault = !event.isSneaking }
     }
 
     /**
