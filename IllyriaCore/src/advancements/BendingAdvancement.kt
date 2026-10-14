@@ -3,6 +3,7 @@ package org.xodium.illyriacore.advancements
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement
 import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import org.xodium.illyriacore.enums.BendingTypeEnum
 
 /**
@@ -56,8 +57,9 @@ internal object BendingAdvancement {
     }
 
     /**
-     * Grants the element-specific advancement for the given type. No-ops if the advancement
-     * hasn't been registered yet.
+     * Grants the element-specific advancement for the given type and adds one of that element's
+     * focus material to the player's inventory. No-ops if the advancement hasn't been
+     * registered yet.
      *
      * @param player The player to grant the advancement to.
      * @param type The [BendingTypeEnum] the player committed to.
@@ -67,6 +69,7 @@ internal object BendingAdvancement {
         type: BendingTypeEnum,
     ) {
         elementAdvancements[type]?.grant(player)
+        player.inventory.addItem(ItemStack.of(type.material))
     }
 
     /**
