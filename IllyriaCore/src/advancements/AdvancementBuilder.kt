@@ -89,7 +89,7 @@ internal object AdvancementBuilder {
                     ),
                     background,
                 )
-            val scope = RootScope(tab, rootAdvancement)
+            val scope = RootScope(rootAdvancement)
             scope.block()
             return RegisteredTab(tab, rootAdvancement, scope.children.toSet())
         }
@@ -97,7 +97,6 @@ internal object AdvancementBuilder {
 
     /** Scope inside [TabBuilder.root] where top-level advancements are declared. */
     class RootScope internal constructor(
-        private val tab: AdvancementTab,
         private val rootAdvancement: RootAdvancement,
     ) {
         internal val children: MutableList<BaseAdvancement> = mutableListOf()
@@ -107,16 +106,16 @@ internal object AdvancementBuilder {
             key: String,
             block: AdvancementScope.() -> Unit,
         ): BaseAdvancement {
-            val scope = AdvancementScope(tab, rootAdvancement)
+            val scope = AdvancementScope(rootAdvancement, children)
             scope.block()
-            return scope.build(rootAdvancement, key).also { children.add(it) }
+            return scope.build(key).also { children.add(it) }
         }
     }
 
     /** Scope inside an `advancement {}` block. Configure the advancement's display here. */
     class AdvancementScope internal constructor(
-        private val tab: AdvancementTab,
         private val parent: Advancement,
+        private val sink: MutableList<BaseAdvancement>,
     ) {
         private var icon: Material = Material.BOOK
         private var title: String = "Advancement"
@@ -127,7 +126,7 @@ internal object AdvancementBuilder {
         private var maxProgression: Int = 1
         private var x: Float = 0f
         private var y: Float = 0f
-        private val nestedChildren = mutableListOf<BaseAdvancement>()
+        private val nestedChildren = mutableListOf<Pair<String, AdvancementScope>>()
 
         /** Sets the icon shown for this advancement. */
         fun icon(material: Material) = apply { icon = material }
@@ -162,26 +161,47 @@ internal object AdvancementBuilder {
             this.y = y
         }
 
-        /** Builds the [BaseAdvancement]. Nested children are built recursively via [nested]. */
-        internal fun build(
-            defaultParent: Advancement,
+        /**
+         * Declares a nested child advancement parented to this one and returns the child's
+         * scope for further nesting. The child is constructed lazily when the parent's
+         * [build] runs.
+         */
+        fun nested(
             key: String,
-        ): BaseAdvancement =
-            BaseAdvancement(
-                key,
-                AdvancementDisplay(
-                    icon,
-                    title,
-                    frame,
-                    showToast,
-                    announceChat,
-                    x,
-                    y,
-                    description,
-                ),
-                parent.takeIf { it !== defaultParent } ?: parent,
-                maxProgression,
-            )
+            block: AdvancementScope.() -> Unit,
+        ): AdvancementScope {
+            val child = AdvancementScope(parent, sink)
+            child.block()
+            nestedChildren += key to child
+            return child
+        }
+
+        /** Builds this [BaseAdvancement], then recursively builds all nested children. */
+        internal fun build(
+            key: String,
+            parentOverride: Advancement? = null,
+        ): BaseAdvancement {
+            val self =
+                BaseAdvancement(
+                    key,
+                    AdvancementDisplay(
+                        icon,
+                        title,
+                        frame,
+                        showToast,
+                        announceChat,
+                        x,
+                        y,
+                        description,
+                    ),
+                    parentOverride ?: parent,
+                    maxProgression,
+                )
+            nestedChildren.forEach { (childKey, childScope) ->
+                childScope.build(childKey, self).also { sink.add(it) }
+            }
+            return self
+        }
     }
 
     /** Result of [TabBuilder.root]; call [register] to commit to the server. */

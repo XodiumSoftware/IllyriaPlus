@@ -1,6 +1,5 @@
 package org.xodium.illyriacore.advancements
 
-import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -10,13 +9,10 @@ import org.xodium.illyriacore.pdcs.PlayerPDC.MIN_BENDING_LEVEL
 
 /**
  * Owns the `bending` advancement tab and its tree of advancements. The tab is built once
- * via [AdvancementBuilder] and committed during plugin enable.
+ * via [AdvancementBuilder] and committed during plugin enable. Each element is a chained
+ * row: `{element}_1` under the tab root, levels `2..5` nested under their previous level.
  */
 internal object BendingAdvancement {
-    /** Per-element, per-level advancement storage: `elementAdvancements[type][level - 1]`. */
-    private val elementAdvancements =
-        mutableMapOf<BendingTypeEnum, MutableList<BaseAdvancement>>()
-
     /** The registered tab handle, available after [register] has been called. */
     var tab: AdvancementBuilder.RegisteredTab? = null
         private set
@@ -35,17 +31,19 @@ internal object BendingAdvancement {
                 .description("Choose Your Path [/bending]")
                 .background("textures/block/blue_ice.png")
                 .root {
-                    BendingTypeEnum.entries.forEachIndexed { column, type ->
-                        val label = type.name.lowercase().replaceFirstChar(Char::uppercase)
-                        val levels = elementAdvancements.getOrPut(type) { mutableListOf() }
-                        (MIN_BENDING_LEVEL..MAX_BENDING_LEVEL).forEach { level ->
-                            levels +=
-                                advancement("${type.name.lowercase()}_$level") {
-                                    icon(type.material)
-                                    title("$label Bender ${level.toRoman()}")
-                                    description("Walk the path of $label — Level ${level.toRoman()}")
-                                    at(level.toFloat(), column + 1f)
-                                }
+                    BendingTypeEnum.entries.forEachIndexed { row, type ->
+                        val y = row + 1f
+                        advancement(key(type, MIN_BENDING_LEVEL)) {
+                            display(type, MIN_BENDING_LEVEL)
+                            at(MIN_BENDING_LEVEL.toFloat(), y)
+                            var scope = this
+                            (MIN_BENDING_LEVEL + 1..MAX_BENDING_LEVEL).forEach { level ->
+                                scope =
+                                    scope.nested(key(type, level)) {
+                                        display(type, level)
+                                        at(level.toFloat(), y)
+                                    }
+                            }
                         }
                     }
                 }.register()
@@ -88,21 +86,43 @@ internal object BendingAdvancement {
         type: BendingTypeEnum,
         level: Int,
     ) {
-        val levels = elementAdvancements[type] ?: return
+        val registered = tab ?: return
         (MIN_BENDING_LEVEL..level.coerceIn(MIN_BENDING_LEVEL, MAX_BENDING_LEVEL)).forEach {
-            levels.getOrNull(it - 1)?.grant(player)
+            registered[key(type, it)]?.grant(player)
         }
     }
 
     /**
      * Revokes all element advancements from the player. Used when the player's bending type
-     * is reset so they can re-earn the advancement on their next pick. No-ops if no
-     * advancements have been registered yet.
+     * is reset so they can re-earn the advancement on their next pick. No-ops if the tab
+     * hasn't been registered yet.
      *
      * @param player The player to revoke the advancements from.
      */
     fun revokeElements(player: Player) {
-        elementAdvancements.values.forEach { levels -> levels.forEach { it.revoke(player) } }
+        val registered = tab ?: return
+        BendingTypeEnum.entries.forEach { type ->
+            (MIN_BENDING_LEVEL..MAX_BENDING_LEVEL).forEach { level ->
+                registered[key(type, level)]?.revoke(player)
+            }
+        }
+    }
+
+    /** The registry key for an element at a given level, e.g. `fire_3`. */
+    private fun key(
+        type: BendingTypeEnum,
+        level: Int,
+    ): String = "${type.name.lowercase()}_$level"
+
+    /** Applies the common display configuration for an element at a given level. */
+    private fun AdvancementBuilder.AdvancementScope.display(
+        type: BendingTypeEnum,
+        level: Int,
+    ) {
+        val label = type.name.lowercase().replaceFirstChar(Char::uppercase)
+        icon(type.material)
+        title("$label Bender ${level.toRoman()}")
+        description("Walk the path of $label — Level ${level.toRoman()}")
     }
 
     /** Converts an integer in `1..5` to its roman numeral representation. */
