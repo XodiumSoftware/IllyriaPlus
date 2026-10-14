@@ -12,6 +12,7 @@ import net.kyori.adventure.text.event.ClickCallback
 import net.kyori.adventure.title.Title
 import org.bukkit.entity.Player
 import org.xodium.illyriacore.enums.BendingTypeEnum
+import org.xodium.illyriacore.mechanics.player.BendingMechanic.assignBendingTeam
 import org.xodium.illyriacore.pdcs.PlayerPDC.bendingType
 import org.xodium.illyrialib.Utils.MM
 
@@ -83,6 +84,7 @@ internal object BendingDialog : DialogInterface {
                                                 val titleSprite =
                                                     """<sprite:"minecraft:items":item/${type.material.key.key}>"""
                                                 player.bendingType = type
+                                                player.assignBendingTeam()
                                                 player.showTitle(
                                                     Title.title(
                                                         MM.deserialize(
