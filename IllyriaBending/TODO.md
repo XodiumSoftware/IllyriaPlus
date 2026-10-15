@@ -5,7 +5,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 ## Air
 
 ### Active
-- [ ] AirBlade
+- [x] AirBlade
 - [ ] AirBlast
 - [ ] AirBreath
 - [ ] AirBurst
