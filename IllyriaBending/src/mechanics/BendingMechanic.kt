@@ -11,7 +11,6 @@ import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.xodium.illyriabending.advancements.BendingAdvancement
 import org.xodium.illyriabending.dialogs.BendingDialog
-import org.xodium.illyriabending.mechanics.MechanicInterface
 import org.xodium.illyriabending.pdcs.PlayerPDC.MAX_BENDING_LEVEL
 import org.xodium.illyriabending.pdcs.PlayerPDC.MIN_BENDING_LEVEL
 import org.xodium.illyriabending.pdcs.PlayerPDC.bendingLevel
