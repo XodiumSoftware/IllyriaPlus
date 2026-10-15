@@ -7,7 +7,7 @@ import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 
 /**
  * EarthArmor: wrap the caster in a second skin of stone and dust.
@@ -21,7 +21,7 @@ import org.xodium.illyriabending.abilities.ActivationType
  */
 internal object EarthArmor : AbilityInterface {
     override val cooldownMs: Long = 20000
-    override val activationType = ActivationType.INSTANT
+    override val activationType = ActivationTypeEnum.INSTANT
 
     /** Base effect duration in ticks (before level scaling). */
     private const val DURATION_TICKS = 140

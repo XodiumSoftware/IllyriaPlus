@@ -8,7 +8,7 @@ import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
 import org.xodium.illyriabending.abilities.AbilityInterface.Companion.rotate
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import kotlin.math.PI
@@ -25,7 +25,7 @@ import kotlin.math.PI
  */
 internal object FireWheel : AbilityInterface {
     override val cooldownMs: Long = 8000
-    override val activationType: ActivationType = ActivationType.TOGGLE
+    override val activationType: ActivationTypeEnum = ActivationTypeEnum.TOGGLE
     override val hasSession: Boolean = true
 
     /** Wheel ring radius in blocks (before level scaling). */

@@ -3,6 +3,7 @@ package org.xodium.illyriabending.abilities
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 import org.xodium.illyriabending.managers.CooldownManager
 import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
@@ -13,7 +14,7 @@ internal interface AbilityInterface {
     val cooldownMs: Long
 
     /** How the player activates this ability. */
-    val activationType: ActivationType
+    val activationType: ActivationTypeEnum
 
     /**
      * Whether this ability tracks per-player session state (e.g., AirBlade charging,
@@ -145,19 +146,4 @@ internal interface AbilityInterface {
             }
         }
     }
-}
-
-/** Defines how an ability is activated by the player. */
-internal enum class ActivationType {
-    /** One-shot cast with no duration (AirBlast, AirAgility). */
-    INSTANT,
-
-    /** Hold to charge, release to launch (AirBlade). */
-    CHARGE,
-
-    /** Activate to enable, activate again to disable (AirWheel). */
-    TOGGLE,
-
-    /** Active for a fixed duration then expires (AirScooter). */
-    DURATION,
 }

@@ -7,7 +7,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -23,7 +23,7 @@ import kotlin.math.sin
  */
 internal object FireKick : AbilityInterface {
     override val cooldownMs: Long = 1500
-    override val activationType: ActivationType = ActivationType.INSTANT
+    override val activationType: ActivationTypeEnum = ActivationTypeEnum.INSTANT
 
     /** Cone reach in blocks. */
     private const val RANGE = 3.5

@@ -8,7 +8,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 import kotlin.math.ceil
 import kotlin.math.cos
 import kotlin.math.sin
@@ -25,7 +25,7 @@ import kotlin.math.sin
  */
 internal object WaterManipulation : AbilityInterface {
     override val cooldownMs: Long = 1200
-    override val activationType = ActivationType.CHARGE
+    override val activationType = ActivationTypeEnum.CHARGE
 
     /** Bolt travel range in blocks (before level scaling). */
     private const val RANGE = 12.0

@@ -10,7 +10,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -28,7 +28,7 @@ import kotlin.math.tan
  */
 internal object FrostBreath : AbilityInterface {
     override val cooldownMs: Long = 4500
-    override val activationType = ActivationType.INSTANT
+    override val activationType = ActivationTypeEnum.INSTANT
 
     /** Cone reach in blocks. */
     private const val RANGE = 7.0

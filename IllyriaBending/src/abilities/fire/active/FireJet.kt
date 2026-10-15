@@ -4,7 +4,7 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 
@@ -19,7 +19,7 @@ import java.util.UUID
  */
 internal object FireJet : AbilityInterface {
     override val cooldownMs: Long = 6000
-    override val activationType: ActivationType = ActivationType.TOGGLE
+    override val activationType: ActivationTypeEnum = ActivationTypeEnum.TOGGLE
     override val hasSession: Boolean = true
 
     /** Sustained jet speed in blocks per tick (before level scaling). */

@@ -8,7 +8,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -24,7 +24,7 @@ import kotlin.math.sin
  */
 internal object EarthSmash : AbilityInterface {
     override val cooldownMs: Long = 11000
-    override val activationType = ActivationType.INSTANT
+    override val activationType = ActivationTypeEnum.INSTANT
 
     /** Hit radius in blocks (before level scaling). */
     private const val RADIUS = 4.0

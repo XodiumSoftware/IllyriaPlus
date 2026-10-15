@@ -6,7 +6,7 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -26,7 +26,7 @@ import kotlin.math.sin
  */
 internal object HealingWaters : AbilityInterface {
     override val cooldownMs: Long = 10000
-    override val activationType = ActivationType.DURATION
+    override val activationType = ActivationTypeEnum.DURATION
     override val hasSession = true
 
     /** Radius in blocks for finding wounded allies (before level scaling). */

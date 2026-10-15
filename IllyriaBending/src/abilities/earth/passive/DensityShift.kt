@@ -7,7 +7,7 @@ import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 
 /**
  * DensityShift: harden the caster's stance like the earth beneath their feet.
@@ -21,7 +21,7 @@ import org.xodium.illyriabending.abilities.ActivationType
  */
 internal object DensityShift : AbilityInterface {
     override val cooldownMs: Long = 12000
-    override val activationType = ActivationType.INSTANT
+    override val activationType = ActivationTypeEnum.INSTANT
 
     /** Base potion duration in ticks (before level scaling). */
     private const val DURATION_TICKS = 100

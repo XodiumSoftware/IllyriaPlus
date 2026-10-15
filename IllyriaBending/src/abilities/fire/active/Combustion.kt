@@ -6,7 +6,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import kotlin.math.cos
@@ -23,7 +23,7 @@ import kotlin.math.sin
  */
 internal object Combustion : AbilityInterface {
     override val cooldownMs: Long = 7500
-    override val activationType: ActivationType = ActivationType.CHARGE
+    override val activationType: ActivationTypeEnum = ActivationTypeEnum.CHARGE
     override val hasSession: Boolean = true
 
     /** Explosion radius in blocks (before charge factor). */

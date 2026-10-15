@@ -7,7 +7,7 @@ import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 
 /**
  * MetalCable: whip a chain of iron up to a ledge and reel yourself to it.
@@ -21,7 +21,7 @@ import org.xodium.illyriabending.abilities.ActivationType
  */
 internal object MetalCable : AbilityInterface {
     override val cooldownMs: Long = 4500
-    override val activationType = ActivationType.INSTANT
+    override val activationType = ActivationTypeEnum.INSTANT
 
     /** Maximum cable reach in blocks (before level scaling). */
     private const val RANGE = 20.0

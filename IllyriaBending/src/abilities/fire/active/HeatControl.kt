@@ -5,7 +5,7 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 
 /**
  * HeatControl: command heat itself by reshaping thermal blocks around the caster.
@@ -21,7 +21,7 @@ import org.xodium.illyriabending.abilities.ActivationType
  */
 internal object HeatControl : AbilityInterface {
     override val cooldownMs: Long = 4000
-    override val activationType: ActivationType = ActivationType.INSTANT
+    override val activationType: ActivationTypeEnum = ActivationTypeEnum.INSTANT
 
     /** Manipulation radius in blocks. */
     private const val RADIUS = 6

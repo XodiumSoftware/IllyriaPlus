@@ -5,7 +5,7 @@ import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import kotlin.math.cos
@@ -22,7 +22,7 @@ import kotlin.math.sin
  */
 internal object AirScooter : AbilityInterface {
     override val cooldownMs: Long = 4000
-    override val activationType: ActivationType = ActivationType.DURATION
+    override val activationType: ActivationTypeEnum = ActivationTypeEnum.DURATION
     override val hasSession: Boolean = true
 
     /** Horizontal propulsion speed per tick (before level scaling). */

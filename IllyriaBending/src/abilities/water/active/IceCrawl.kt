@@ -11,7 +11,7 @@ import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 internal object IceCrawl : AbilityInterface {
     override val cooldownMs: Long = 5500
-    override val activationType = ActivationType.INSTANT
+    override val activationType = ActivationTypeEnum.INSTANT
 
     /** Band length in blocks ahead of the player (before level scaling). */
     private const val LENGTH = 6

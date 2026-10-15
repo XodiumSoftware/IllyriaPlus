@@ -7,7 +7,7 @@ import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -22,7 +22,7 @@ import kotlin.math.sin
  */
 internal object FireBurst : AbilityInterface {
     override val cooldownMs: Long = 5000
-    override val activationType: ActivationType = ActivationType.INSTANT
+    override val activationType: ActivationTypeEnum = ActivationTypeEnum.INSTANT
 
     /** Burst radius in blocks. */
     private const val RADIUS = 6.0

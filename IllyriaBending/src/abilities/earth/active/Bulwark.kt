@@ -8,7 +8,7 @@ import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -25,7 +25,7 @@ import kotlin.math.sin
  */
 internal object Bulwark : AbilityInterface {
     override val cooldownMs: Long = 9000
-    override val activationType = ActivationType.INSTANT
+    override val activationType = ActivationTypeEnum.INSTANT
 
     /** Horizontal distance ahead of the caster where the wall is raised. */
     private const val SPAWN_DISTANCE = 2.5

@@ -6,7 +6,7 @@ import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 internal object EarthSurf : AbilityInterface {
     override val cooldownMs: Long = 9000
-    override val activationType = ActivationType.TOGGLE
+    override val activationType = ActivationTypeEnum.TOGGLE
     override val hasSession = true
 
     /** Horizontal propulsion speed per tick (before level scaling). */

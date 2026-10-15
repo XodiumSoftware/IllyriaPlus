@@ -8,7 +8,7 @@ import org.bukkit.World
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 internal object EarthTunnel : AbilityInterface {
     override val cooldownMs: Long = 8500
-    override val activationType = ActivationType.INSTANT
+    override val activationType = ActivationTypeEnum.INSTANT
     override val hasSession = true
 
     /** Total tunnel length in blocks (before level scaling). */

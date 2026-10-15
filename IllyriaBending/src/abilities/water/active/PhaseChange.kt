@@ -7,7 +7,7 @@ import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 
 /**
  * PhaseChange: freeze water in a radius around the caster.
@@ -21,7 +21,7 @@ import org.xodium.illyriabending.abilities.ActivationType
  */
 internal object PhaseChange : AbilityInterface {
     override val cooldownMs: Long = 7000
-    override val activationType = ActivationType.TOGGLE
+    override val activationType = ActivationTypeEnum.TOGGLE
 
     /** Freeze radius in blocks (before level scaling). */
     private const val RADIUS = 5

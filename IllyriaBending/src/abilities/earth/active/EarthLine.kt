@@ -10,7 +10,7 @@ import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 
 /**
  * EarthLine: trace a jagged line of earth spikes along the ground ahead of the caster.
@@ -24,7 +24,7 @@ import org.xodium.illyriabending.abilities.ActivationType
  */
 internal object EarthLine : AbilityInterface {
     override val cooldownMs: Long = 6000
-    override val activationType = ActivationType.INSTANT
+    override val activationType = ActivationTypeEnum.INSTANT
 
     /** Maximum line length in blocks (before level scaling). */
     private const val LENGTH = 10.0

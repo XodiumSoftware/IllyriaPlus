@@ -7,7 +7,7 @@ import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 
 /**
  * FerroControl: tug every stray scrap of metal toward the caster like a lodestone.
@@ -21,7 +21,7 @@ import org.xodium.illyriabending.abilities.ActivationType
  */
 internal object FerroControl : AbilityInterface {
     override val cooldownMs: Long = 5000
-    override val activationType = ActivationType.INSTANT
+    override val activationType = ActivationTypeEnum.INSTANT
 
     /** Base pickup radius in blocks (before level scaling). */
     private const val RADIUS = 8.0

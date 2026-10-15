@@ -6,7 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 
 /**
  * GracefulDescent: let the wind carry you gently to the ground.
@@ -19,7 +19,7 @@ import org.xodium.illyriabending.abilities.ActivationType
  */
 internal object GracefulDescent : AbilityInterface {
     override val cooldownMs: Long = 6000
-    override val activationType: ActivationType = ActivationType.INSTANT
+    override val activationType: ActivationTypeEnum = ActivationTypeEnum.INSTANT
 
     /** Base slow falling duration in ticks (before level scaling). */
     private const val DURATION_TICKS = 120

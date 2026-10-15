@@ -7,7 +7,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -27,7 +27,7 @@ import kotlin.math.sin
  */
 internal object WaterGimbal : AbilityInterface {
     override val cooldownMs: Long = 8000
-    override val activationType = ActivationType.CHARGE
+    override val activationType = ActivationTypeEnum.CHARGE
     override val hasSession = true
 
     /** Ring orbit radius in blocks (before level scaling). */

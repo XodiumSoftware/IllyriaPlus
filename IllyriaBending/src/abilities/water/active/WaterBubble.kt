@@ -10,7 +10,7 @@ import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -30,7 +30,7 @@ import kotlin.math.sin
  */
 internal object WaterBubble : AbilityInterface {
     override val cooldownMs: Long = 9000
-    override val activationType = ActivationType.DURATION
+    override val activationType = ActivationTypeEnum.DURATION
     override val hasSession = true
 
     /** Maximum bubble duration in ticks (before level scaling). */

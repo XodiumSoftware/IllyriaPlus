@@ -14,7 +14,7 @@ import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 internal object EarthGlove : AbilityInterface {
     override val cooldownMs: Long = 6500
-    override val activationType = ActivationType.DURATION
+    override val activationType = ActivationTypeEnum.DURATION
     override val hasSession = true
 
     /** How long the glove persists if no hit lands, in ticks. */

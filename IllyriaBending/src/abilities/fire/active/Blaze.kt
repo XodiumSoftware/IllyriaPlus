@@ -8,7 +8,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import kotlin.math.PI
@@ -27,7 +27,7 @@ import kotlin.math.sin
  */
 internal object Blaze : AbilityInterface {
     override val cooldownMs: Long = 4500
-    override val activationType: ActivationType = ActivationType.CHARGE
+    override val activationType: ActivationTypeEnum = ActivationTypeEnum.CHARGE
     override val hasSession: Boolean = true
 
     /** Projectile hit radius in blocks (before charge factor). */

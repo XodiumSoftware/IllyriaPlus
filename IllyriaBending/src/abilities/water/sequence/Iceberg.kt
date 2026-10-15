@@ -10,7 +10,7 @@ import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.enums.ActivationTypeEnum
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 internal object Iceberg : AbilityInterface {
     override val cooldownMs: Long = 12000
-    override val activationType = ActivationType.INSTANT
+    override val activationType = ActivationTypeEnum.INSTANT
 
     /** Distance in front of the caster where the iceberg erupts. */
     private const val FORWARD_OFFSET = 5.0
