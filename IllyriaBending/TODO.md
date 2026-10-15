@@ -59,7 +59,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 
 ### Active
 
-- [ ] Bulwark
+- [x] Bulwark
 - [ ] Catapult
 - [ ] Collapse
 - [ ] EarthArmor
@@ -97,7 +97,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 - [x] FireBlast
 - [x] FireBreath
 - [x] FireBurst
-- [ ] FireJet
+- [x] FireJet
 - [ ] FirePropagate
 - [ ] FireShield
 - [ ] FireWall
