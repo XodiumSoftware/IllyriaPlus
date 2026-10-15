@@ -8,12 +8,12 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 
 - [x] AirBlade
 - [x] AirBlast
-- [ ] AirBreath
-- [ ] AirBurst
-- [ ] AirPunch
-- [ ] AirScooter
-- [ ] AirShield
-- [ ] AirSpout
+- [x] AirBreath
+- [x] AirBurst
+- [x] AirPunch
+- [x] AirScooter
+- [x] AirShield
+- [x] AirSpout
 - [ ] AirSwipe
 - [ ] Tornado
 
