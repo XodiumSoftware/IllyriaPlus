@@ -34,7 +34,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 - [x] FrostBreath
 - [x] HealingWaters
 - [ ] IceCrawl
-- [ ] IceSpike
+- [x] IceSpike
 - [ ] IceWall
 - [ ] OctopusForm
 - [ ] PhaseChange
