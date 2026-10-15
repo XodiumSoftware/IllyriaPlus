@@ -1,6 +1,7 @@
-package org.xodium.illyriabending.abilities.air
+package org.xodium.illyriabending.abilities.air.active
 
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
@@ -120,7 +121,7 @@ internal object AirBlade : AbilityInterface {
             if (!block.isPassable && !block.type.isAir) return false
 
             val below = location.clone().subtract(0.0, radius + 0.25, 0.0).block
-            if (below.type == org.bukkit.Material.FIRE) below.type = org.bukkit.Material.AIR
+            if (below.type == Material.FIRE) below.type = Material.AIR
 
             if (block.isLiquid) return false
 

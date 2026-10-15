@@ -1,6 +1,7 @@
-package org.xodium.illyriabending.abilities.air
+package org.xodium.illyriabending.abilities.air.active
 
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
@@ -9,6 +10,7 @@ import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.math.tan
 
 /**
  * AirBlast: emit a short-ranged cone of compressed air that shoves enemies and extinguishes fires.
@@ -117,12 +119,12 @@ internal object AirBlast : AbilityInterface {
         val world = origin.world ?: return
         for (i in 1..RANGE.toInt()) {
             val center = origin.clone().add(direction.clone().multiply(i.toDouble()))
-            val radius = i * kotlin.math.tan(angleRad)
+            val radius = i * tan(angleRad)
             for (x in -radius.toInt()..radius.toInt()) {
                 for (y in -radius.toInt()..radius.toInt()) {
                     for (z in -radius.toInt()..radius.toInt()) {
                         val block = world.getBlockAt(center.blockX + x, center.blockY + y, center.blockZ + z)
-                        if (block.type == org.bukkit.Material.FIRE) block.type = org.bukkit.Material.AIR
+                        if (block.type == Material.FIRE) block.type = Material.AIR
                     }
                 }
             }
