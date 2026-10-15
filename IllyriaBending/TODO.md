@@ -79,7 +79,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 ### Passive
 
 - [x] DensityShift
-- [ ] EarthCling
+- [x] EarthCling
 - [ ] FerroControl
 - [ ] Locksmithing
 
