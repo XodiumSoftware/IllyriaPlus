@@ -30,7 +30,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 
 ### Active
 
-- [ ] BloodBending
+- [x] BloodBending
 - [x] FrostBreath
 - [x] HealingWaters
 - [x] IceCrawl
