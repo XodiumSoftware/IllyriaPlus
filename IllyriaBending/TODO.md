@@ -53,7 +53,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 ### Sequence
 
 - [x] Iceberg
-- [ ] WaterGimbal
+- [x] WaterGimbal
 
 ## Earth
 
