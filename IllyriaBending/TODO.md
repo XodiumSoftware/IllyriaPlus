@@ -108,5 +108,5 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 ### Sequence
 
 - [x] FireKick
-- [ ] FireSpin
+- [x] FireSpin
 - [ ] FireWheel
