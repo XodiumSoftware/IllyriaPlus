@@ -28,9 +28,7 @@ internal object PlayerPDC {
     const val MAX_BENDING_LEVEL = 5
 
     /**
-     * Gets or sets a [Player]'s bending type in their persistent data container.
-     *
-     * @return The [Player]'s [BendingTypeEnum], or `null` if none is set.
+     * The [Player]'s committed bending type. Set to `null` to clear.
      */
     var Player.bendingType: BendingTypeEnum?
         get() =
@@ -46,17 +44,13 @@ internal object PlayerPDC {
         }
 
     /**
-     * Whether the [Player] has a bending type set in their persistent data container.
-     *
-     * @return `true` if the [Player] has chosen a [BendingTypeEnum], `false` otherwise.
+     * Whether the [Player] has chosen a bending type.
      */
     val Player.hasBendingType: Boolean get() = bendingType != null
 
     /**
-     * Gets or sets a [Player]'s bending level in their persistent data container. Values are
-     * clamped to `[MIN_BENDING_LEVEL, MAX_BENDING_LEVEL]` on write.
-     *
-     * @return The [Player]'s bending level, or [DEFAULT_BENDING_LEVEL] if none is set.
+     * The [Player]'s bending level, clamped to `[MIN_BENDING_LEVEL, MAX_BENDING_LEVEL]` on write.
+     * Defaults to [DEFAULT_BENDING_LEVEL] when unset.
      */
     var Player.bendingLevel: Int
         get() =
@@ -74,10 +68,8 @@ internal object PlayerPDC {
         }
 
     /**
-     * Gets or sets a [Player]'s total projectile kill count for their current bending type
-     * in their persistent data container. Used to gate bending level progression.
-     *
-     * @return The number of kills, or `0` if none is set.
+     * The [Player]'s total projectile kill count for their current bending type. Used to gate
+     * bending level progression.
      */
     var Player.bendingKills: Int
         get() = persistentDataContainer.getOrDefault(BENDING_KILLS_KEY, PersistentDataType.INTEGER, 0)

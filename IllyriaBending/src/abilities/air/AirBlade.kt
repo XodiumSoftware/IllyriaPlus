@@ -310,6 +310,11 @@ internal object AirBlade : AbilityInterface {
 
     /**
      * Rotates [vec] around [axis] by [angle] radians using Rodrigues' rotation formula.
+     *
+     * @param vec The vector to rotate.
+     * @param axis The rotation axis; will be normalized before use.
+     * @param angle The rotation angle in radians.
+     * @return The rotated vector.
      */
     private fun rotate(
         vec: Vector,

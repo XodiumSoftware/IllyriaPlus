@@ -58,7 +58,13 @@ internal object AirBlast : AbilityInterface {
         knockback(player, origin, direction, angleRad, knockScale)
     }
 
-    /** Renders a cone of air particles emanating from [origin] along [direction]. */
+    /**
+     * Renders a cone of air particles emanating from [origin] along [direction].
+     *
+     * @param origin The starting point of the blast (usually the caster's eye location).
+     * @param direction The normalized travel direction of the blast.
+     * @param angleRad The cone half-angle in radians.
+     */
     private fun render(
         origin: Location,
         direction: Vector,
@@ -96,7 +102,13 @@ internal object AirBlast : AbilityInterface {
         }
     }
 
-    /** Extinguishes fire blocks inside the cone. */
+    /**
+     * Extinguishes fire blocks inside the cone.
+     *
+     * @param origin The starting point of the blast.
+     * @param direction The normalized travel direction of the blast.
+     * @param angleRad The cone half-angle in radians.
+     */
     private fun extinguish(
         origin: Location,
         direction: Vector,
@@ -117,7 +129,15 @@ internal object AirBlast : AbilityInterface {
         }
     }
 
-    /** Damages and shoves living entities caught in the cone away from the player. */
+    /**
+     * Damages and shoves living entities caught in the cone away from the player.
+     *
+     * @param player The casting player; used as the damage source.
+     * @param origin The starting point of the blast.
+     * @param direction The normalized travel direction of the blast.
+     * @param angleRad The cone half-angle in radians.
+     * @param knockScale Multiplier applied to [KNOCKBACK].
+     */
     private fun knockback(
         player: Player,
         origin: Location,
