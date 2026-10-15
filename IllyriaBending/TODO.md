@@ -74,7 +74,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 - [x] LavaFlux
 - [x] MetalCable
 - [x] RaiseEarth
-- [ ] Shockwave
+- [x] Shockwave
 
 ### Passive
 
