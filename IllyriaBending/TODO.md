@@ -94,7 +94,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 
 - [x] Blaze
 - [x] Combustion
-- [ ] FireBlast
+- [x] FireBlast
 - [ ] FireBreath
 - [ ] FireBurst
 - [ ] FireJet
