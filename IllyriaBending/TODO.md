@@ -5,8 +5,9 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 ## Air
 
 ### Active
+
 - [x] AirBlade
-- [ ] AirBlast
+- [x] AirBlast
 - [ ] AirBreath
 - [ ] AirBurst
 - [ ] AirPunch
@@ -17,15 +18,18 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 - [ ] Tornado
 
 ### Passive
+
 - [ ] AirAgility
 - [ ] GracefulDescent
 
 ### Sequence
+
 - [ ] AirWheel
 
 ## Water
 
 ### Active
+
 - [ ] BloodBending
 - [ ] FrostBreath
 - [ ] HealingWaters
@@ -42,16 +46,19 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 - [ ] WaterWave
 
 ### Passive
+
 - [ ] FastSwim
 - [ ] HydroSink
 
 ### Sequence
+
 - [ ] Iceberg
 - [ ] WaterGimbal
 
 ## Earth
 
 ### Active
+
 - [ ] Bulwark
 - [ ] Catapult
 - [ ] Collapse
@@ -70,18 +77,21 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 - [ ] Shockwave
 
 ### Passive
+
 - [ ] DensityShift
 - [ ] EarthCling
 - [ ] FerroControl
 - [ ] Locksmithing
 
 ### Sequence
+
 - [ ] EarthPillars
 - [ ] EarthShards
 
 ## Fire
 
 ### Active
+
 - [ ] Blaze
 - [ ] Combustion
 - [ ] FireBlast
@@ -96,6 +106,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 - [ ] Lightning
 
 ### Sequence
+
 - [ ] FireKick
 - [ ] FireSpin
 - [ ] FireWheel
@@ -103,6 +114,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 ## Avatar
 
 ### Active
+
 - [ ] AvatarState
 - [ ] Chakra
 - [ ] ChakraFocus
