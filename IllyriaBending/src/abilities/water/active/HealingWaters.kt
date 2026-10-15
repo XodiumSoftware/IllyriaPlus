@@ -4,10 +4,10 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.PI
@@ -26,6 +26,8 @@ import kotlin.math.sin
  */
 internal object HealingWaters : AbilityInterface {
     override val cooldownMs: Long = 10000
+    override val activationType = ActivationType.DURATION
+    override val hasSession = true
 
     /** Radius in blocks for finding wounded allies (before level scaling). */
     private const val HEAL_RADIUS = 4.0
@@ -57,56 +59,48 @@ internal object HealingWaters : AbilityInterface {
     /** Height of the particle column for the render. */
     private const val RENDER_HEIGHT = 2.0
 
-    /** Active channeling sessions keyed by caster UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Per-player healing state for active sessions. */
+    private val channels = ConcurrentHashMap<UUID, ChannelData>()
 
-    /**
-     * Holds state for an active HealingWaters channel.
-     */
-    private class Session(
+    /** Holds state for an active HealingWaters channel. */
+    private class ChannelData(
         val player: Player,
         val level: Int,
         var ticks: Long = 0L,
         var angle: Double = 0.0,
-        var task: BukkitTask? = null,
     )
 
     override fun activate(
         player: Player,
         level: Int,
     ) {
-        if (sessions.containsKey(player.uniqueId)) return
+        if (isOnCooldown(player)) return
 
-        val session = Session(player, level)
-        sessions[player.uniqueId] = session
+        val uuid = player.uniqueId
+        if (SessionManager.has(this, uuid)) return
 
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(player.uniqueId) },
-                0L,
-                TICK_PERIOD,
-            )
+        channels[uuid] = ChannelData(player, level)
+        SessionManager.start(this, uuid)
     }
 
-    /** Advances a healing channel by one tick. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
-        val player = session.player
+    override fun tickSession(uuid: UUID) {
+        val data = channels[uuid] ?: return
+        val player = data.player
 
-        session.ticks += TICK_PERIOD
-        session.angle += ROTATION_STEP
+        data.ticks += TICK_PERIOD
+        data.angle += ROTATION_STEP
 
-        val maxTicks = MAX_DURATION_TICKS + (session.level - 1) * DURATION_PER_LEVEL
-        if (!player.isOnline || player.isDead || !player.isSneaking || session.ticks > maxTicks) {
-            remove(uuid)
+        val maxTicks = MAX_DURATION_TICKS + (data.level - 1) * DURATION_PER_LEVEL
+        if (!player.isOnline || player.isDead || !player.isSneaking || data.ticks > maxTicks) {
+            channels.remove(uuid)
+            SessionManager.remove(this, uuid)
             return
         }
 
-        render(session)
+        render(data)
 
-        if (session.ticks % HEAL_PERIOD_TICKS == 0L) {
-            heal(session)
+        if (data.ticks % HEAL_PERIOD_TICKS == 0L) {
+            heal(data)
         }
 
         if (Math.random() < 1.0 / 8.0) {
@@ -118,10 +112,10 @@ internal object HealingWaters : AbilityInterface {
      * Picks the most-injured allied player (including the caster) inside the heal
      * radius and restores a small amount of health.
      */
-    private fun heal(session: Session) {
-        val player = session.player
-        val radius = HEAL_RADIUS + (session.level - 1) * RADIUS_PER_LEVEL
-        val healAmount = HEAL_PER_PULSE + (session.level - 1) * HEAL_PER_LEVEL
+    private fun heal(data: ChannelData) {
+        val player = data.player
+        val radius = HEAL_RADIUS + (data.level - 1) * RADIUS_PER_LEVEL
+        val healAmount = HEAL_PER_PULSE + (data.level - 1) * HEAL_PER_LEVEL
 
         val world = player.world
         val candidates =
@@ -150,8 +144,8 @@ internal object HealingWaters : AbilityInterface {
     }
 
     /** Renders the spiraling column of water particles around the caster. */
-    private fun render(session: Session) {
-        val player = session.player
+    private fun render(data: ChannelData) {
+        val player = data.player
         val world = player.world
         val base = player.location.clone()
 
@@ -159,7 +153,7 @@ internal object HealingWaters : AbilityInterface {
         while (y <= RENDER_HEIGHT) {
             val rays = 4
             for (i in 0 until rays) {
-                val angle = session.angle + i * (2.0 * PI / rays) + y * 0.7
+                val angle = data.angle + i * (2.0 * PI / rays) + y * 0.7
                 val offset = Vector(cos(angle) * 0.7, y, sin(angle) * 0.7)
                 world.spawnParticle(Particle.SPLASH, base.clone().add(offset), 1, 0.0, 0.0, 0.0, 0.0)
                 if (Math.random() < 0.3) {
@@ -187,10 +181,5 @@ internal object HealingWaters : AbilityInterface {
             0.2,
             0.0,
         )
-    }
-
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.task?.cancel()
     }
 }

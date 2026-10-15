@@ -7,10 +7,11 @@ import org.bukkit.Sound
 import org.bukkit.block.Block
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.ceil
@@ -27,6 +28,8 @@ import kotlin.math.ceil
  */
 internal object Torrent : AbilityInterface {
     override val cooldownMs: Long = 8500
+    override val activationType = ActivationType.DURATION
+    override val hasSession = true
 
     /** Wave travel range in blocks (before level scaling). */
     private const val RANGE = 10.0
@@ -61,30 +64,27 @@ internal object Torrent : AbilityInterface {
     /** Delay before temporary water blocks are drained. */
     private const val DRAIN_AFTER_TICKS = 30L
 
-    /** Ticks between task updates. */
-    private const val TICK_PERIOD = 1L
+    /** Per-player torrent state for active sessions. */
+    private val torrents = ConcurrentHashMap<UUID, TorrentData>()
 
-    /** Active torrent sessions keyed by caster UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
-
-    /**
-     * Holds state for an active Torrent.
-     */
-    private class Session(
+    /** Holds state for an active Torrent. */
+    private class TorrentData(
         val player: Player,
         val direction: Vector,
         val origin: Location,
         val level: Int,
         var ticks: Long = 0L,
         val placed: MutableList<Block> = mutableListOf(),
-        var task: BukkitTask? = null,
     )
 
     override fun activate(
         player: Player,
         level: Int,
     ) {
-        if (sessions.containsKey(player.uniqueId)) return
+        if (isOnCooldown(player)) return
+
+        val uuid = player.uniqueId
+        if (SessionManager.has(this, uuid)) return
 
         val direction =
             player
@@ -95,38 +95,31 @@ internal object Torrent : AbilityInterface {
                 .normalize()
         val origin = player.location.clone().add(direction.clone().multiply(1.5))
 
-        val session = Session(player, direction, origin, level)
-        sessions[player.uniqueId] = session
+        torrents[uuid] = TorrentData(player, direction, origin, level)
+        SessionManager.start(this, uuid)
         player.world.playSound(origin, Sound.ENTITY_PLAYER_SPLASH_HIGH_SPEED, 1.2f, 0.7f)
-
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(player.uniqueId) },
-                0L,
-                TICK_PERIOD,
-            )
     }
 
-    /** Advances a torrent session by one tick. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
-        val player = session.player
+    override fun tickSession(uuid: UUID) {
+        val data = torrents[uuid] ?: return
+        val player = data.player
 
-        session.ticks += TICK_PERIOD
+        data.ticks += 1L
 
-        val range = RANGE + (session.level - 1) * RANGE_PER_LEVEL
-        val speed = SPEED + (session.level - 1) * SPEED_PER_LEVEL
+        val range = RANGE + (data.level - 1) * RANGE_PER_LEVEL
+        val speed = SPEED + (data.level - 1) * SPEED_PER_LEVEL
         val maxTicks = ceil(range / speed).toLong()
 
-        if (!player.isOnline || player.isDead || session.ticks > maxTicks) {
-            remove(uuid)
+        if (!player.isOnline || player.isDead || data.ticks > maxTicks) {
+            torrents.remove(uuid)
+            SessionManager.remove(this, uuid)
+            scheduleDrain(data)
             return
         }
 
-        advance(session, speed)
-        render(session)
-        push(session)
+        advance(data, speed)
+        render(data)
+        push(data)
     }
 
     /**
@@ -134,25 +127,25 @@ internal object Torrent : AbilityInterface {
      * passes through air.
      */
     private fun advance(
-        session: Session,
+        data: TorrentData,
         speed: Double,
     ) {
-        val world = session.origin.world ?: return
-        val depth = session.ticks * speed
-        val halfWidth = HALF_WIDTH + (session.level - 1) / 2 * WIDTH_PER_TWO_LEVELS
-        val side = Vector(-session.direction.z, 0.0, session.direction.x)
+        val world = data.origin.world ?: return
+        val depth = data.ticks * speed
+        val halfWidth = HALF_WIDTH + (data.level - 1) / 2 * WIDTH_PER_TWO_LEVELS
+        val side = Vector(-data.direction.z, 0.0, data.direction.x)
 
         for (lateralIndex in -halfWidth..halfWidth) {
             for (vertical in 0 until HEIGHT) {
                 val block =
                     world.getBlockAt(
-                        (session.origin.x + session.direction.x * depth + side.x * lateralIndex).toInt(),
-                        session.origin.blockY + vertical,
-                        (session.origin.z + session.direction.z * depth + side.z * lateralIndex).toInt(),
+                        (data.origin.x + data.direction.x * depth + side.x * lateralIndex).toInt(),
+                        data.origin.blockY + vertical,
+                        (data.origin.z + data.direction.z * depth + side.z * lateralIndex).toInt(),
                     )
                 if (block.type == Material.AIR) {
                     block.type = Material.WATER
-                    session.placed.add(block)
+                    data.placed.add(block)
                 } else if (!block.isPassable && block.type != Material.WATER) {
                     // Wave breaks against solid terrain; skip this cell.
                     continue
@@ -162,12 +155,12 @@ internal object Torrent : AbilityInterface {
     }
 
     /** Renders the wave front as a rolling wall of splash particles. */
-    private fun render(session: Session) {
-        val world = session.origin.world ?: return
-        val origin = session.origin
-        val direction = session.direction
-        val depth = session.ticks * (SPEED + (session.level - 1) * SPEED_PER_LEVEL)
-        val halfWidth = HALF_WIDTH + (session.level - 1) / 2 * WIDTH_PER_TWO_LEVELS
+    private fun render(data: TorrentData) {
+        val world = data.origin.world ?: return
+        val origin = data.origin
+        val direction = data.direction
+        val depth = data.ticks * (SPEED + (data.level - 1) * SPEED_PER_LEVEL)
+        val halfWidth = HALF_WIDTH + (data.level - 1) / 2 * WIDTH_PER_TWO_LEVELS
         val side = Vector(-direction.z, 0.0, direction.x)
 
         for (lateralIndex in -halfWidth..halfWidth) {
@@ -208,21 +201,21 @@ internal object Torrent : AbilityInterface {
     }
 
     /** Pushes entities standing on or near the wave front along the travel direction. */
-    private fun push(session: Session) {
-        val world = session.origin.world ?: return
-        val origin = session.origin
-        val direction = session.direction
-        val depth = session.ticks * (SPEED + (session.level - 1) * SPEED_PER_LEVEL)
-        val halfWidth = HALF_WIDTH + (session.level - 1) / 2 * WIDTH_PER_TWO_LEVELS
-        val speed = SPEED + (session.level - 1) * SPEED_PER_LEVEL
+    private fun push(data: TorrentData) {
+        val world = data.origin.world ?: return
+        val origin = data.origin
+        val direction = data.direction
+        val depth = data.ticks * (SPEED + (data.level - 1) * SPEED_PER_LEVEL)
+        val halfWidth = HALF_WIDTH + (data.level - 1) / 2 * WIDTH_PER_TWO_LEVELS
+        val speed = SPEED + (data.level - 1) * SPEED_PER_LEVEL
         val center = origin.clone().add(direction.clone().multiply(depth))
 
         world
             .getNearbyEntities(center, halfWidth + 1.0, HEIGHT + 1.0, halfWidth + 1.0)
             .filterIsInstance<LivingEntity>()
-            .filter { it != session.player }
+            .filter { it != data.player }
             .forEach { entity ->
-                entity.damage(DAMAGE, session.player)
+                entity.damage(DAMAGE, data.player)
                 val push =
                     direction
                         .clone()
@@ -233,14 +226,11 @@ internal object Torrent : AbilityInterface {
     }
 
     /** Drains temporary water blocks after the torrent has passed. */
-    private fun remove(uuid: UUID) {
-        val session = sessions.remove(uuid) ?: return
-        session.task?.cancel()
-
+    private fun scheduleDrain(data: TorrentData) {
         instance.server.scheduler.runTaskLater(
             instance,
             Runnable {
-                session.placed.forEach { block ->
+                data.placed.forEach { block ->
                     if (block.type == Material.WATER) {
                         block.type = Material.AIR
                     }

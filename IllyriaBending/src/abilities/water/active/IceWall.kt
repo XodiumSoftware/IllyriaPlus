@@ -8,6 +8,7 @@ import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -24,6 +25,7 @@ import kotlin.math.sin
  */
 internal object IceWall : AbilityInterface {
     override val cooldownMs: Long = 8000
+    override val activationType = ActivationType.INSTANT
 
     /** Horizontal distance ahead of the caster where the wall is raised. */
     private const val SPAWN_DISTANCE = 3.0
@@ -53,6 +55,8 @@ internal object IceWall : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val world = player.world
         val forward =
             player
@@ -111,6 +115,8 @@ internal object IceWall : AbilityInterface {
         world.spawnParticle(Particle.SNOWFLAKE, center.clone().add(0.0, 1.5, 0.0), 30, 1.5, 1.0, 1.5, 0.0)
 
         scheduleMelt(placed, meltAfter)
+
+        complete(player)
     }
 
     /**

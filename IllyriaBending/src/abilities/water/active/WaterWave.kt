@@ -4,10 +4,10 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.PI
@@ -26,6 +26,8 @@ import kotlin.math.sin
  */
 internal object WaterWave : AbilityInterface {
     override val cooldownMs: Long = 6000
+    override val activationType = ActivationType.DURATION
+    override val hasSession = true
 
     /** Horizontal speed per tick (before level scaling). */
     private const val SPEED = 0.55
@@ -51,57 +53,46 @@ internal object WaterWave : AbilityInterface {
     /** Radius in which entities are knocked aside by the wave. */
     private const val PUSH_RADIUS = 1.6
 
-    /** Ticks between task updates. */
-    private const val TICK_PERIOD = 1L
-
     /** Rotational increment per tick for the wave render. */
     private const val ROTATION_STEP = 0.6
 
-    /** Active wave sessions keyed by caster UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Per-player wave state for active sessions. */
+    private val waves = ConcurrentHashMap<UUID, WaveData>()
 
-    /**
-     * Holds state for an active WaterWave ride.
-     */
-    private class Session(
+    /** Holds state for an active WaterWave ride. */
+    private class WaveData(
         val player: Player,
         val level: Int,
         var ticks: Long = 0L,
         var angle: Double = 0.0,
-        var task: BukkitTask? = null,
     )
 
     override fun activate(
         player: Player,
         level: Int,
     ) {
-        if (sessions.containsKey(player.uniqueId)) return
+        if (isOnCooldown(player)) return
 
-        val session = Session(player, level)
-        sessions[player.uniqueId] = session
+        val uuid = player.uniqueId
+        if (SessionManager.has(this, uuid)) return
+
+        waves[uuid] = WaveData(player, level)
+        SessionManager.start(this, uuid)
 
         player.world.playSound(player.location, Sound.ENTITY_PLAYER_SPLASH_HIGH_SPEED, 1.0f, 0.9f)
-
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(player.uniqueId) },
-                0L,
-                TICK_PERIOD,
-            )
     }
 
-    /** Advances a wave session by one tick. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
-        val player = session.player
+    override fun tickSession(uuid: UUID) {
+        val data = waves[uuid] ?: return
+        val player = data.player
 
-        session.ticks += TICK_PERIOD
-        session.angle += ROTATION_STEP
+        data.ticks += 1L
+        data.angle += ROTATION_STEP
 
-        val maxTicks = MAX_DURATION_TICKS + (session.level - 1) * DURATION_PER_LEVEL
-        if (!player.isOnline || player.isDead || session.ticks > maxTicks) {
-            remove(uuid)
+        val maxTicks = MAX_DURATION_TICKS + (data.level - 1) * DURATION_PER_LEVEL
+        if (!player.isOnline || player.isDead || data.ticks > maxTicks) {
+            waves.remove(uuid)
+            SessionManager.remove(this, uuid)
             return
         }
 
@@ -115,18 +106,19 @@ internal object WaterWave : AbilityInterface {
                 .normalize()
         val next = player.location.clone().add(heading)
         if (!next.block.isPassable && !next.block.isLiquid) {
-            remove(uuid)
+            waves.remove(uuid)
+            SessionManager.remove(this, uuid)
             return
         }
 
-        propel(session)
-        render(session)
-        knockback(session)
+        propel(data)
+        render(data)
+        knockback(data)
     }
 
     /** Moves the player forward with the wave. */
-    private fun propel(session: Session) {
-        val player = session.player
+    private fun propel(data: WaveData) {
+        val player = data.player
         val dir =
             player
                 .location
@@ -134,7 +126,7 @@ internal object WaterWave : AbilityInterface {
                 .clone()
                 .setY(0)
                 .normalize()
-        val speed = SPEED + (session.level - 1) * SPEED_PER_LEVEL
+        val speed = SPEED + (data.level - 1) * SPEED_PER_LEVEL
         val velocity = dir.multiply(speed)
         val current = player.velocity
         val y = if (current.y < 0.0) 0.05 else current.y
@@ -142,8 +134,8 @@ internal object WaterWave : AbilityInterface {
     }
 
     /** Renders the curling wave around the player. */
-    private fun render(session: Session) {
-        val player = session.player
+    private fun render(data: WaveData) {
+        val player = data.player
         val world = player.world
         val base = player.location.clone()
 
@@ -157,7 +149,7 @@ internal object WaterWave : AbilityInterface {
 
         // Curling front arc.
         for (i in 0 until 14) {
-            val angle = session.angle + i * (2.0 * PI / 14)
+            val angle = data.angle + i * (2.0 * PI / 14)
             val height = 1.2 + 0.4 * sin(angle)
             val offsetForward = 0.6 + 0.4 * cos(angle)
             val offsetSide = sin(angle * 0.7) * 0.8
@@ -194,8 +186,8 @@ internal object WaterWave : AbilityInterface {
     }
 
     /** Knocks entities in front of the wave sideways. */
-    private fun knockback(session: Session) {
-        val player = session.player
+    private fun knockback(data: WaveData) {
+        val player = data.player
         val world = player.world
         val base = player.location.clone()
         val forward =
@@ -235,10 +227,5 @@ internal object WaterWave : AbilityInterface {
                         .add(away)
                         .add(Vector(0.0, KNOCKUP, 0.0))
             }
-    }
-
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.task?.cancel()
     }
 }

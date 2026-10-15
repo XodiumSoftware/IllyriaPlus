@@ -8,6 +8,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 import kotlin.math.ceil
 import kotlin.math.cos
 import kotlin.math.sin
@@ -24,6 +25,7 @@ import kotlin.math.sin
  */
 internal object WaterManipulation : AbilityInterface {
     override val cooldownMs: Long = 1200
+    override val activationType = ActivationType.CHARGE
 
     /** Bolt travel range in blocks (before level scaling). */
     private const val RANGE = 12.0
@@ -56,6 +58,8 @@ internal object WaterManipulation : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val origin = player.eyeLocation.clone()
         val direction = origin.direction.clone().normalize()
         val world = origin.world ?: return
@@ -71,6 +75,8 @@ internal object WaterManipulation : AbilityInterface {
         if (impact == null) {
             wetTerminal(origin, direction, range)
         }
+
+        complete(player)
     }
 
     /**

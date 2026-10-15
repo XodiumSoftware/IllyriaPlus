@@ -5,10 +5,10 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.PI
@@ -27,6 +27,8 @@ import kotlin.math.sin
  */
 internal object WaterGimbal : AbilityInterface {
     override val cooldownMs: Long = 8000
+    override val activationType = ActivationType.CHARGE
+    override val hasSession = true
 
     /** Ring orbit radius in blocks (before level scaling). */
     private const val RADIUS = 1.4
@@ -67,24 +69,19 @@ internal object WaterGimbal : AbilityInterface {
     /** Rotation step per tick for the orbiting rings. */
     private const val ROTATION_STEP = PI / 16
 
-    /** Active gimbal sessions keyed by caster UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Per-player gimbal state for active sessions. */
+    private val gimbals = ConcurrentHashMap<UUID, GimbalData>()
 
-    /**
-     * Holds state for an active WaterGimbal session: orbiting rings, then launched wave.
-     */
-    private class Session(
+    /** Holds state for an active WaterGimbal session: orbiting rings, then launched wave. */
+    private class GimbalData(
         val player: Player,
         val level: Int,
         var phase: Phase = Phase.RINGS,
         var ticks: Long = 0L,
         var angle: Double = 0.0,
-        var task: BukkitTask? = null,
     )
 
-    /**
-     * Lifecycle phases of a WaterGimbal activation.
-     */
+    /** Lifecycle phases of a WaterGimbal activation. */
     private enum class Phase {
         /** The two rings orbit the caster while charging. */
         RINGS,
@@ -97,53 +94,50 @@ internal object WaterGimbal : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val uuid = player.uniqueId
-        if (sessions.containsKey(uuid)) return
+        if (SessionManager.has(this, uuid)) return
 
-        val session = Session(player, level)
-        sessions[uuid] = session
-
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(uuid) },
-                0L,
-                TICK_PERIOD,
-            )
+        gimbals[uuid] = GimbalData(player, level)
+        SessionManager.start(this, uuid)
     }
 
-    /** Advances a gimbal session by one tick, transitioning between the two phases. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
-        val player = session.player
+    override fun tickSession(uuid: UUID) {
+        val data = gimbals[uuid] ?: return
+        val player = data.player
 
-        session.ticks += TICK_PERIOD
-        session.angle += ROTATION_STEP
+        data.ticks += TICK_PERIOD
+        data.angle += ROTATION_STEP
 
         if (!player.isOnline || player.isDead) {
-            remove(uuid)
+            gimbals.remove(uuid)
+            SessionManager.remove(this, uuid)
             return
         }
 
-        when (session.phase) {
+        when (data.phase) {
             Phase.RINGS -> {
                 if (!player.isSneaking) {
-                    remove(uuid)
+                    gimbals.remove(uuid)
+                    SessionManager.remove(this, uuid)
                     return
                 }
-                val maxCharge = CHARGE_TICKS + (session.level - 1) * CHARGE_PER_LEVEL
-                if (session.ticks >= maxCharge) {
-                    session.phase = Phase.WAVES
-                    session.ticks = 0
-                    launchWaves(session)
+                val maxCharge = CHARGE_TICKS + (data.level - 1) * CHARGE_PER_LEVEL
+                if (data.ticks >= maxCharge) {
+                    data.phase = Phase.WAVES
+                    data.ticks = 0
+                    launchWaves(data)
+                    complete(player)
                 } else {
-                    renderRings(session)
+                    renderRings(data)
                 }
             }
 
             Phase.WAVES -> {
-                if (session.ticks > TICK_PERIOD) {
-                    remove(uuid)
+                if (data.ticks > TICK_PERIOD) {
+                    gimbals.remove(uuid)
+                    SessionManager.remove(this, uuid)
                     return
                 }
             }
@@ -151,15 +145,15 @@ internal object WaterGimbal : AbilityInterface {
     }
 
     /** Renders the two orbiting rings around the caster. */
-    private fun renderRings(session: Session) {
-        val player = session.player
+    private fun renderRings(data: GimbalData) {
+        val player = data.player
         val world = player.world
         val origin = player.location.clone().add(0.0, 1.1, 0.0)
-        val radius = RADIUS + (session.level - 1) * RADIUS_PER_LEVEL
+        val radius = RADIUS + (data.level - 1) * RADIUS_PER_LEVEL
 
         val spokes = 16
         for (i in 0 until spokes) {
-            val angle = session.angle + i * (2.0 * PI / spokes)
+            val angle = data.angle + i * (2.0 * PI / spokes)
             val offset = Vector(cos(angle) * radius, 0.0, sin(angle) * radius)
             world.spawnParticle(Particle.SPLASH, origin.clone().add(offset), 1, 0.0, 0.0, 0.0, 0.0)
         }
@@ -174,7 +168,7 @@ internal object WaterGimbal : AbilityInterface {
         val rotAxis = facing.clone().crossProduct(Vector(0.0, 1.0, 0.0)).normalize()
         val up = Vector(0.0, 1.0, 0.0)
         for (i in 0 until spokes) {
-            val angle = -session.angle + i * (2.0 * PI / spokes)
+            val angle = -data.angle + i * (2.0 * PI / spokes)
             val offset = rotate(up.clone().multiply(radius), rotAxis, angle)
             world.spawnParticle(
                 Particle.BUBBLE,
@@ -193,14 +187,14 @@ internal object WaterGimbal : AbilityInterface {
     }
 
     /** Launches the twin wave attack, damaging and shoving entities in front. */
-    private fun launchWaves(session: Session) {
-        val player = session.player
+    private fun launchWaves(data: GimbalData) {
+        val player = data.player
         val world = player.world
         val origin = player.eyeLocation.clone()
         val dir = origin.direction.clone().normalize()
 
-        val damage = DAMAGE + (session.level - 1) * DAMAGE_PER_LEVEL
-        val knockback = KNOCKBACK + (session.level - 1) * KNOCKBACK_PER_LEVEL
+        val damage = DAMAGE + (data.level - 1) * DAMAGE_PER_LEVEL
+        val knockback = KNOCKBACK + (data.level - 1) * KNOCKBACK_PER_LEVEL
 
         renderWave(origin, dir)
         world.playSound(origin, Sound.ENTITY_PLAYER_SPLASH_HIGH_SPEED, 1.0f, 1.0f)
@@ -268,11 +262,6 @@ internal object WaterGimbal : AbilityInterface {
             }
             d += step
         }
-    }
-
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.task?.cancel()
     }
 
     /**

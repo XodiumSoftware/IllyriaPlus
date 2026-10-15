@@ -10,6 +10,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -27,6 +28,7 @@ import kotlin.math.tan
  */
 internal object FrostBreath : AbilityInterface {
     override val cooldownMs: Long = 4500
+    override val activationType = ActivationType.INSTANT
 
     /** Cone reach in blocks. */
     private const val RANGE = 7.0
@@ -59,6 +61,8 @@ internal object FrostBreath : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val origin = player.eyeLocation.clone()
         val direction = origin.direction.clone().normalize()
         val world = origin.world ?: return
@@ -72,6 +76,8 @@ internal object FrostBreath : AbilityInterface {
 
         freeze(origin, direction, angleRad)
         damageAndSlow(player, origin, direction, angleRad, damage)
+
+        complete(player)
     }
 
     /**

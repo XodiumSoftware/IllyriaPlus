@@ -6,6 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 
 /**
  * FastSwim: pull currents around the body to slice through water at speed.
@@ -18,6 +19,7 @@ import org.xodium.illyriabending.abilities.AbilityInterface
  */
 internal object FastSwim : AbilityInterface {
     override val cooldownMs: Long = 8000
+    override val activationType = ActivationType.INSTANT
 
     /** Base potion effect duration in ticks (before level scaling). */
     private const val DURATION_TICKS = 120
@@ -38,6 +40,8 @@ internal object FastSwim : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val duration = DURATION_TICKS + (level - 1) * DURATION_PER_LEVEL
         val speedAmplifier = SPEED_AMPLIFIER + (level - 1) / 2
 
@@ -73,5 +77,7 @@ internal object FastSwim : AbilityInterface {
             0.05,
         )
         player.world.playSound(body, Sound.ENTITY_DOLPHIN_SWIM, 0.7f, 1.3f)
+
+        complete(player)
     }
 }

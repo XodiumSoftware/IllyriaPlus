@@ -11,6 +11,7 @@ import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
@@ -26,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 internal object IceCrawl : AbilityInterface {
     override val cooldownMs: Long = 5500
+    override val activationType = ActivationType.INSTANT
 
     /** Band length in blocks ahead of the player (before level scaling). */
     private const val LENGTH = 6
@@ -70,6 +72,8 @@ internal object IceCrawl : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         // Re-cast while a previous crawl is still active is silently ignored.
         if (sessions.put(player.uniqueId, true) != null) return
 
@@ -97,6 +101,7 @@ internal object IceCrawl : AbilityInterface {
             player.world.playSound(center, Sound.BLOCK_GLASS_BREAK, 0.6f, 1.4f)
             punish(player, length, halfWidth, damage)
             scheduleMelt(player.uniqueId, converted)
+            complete(player)
         } else {
             sessions.remove(player.uniqueId)
         }

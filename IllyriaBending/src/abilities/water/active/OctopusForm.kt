@@ -4,10 +4,10 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.PI
@@ -25,6 +25,8 @@ import kotlin.math.sin
  */
 internal object OctopusForm : AbilityInterface {
     override val cooldownMs: Long = 9000
+    override val activationType = ActivationType.DURATION
+    override val hasSession = true
 
     /** Tendril reach radius in blocks (before level scaling). */
     private const val RADIUS = 2.4
@@ -59,62 +61,51 @@ internal object OctopusForm : AbilityInterface {
     /** Damage cooldown applied per entity so the tendrils don't shred every tick. */
     private const val DAMAGE_COOLDOWN_TICKS = 12L
 
-    /** Ticks between task updates. */
-    private const val TICK_PERIOD = 1L
-
     /** Rotational increment per tick for the tendril orbit. */
     private const val ROTATION_STEP = 0.35
 
-    /** Active octopus sessions keyed by caster UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Per-player octopus state for active sessions. */
+    private val octopi = ConcurrentHashMap<UUID, OctopusData>()
 
-    /**
-     * Holds state for an active OctopusForm.
-     */
-    private class Session(
+    /** Holds state for an active OctopusForm. */
+    private class OctopusData(
         val player: Player,
         val level: Int,
         var ticks: Long = 0L,
         var angle: Double = 0.0,
         val lastHit: MutableMap<UUID, Long> = mutableMapOf(),
-        var task: BukkitTask? = null,
     )
 
     override fun activate(
         player: Player,
         level: Int,
     ) {
-        if (sessions.containsKey(player.uniqueId)) return
+        if (isOnCooldown(player)) return
 
-        val session = Session(player, level)
-        sessions[player.uniqueId] = session
+        val uuid = player.uniqueId
+        if (SessionManager.has(this, uuid)) return
+
+        octopi[uuid] = OctopusData(player, level)
+        SessionManager.start(this, uuid)
         player.world.playSound(player.location, Sound.ENTITY_PLAYER_SPLASH_HIGH_SPEED, 1.0f, 1.1f)
-
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(player.uniqueId) },
-                0L,
-                TICK_PERIOD,
-            )
     }
 
-    /** Advances an octopus session by one tick. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
-        val player = session.player
+    override fun tickSession(uuid: UUID) {
+        val data = octopi[uuid] ?: return
+        val player = data.player
 
-        session.ticks += TICK_PERIOD
-        session.angle += ROTATION_STEP
+        data.ticks += 1L
+        data.angle += ROTATION_STEP
 
-        val maxTicks = MAX_DURATION_TICKS + (session.level - 1) * DURATION_PER_LEVEL
-        if (!player.isOnline || player.isDead || !player.isSneaking || session.ticks > maxTicks) {
-            remove(uuid)
+        val maxTicks = MAX_DURATION_TICKS + (data.level - 1) * DURATION_PER_LEVEL
+        if (!player.isOnline || player.isDead || !player.isSneaking || data.ticks > maxTicks) {
+            octopi.remove(uuid)
+            SessionManager.remove(this, uuid)
             return
         }
 
-        render(session)
-        damage(session)
+        render(data)
+        damage(data)
 
         if (Math.random() < 1.0 / 8.0) {
             player.world.playSound(
@@ -127,15 +118,15 @@ internal object OctopusForm : AbilityInterface {
     }
 
     /** Renders the whirling water tendrils. */
-    private fun render(session: Session) {
-        val player = session.player
+    private fun render(data: OctopusData) {
+        val player = data.player
         val world = player.world
         val center = player.location.clone().add(0.0, 1.1, 0.0)
-        val radius = RADIUS + (session.level - 1) * RADIUS_PER_LEVEL
-        val tendrils = TENDRILS + (session.level - 1) / 2 * TENDRILS_PER_TWO_LEVELS
+        val radius = RADIUS + (data.level - 1) * RADIUS_PER_LEVEL
+        val tendrils = TENDRILS + (data.level - 1) / 2 * TENDRILS_PER_TWO_LEVELS
 
         for (tendrilIndex in 0 until tendrils) {
-            val phase = session.angle + tendrilIndex * (2.0 * PI / tendrils)
+            val phase = data.angle + tendrilIndex * (2.0 * PI / tendrils)
 
             // Each tendril sweeps from mid-radius out to full reach in a curved arc.
             var t = radius * 0.4
@@ -158,12 +149,12 @@ internal object OctopusForm : AbilityInterface {
     }
 
     /** Sweeps entities near the tendril tips with damage and knockback. */
-    private fun damage(session: Session) {
-        val player = session.player
+    private fun damage(data: OctopusData) {
+        val player = data.player
         val world = player.world
         val center = player.location.clone().add(0.0, 1.1, 0.0)
-        val radius = RADIUS + (session.level - 1) * RADIUS_PER_LEVEL
-        val damage = DAMAGE + (session.level - 1) * DAMAGE_PER_LEVEL
+        val radius = RADIUS + (data.level - 1) * RADIUS_PER_LEVEL
+        val damage = DAMAGE + (data.level - 1) * DAMAGE_PER_LEVEL
 
         world
             .getNearbyEntities(center, radius + 0.5, 1.5, radius + 0.5)
@@ -179,9 +170,9 @@ internal object OctopusForm : AbilityInterface {
                 val dist = toVec.length()
                 dist in 0.6..radius
             }.forEach { entity ->
-                val lastHit = session.lastHit[entity.uniqueId] ?: 0L
-                if (session.ticks - lastHit < DAMAGE_COOLDOWN_TICKS) return@forEach
-                session.lastHit[entity.uniqueId] = session.ticks
+                val lastHit = data.lastHit[entity.uniqueId] ?: 0L
+                if (data.ticks - lastHit < DAMAGE_COOLDOWN_TICKS) return@forEach
+                data.lastHit[entity.uniqueId] = data.ticks
 
                 entity.damage(damage, player)
                 val push =
@@ -208,10 +199,5 @@ internal object OctopusForm : AbilityInterface {
                     0.0,
                 )
             }
-    }
-
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.task?.cancel()
     }
 }

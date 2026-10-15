@@ -7,6 +7,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 
 /**
  * HydroSink: pull water under the feet to plunge rapidly downward.
@@ -19,6 +20,7 @@ import org.xodium.illyriabending.abilities.AbilityInterface
  */
 internal object HydroSink : AbilityInterface {
     override val cooldownMs: Long = 6000
+    override val activationType = ActivationType.INSTANT
 
     /** Base downward velocity applied to the caster. */
     private const val SINK_VELOCITY = 1.6
@@ -39,6 +41,8 @@ internal object HydroSink : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val sink = SINK_VELOCITY + (level - 1) * SINK_PER_LEVEL
         val breathDuration = BREATH_DURATION_TICKS + (level - 1) * BREATH_PER_LEVEL
 
@@ -75,5 +79,7 @@ internal object HydroSink : AbilityInterface {
             0.05,
         )
         player.world.playSound(body, Sound.ENTITY_PLAYER_SPLASH_HIGH_SPEED, 0.8f, 0.9f)
+
+        complete(player)
     }
 }

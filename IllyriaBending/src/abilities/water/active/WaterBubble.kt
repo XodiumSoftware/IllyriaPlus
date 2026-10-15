@@ -7,10 +7,11 @@ import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.PI
@@ -29,6 +30,8 @@ import kotlin.math.sin
  */
 internal object WaterBubble : AbilityInterface {
     override val cooldownMs: Long = 9000
+    override val activationType = ActivationType.DURATION
+    override val hasSession = true
 
     /** Maximum bubble duration in ticks (before level scaling). */
     private const val MAX_DURATION_TICKS = 160L
@@ -54,72 +57,65 @@ internal object WaterBubble : AbilityInterface {
     /** How many ring segments to draw each tick. */
     private const val RING_SEGMENTS = 12
 
-    /** Active bubble sessions keyed by caster UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Per-player bubble state for active sessions. */
+    private val bubbles = ConcurrentHashMap<UUID, BubbleData>()
 
-    /**
-     * Holds state for an active WaterBubble channel.
-     */
-    private class Session(
+    /** Holds state for an active WaterBubble channel. */
+    private class BubbleData(
         val player: Player,
         val level: Int,
         var ticks: Long = 0L,
         var angle: Double = 0.0,
-        var task: BukkitTask? = null,
     )
 
     override fun activate(
         player: Player,
         level: Int,
     ) {
-        if (sessions.containsKey(player.uniqueId)) return
+        if (isOnCooldown(player)) return
+
+        val uuid = player.uniqueId
+        if (SessionManager.has(this, uuid)) return
 
         // Kick everything off with an initial effect application so it lands instantly.
         applyEffects(player, level)
 
-        val session = Session(player, level)
-        sessions[player.uniqueId] = session
+        bubbles[uuid] = BubbleData(player, level)
+        SessionManager.start(this, uuid, TICK_PERIOD)
         player.world.playSound(player.location, Sound.BLOCK_BUBBLE_COLUMN_UPWARDS_AMBIENT, 1.0f, 1.2f)
-
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(player.uniqueId) },
-                0L,
-                TICK_PERIOD,
-            )
     }
 
-    /** Advances a bubble session by one tick. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
-        val player = session.player
+    override fun tickSession(uuid: UUID) {
+        val data = bubbles[uuid] ?: return
+        val player = data.player
 
-        session.ticks += TICK_PERIOD
-        session.angle += ROTATION_STEP
+        data.ticks += TICK_PERIOD
+        data.angle += ROTATION_STEP
 
-        val maxTicks = MAX_DURATION_TICKS + (session.level - 1) * DURATION_PER_LEVEL
+        val maxTicks = MAX_DURATION_TICKS + (data.level - 1) * DURATION_PER_LEVEL
         val headBlock = player.eyeLocation.block
 
         val stillValid =
             player.isOnline &&
                 !player.isDead &&
                 player.isSneaking &&
-                session.ticks <= maxTicks &&
+                data.ticks <= maxTicks &&
                 headBlock.isLiquid
 
         if (!stillValid) {
-            remove(uuid)
+            bubbles.remove(uuid)
+            SessionManager.remove(this, uuid)
+            player.world.playSound(player.location, Sound.BLOCK_BUBBLE_COLUMN_WHIRLPOOL_AMBIENT, 0.6f, 0.5f)
             return
         }
 
         // Refresh breathing effects periodically so they never lapse.
-        if (session.ticks % EFFECT_REFRESH_TICKS == 0L) {
-            applyEffects(player, session.level)
+        if (data.ticks % EFFECT_REFRESH_TICKS == 0L) {
+            applyEffects(player, data.level)
         }
 
-        render(session)
-        carve(session)
+        render(data)
+        carve(data)
 
         if (Math.random() < 1.0 / 10.0) {
             player.world.playSound(
@@ -160,11 +156,11 @@ internal object WaterBubble : AbilityInterface {
      * breathable water and lets the player see clearly. Restores water after the
      * carve so the change is purely temporary.
      */
-    private fun carve(session: Session) {
-        val player = session.player
+    private fun carve(data: BubbleData) {
+        val player = data.player
         val world = player.world
         val eye = player.eyeLocation
-        val radius = RADIUS + (session.level - 1) * RADIUS_PER_LEVEL
+        val radius = RADIUS + (data.level - 1) * RADIUS_PER_LEVEL
         val r = radius.toInt().coerceAtLeast(1)
 
         val carved = mutableListOf<Block>()
@@ -196,14 +192,14 @@ internal object WaterBubble : AbilityInterface {
     }
 
     /** Renders the spinning ring of bubble particles around the caster's head. */
-    private fun render(session: Session) {
-        val player = session.player
+    private fun render(data: BubbleData) {
+        val player = data.player
         val world = player.world
         val head = player.eyeLocation.clone()
-        val radius = RADIUS + (session.level - 1) * RADIUS_PER_LEVEL
+        val radius = RADIUS + (data.level - 1) * RADIUS_PER_LEVEL
 
         for (i in 0 until RING_SEGMENTS) {
-            val angle = session.angle + i * (2.0 * PI / RING_SEGMENTS)
+            val angle = data.angle + i * (2.0 * PI / RING_SEGMENTS)
             val offset =
                 Vector(
                     cos(angle) * radius,
@@ -234,14 +230,5 @@ internal object WaterBubble : AbilityInterface {
             0.4,
             0.0,
         )
-    }
-
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.let { session ->
-            val player = session.player
-            session.task?.cancel()
-            player.world.playSound(player.location, Sound.BLOCK_BUBBLE_COLUMN_WHIRLPOOL_AMBIENT, 0.6f, 0.5f)
-        }
     }
 }

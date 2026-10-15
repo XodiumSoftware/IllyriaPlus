@@ -4,10 +4,10 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.PI
@@ -25,6 +25,8 @@ import kotlin.math.sin
  */
 internal object WaterRing : AbilityInterface {
     override val cooldownMs: Long = 7000
+    override val activationType = ActivationType.DURATION
+    override val hasSession = true
 
     /** Ring orbit radius in blocks (before level scaling). */
     private const val RADIUS = 2.0
@@ -53,77 +55,66 @@ internal object WaterRing : AbilityInterface {
     /** Additional duration per level. */
     private const val DURATION_PER_LEVEL = 30L
 
-    /** Ticks between task updates. */
-    private const val TICK_PERIOD = 1L
-
     /** Rotational increment per tick for the ring render. */
     private const val ROTATION_STEP = 0.25
 
     /** Damage cooldown applied per entity so the ring doesn't shred every tick. */
     private const val DAMAGE_COOLDOWN_TICKS = 10L
 
-    /** Active ring sessions keyed by caster UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Per-player ring state for active sessions. */
+    private val rings = ConcurrentHashMap<UUID, RingData>()
 
-    /**
-     * Holds state for an active WaterRing.
-     */
-    private class Session(
+    /** Holds state for an active WaterRing. */
+    private class RingData(
         val player: Player,
         val level: Int,
         var ticks: Long = 0L,
         var angle: Double = 0.0,
         val lastHit: MutableMap<UUID, Long> = mutableMapOf(),
-        var task: BukkitTask? = null,
     )
 
     override fun activate(
         player: Player,
         level: Int,
     ) {
-        if (sessions.containsKey(player.uniqueId)) return
+        if (isOnCooldown(player)) return
 
-        val session = Session(player, level)
-        sessions[player.uniqueId] = session
+        val uuid = player.uniqueId
+        if (SessionManager.has(this, uuid)) return
+
+        rings[uuid] = RingData(player, level)
+        SessionManager.start(this, uuid)
         player.world.playSound(player.location, Sound.BLOCK_WATER_AMBIENT, 1.0f, 1.3f)
-
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(player.uniqueId) },
-                0L,
-                TICK_PERIOD,
-            )
     }
 
-    /** Advances a ring session by one tick. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
-        val player = session.player
+    override fun tickSession(uuid: UUID) {
+        val data = rings[uuid] ?: return
+        val player = data.player
 
-        session.ticks += TICK_PERIOD
-        session.angle += ROTATION_STEP
+        data.ticks += 1L
+        data.angle += ROTATION_STEP
 
-        val maxTicks = MAX_DURATION_TICKS + (session.level - 1) * DURATION_PER_LEVEL
-        if (!player.isOnline || player.isDead || !player.isSneaking || session.ticks > maxTicks) {
-            remove(uuid)
+        val maxTicks = MAX_DURATION_TICKS + (data.level - 1) * DURATION_PER_LEVEL
+        if (!player.isOnline || player.isDead || !player.isSneaking || data.ticks > maxTicks) {
+            rings.remove(uuid)
+            SessionManager.remove(this, uuid)
             return
         }
 
-        render(session)
-        damage(session)
+        render(data)
+        damage(data)
     }
 
     /** Renders the spinning ring of water particles. */
-    private fun render(session: Session) {
-        val player = session.player
+    private fun render(data: RingData) {
+        val player = data.player
         val world = player.world
         val center = player.location.clone().add(0.0, 0.9, 0.0)
-        val radius = RADIUS + (session.level - 1) * RADIUS_PER_LEVEL
+        val radius = RADIUS + (data.level - 1) * RADIUS_PER_LEVEL
 
         val segments = 18
         for (i in 0 until segments) {
-            val angle = session.angle + i * (2.0 * PI / segments)
+            val angle = data.angle + i * (2.0 * PI / segments)
             val offset = Vector(cos(angle) * radius, 0.1 * sin(angle * 3.0), sin(angle) * radius)
             world.spawnParticle(Particle.SPLASH, center.clone().add(offset), 1, 0.0, 0.0, 0.0, 0.0)
             if (Math.random() < 0.2) {
@@ -152,12 +143,12 @@ internal object WaterRing : AbilityInterface {
     }
 
     /** Damages entities near the ring's outer edge. */
-    private fun damage(session: Session) {
-        val player = session.player
+    private fun damage(data: RingData) {
+        val player = data.player
         val world = player.world
         val center = player.location.clone().add(0.0, 0.9, 0.0)
-        val radius = RADIUS + (session.level - 1) * RADIUS_PER_LEVEL
-        val damage = DAMAGE + (session.level - 1) * DAMAGE_PER_LEVEL
+        val radius = RADIUS + (data.level - 1) * RADIUS_PER_LEVEL
+        val damage = DAMAGE + (data.level - 1) * DAMAGE_PER_LEVEL
 
         world
             .getNearbyEntities(center, radius + HIT_RADIUS, 1.5, radius + HIT_RADIUS)
@@ -173,9 +164,9 @@ internal object WaterRing : AbilityInterface {
                 val dist = toVec.length()
                 dist in (radius - HIT_RADIUS)..(radius + HIT_RADIUS)
             }.forEach { entity ->
-                val lastHit = session.lastHit[entity.uniqueId] ?: 0L
-                if (session.ticks - lastHit < DAMAGE_COOLDOWN_TICKS) return@forEach
-                session.lastHit[entity.uniqueId] = session.ticks
+                val lastHit = data.lastHit[entity.uniqueId] ?: 0L
+                if (data.ticks - lastHit < DAMAGE_COOLDOWN_TICKS) return@forEach
+                data.lastHit[entity.uniqueId] = data.ticks
 
                 entity.damage(damage, player)
                 val push =
@@ -192,10 +183,5 @@ internal object WaterRing : AbilityInterface {
                         .add(push)
                         .add(Vector(0.0, KNOCKUP, 0.0))
             }
-    }
-
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.task?.cancel()
     }
 }

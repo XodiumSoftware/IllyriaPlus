@@ -10,6 +10,7 @@ import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 
 /**
  * IceSpike: erupt a jagged spike of ice from the ground a few blocks ahead.
@@ -23,6 +24,7 @@ import org.xodium.illyriabending.abilities.AbilityInterface
  */
 internal object IceSpike : AbilityInterface {
     override val cooldownMs: Long = 4500
+    override val activationType = ActivationType.INSTANT
 
     /** Horizontal distance ahead of the player where the spike erupts. */
     private const val SPAWN_DISTANCE = 3.5
@@ -58,6 +60,8 @@ internal object IceSpike : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val world = player.world
         val forward =
             player
@@ -106,6 +110,8 @@ internal object IceSpike : AbilityInterface {
                 MELT_DELAY_TICKS,
             )
         }
+
+        complete(player)
     }
 
     /**
