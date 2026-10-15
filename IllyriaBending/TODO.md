@@ -15,7 +15,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 - [x] AirShield
 - [x] AirSpout
 - [x] AirSwipe
-- [ ] Tornado
+- [x] Tornado
 
 ### Passive
 
