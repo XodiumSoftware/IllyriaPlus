@@ -5,6 +5,7 @@ import com.fren_gor.ultimateAdvancementAPI.database.impl.SQLite
 import org.bukkit.plugin.java.JavaPlugin
 import org.xodium.illyriabending.advancements.BendingAdvancement
 import org.xodium.illyriabending.mechanics.BendingMechanic
+import org.xodium.illyriabending.mechanics.BendingScoreboardMechanic
 import org.xodium.illyriabending.mechanics.MechanicInterface
 import org.xodium.illyrialib.Utils.validateVersion
 import java.io.File
@@ -40,6 +41,7 @@ internal class IllyriaBending : JavaPlugin() {
         mechanics =
             listOf(
                 BendingMechanic,
+                BendingScoreboardMechanic,
             )
 
         logger.info(
