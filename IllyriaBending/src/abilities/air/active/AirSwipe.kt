@@ -7,6 +7,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -24,6 +25,7 @@ import kotlin.math.sin
  */
 internal object AirSwipe : AbilityInterface {
     override val cooldownMs: Long = 2500
+    override val activationType: ActivationType = ActivationType.INSTANT
 
     /** Maximum reach of the swipe in blocks. */
     private const val RANGE = 4.5
@@ -56,6 +58,8 @@ internal object AirSwipe : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val origin = player.eyeLocation.clone().subtract(0.0, 0.4, 0.0)
         val world = origin.world ?: return
 
@@ -73,6 +77,8 @@ internal object AirSwipe : AbilityInterface {
         world.playSound(origin, Sound.ENTITY_BREEZE_WIND_BURST, 1.0f, 1.3f)
 
         strike(player, origin, forward, range, arcRad, knockScale)
+
+        complete(player)
     }
 
     /**

@@ -6,6 +6,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 
 /**
  * AirPunch: a short-ranged, lunging jab of compressed air.
@@ -15,6 +16,7 @@ import org.xodium.illyriabending.abilities.AbilityInterface
  */
 internal object AirPunch : AbilityInterface {
     override val cooldownMs: Long = 1500
+    override val activationType: ActivationType = ActivationType.INSTANT
 
     /** Jab reach in blocks (before level scaling). */
     private const val RANGE = 2.5
@@ -41,6 +43,8 @@ internal object AirPunch : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val origin = player.eyeLocation.clone()
         val direction = origin.direction.clone().normalize()
         val world = origin.world ?: return
@@ -54,6 +58,8 @@ internal object AirPunch : AbilityInterface {
         strike(player, origin, direction, range, level)
 
         player.velocity = player.velocity.add(direction.clone().multiply(LUNGE))
+
+        complete(player)
     }
 
     /**

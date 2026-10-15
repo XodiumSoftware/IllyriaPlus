@@ -3,12 +3,11 @@ package org.xodium.illyriabending.abilities.air.active
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -23,6 +22,8 @@ import kotlin.math.sin
  */
 internal object AirScooter : AbilityInterface {
     override val cooldownMs: Long = 4000
+    override val activationType: ActivationType = ActivationType.DURATION
+    override val hasSession: Boolean = true
 
     /** Horizontal propulsion speed per tick (before level scaling). */
     private const val SPEED = 0.4
@@ -39,18 +40,14 @@ internal object AirScooter : AbilityInterface {
     /** Height offset of particles under the player. */
     private const val PARTICLE_Y_OFFSET = -0.35
 
-    /** Active scooter sessions keyed by player UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Per-session scooter state keyed by player UUID. */
+    private val states = mutableMapOf<UUID, ScooterState>()
 
-    /**
-     * Holds state for an active scooter ride.
-     */
-    private class Session(
-        val player: Player,
+    /** Holds per-session state for an active scooter ride. */
+    private class ScooterState(
         val level: Int,
         var ticks: Long = 0L,
         var angle: Double = 0.0,
-        var task: BukkitTask? = null,
     )
 
     override fun activate(
@@ -58,44 +55,42 @@ internal object AirScooter : AbilityInterface {
         level: Int,
     ) {
         val uuid = player.uniqueId
-        if (sessions.containsKey(uuid)) {
-            remove(uuid)
+        if (SessionManager.has(this, uuid)) {
+            states.remove(uuid)
+            SessionManager.remove(this, uuid)
             return
         }
+        if (isOnCooldown(player)) return
 
-        val session = Session(player, level)
-        sessions[uuid] = session
-
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(uuid) },
-                0L,
-                TICK_PERIOD,
-            )
+        states[uuid] = ScooterState(level)
+        SessionManager.start(this, uuid, TICK_PERIOD)
     }
 
-    /** Advances a scooter session by one tick. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
+    override fun tickSession(uuid: UUID) {
+        val session = SessionManager.get(this, uuid) ?: return
         val player = session.player
+        val state = states[uuid] ?: return
 
-        session.ticks += TICK_PERIOD
-        session.angle += 0.4
+        state.ticks += TICK_PERIOD
+        state.angle += 0.4
 
-        if (!player.isOnline || player.isDead || session.ticks > MAX_DURATION_TICKS) {
-            remove(uuid)
+        if (!player.isOnline || player.isDead || state.ticks > MAX_DURATION_TICKS) {
+            states.remove(uuid)
+            SessionManager.remove(this, uuid)
+            complete(player)
             return
         }
 
-        propel(session)
-        render(session)
-        playSound(session)
+        propel(player, state)
+        render(player, state)
+        playSound(player)
     }
 
     /** Pushes the player horizontally each tick. */
-    private fun propel(session: Session) {
-        val player = session.player
+    private fun propel(
+        player: Player,
+        state: ScooterState,
+    ) {
         val dir =
             player
                 .location
@@ -103,7 +98,7 @@ internal object AirScooter : AbilityInterface {
                 .clone()
                 .setY(0)
                 .normalize()
-        val speed = SPEED + (session.level - 1) * SPEED_PER_LEVEL
+        val speed = SPEED + (state.level - 1) * SPEED_PER_LEVEL
 
         val velocity = dir.multiply(speed)
         val current = player.velocity
@@ -111,14 +106,16 @@ internal object AirScooter : AbilityInterface {
     }
 
     /** Renders the spinning disc of air under the player's feet. */
-    private fun render(session: Session) {
-        val player = session.player
+    private fun render(
+        player: Player,
+        state: ScooterState,
+    ) {
         val world = player.world
         val origin = player.location.clone().add(0.0, PARTICLE_Y_OFFSET, 0.0)
 
         val rays = 12
         for (i in 0 until rays) {
-            val angle = session.angle + i * (2.0 * Math.PI / rays)
+            val angle = state.angle + i * (2.0 * Math.PI / rays)
             val offset =
                 Vector(
                     cos(angle) * 0.5,
@@ -132,19 +129,14 @@ internal object AirScooter : AbilityInterface {
     }
 
     /** Plays periodic sound while riding. */
-    private fun playSound(session: Session) {
+    private fun playSound(player: Player) {
         if (Math.random() < 1.0 / 10.0) {
-            session.player.world.playSound(
-                session.player.location,
+            player.world.playSound(
+                player.location,
                 Sound.ENTITY_BREEZE_IDLE_GROUND,
                 0.4f,
                 1.6f,
             )
         }
-    }
-
-    /** Cancels and removes a scooter session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.task?.cancel()
     }
 }

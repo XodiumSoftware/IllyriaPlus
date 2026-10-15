@@ -5,12 +5,11 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -24,6 +23,8 @@ import kotlin.math.sin
  */
 internal object AirBurst : AbilityInterface {
     override val cooldownMs: Long = 6000
+    override val activationType: ActivationType = ActivationType.CHARGE
+    override val hasSession: Boolean = true
 
     /** Blast radius in blocks (before charge factor). */
     private const val RADIUS = 5.0
@@ -49,56 +50,46 @@ internal object AirBurst : AbilityInterface {
     /** Particle density step along render rays. */
     private const val STEP = 0.4
 
-    /** Active charging sessions keyed by player UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Per-session charge state keyed by player UUID. */
+    private val states = mutableMapOf<UUID, ChargeState>()
 
-    /**
-     * Holds state for a charging AirBurst activation.
-     */
-    private class Session(
-        val player: Player,
+    /** Holds per-session state for a charging burst. */
+    private class ChargeState(
         val startTime: Long = System.currentTimeMillis(),
-        var task: BukkitTask? = null,
+        var level: Int = 1,
     )
 
     override fun activate(
         player: Player,
         level: Int,
     ) {
-        if (sessions.containsKey(player.uniqueId)) return
+        if (isOnCooldown(player)) return
+        if (SessionManager.has(this, player.uniqueId)) return
 
-        val session = Session(player)
-        sessions[player.uniqueId] = session
-
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(player.uniqueId, level) },
-                0L,
-                TICK_PERIOD,
-            )
+        states[player.uniqueId] = ChargeState(level = level)
+        SessionManager.start(this, player.uniqueId, TICK_PERIOD)
     }
 
-    /** Advances a charging session by one tick. */
-    private fun tick(
-        uuid: UUID,
-        level: Int,
-    ) {
-        val session = sessions[uuid] ?: return
+    override fun tickSession(uuid: UUID) {
+        val session = SessionManager.get(this, uuid) ?: return
         val player = session.player
+        val state = states[uuid] ?: return
 
         if (!player.isOnline || player.isDead) {
-            remove(uuid)
+            states.remove(uuid)
+            SessionManager.remove(this, uuid)
             return
         }
 
-        val elapsed = System.currentTimeMillis() - session.startTime
+        val elapsed = System.currentTimeMillis() - state.startTime
         val chargeFactor = minOf(1.0, elapsed.toDouble() / MAX_CHARGE_TIME_MS)
 
         if (!player.isSneaking || elapsed >= MAX_CHARGE_TIME_MS * 2L) {
             val factor = 1.0 + (CHARGE_FACTOR - 1.0) * chargeFactor
-            remove(uuid)
-            detonate(player, level, factor)
+            states.remove(uuid)
+            SessionManager.remove(this, uuid)
+            detonate(player, state.level, factor)
+            complete(player)
             return
         }
 
@@ -207,10 +198,5 @@ internal object AirBurst : AbilityInterface {
                 }
             }
         }
-    }
-
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.task?.cancel()
     }
 }

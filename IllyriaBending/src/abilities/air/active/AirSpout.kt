@@ -4,12 +4,11 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -25,6 +24,8 @@ import kotlin.math.sin
  */
 internal object AirSpout : AbilityInterface {
     override val cooldownMs: Long = 3500
+    override val activationType: ActivationType = ActivationType.DURATION
+    override val hasSession: Boolean = true
 
     /** Vertical lift applied per tick to the caster (before level scaling). */
     private const val LIFT = 0.18
@@ -47,60 +48,53 @@ internal object AirSpout : AbilityInterface {
     /** Height of the spout column for the render. */
     private const val RENDER_HEIGHT = 3.0
 
-    /** Active spout sessions keyed by player UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Per-session spout state keyed by player UUID. */
+    private val states = mutableMapOf<UUID, SpoutState>()
 
-    /**
-     * Holds state for an active AirSpout session.
-     */
-    private class Session(
-        val player: Player,
+    /** Holds per-session state for an active spout. */
+    private class SpoutState(
         val level: Int,
         var ticks: Long = 0L,
         var angle: Double = 0.0,
-        var task: BukkitTask? = null,
     )
 
     override fun activate(
         player: Player,
         level: Int,
     ) {
-        if (sessions.containsKey(player.uniqueId)) return
+        if (isOnCooldown(player)) return
+        if (SessionManager.has(this, player.uniqueId)) return
 
-        val session = Session(player, level)
-        sessions[player.uniqueId] = session
-
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(player.uniqueId) },
-                0L,
-                TICK_PERIOD,
-            )
+        states[player.uniqueId] = SpoutState(level)
+        SessionManager.start(this, player.uniqueId, TICK_PERIOD)
     }
 
-    /** Advances a spout session by one tick. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
+    override fun tickSession(uuid: UUID) {
+        val session = SessionManager.get(this, uuid) ?: return
         val player = session.player
+        val state = states[uuid] ?: return
 
-        session.ticks += TICK_PERIOD
-        session.angle += 0.5
+        state.ticks += TICK_PERIOD
+        state.angle += 0.5
 
-        if (!player.isOnline || player.isDead || !player.isSneaking || session.ticks > MAX_DURATION_TICKS) {
-            remove(uuid)
+        if (!player.isOnline || player.isDead || !player.isSneaking || state.ticks > MAX_DURATION_TICKS) {
+            states.remove(uuid)
+            SessionManager.remove(this, uuid)
+            complete(player)
             return
         }
 
-        lift(session)
-        render(session)
-        playSound(session)
+        lift(player, state)
+        render(player, state)
+        playSound(player)
     }
 
     /** Applies lift to the caster and nearby entities. */
-    private fun lift(session: Session) {
-        val player = session.player
-        val lift = LIFT + (session.level - 1) * LIFT_PER_LEVEL
+    private fun lift(
+        player: Player,
+        state: SpoutState,
+    ) {
+        val lift = LIFT + (state.level - 1) * LIFT_PER_LEVEL
 
         val current = player.velocity
         player.velocity = Vector(current.x, lift, current.z)
@@ -117,8 +111,10 @@ internal object AirSpout : AbilityInterface {
     }
 
     /** Renders the spinning column of air beneath the player. */
-    private fun render(session: Session) {
-        val player = session.player
+    private fun render(
+        player: Player,
+        state: SpoutState,
+    ) {
         val world = player.world
         val base = player.location.clone().subtract(0.0, 0.5, 0.0)
 
@@ -127,7 +123,7 @@ internal object AirSpout : AbilityInterface {
             val radiusAt = 0.6 - (y / RENDER_HEIGHT) * 0.3
             val rays = 6
             for (i in 0 until rays) {
-                val angle = session.angle + i * (2.0 * PI / rays) + y * 0.8
+                val angle = state.angle + i * (2.0 * PI / rays) + y * 0.8
                 val offset =
                     Vector(
                         cos(angle) * radiusAt,
@@ -141,19 +137,14 @@ internal object AirSpout : AbilityInterface {
     }
 
     /** Plays periodic sound. */
-    private fun playSound(session: Session) {
+    private fun playSound(player: Player) {
         if (Math.random() < 1.0 / 8.0) {
-            session.player.world.playSound(
-                session.player.location,
+            player.world.playSound(
+                player.location,
                 Sound.ENTITY_BREEZE_IDLE_GROUND,
                 0.5f,
                 1.4f,
             )
         }
-    }
-
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.task?.cancel()
     }
 }

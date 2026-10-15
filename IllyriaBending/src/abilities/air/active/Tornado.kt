@@ -5,12 +5,11 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -27,6 +26,8 @@ import kotlin.math.sin
  */
 internal object Tornado : AbilityInterface {
     override val cooldownMs: Long = 12000
+    override val activationType: ActivationType = ActivationType.DURATION
+    override val hasSession: Boolean = true
 
     /** Horizontal distance ahead of the player where the tornado is summoned. */
     private const val SPAWN_DISTANCE = 4.0
@@ -61,27 +62,24 @@ internal object Tornado : AbilityInterface {
     /** Rotational increment per tick for the spiral render. */
     private const val ROTATION_STEP = 0.6
 
-    /** Active tornado sessions keyed by caster UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Per-session tornado state keyed by player UUID. */
+    private val states = mutableMapOf<UUID, TornadoState>()
 
-    /**
-     * Holds state for an active tornado.
-     */
-    private class Session(
-        val player: Player,
+    /** Holds per-session state for an active tornado. */
+    private class TornadoState(
         val center: Location,
         val height: Double,
         val maxTicks: Long,
         var ticks: Long = 0L,
         var angle: Double = 0.0,
-        var task: BukkitTask? = null,
     )
 
     override fun activate(
         player: Player,
         level: Int,
     ) {
-        if (sessions.containsKey(player.uniqueId)) return
+        if (isOnCooldown(player)) return
+        if (SessionManager.has(this, player.uniqueId)) return
 
         val forward =
             player
@@ -98,49 +96,44 @@ internal object Tornado : AbilityInterface {
         val height = HEIGHT + (level - 1) * HEIGHT_PER_LEVEL
         val maxTicks = MAX_DURATION_TICKS + (level - 1) * DURATION_PER_LEVEL
 
-        val session = Session(player, center, height, maxTicks)
-        sessions[player.uniqueId] = session
+        states[player.uniqueId] = TornadoState(center, height, maxTicks)
 
         center.world?.playSound(center, Sound.ENTITY_BREEZE_WIND_BURST, 1.2f, 0.7f)
 
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(player.uniqueId) },
-                0L,
-                TICK_PERIOD,
-            )
+        SessionManager.start(this, player.uniqueId, TICK_PERIOD)
     }
 
-    /** Advances a tornado session by one tick. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
+    override fun tickSession(uuid: UUID) {
+        val session = SessionManager.get(this, uuid) ?: return
         val player = session.player
+        val state = states[uuid] ?: return
 
-        session.ticks += TICK_PERIOD
-        session.angle += ROTATION_STEP
+        state.ticks += TICK_PERIOD
+        state.angle += ROTATION_STEP
 
-        if (!player.isOnline || session.ticks > session.maxTicks) {
-            remove(uuid)
+        if (!player.isOnline || state.ticks > state.maxTicks) {
+            states.remove(uuid)
+            SessionManager.remove(this, uuid)
+            complete(player)
             return
         }
 
-        render(session)
-        suck(session)
-        playSound(session)
+        render(state)
+        suck(player, state)
+        playSound(state)
     }
 
     /** Renders the spinning funnel of air particles from ground to peak. */
-    private fun render(session: Session) {
-        val world = session.center.world ?: return
+    private fun render(state: TornadoState) {
+        val world = state.center.world ?: return
 
         var y = 0.0
-        while (y <= session.height) {
-            val progress = y / session.height
+        while (y <= state.height) {
+            val progress = y / state.height
             val radiusAt = 0.4 + progress * 1.4
             val rays = 6
             for (i in 0 until rays) {
-                val angle = session.angle + i * (2.0 * PI / rays) + y * 0.5
+                val angle = state.angle + i * (2.0 * PI / rays) + y * 0.5
                 val offset =
                     Vector(
                         cos(angle) * radiusAt,
@@ -149,7 +142,7 @@ internal object Tornado : AbilityInterface {
                     )
                 world.spawnParticle(
                     Particle.CLOUD,
-                    session.center.clone().add(offset),
+                    state.center.clone().add(offset),
                     1,
                     0.0,
                     0.0,
@@ -162,17 +155,20 @@ internal object Tornado : AbilityInterface {
     }
 
     /** Pulls nearby entities toward the funnel, lifts them, and flings them at the top. */
-    private fun suck(session: Session) {
-        val world = session.center.world ?: return
+    private fun suck(
+        player: Player,
+        state: TornadoState,
+    ) {
+        val world = state.center.world ?: return
 
         world
-            .getNearbyEntities(session.center, PULL_RADIUS, session.height, PULL_RADIUS)
+            .getNearbyEntities(state.center, PULL_RADIUS, state.height, PULL_RADIUS)
             .filterIsInstance<LivingEntity>()
-            .filter { it != session.player }
-            .filter { it.location.y <= session.center.y + session.height + 2.0 }
+            .filter { it != player }
+            .filter { it.location.y <= state.center.y + state.height + 2.0 }
             .forEach { entity ->
                 val toCenter =
-                    session
+                    state
                         .center
                         .toVector()
                         .subtract(entity.location.toVector())
@@ -183,7 +179,7 @@ internal object Tornado : AbilityInterface {
                 if (dist > 0.8) {
                     val pull = toCenter.normalize().multiply(PULL)
                     entity.velocity = Vector(current.x + pull.x, LIFT, current.z + pull.z)
-                } else if (entity.location.y >= session.center.y + session.height - 1.0) {
+                } else if (entity.location.y >= state.center.y + state.height - 1.0) {
                     val angle = Math.random() * 2.0 * PI
                     val fling = Vector(cos(angle) * FLING, 0.3, sin(angle) * FLING)
                     entity.velocity = current.add(fling)
@@ -194,19 +190,14 @@ internal object Tornado : AbilityInterface {
     }
 
     /** Plays periodic wind sound. */
-    private fun playSound(session: Session) {
+    private fun playSound(state: TornadoState) {
         if (Math.random() < 1.0 / 6.0) {
-            session.center.world?.playSound(
-                session.center,
+            state.center.world?.playSound(
+                state.center,
                 Sound.ENTITY_BREEZE_IDLE_GROUND,
                 0.8f,
                 0.9f,
             )
         }
-    }
-
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.task?.cancel()
     }
 }

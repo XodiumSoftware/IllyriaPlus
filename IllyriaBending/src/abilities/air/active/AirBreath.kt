@@ -8,12 +8,11 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -30,6 +29,8 @@ import kotlin.math.tan
  */
 internal object AirBreath : AbilityInterface {
     override val cooldownMs: Long = 5000
+    override val activationType: ActivationType = ActivationType.DURATION
+    override val hasSession: Boolean = true
 
     /** Cone reach in blocks. */
     private const val RANGE = 6.0
@@ -55,14 +56,22 @@ internal object AirBreath : AbilityInterface {
     /** Particle density step along each ray. */
     private const val STEP = 0.4
 
-    /** Active casting sessions keyed by player UUID. */
-    private val sessions = ConcurrentHashMap<UUID, BukkitTask>()
+    /** Per-session breath state keyed by player UUID. */
+    private val states = mutableMapOf<UUID, BreathState>()
+
+    /** Holds per-session state for an active breath. */
+    private class BreathState(
+        var ticks: Long = 0L,
+        var angleRad: Double = 0.0,
+        var pushScale: Double = 1.0,
+    )
 
     override fun activate(
         player: Player,
         level: Int,
     ) {
-        if (sessions.containsKey(player.uniqueId)) return
+        if (isOnCooldown(player)) return
+        if (SessionManager.has(this, player.uniqueId)) return
 
         val angleRad = Math.toRadians(CONE_ANGLE_DEG + (level - 1) * 5.0)
         val pushScale = 1.0 + (level - 1) * 0.25
@@ -71,26 +80,23 @@ internal object AirBreath : AbilityInterface {
             PotionEffect(PotionEffectType.WATER_BREATHING, WATER_BREATHING_TICKS, 0, false, false),
         )
 
-        var ticks = 0L
-        sessions[player.uniqueId] =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable {
-                    ticks += TICK_PERIOD
-                    if (!player.isOnline || player.isDead || !player.isSneaking || ticks > MAX_DURATION_TICKS) {
-                        remove(player.uniqueId)
-                        return@Runnable
-                    }
-                    breathe(player, angleRad, pushScale)
-                },
-                0L,
-                TICK_PERIOD,
-            )
+        states[player.uniqueId] = BreathState(angleRad = angleRad, pushScale = pushScale)
+        SessionManager.start(this, player.uniqueId, TICK_PERIOD)
     }
 
-    /** Removes an active session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.cancel()
+    override fun tickSession(uuid: UUID) {
+        val session = SessionManager.get(this, uuid) ?: return
+        val player = session.player
+        val state = states[uuid] ?: return
+
+        state.ticks += TICK_PERIOD
+        if (!player.isOnline || player.isDead || !player.isSneaking || state.ticks > MAX_DURATION_TICKS) {
+            states.remove(uuid)
+            SessionManager.remove(this, uuid)
+            complete(player)
+            return
+        }
+        breathe(player, state.angleRad, state.pushScale)
     }
 
     /**
