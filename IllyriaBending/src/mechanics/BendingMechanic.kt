@@ -110,17 +110,41 @@ internal object BendingMechanic : MechanicInterface {
         )
 
     @EventHandler
-    fun on(event: PlayerJoinEvent) {
+    fun on(event: PlayerJoinEvent) = grantRootAdvancement(event)
+
+    @EventHandler
+    fun on(event: PlayerQuitEvent) = clearCastCooldown(event)
+
+    @EventHandler
+    fun on(event: PlayerArmSwingEvent) = trackCastCooldown(event)
+
+    /**
+     * Grants the root advancement if the player has not chosen a bending type.
+     *
+     * @param event The [PlayerJoinEvent] triggered when a player joins the server.
+     */
+    private fun grantRootAdvancement(event: PlayerJoinEvent) {
         if (!event.player.hasBendingType) BendingAdvancement.grantRoot(event.player)
     }
 
-    @EventHandler
-    fun on(event: PlayerQuitEvent) {
+    /**
+     * Clears the player's cast cooldown entry.
+     *
+     * @param event The [PlayerQuitEvent] triggered when a player leaves the server.
+     */
+    private fun clearCastCooldown(event: PlayerQuitEvent) {
         lastCastMs.remove(event.player.uniqueId)
     }
 
-    @EventHandler
-    fun on(event: PlayerArmSwingEvent) {
+    /**
+     * Records a bending cast if the swing is valid and the player's cooldown has elapsed.
+     *
+     * A swing is a valid cast when it is performed with the main hand, the main hand is empty,
+     * and the off hand holds the material matching the player's bending type.
+     *
+     * @param event The [PlayerArmSwingEvent] triggered when a player swings their arm.
+     */
+    private fun trackCastCooldown(event: PlayerArmSwingEvent) {
         if (event.hand != EquipmentSlot.HAND) return
         val player = event.player
         if (!player.inventory.itemInMainHand.isEmpty) return
