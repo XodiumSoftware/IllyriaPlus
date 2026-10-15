@@ -130,6 +130,7 @@ internal object BloodBending : AbilityInterface {
 
         return world
             .getNearbyEntities(origin, range, range, range)
+            .asSequence()
             .filterIsInstance<LivingEntity>()
             .filter { it != player }
             .filter { !it.isDead }
