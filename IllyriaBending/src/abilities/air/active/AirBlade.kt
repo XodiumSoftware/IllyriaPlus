@@ -49,9 +49,6 @@ internal object AirBlade : AbilityInterface {
     /** How many blocks the blade advances every tick (before charge factor). */
     private const val SPEED = 0.8
 
-    /** How many milliseconds it takes to fully charge. */
-    private const val MAX_CHARGE_TIME_MS = 2000L
-
     /** Damage and range multiplier at full charge. Radius and speed are only halved-affected. */
     private const val CHARGE_FACTOR = 3.0
 
@@ -60,6 +57,9 @@ internal object AirBlade : AbilityInterface {
 
     /** Current angle for the rotating ring animation, incremented each tick. */
     private var chargingPoint = 0.0
+
+    /** Charge start times keyed by player UUID. */
+    private val chargeStartMs = mutableMapOf<UUID, Long>()
 
     /** Active blade projectiles keyed by player UUID. */
     private val blades = mutableMapOf<UUID, Blade>()
@@ -91,9 +91,7 @@ internal object AirBlade : AbilityInterface {
         var ticksAlive = 0
         var rotationAngle = 0.0
 
-        /**
-         * Advances the blade one tick. Returns `false` when the blade should be removed.
-         */
+        /** Advances the blade one tick. Returns `false` when the blade should be removed. */
         fun update(): Boolean {
             if (++ticksAlive > maxTicks) return false
 
@@ -155,31 +153,8 @@ internal object AirBlade : AbilityInterface {
         if (isOnCooldown(player)) return
         if (SessionManager.has(this, player.uniqueId)) return
 
-        val direction =
-            player
-                .location
-                .direction
-                .clone()
-                .setY(0)
-                .normalize()
-        val maxRadius = RADIUS * CHARGE_FACTOR * 0.5
-        val origin =
-            player
-                .location
-                .clone()
-                .add(direction.clone())
-                .add(0.0, maxRadius, 0.0)
-
+        chargeStartMs[player.uniqueId] = System.currentTimeMillis()
         SessionManager.start(this, player.uniqueId, TICK_PERIOD)
-        startSession(player, level)
-    }
-
-    override fun startSession(
-        player: Player,
-        level: Int,
-    ) {
-        // Store initial state in a map for this ability
-        // Session data is managed by SessionManager, but we track blade-specific state here
     }
 
     override fun tickSession(uuid: UUID) {
@@ -189,6 +164,7 @@ internal object AirBlade : AbilityInterface {
         if (!player.isOnline || player.isDead) {
             SessionManager.remove(this, uuid)
             blades.remove(uuid)
+            chargeStartMs.remove(uuid)
             complete(player)
             return
         }
@@ -223,11 +199,14 @@ internal object AirBlade : AbilityInterface {
 
         if (origin.block.isLiquid) {
             SessionManager.remove(this, uuid)
+            chargeStartMs.remove(uuid)
             return
         }
 
         if (player.isSneaking) {
-            val r = RADIUS * 0.5
+            val elapsed = System.currentTimeMillis() - (chargeStartMs[uuid] ?: return)
+            val timeFactor = minOf(0.9, elapsed.toDouble() / 2000L)
+            val r = RADIUS * CHARGE_FACTOR * timeFactor * 0.5
             val count = ceil(r * 10).toInt()
             val axisY = Vector(0, 1, 0)
             val rotAxis = axisY.clone().crossProduct(direction).normalize()
@@ -255,6 +234,7 @@ internal object AirBlade : AbilityInterface {
         if (!blade.update()) {
             blades.remove(player.uniqueId)
             SessionManager.remove(this, player.uniqueId)
+            chargeStartMs.remove(player.uniqueId)
             complete(player)
         }
     }
@@ -266,14 +246,22 @@ internal object AirBlade : AbilityInterface {
         direction: Vector,
         origin: Location,
     ) {
+        val elapsed = System.currentTimeMillis() - (chargeStartMs[uuid] ?: 0L)
+        val factor =
+            when {
+                elapsed >= 2000L -> CHARGE_FACTOR
+                elapsed > 600L -> 1.0 + (CHARGE_FACTOR - 1.0) * elapsed.toDouble() / 2000L
+                else -> 1.0
+            }
+
         blades[uuid] =
             Blade(
                 player,
                 origin,
                 direction,
-                RADIUS * 0.5,
-                SPEED * 0.5,
-                1.0,
+                RADIUS * factor * 0.5,
+                SPEED * factor * 0.5,
+                factor,
             )
     }
 }

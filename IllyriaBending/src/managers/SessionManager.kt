@@ -1,8 +1,9 @@
 package org.xodium.illyriabending.managers
 
+import org.bukkit.entity.Player
+import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.Session
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
@@ -81,5 +82,22 @@ internal object SessionManager {
     fun clear(ability: AbilityInterface) {
         sessions[ability]?.values?.forEach { it.cancel() }
         sessions.remove(ability)
+    }
+}
+
+/**
+ * Represents an active ability session with task management.
+ *
+ * @property player The player this session belongs to.
+ */
+internal class Session(
+    val player: Player,
+) {
+    /** The scheduler task for this session. */
+    var task: BukkitTask? = null
+
+    /** Cancels the session task if active. */
+    fun cancel() {
+        task?.cancel()
     }
 }
