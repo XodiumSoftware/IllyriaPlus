@@ -103,7 +103,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 - [x] FireWall
 - [x] FlameRush
 - [x] HeatControl
-- [ ] Lightning
+- [x] Lightning
 
 ### Sequence
 
