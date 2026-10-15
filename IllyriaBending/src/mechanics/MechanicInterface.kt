@@ -1,4 +1,4 @@
-package org.xodium.illyriabending
+package org.xodium.illyriabending.mechanics
 
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import org.bukkit.event.Listener
