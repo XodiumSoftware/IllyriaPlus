@@ -38,7 +38,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 - [x] IceWall
 - [x] OctopusForm
 - [x] PhaseChange
-- [ ] Torrent
+- [x] Torrent
 - [x] WaterBubble
 - [x] WaterManipulation
 - [x] WaterRing
