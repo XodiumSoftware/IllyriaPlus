@@ -86,7 +86,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 ### Sequence
 
 - [x] EarthPillars
-- [ ] EarthShards
+- [x] EarthShards
 
 ## Fire
 
