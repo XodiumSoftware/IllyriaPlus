@@ -52,7 +52,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 
 ### Sequence
 
-- [ ] Iceberg
+- [x] Iceberg
 - [ ] WaterGimbal
 
 ## Earth
@@ -63,7 +63,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 - [ ] Catapult
 - [ ] Collapse
 - [ ] EarthArmor
-- [ ] EarthBlast
+- [x] EarthBlast
 - [ ] EarthGlove
 - [ ] EarthLine
 - [ ] EarthShot
