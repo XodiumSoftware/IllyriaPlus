@@ -100,7 +100,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 - [x] FireJet
 - [x] FirePropagate
 - [x] FireShield
-- [ ] FireWall
+- [x] FireWall
 - [ ] FlameRush
 - [ ] HeatControl
 - [ ] Lightning
@@ -110,11 +110,3 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 - [ ] FireKick
 - [ ] FireSpin
 - [ ] FireWheel
-
-## Avatar
-
-### Active
-
-- [ ] AvatarState
-- [ ] Chakra
-- [ ] ChakraFocus
