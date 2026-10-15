@@ -66,7 +66,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 - [x] EarthBlast
 - [ ] EarthGlove
 - [ ] EarthLine
-- [ ] EarthShot
+- [x] EarthShot
 - [ ] EarthSmash
 - [ ] EarthSurf
 - [ ] EarthTunnel
