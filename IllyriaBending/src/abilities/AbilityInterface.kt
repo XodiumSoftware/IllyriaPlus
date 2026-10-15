@@ -11,6 +11,9 @@ internal interface AbilityInterface {
     /** The cooldown in milliseconds after this ability completes. */
     val cooldownMs: Long
 
+    /** How the player activates this ability. */
+    val activationType: ActivationType
+
     /**
      * Called when the player activates the ability (sneak-hold with focus item).
      *
@@ -173,4 +176,19 @@ internal class Session(
     fun cancel() {
         task?.cancel()
     }
+}
+
+/** Defines how an ability is activated by the player. */
+internal enum class ActivationType {
+    /** One-shot cast with no duration (AirBlast, AirAgility). */
+    INSTANT,
+
+    /** Hold to charge, release to launch (AirBlade). */
+    CHARGE,
+
+    /** Activate to enable, activate again to disable (AirWheel). */
+    TOGGLE,
+
+    /** Active for a fixed duration then expires (AirScooter). */
+    DURATION,
 }
