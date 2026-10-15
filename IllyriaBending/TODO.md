@@ -70,7 +70,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 - [x] EarthSmash
 - [x] EarthSurf
 - [x] EarthTunnel
-- [ ] LavaDisk
+- [x] LavaDisk
 - [ ] LavaFlux
 - [ ] MetalCable
 - [x] RaiseEarth
