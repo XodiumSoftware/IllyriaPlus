@@ -62,7 +62,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 - [x] Bulwark
 - [x] Catapult
 - [x] Collapse
-- [ ] EarthArmor
+- [x] EarthArmor
 - [x] EarthBlast
 - [ ] EarthGlove
 - [ ] EarthLine
