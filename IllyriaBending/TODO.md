@@ -42,7 +42,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 - [x] WaterBubble
 - [x] WaterManipulation
 - [ ] WaterRing
-- [ ] WaterSpout
+- [x] WaterSpout
 - [ ] WaterWave
 
 ### Passive
