@@ -9,6 +9,8 @@ import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.math.cos
+import kotlin.math.sin
 
 /**
  * AirScooter: summon an air bubble that propels the caster forward.
@@ -119,9 +121,9 @@ internal object AirScooter : AbilityInterface {
             val angle = session.angle + i * (2.0 * Math.PI / rays)
             val offset =
                 Vector(
-                    Math.cos(angle) * 0.5,
+                    cos(angle) * 0.5,
                     0.0,
-                    Math.sin(angle) * 0.5,
+                    sin(angle) * 0.5,
                 )
             world.spawnParticle(Particle.CLOUD, origin.clone().add(offset), 1, 0.0, 0.0, 0.0, 0.0)
         }
