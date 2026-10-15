@@ -11,12 +11,11 @@ import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
 import org.xodium.illyriabending.enums.ActivationTypeEnum
 import org.xodium.illyriabending.managers.SessionManager
+import org.xodium.illyriabending.rotateAround
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.PI
 import kotlin.math.ceil
-import kotlin.math.cos
-import kotlin.math.sin
 
 /**
  * LavaDisk: hurl a whirling discus of molten rock.
@@ -178,7 +177,7 @@ internal object LavaDisk : AbilityInterface {
 
             for (i in 0 until count) {
                 val angle = rotation + i * (2.0 * PI / count)
-                val offset = rotate(dir.clone().multiply(radius), rotAxis, angle)
+                val offset = dir.clone().multiply(radius).rotateAround(rotAxis, angle)
                 val point = location.clone().add(offset)
                 world.spawnParticle(Particle.LAVA, point, 1, 0.0, 0.0, 0.0, 0.0)
                 world.spawnParticle(Particle.FLAME, point, 1, 0.0, 0.0, 0.0, 0.0)
@@ -239,27 +238,5 @@ internal object LavaDisk : AbilityInterface {
                 block.type = Material.FIRE
             }
         }
-    }
-
-    /**
-     * Rotates [vec] around [axis] by [angle] radians using Rodrigues' rotation formula.
-     *
-     * @param vec The vector to rotate.
-     * @param axis The rotation axis; will be normalized before use.
-     * @param angle The rotation angle in radians.
-     * @return The rotated vector.
-     */
-    private fun rotate(
-        vec: Vector,
-        axis: Vector,
-        angle: Double,
-    ): Vector {
-        val k = axis.clone().normalize()
-        val cosA = cos(angle)
-        val sinA = sin(angle)
-        val term1 = vec.clone().multiply(cosA)
-        val term2 = k.clone().crossProduct(vec).multiply(sinA)
-        val term3 = k.clone().multiply(k.dot(vec) * (1.0 - cosA))
-        return term1.add(term2).add(term3)
     }
 }

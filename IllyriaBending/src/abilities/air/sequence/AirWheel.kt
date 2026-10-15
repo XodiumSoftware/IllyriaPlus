@@ -6,9 +6,9 @@ import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.AbilityInterface.Companion.rotate
 import org.xodium.illyriabending.enums.ActivationTypeEnum
 import org.xodium.illyriabending.managers.SessionManager
+import org.xodium.illyriabending.rotateAround
 import java.util.UUID
 import kotlin.math.PI
 
@@ -145,7 +145,7 @@ internal object AirWheel : AbilityInterface {
         val spokes = 16
         for (i in 0 until spokes) {
             val angle = state.angle + i * (2.0 * PI / spokes)
-            val offset = rotate(up.clone().multiply(radius), rotAxis, angle)
+            val offset = up.clone().multiply(radius).rotateAround(rotAxis, angle)
             world.spawnParticle(Particle.CLOUD, origin.clone().add(offset), 1, 0.0, 0.0, 0.0, 0.0)
         }
 
@@ -154,7 +154,7 @@ internal object AirWheel : AbilityInterface {
             val angle = state.angle + i * (2.0 * PI / rimRays)
             var d = 0.2
             while (d < radius) {
-                val offset = rotate(up.clone().multiply(d), rotAxis, angle)
+                val offset = up.clone().multiply(d).rotateAround(rotAxis, angle)
                 world.spawnParticle(Particle.CLOUD, origin.clone().add(offset), 1, 0.0, 0.0, 0.0, 0.0)
                 d += 0.3
             }

@@ -7,10 +7,10 @@ import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
-import org.xodium.illyriabending.abilities.AbilityInterface.Companion.getNearEntities
-import org.xodium.illyriabending.abilities.AbilityInterface.Companion.rotate
 import org.xodium.illyriabending.enums.ActivationTypeEnum
 import org.xodium.illyriabending.managers.SessionManager
+import org.xodium.illyriabending.nearbyLivingEntities
+import org.xodium.illyriabending.rotateAround
 import java.util.UUID
 import kotlin.math.PI
 import kotlin.math.ceil
@@ -119,7 +119,7 @@ internal object AirBlade : AbilityInterface {
 
             for (i in 0 until count) {
                 val angle = rotationAngle + i * (2.0 * PI / count)
-                val offset = rotate(dir.clone().multiply(radius), rotAxis, angle)
+                val offset = dir.clone().multiply(radius).rotateAround(rotAxis, angle)
                 val point = location.clone().add(offset)
                 location.world?.spawnParticle(Particle.CLOUD, point, 1, 0.0, 0.0, 0.0, 0.0)
             }
@@ -131,7 +131,8 @@ internal object AirBlade : AbilityInterface {
 
         /** Damages and knocks back living entities overlapping the blade disc. */
         private fun damageNearby() {
-            getNearEntities(location, radius)
+            location
+                .nearbyLivingEntities(radius)
                 .filter { it != player }
                 .forEach { entity ->
                     entity.damage(DAMAGE * factor, player)
@@ -214,7 +215,7 @@ internal object AirBlade : AbilityInterface {
             chargingPoint += PI / 36
             for (i in 0 until count) {
                 val angle = chargingPoint + i * (2.0 * PI / count)
-                val offset = rotate(direction.clone().multiply(r), rotAxis, angle)
+                val offset = direction.clone().multiply(r).rotateAround(rotAxis, angle)
                 origin.world?.spawnParticle(Particle.CLOUD, origin.clone().add(offset), 1, 0.0, 0.0, 0.0, 0.0)
             }
 
