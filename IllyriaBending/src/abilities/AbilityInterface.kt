@@ -1,7 +1,9 @@
 package org.xodium.illyriabending.abilities
 
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitTask
+import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -112,12 +114,85 @@ internal interface AbilityInterface {
         private val SESSIONS = ConcurrentHashMap<AbilityInterface, MutableMap<UUID, Session>>()
 
         /**
+         * Rotates a vector around an axis using Rodrigues' rotation formula.
+         *
+         * @param vec The vector to rotate.
+         * @param axis The rotation axis; will be normalized before use.
+         * @param angle The rotation angle in radians.
+         * @return The rotated vector.
+         */
+        fun rotate(
+            vec: Vector,
+            axis: Vector,
+            angle: Double,
+        ): Vector {
+            val k = axis.clone().normalize()
+            val cosA = kotlin.math.cos(angle)
+            val sinA = kotlin.math.sin(angle)
+            val term1 = vec.clone().multiply(cosA)
+            val term2 = k.clone().crossProduct(vec).multiply(sinA)
+            val term3 = k.clone().multiply(k.dot(vec) * (1.0 - cosA))
+            return term1.add(term2).add(term3)
+        }
+
+        /**
+         * Gets living entities within a radius of a location.
+         *
+         * @param location The center location.
+         * @param radius The search radius.
+         * @return List of nearby living entities.
+         */
+        fun getNearEntities(
+            location: org.bukkit.Location,
+            radius: Double,
+        ): List<LivingEntity> =
+            location
+                .world
+                ?.getNearbyEntities(location, radius, radius, radius)
+                ?.filterIsInstance<LivingEntity>()
+                ?: emptyList()
+
+        /**
+         * Damages entities and applies knockback away from a source location.
+         *
+         * @param player The player dealing damage.
+         * @param entities The entities to damage.
+         * @param damage Amount of damage in hearts.
+         * @param source The location to knock entities away from.
+         * @param knockback Horizontal knockback strength.
+         * @param knockup Vertical knockback strength.
+         */
+        fun damageEntities(
+            player: Player,
+            entities: List<LivingEntity>,
+            damage: Double,
+            source: org.bukkit.Location,
+            knockback: Double = 0.0,
+            knockup: Double = 0.0,
+        ) {
+            entities.forEach { entity ->
+                entity.damage(damage, player)
+                if (knockback > 0.0 || knockup > 0.0) {
+                    val push =
+                        entity
+                            .location
+                            .toVector()
+                            .subtract(source.toVector())
+                            .normalize()
+                            .apply { y = knockup }
+                            .multiply(knockback)
+                    entity.velocity = entity.velocity.add(push)
+                }
+            }
+        }
+
+        /**
          * Starts a repeating task for an ability session.
          *
          * @param ability The ability to tick.
          * @param uuid The player's UUID.
          * @param periodTicks Ticks between each tick call.
-         * @return The created BukkitTask, or null if scheduling failed.
+         * @return The created BukkitTask.
          */
         fun startSessionTask(
             ability: AbilityInterface,

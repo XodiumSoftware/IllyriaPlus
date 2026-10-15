@@ -6,6 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 
 /**
  * AirAgility: draw on the wind to move with unnatural lightness.
@@ -18,6 +19,7 @@ import org.xodium.illyriabending.abilities.AbilityInterface
  */
 internal object AirAgility : AbilityInterface {
     override val cooldownMs: Long = 8000
+    override val activationType: ActivationType = ActivationType.INSTANT
 
     /** Base potion effect duration in ticks (before level scaling). */
     private const val DURATION_TICKS = 120
@@ -38,6 +40,8 @@ internal object AirAgility : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val duration = DURATION_TICKS + (level - 1) * DURATION_PER_LEVEL
         val jumpAmplifier = JUMP_AMPLIFIER + (level - 1) / 2
 
@@ -73,5 +77,7 @@ internal object AirAgility : AbilityInterface {
             0.02,
         )
         player.world.playSound(feet, Sound.ENTITY_BREEZE_WIND_BURST, 0.6f, 1.6f)
+
+        complete(player)
     }
 }

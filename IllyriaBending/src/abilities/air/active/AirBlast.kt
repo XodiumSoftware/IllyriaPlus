@@ -8,6 +8,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.tan
@@ -23,6 +24,7 @@ import kotlin.math.tan
  */
 internal object AirBlast : AbilityInterface {
     override val cooldownMs: Long = 3000
+    override val activationType: ActivationType = ActivationType.INSTANT
 
     /** Cone reach in blocks. */
     private const val RANGE = 8.0
@@ -46,6 +48,8 @@ internal object AirBlast : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val origin = player.eyeLocation.clone()
         val direction = origin.direction.clone().normalize()
         val world = origin.world ?: return
@@ -58,6 +62,8 @@ internal object AirBlast : AbilityInterface {
 
         extinguish(origin, direction, angleRad)
         knockback(player, origin, direction, angleRad, knockScale)
+
+        complete(player)
     }
 
     /**

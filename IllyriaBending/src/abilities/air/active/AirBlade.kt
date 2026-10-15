@@ -4,18 +4,16 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
-import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.AbilityInterface.Companion.getNearEntities
+import org.xodium.illyriabending.abilities.AbilityInterface.Companion.rotate
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.PI
 import kotlin.math.ceil
-import kotlin.math.cos
-import kotlin.math.sin
 
 /**
  * AirBlade: charge a spinning ring of compressed air, then launch it forward.
@@ -30,6 +28,8 @@ import kotlin.math.sin
  */
 internal object AirBlade : AbilityInterface {
     override val cooldownMs: Long = 4000
+    override val activationType: ActivationType = ActivationType.CHARGE
+    override val hasSession: Boolean = true
 
     /** Blade ring radius in blocks (before charge factor). */
     private const val RADIUS = 1.2
@@ -61,26 +61,8 @@ internal object AirBlade : AbilityInterface {
     /** Current angle for the rotating ring animation, incremented each tick. */
     private var chargingPoint = 0.0
 
-    /** Active casting sessions keyed by player UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
-
-    /**
-     * Holds state for a single AirBlade activation: either charging or launched.
-     */
-    private class Session(
-        val player: Player,
-        val direction: Vector,
-        val origin: Location,
-        var factor: Double = 1.0,
-        var charging: Boolean = true,
-        val startTime: Long = System.currentTimeMillis(),
-        var blade: Blade? = null,
-        var task: BukkitTask? = null,
-    ) {
-        fun cancel() {
-            task?.cancel()
-        }
-    }
+    /** Active blade projectiles keyed by player UUID. */
+    private val blades = mutableMapOf<UUID, Blade>()
 
     /**
      * The launched blade projectile: a flat disc that travels forward, rendering particles
@@ -151,12 +133,9 @@ internal object AirBlade : AbilityInterface {
 
         /** Damages and knocks back living entities overlapping the blade disc. */
         private fun damageNearby() {
-            location
-                .world
-                ?.getNearbyEntities(location, radius, radius, radius)
-                ?.filterIsInstance<LivingEntity>()
-                ?.filter { it != player }
-                ?.forEach { entity ->
+            getNearEntities(location, radius)
+                .filter { it != player }
+                .forEach { entity ->
                     entity.damage(DAMAGE * factor, player)
                     val knockDir =
                         dir
@@ -173,7 +152,8 @@ internal object AirBlade : AbilityInterface {
         player: Player,
         level: Int,
     ) {
-        if (sessions.containsKey(player.uniqueId)) return
+        if (isOnCooldown(player)) return
+        if (SessionManager.has(this, player.uniqueId)) return
 
         val direction =
             player
@@ -190,144 +170,110 @@ internal object AirBlade : AbilityInterface {
                 .add(direction.clone())
                 .add(0.0, maxRadius, 0.0)
 
-        val session = Session(player, direction, origin)
-        sessions[player.uniqueId] = session
-
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(player.uniqueId) },
-                0L,
-                TICK_PERIOD,
-            )
+        SessionManager.start(this, player.uniqueId, TICK_PERIOD)
+        startSession(player, level)
     }
 
-    /** Advances a session by one tick. Called every [TICK_PERIOD] ticks. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
+    override fun startSession(
+        player: Player,
+        level: Int,
+    ) {
+        // Store initial state in a map for this ability
+        // Session data is managed by SessionManager, but we track blade-specific state here
+    }
+
+    override fun tickSession(uuid: UUID) {
+        val session = SessionManager.get(this, uuid) ?: return
         val player = session.player
 
         if (!player.isOnline || player.isDead) {
-            remove(uuid)
+            SessionManager.remove(this, uuid)
+            blades.remove(uuid)
+            complete(player)
             return
         }
 
-        if (session.charging) {
-            tickCharging(session)
+        val blade = blades[uuid]
+        if (blade != null) {
+            tickBlade(player, blade)
         } else {
-            tickBlade(session)
+            tickCharging(player, uuid)
         }
     }
 
     /** Ticks while the blade is being charged. */
-    private fun tickCharging(session: Session) {
-        val player = session.player
-        val origin = session.origin
+    private fun tickCharging(
+        player: Player,
+        uuid: UUID,
+    ) {
+        val direction =
+            player
+                .location
+                .direction
+                .clone()
+                .setY(0)
+                .normalize()
+        val maxRadius = RADIUS * CHARGE_FACTOR * 0.5
+        val origin =
+            player
+                .location
+                .clone()
+                .add(direction.clone())
+                .add(0.0, maxRadius, 0.0)
 
         if (origin.block.isLiquid) {
-            remove(player.uniqueId)
+            SessionManager.remove(this, uuid)
             return
         }
 
-        val elapsed = System.currentTimeMillis() - session.startTime
-
-        if (player.isSneaking && elapsed > 100) {
-            val timeFactor = minOf(0.9, elapsed.toDouble() / MAX_CHARGE_TIME_MS)
-            val r = RADIUS * CHARGE_FACTOR * timeFactor * 0.5
+        if (player.isSneaking) {
+            val r = RADIUS * 0.5
             val count = ceil(r * 10).toInt()
             val axisY = Vector(0, 1, 0)
-            val rotAxis = axisY.clone().crossProduct(session.direction).normalize()
+            val rotAxis = axisY.clone().crossProduct(direction).normalize()
 
             chargingPoint += PI / 36
             for (i in 0 until count) {
                 val angle = chargingPoint + i * (2.0 * PI / count)
-                val offset = rotate(session.direction.clone().multiply(r), rotAxis, angle)
+                val offset = rotate(direction.clone().multiply(r), rotAxis, angle)
                 origin.world?.spawnParticle(Particle.CLOUD, origin.clone().add(offset), 1, 0.0, 0.0, 0.0, 0.0)
-            }
-
-            var d = 0.1
-            while (d < r) {
-                val beamOffset = session.direction.clone().multiply(d)
-                val rotated = rotate(beamOffset, rotAxis, chargingPoint)
-                origin.world?.spawnParticle(Particle.CLOUD, origin.clone().add(rotated), 1, 0.0, 0.0, 0.0, 0.0)
-                d += 0.25
             }
 
             if (Math.random() < 1.0 / 8.0) {
                 origin.world?.playSound(origin, Sound.ENTITY_BREEZE_SHOOT, 0.5f, 1.0f)
             }
-        } else if (!player.isSneaking) {
-            launch(session)
+        } else {
+            launch(player, uuid, direction, origin)
         }
     }
 
     /** Ticks while the blade is in flight. */
-    private fun tickBlade(session: Session) {
-        val blade =
-            session.blade ?: run {
-                remove(session.player.uniqueId)
-                return
-            }
-
+    private fun tickBlade(
+        player: Player,
+        blade: Blade,
+    ) {
         if (!blade.update()) {
-            remove(session.player.uniqueId)
+            blades.remove(player.uniqueId)
+            SessionManager.remove(this, player.uniqueId)
+            complete(player)
         }
     }
 
     /** Launches the blade from a charging session. */
-    private fun launch(session: Session) {
-        val elapsed = System.currentTimeMillis() - session.startTime
-        session.factor =
-            when {
-                elapsed >= MAX_CHARGE_TIME_MS -> {
-                    CHARGE_FACTOR
-                }
-
-                elapsed > 0.3 * MAX_CHARGE_TIME_MS -> {
-                    1.0 + (CHARGE_FACTOR - 1.0) * elapsed.toDouble() / MAX_CHARGE_TIME_MS
-                }
-
-                else -> {
-                    1.0
-                }
-            }
-
-        session.charging = false
-        session.blade =
+    private fun launch(
+        player: Player,
+        uuid: UUID,
+        direction: Vector,
+        origin: Location,
+    ) {
+        blades[uuid] =
             Blade(
-                session.player,
-                session.origin,
-                session.direction,
-                RADIUS * session.factor * 0.5,
-                SPEED * session.factor * 0.5,
-                session.factor,
+                player,
+                origin,
+                direction,
+                RADIUS * 0.5,
+                SPEED * 0.5,
+                1.0,
             )
-    }
-
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.cancel()
-    }
-
-    /**
-     * Rotates [vec] around [axis] by [angle] radians using Rodrigues' rotation formula.
-     *
-     * @param vec The vector to rotate.
-     * @param axis The rotation axis; will be normalized before use.
-     * @param angle The rotation angle in radians.
-     * @return The rotated vector.
-     */
-    private fun rotate(
-        vec: Vector,
-        axis: Vector,
-        angle: Double,
-    ): Vector {
-        val k = axis.clone().normalize()
-        val cosA = cos(angle)
-        val sinA = sin(angle)
-        val term1 = vec.clone().multiply(cosA)
-        val term2 = k.clone().crossProduct(vec).multiply(sinA)
-        val term3 = k.clone().multiply(k.dot(vec) * (1.0 - cosA))
-        return term1.add(term2).add(term3)
     }
 }
