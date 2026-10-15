@@ -19,7 +19,7 @@ Reference list of all bending types and their skills from [PrimordialMoros/Bendi
 
 ### Passive
 
-- [ ] AirAgility
+- [x] AirAgility
 - [ ] GracefulDescent
 
 ### Sequence
