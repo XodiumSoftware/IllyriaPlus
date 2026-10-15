@@ -1,23 +1,17 @@
 package org.xodium.illyriabending.enums
 
 import org.bukkit.Material
-import org.xodium.illyriabending.projectiles.AirProjectile
-import org.xodium.illyriabending.projectiles.EarthProjectile
-import org.xodium.illyriabending.projectiles.FireProjectile
-import org.xodium.illyriabending.projectiles.ProjectileInterface
-import org.xodium.illyriabending.projectiles.WaterProjectile
 
 /** Default kill thresholds to reach levels 2-5, indexed by `currentLevel - 1`. */
 private val DEFAULT_KILL_THRESHOLDS = intArrayOf(5, 15, 40, 100)
 
 /**
- * The available bending types. Each entry carries everything needed to render, gate, and
- * launch its bending ability.
+ * The available bending types. Each entry carries everything needed to render and gate
+ * its bending abilities.
  *
  * @property color MiniMessage color name used in advancement/dialog text for this element.
  * @property material The offhand focus [Material] required to cast this element.
  * @property cooldownTicks Cooldown in Minecraft ticks (20 = 1 second) between successful casts.
- * @property projectile The [ProjectileInterface] launched when the player casts this element.
  * @property subSkill The themed [SubSkill] unlocked at level 3.
  * @property killThresholds Kill counts required to advance from level N to N+1, indexed by
  * `currentLevel - 1`. Defaults to [DEFAULT_KILL_THRESHOLDS].
@@ -26,14 +20,13 @@ internal enum class BendingTypeEnum(
     val color: String,
     val material: Material,
     val cooldownTicks: Long,
-    val projectile: ProjectileInterface,
     val subSkill: SubSkill,
     val killThresholds: IntArray = DEFAULT_KILL_THRESHOLDS,
 ) {
-    AIR("white", Material.WIND_CHARGE, 20L, AirProjectile, SubSkill.VACUUM),
-    EARTH("brown", Material.RESIN_CLUMP, 60L, EarthProjectile, SubSkill.METAL),
-    FIRE("red", Material.FIRE_CHARGE, 20L, FireProjectile, SubSkill.LIGHTNING),
-    WATER("blue", Material.HEART_OF_THE_SEA, 30L, WaterProjectile, SubSkill.BLOOD),
+    AIR("white", Material.WIND_CHARGE, 20L, SubSkill.VACUUM),
+    EARTH("brown", Material.RESIN_CLUMP, 60L, SubSkill.METAL),
+    FIRE("red", Material.FIRE_CHARGE, 20L, SubSkill.LIGHTNING),
+    WATER("blue", Material.HEART_OF_THE_SEA, 30L, SubSkill.BLOOD),
     ;
 
     /**
