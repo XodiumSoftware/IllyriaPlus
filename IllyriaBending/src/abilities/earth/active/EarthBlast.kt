@@ -8,6 +8,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 import kotlin.math.ceil
 import kotlin.math.cos
 import kotlin.math.sin
@@ -24,6 +25,7 @@ import kotlin.math.sin
  */
 internal object EarthBlast : AbilityInterface {
     override val cooldownMs: Long = 1400
+    override val activationType = ActivationType.INSTANT
 
     /** Bolt travel range in blocks (before level scaling). */
     private const val RANGE = 14.0
@@ -56,6 +58,8 @@ internal object EarthBlast : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val origin = player.eyeLocation.clone()
         val direction = origin.direction.clone().normalize()
         val world = origin.world ?: return
@@ -70,6 +74,7 @@ internal object EarthBlast : AbilityInterface {
 
         val impact = trace(player, origin, direction, range, damage, knockback)
         render(origin, direction, impact ?: origin.clone().add(direction.clone().multiply(range)))
+        complete(player)
     }
 
     /**

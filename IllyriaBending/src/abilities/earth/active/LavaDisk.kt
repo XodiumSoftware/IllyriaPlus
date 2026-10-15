@@ -7,10 +7,10 @@ import org.bukkit.Sound
 import org.bukkit.block.Block
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.PI
@@ -30,6 +30,8 @@ import kotlin.math.sin
  */
 internal object LavaDisk : AbilityInterface {
     override val cooldownMs: Long = 7000
+    override val activationType = ActivationType.INSTANT
+    override val hasSession = true
 
     /** Disk ring radius in blocks (before level scaling). */
     private const val RADIUS = 0.9
@@ -61,28 +63,23 @@ internal object LavaDisk : AbilityInterface {
     /** Maximum travel range in blocks. */
     private const val RANGE = 18.0
 
-    /** Ticks between task updates. */
-    private const val TICK_PERIOD = 1L
-
-    /** Active disk sessions keyed by player UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Per-player disk state for active sessions. */
+    private val disks = ConcurrentHashMap<UUID, DiskData>()
 
     /** Holds state for a single launched LavaDisk. */
-    private class Session(
+    private class DiskData(
         val player: Player,
-        val level: Int,
-        var task: BukkitTask? = null,
+        val disk: Disk,
     )
 
     override fun activate(
         player: Player,
         level: Int,
     ) {
-        val uuid = player.uniqueId
-        if (sessions.containsKey(uuid)) return
+        if (isOnCooldown(player)) return
 
-        val session = Session(player, level)
-        sessions[uuid] = session
+        val uuid = player.uniqueId
+        if (SessionManager.has(this, uuid)) return
 
         player.world.playSound(player.eyeLocation, Sound.ITEM_FIRECHARGE_USE, 1.0f, 1.2f)
         player.world.playSound(player.eyeLocation, Sound.BLOCK_LAVA_POP, 0.8f, 1.0f)
@@ -105,19 +102,23 @@ internal object LavaDisk : AbilityInterface {
                 FIRE_TICKS + (level - 1) * FIRE_PER_LEVEL,
             )
 
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable {
-                    if (!player.isOnline || player.isDead) {
-                        remove(uuid)
-                        return@Runnable
-                    }
-                    if (!disk.update()) remove(uuid)
-                },
-                0L,
-                TICK_PERIOD,
-            )
+        disks[uuid] = DiskData(player, disk)
+        SessionManager.start(this, uuid)
+    }
+
+    override fun tickSession(uuid: UUID) {
+        val data = disks[uuid] ?: return
+
+        if (!data.player.isOnline || data.player.isDead) {
+            disks.remove(uuid)
+            SessionManager.remove(this, uuid)
+            return
+        }
+        if (!data.disk.update()) {
+            disks.remove(uuid)
+            SessionManager.remove(this, uuid)
+            complete(data.player)
+        }
     }
 
     /** The flying molten-disk projectile. */
@@ -238,11 +239,6 @@ internal object LavaDisk : AbilityInterface {
                 block.type = Material.FIRE
             }
         }
-    }
-
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.task?.cancel()
     }
 
     /**

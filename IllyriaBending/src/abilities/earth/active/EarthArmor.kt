@@ -7,6 +7,7 @@ import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 
 /**
  * EarthArmor: wrap the caster in a second skin of stone and dust.
@@ -20,6 +21,7 @@ import org.xodium.illyriabending.abilities.AbilityInterface
  */
 internal object EarthArmor : AbilityInterface {
     override val cooldownMs: Long = 20000
+    override val activationType = ActivationType.INSTANT
 
     /** Base effect duration in ticks (before level scaling). */
     private const val DURATION_TICKS = 140
@@ -46,6 +48,8 @@ internal object EarthArmor : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val duration = DURATION_TICKS + (level - 1) * DURATION_PER_LEVEL
         val resistance = RESISTANCE_AMPLIFIER + (level - 1) / 3 * RESISTANCE_PER_THREE_LEVELS
         val absorption = ABSORPTION_AMPLIFIER + (level - 1) / 2 * ABSORPTION_PER_TWO_LEVELS
@@ -105,5 +109,6 @@ internal object EarthArmor : AbilityInterface {
         )
         world.playSound(player.location, Sound.BLOCK_STONE_PLACE, 1.0f, 0.8f)
         world.playSound(player.location, Sound.BLOCK_GRAVEL_PLACE, 0.8f, 1.0f)
+        complete(player)
     }
 }

@@ -11,10 +11,11 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
@@ -30,6 +31,8 @@ import java.util.concurrent.ConcurrentHashMap
  */
 internal object EarthGlove : AbilityInterface {
     override val cooldownMs: Long = 6500
+    override val activationType = ActivationType.DURATION
+    override val hasSession = true
 
     /** How long the glove persists if no hit lands, in ticks. */
     private const val WINDOW_TICKS = 100L
@@ -58,15 +61,14 @@ internal object EarthGlove : AbilityInterface {
     /** Mining Fatigue amplifier (1 = Mining Fatigue II). */
     private const val FATIGUE_AMPLIFIER = 1
 
-    /** Active gloves keyed by player UUID. */
-    private val active = ConcurrentHashMap<UUID, Glove>()
+    /** Per-player glove state for active sessions. */
+    private val gloves = ConcurrentHashMap<UUID, GloveData>()
 
     /** Holds state for a single EarthGlove arming. */
-    private class Glove(
+    private class GloveData(
         val player: Player,
         val level: Int,
         var remainingTicks: Long,
-        var task: BukkitTask? = null,
         var listener: Listener? = null,
     )
 
@@ -74,12 +76,14 @@ internal object EarthGlove : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val uuid = player.uniqueId
-        if (active.containsKey(uuid)) return
+        if (SessionManager.has(this, uuid)) return
 
         val window = WINDOW_TICKS + (level - 1) * WINDOW_PER_LEVEL
-        val glove = Glove(player, level, window)
-        active[uuid] = glove
+        val data = GloveData(player, level, window)
+        gloves[uuid] = data
 
         val world = player.world
         val hand = player.location.clone().add(0.0, 1.1, 0.0)
@@ -147,32 +151,29 @@ internal object EarthGlove : AbilityInterface {
                     )
                     victim.world.playSound(victim.location, Sound.BLOCK_STONE_BREAK, 1.0f, 0.8f)
 
-                    remove(uuid)
+                    cleanup(uuid)
+                    complete(player)
                 }
             }
-        glove.listener = listener
+        data.listener = listener
         instance.server.pluginManager.registerEvents(listener, instance)
 
-        // Count down the glove window; expire if no hit lands.
-        glove.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable {
-                    val current = active[uuid] ?: return@Runnable
-                    current.remainingTicks -= 1L
-                    if (!player.isOnline || player.isDead || current.remainingTicks <= 0L) {
-                        remove(uuid)
-                    }
-                },
-                0L,
-                1L,
-            )
+        SessionManager.start(this, uuid)
     }
 
-    /** Cancels and removes the glove for [uuid], unregistering its listener and task. */
-    private fun remove(uuid: UUID) {
-        val glove = active.remove(uuid) ?: return
-        glove.task?.cancel()
-        glove.listener?.let { HandlerList.unregisterAll(it) }
+    override fun tickSession(uuid: UUID) {
+        val data = gloves[uuid] ?: return
+
+        data.remainingTicks -= 1L
+        if (!data.player.isOnline || data.player.isDead || data.remainingTicks <= 0L) {
+            cleanup(uuid)
+        }
+    }
+
+    /** Cancels and cleans up the glove for [uuid], unregistering its listener. */
+    private fun cleanup(uuid: UUID) {
+        val data = gloves.remove(uuid) ?: return
+        data.listener?.let { HandlerList.unregisterAll(it) }
+        SessionManager.remove(this, uuid)
     }
 }

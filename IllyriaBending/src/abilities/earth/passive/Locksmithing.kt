@@ -9,6 +9,7 @@ import org.bukkit.block.data.Openable
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 
 /**
  * Locksmithing: pry open barred metal fittings with a flick of the wrist.
@@ -22,6 +23,7 @@ import org.xodium.illyriabending.abilities.AbilityInterface
  */
 internal object Locksmithing : AbilityInterface {
     override val cooldownMs: Long = 2500
+    override val activationType = ActivationType.INSTANT
 
     /** Maximum line-of-sight range in blocks (before level scaling). */
     private const val RANGE = 6.0
@@ -36,6 +38,8 @@ internal object Locksmithing : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val world = player.world
         val origin = player.eyeLocation.clone()
         val direction = origin.direction.clone().normalize()
@@ -50,6 +54,7 @@ internal object Locksmithing : AbilityInterface {
 
         toggle(target)
         renderUnlock(target.location)
+        complete(player)
     }
 
     /**

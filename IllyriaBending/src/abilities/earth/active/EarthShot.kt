@@ -6,10 +6,10 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.ceil
@@ -26,6 +26,8 @@ import kotlin.math.ceil
  */
 internal object EarthShot : AbilityInterface {
     override val cooldownMs: Long = 2500
+    override val activationType = ActivationType.INSTANT
+    override val hasSession = true
 
     /** Base number of stones hurled per activation. */
     private const val SHOTS = 3
@@ -54,20 +56,16 @@ internal object EarthShot : AbilityInterface {
     /** Ticks between successive shots in the volley. */
     private const val SHOT_INTERVAL_TICKS = 2L
 
-    /** Ticks between task updates. */
-    private const val TICK_PERIOD = 1L
-
-    /** Active volley sessions keyed by player UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Per-player volley state for active sessions. */
+    private val volleys = ConcurrentHashMap<UUID, VolleyData>()
 
     /** Holds state for a single EarthShot burst: fires [shotsLeft] stones one at a time. */
-    private class Session(
+    private class VolleyData(
         val player: Player,
         val level: Int,
         var shotsLeft: Int,
         var ticks: Long = 0L,
         val projectiles: MutableList<Stone> = mutableListOf(),
-        var task: BukkitTask? = null,
     )
 
     /** A single flying stone. */
@@ -171,44 +169,38 @@ internal object EarthShot : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val uuid = player.uniqueId
-        if (sessions.containsKey(uuid)) return
+        if (SessionManager.has(this, uuid)) return
 
         val shots = SHOTS + (level - 1) / 2 * SHOTS_PER_TWO_LEVELS
-        val session = Session(player, level, shots)
-        sessions[uuid] = session
+        volleys[uuid] = VolleyData(player, level, shots)
+        SessionManager.start(this, uuid)
 
         player.world.playSound(player.eyeLocation, Sound.BLOCK_GRAVEL_BREAK, 0.9f, 1.0f)
-
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(uuid) },
-                0L,
-                TICK_PERIOD,
-            )
     }
 
-    /** Advances a volley session by one tick. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
-        val player = session.player
+    override fun tickSession(uuid: UUID) {
+        val data = volleys[uuid] ?: return
+        val player = data.player
 
         if (!player.isOnline || player.isDead) {
-            remove(uuid)
+            volleys.remove(uuid)
+            SessionManager.remove(this, uuid)
             return
         }
 
-        session.ticks += TICK_PERIOD
+        data.ticks += 1L
 
         // Fire the next stone when it's time.
-        if (session.shotsLeft > 0 && session.ticks % SHOT_INTERVAL_TICKS == 0L) {
-            fire(session)
-            session.shotsLeft--
+        if (data.shotsLeft > 0 && data.ticks % SHOT_INTERVAL_TICKS == 0L) {
+            fire(data)
+            data.shotsLeft--
         }
 
         // Update in-flight stones.
-        val iterator = session.projectiles.iterator()
+        val iterator = data.projectiles.iterator()
         while (iterator.hasNext()) {
             val stone = iterator.next()
             if (!stone.update()) {
@@ -216,14 +208,16 @@ internal object EarthShot : AbilityInterface {
             }
         }
 
-        if (session.shotsLeft <= 0 && session.projectiles.isEmpty()) {
-            remove(uuid)
+        if (data.shotsLeft <= 0 && data.projectiles.isEmpty()) {
+            volleys.remove(uuid)
+            SessionManager.remove(this, uuid)
+            complete(player)
         }
     }
 
     /** Launches a single stone from the caster's eye with a small random spread. */
-    private fun fire(session: Session) {
-        val player = session.player
+    private fun fire(data: VolleyData) {
+        val player = data.player
         val origin = player.eyeLocation.clone()
         val baseDir = origin.direction.clone()
 
@@ -236,14 +230,9 @@ internal object EarthShot : AbilityInterface {
             )
         val dir = baseDir.add(jitter).normalize()
 
-        val damage = DAMAGE + (session.level - 1) * DAMAGE_PER_LEVEL
+        val damage = DAMAGE + (data.level - 1) * DAMAGE_PER_LEVEL
         val stone = Stone(player, origin, dir, damage, KNOCKBACK)
-        session.projectiles.add(stone)
-        player.world.playSound(origin, Sound.BLOCK_STONE_PLACE, 0.55f, 1.0f + 0.08f * session.shotsLeft)
-    }
-
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.task?.cancel()
+        data.projectiles.add(stone)
+        player.world.playSound(origin, Sound.BLOCK_STONE_PLACE, 0.55f, 1.0f + 0.08f * data.shotsLeft)
     }
 }

@@ -11,6 +11,7 @@ import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 
 /**
  * LavaFlux: briefly transmute a patch of ground into roiling magma.
@@ -24,6 +25,7 @@ import org.xodium.illyriabending.abilities.AbilityInterface
  */
 internal object LavaFlux : AbilityInterface {
     override val cooldownMs: Long = 12000
+    override val activationType = ActivationType.INSTANT
 
     /** Horizontal distance ahead of the caster where the flux is centered. */
     private const val SPAWN_DISTANCE = 4.0
@@ -56,6 +58,8 @@ internal object LavaFlux : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val world = player.world
         val forward =
             player
@@ -107,6 +111,7 @@ internal object LavaFlux : AbilityInterface {
             )
 
         scheduleReform(transmuted, reformAfter)
+        complete(player)
     }
 
     /**

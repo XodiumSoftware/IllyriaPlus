@@ -7,6 +7,7 @@ import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 
 /**
  * DensityShift: harden the caster's stance like the earth beneath their feet.
@@ -20,6 +21,7 @@ import org.xodium.illyriabending.abilities.AbilityInterface
  */
 internal object DensityShift : AbilityInterface {
     override val cooldownMs: Long = 12000
+    override val activationType = ActivationType.INSTANT
 
     /** Base potion duration in ticks (before level scaling). */
     private const val DURATION_TICKS = 100
@@ -40,6 +42,8 @@ internal object DensityShift : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val duration = DURATION_TICKS + (level - 1) * DURATION_PER_LEVEL
         val resistance = RESISTANCE_AMPLIFIER + (level - 1) / 3 * RESISTANCE_PER_THREE_LEVELS
 
@@ -88,5 +92,6 @@ internal object DensityShift : AbilityInterface {
         )
         world.playSound(feet, Sound.BLOCK_STONE_PLACE, 0.9f, 0.7f)
         world.playSound(feet, Sound.BLOCK_GRAVEL_PLACE, 0.7f, 0.9f)
+        complete(player)
     }
 }

@@ -10,6 +10,7 @@ import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -26,6 +27,7 @@ import kotlin.math.sin
  */
 internal object EarthPillars : AbilityInterface {
     override val cooldownMs: Long = 18000
+    override val activationType = ActivationType.INSTANT
 
     /** Base number of pillars in the ring (before level scaling). */
     private const val PILLARS = 6
@@ -73,6 +75,8 @@ internal object EarthPillars : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val world = player.world
         val pillarCount = PILLARS + (level - 1) / 2 * PILLARS_PER_TWO_LEVELS
         val height = HEIGHT + (level - 1) / 2 * HEIGHT_PER_TWO_LEVELS
@@ -138,6 +142,7 @@ internal object EarthPillars : AbilityInterface {
             },
             teardownDelay,
         )
+        complete(player)
     }
 
     /**

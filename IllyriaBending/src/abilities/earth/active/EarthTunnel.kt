@@ -7,9 +7,9 @@ import org.bukkit.Sound
 import org.bukkit.World
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
@@ -25,6 +25,8 @@ import java.util.concurrent.ConcurrentHashMap
  */
 internal object EarthTunnel : AbilityInterface {
     override val cooldownMs: Long = 8500
+    override val activationType = ActivationType.INSTANT
+    override val hasSession = true
 
     /** Total tunnel length in blocks (before level scaling). */
     private const val LENGTH = 8
@@ -38,15 +40,27 @@ internal object EarthTunnel : AbilityInterface {
     /** Ticks between successive per-segment carves, for a rolling dig animation. */
     private const val SEGMENT_INTERVAL_TICKS = 1L
 
-    /** Active tunnel digs keyed by player UUID (currently used as a re-entry guard). */
-    private val sessions = ConcurrentHashMap<UUID, BukkitTask>()
+    /** Per-player dig state for active sessions. */
+    private val digs = ConcurrentHashMap<UUID, DigData>()
+
+    /** Holds state for a single EarthTunnel dig. */
+    private class DigData(
+        val player: Player,
+        val length: Int,
+        val forward: org.bukkit.util.Vector,
+        val startBlock: Block,
+        val world: World,
+        var segment: Int = 1,
+    )
 
     override fun activate(
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val uuid = player.uniqueId
-        if (sessions.containsKey(uuid)) return
+        if (SessionManager.has(this, uuid)) return
 
         val world = player.world
         val forward =
@@ -62,31 +76,29 @@ internal object EarthTunnel : AbilityInterface {
 
         world.playSound(player.location, Sound.BLOCK_GRAVEL_BREAK, 1.0f, 0.8f)
 
-        // Carve one block-length per tick, progressing outward.
-        var segment = 1
-        val taskHolder = arrayOfNulls<BukkitTask>(1)
-        taskHolder[0] =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable {
-                    if (segment > length) {
-                        taskHolder[0]?.cancel()
-                        sessions.remove(uuid)
-                        return@Runnable
-                    }
-                    val center =
-                        startBlock
-                            .location
-                            .clone()
-                            .add(forward.clone().multiply(segment.toDouble()))
-                    carve(world, center)
-                    world.playSound(center, Sound.BLOCK_STONE_BREAK, 0.7f, 0.9f)
-                    segment++
-                },
-                0L,
-                SEGMENT_INTERVAL_TICKS,
-            )
-        taskHolder[0]?.let { sessions[uuid] = it }
+        digs[uuid] = DigData(player, length, forward, startBlock, world)
+        SessionManager.start(this, uuid, SEGMENT_INTERVAL_TICKS)
+    }
+
+    override fun tickSession(uuid: UUID) {
+        val data = digs[uuid] ?: return
+
+        if (data.segment > data.length) {
+            digs.remove(uuid)
+            SessionManager.remove(this, uuid)
+            complete(data.player)
+            return
+        }
+
+        val center =
+            data
+                .startBlock
+                .location
+                .clone()
+                .add(data.forward.clone().multiply(data.segment.toDouble()))
+        carve(data.world, center)
+        data.world.playSound(center, Sound.BLOCK_STONE_BREAK, 0.7f, 0.9f)
+        data.segment++
     }
 
     /**

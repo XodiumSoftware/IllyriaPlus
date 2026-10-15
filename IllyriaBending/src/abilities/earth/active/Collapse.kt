@@ -10,6 +10,7 @@ import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 
 /**
  * Collapse: vanish the ground out from under a target ahead of the caster.
@@ -23,6 +24,7 @@ import org.xodium.illyriabending.abilities.AbilityInterface
  */
 internal object Collapse : AbilityInterface {
     override val cooldownMs: Long = 7000
+    override val activationType = ActivationType.INSTANT
 
     /** Horizontal distance ahead of the caster where the pit opens. */
     private const val SPAWN_DISTANCE = 4.0
@@ -58,6 +60,8 @@ internal object Collapse : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val world = player.world
         val forward =
             player
@@ -85,6 +89,7 @@ internal object Collapse : AbilityInterface {
         world.playSound(ground, Sound.BLOCK_STONE_BREAK, 0.9f, 0.9f)
         damageTrapped(player, ground, radius, depth, damage)
         scheduleReform(removed, reformAfter)
+        complete(player)
     }
 
     /**

@@ -7,6 +7,7 @@ import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 
 /**
  * FerroControl: tug every stray scrap of metal toward the caster like a lodestone.
@@ -20,6 +21,7 @@ import org.xodium.illyriabending.abilities.AbilityInterface
  */
 internal object FerroControl : AbilityInterface {
     override val cooldownMs: Long = 5000
+    override val activationType = ActivationType.INSTANT
 
     /** Base pickup radius in blocks (before level scaling). */
     private const val RADIUS = 8.0
@@ -37,6 +39,8 @@ internal object FerroControl : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val world = player.world
         val center = player.location.clone()
         val radius = RADIUS + (level - 1) * RADIUS_PER_LEVEL
@@ -74,6 +78,7 @@ internal object FerroControl : AbilityInterface {
             world.playSound(center, Sound.BLOCK_CHAIN_PLACE, 0.9f, 1.5f)
             world.playSound(center, Sound.ITEM_ARMOR_EQUIP_CHAIN, 0.8f, 1.3f)
         }
+        complete(player)
     }
 
     /**

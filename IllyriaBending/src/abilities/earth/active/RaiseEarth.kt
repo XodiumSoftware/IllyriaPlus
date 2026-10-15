@@ -10,6 +10,7 @@ import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 
 /**
  * RaiseEarth: tear a column of solid ground up from the earth ahead of the caster.
@@ -23,6 +24,7 @@ import org.xodium.illyriabending.abilities.AbilityInterface
  */
 internal object RaiseEarth : AbilityInterface {
     override val cooldownMs: Long = 5500
+    override val activationType = ActivationType.INSTANT
 
     /** Horizontal distance ahead of the caster where the pillar erupts. */
     private const val SPAWN_DISTANCE = 3.0
@@ -61,6 +63,8 @@ internal object RaiseEarth : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val world = player.world
         val forward =
             player
@@ -88,6 +92,7 @@ internal object RaiseEarth : AbilityInterface {
         world.playSound(ground, Sound.BLOCK_GRAVEL_PLACE, 0.9f, 0.8f)
         damageAndLaunch(player, ground, height, damage, knockup)
         scheduleSettle(placed, settleAfter)
+        complete(player)
     }
 
     /**

@@ -8,6 +8,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 
 /**
  * Catapult: slam a fist of stone up from the ground to hurl the caster skyward.
@@ -21,6 +22,7 @@ import org.xodium.illyriabending.abilities.AbilityInterface
  */
 internal object Catapult : AbilityInterface {
     override val cooldownMs: Long = 8000
+    override val activationType = ActivationType.INSTANT
 
     /** Base upward velocity applied to the caster. */
     private const val LAUNCH_POWER = 1.4
@@ -41,6 +43,8 @@ internal object Catapult : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val world = player.world
         val feet = player.location.clone()
 
@@ -83,5 +87,6 @@ internal object Catapult : AbilityInterface {
                 true,
             ),
         )
+        complete(player)
     }
 }

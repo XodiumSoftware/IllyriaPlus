@@ -6,10 +6,10 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.cos
@@ -27,6 +27,8 @@ import kotlin.math.sin
  */
 internal object EarthShards : AbilityInterface {
     override val cooldownMs: Long = 15000
+    override val activationType = ActivationType.INSTANT
+    override val hasSession = true
 
     /** Base shards per volley (before level scaling). */
     private const val SHARDS_PER_VOLLEY = 8
@@ -58,19 +60,15 @@ internal object EarthShards : AbilityInterface {
     /** Ticks between volleys. */
     private const val VOLLEY_INTERVAL_TICKS = 5L
 
-    /** Ticks between task updates. */
-    private const val TICK_PERIOD = 1L
-
-    /** Active storms keyed by player UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Per-player storm state for active sessions. */
+    private val storms = ConcurrentHashMap<UUID, StormData>()
 
     /** Holds state for a single EarthShards storm. */
-    private class Session(
+    private class StormData(
         val player: Player,
         val level: Int,
         var ticks: Long = 0L,
         val shards: MutableList<Shard> = mutableListOf(),
-        var task: BukkitTask? = null,
     )
 
     /** A single hurtling rock shard. */
@@ -167,42 +165,37 @@ internal object EarthShards : AbilityInterface {
         player: Player,
         level: Int,
     ) {
-        val uuid = player.uniqueId
-        if (sessions.containsKey(uuid)) return
+        if (isOnCooldown(player)) return
 
-        val session = Session(player, level)
-        sessions[uuid] = session
+        val uuid = player.uniqueId
+        if (SessionManager.has(this, uuid)) return
+
+        storms[uuid] = StormData(player, level)
+        SessionManager.start(this, uuid)
 
         player.world.playSound(player.location, Sound.BLOCK_STONE_BREAK, 1.0f, 0.6f)
         player.world.playSound(player.location, Sound.BLOCK_GRAVEL_BREAK, 0.9f, 0.7f)
-
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(uuid) },
-                0L,
-                TICK_PERIOD,
-            )
     }
 
-    /** Advances a shard storm one tick: spawning volleys and updating shards. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
-        val player = session.player
+    override fun tickSession(uuid: UUID) {
+        val data = storms[uuid] ?: return
+        val player = data.player
 
-        val maxTicks = STORM_TICKS + (session.level - 1) * STORM_TICKS_PER_LEVEL
-        if (!player.isOnline || player.isDead || session.ticks > maxTicks) {
-            remove(uuid)
+        val maxTicks = STORM_TICKS + (data.level - 1) * STORM_TICKS_PER_LEVEL
+        if (!player.isOnline || player.isDead || data.ticks > maxTicks) {
+            storms.remove(uuid)
+            SessionManager.remove(this, uuid)
+            complete(player)
             return
         }
 
-        session.ticks += TICK_PERIOD
+        data.ticks += 1L
 
-        if (session.ticks % VOLLEY_INTERVAL_TICKS == 0L) {
-            spawnVolley(session)
+        if (data.ticks % VOLLEY_INTERVAL_TICKS == 0L) {
+            spawnVolley(data)
         }
 
-        val iterator = session.shards.iterator()
+        val iterator = data.shards.iterator()
         while (iterator.hasNext()) {
             val shard = iterator.next()
             if (!shard.update()) {
@@ -215,15 +208,15 @@ internal object EarthShards : AbilityInterface {
      * Launches a fresh ring of shards outward from the caster in a circle. Each shard
      * has a small vertical arc so the volley clears the caster before raining down.
      */
-    private fun spawnVolley(session: Session) {
-        val player = session.player
-        val shardsInVolley = SHARDS_PER_VOLLEY + (session.level - 1) * SHARDS_PER_LEVEL
-        val damage = DAMAGE + (session.level - 1) * DAMAGE_PER_LEVEL
+    private fun spawnVolley(data: StormData) {
+        val player = data.player
+        val shardsInVolley = SHARDS_PER_VOLLEY + (data.level - 1) * SHARDS_PER_LEVEL
+        val damage = DAMAGE + (data.level - 1) * DAMAGE_PER_LEVEL
 
         val origin = player.eyeLocation.clone().subtract(0.0, 0.5, 0.0)
 
         for (i in 0 until shardsInVolley) {
-            val angle = i * (2.0 * Math.PI / shardsInVolley) + session.ticks * 0.1
+            val angle = i * (2.0 * Math.PI / shardsInVolley) + data.ticks * 0.1
             // Slight random jitter per shard so the storm feels organic.
             val jitter =
                 Vector(
@@ -238,7 +231,7 @@ internal object EarthShards : AbilityInterface {
                     sin(angle) * SHARD_SPEED,
                 ).add(jitter)
 
-            session.shards += Shard(player, origin, velocity, damage)
+            data.shards += Shard(player, origin, velocity, damage)
         }
 
         player.world.playSound(
@@ -247,10 +240,5 @@ internal object EarthShards : AbilityInterface {
             0.6f,
             0.8f,
         )
-    }
-
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.task?.cancel()
     }
 }

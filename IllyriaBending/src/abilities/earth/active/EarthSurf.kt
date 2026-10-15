@@ -4,10 +4,10 @@ import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
@@ -23,6 +23,8 @@ import java.util.concurrent.ConcurrentHashMap
  */
 internal object EarthSurf : AbilityInterface {
     override val cooldownMs: Long = 9000
+    override val activationType = ActivationType.TOGGLE
+    override val hasSession = true
 
     /** Horizontal propulsion speed per tick (before level scaling). */
     private const val SPEED = 0.55
@@ -36,71 +38,63 @@ internal object EarthSurf : AbilityInterface {
     /** Additional ride duration per level. */
     private const val DURATION_PER_LEVEL = 20L
 
-    /** Ticks between task updates. */
-    private const val TICK_PERIOD = 1L
-
     /** Height the rider is held above the ground. */
     private const val RIDE_HEIGHT = 0.05
 
     /** Radius of the particle berm rendered around the caster. */
     private const val BERM_RADIUS = 0.7
 
-    /** Active surfs keyed by player UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Per-player surf state for active sessions. */
+    private val surfs = ConcurrentHashMap<UUID, SurfData>()
 
     /** Holds state for a single EarthSurf ride. */
-    private class Session(
+    private class SurfData(
         val player: Player,
         val level: Int,
         var ticks: Long = 0L,
-        var task: BukkitTask? = null,
     )
 
     override fun activate(
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val uuid = player.uniqueId
-        if (sessions.containsKey(uuid)) {
-            remove(uuid)
+        if (SessionManager.has(this, uuid)) {
+            surfs.remove(uuid)
+            SessionManager.remove(this, uuid)
+            complete(player)
             return
         }
 
-        val session = Session(player, level)
-        sessions[uuid] = session
+        surfs[uuid] = SurfData(player, level)
+        SessionManager.start(this, uuid)
 
         player.world.playSound(player.location, Sound.BLOCK_GRAVEL_BREAK, 1.0f, 0.6f)
-
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(uuid) },
-                0L,
-                TICK_PERIOD,
-            )
     }
 
-    /** Advances a surf session by one tick. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
-        val player = session.player
+    override fun tickSession(uuid: UUID) {
+        val data = surfs[uuid] ?: return
+        val player = data.player
 
-        session.ticks += TICK_PERIOD
+        data.ticks += 1L
 
-        val maxTicks = MAX_DURATION_TICKS + (session.level - 1) * DURATION_PER_LEVEL
-        if (!player.isOnline || player.isDead || session.ticks > maxTicks) {
-            remove(uuid)
+        val maxTicks = MAX_DURATION_TICKS + (data.level - 1) * DURATION_PER_LEVEL
+        if (!player.isOnline || player.isDead || data.ticks > maxTicks) {
+            surfs.remove(uuid)
+            SessionManager.remove(this, uuid)
             return
         }
 
-        propel(session)
-        render(session)
-        playSound(session)
+        propel(data)
+        render(data)
+        playSound(data)
     }
 
     /** Pushes the player horizontally along their facing direction each tick. */
-    private fun propel(session: Session) {
-        val player = session.player
+    private fun propel(data: SurfData) {
+        val player = data.player
         val dir =
             player
                 .location
@@ -108,7 +102,7 @@ internal object EarthSurf : AbilityInterface {
                 .clone()
                 .setY(0)
                 .normalize()
-        val speed = SPEED + (session.level - 1) * SPEED_PER_LEVEL
+        val speed = SPEED + (data.level - 1) * SPEED_PER_LEVEL
 
         val velocity = dir.multiply(speed)
         val current = player.velocity
@@ -118,8 +112,8 @@ internal object EarthSurf : AbilityInterface {
     }
 
     /** Renders a churning ring of earth and gravel around the caster's feet. */
-    private fun render(session: Session) {
-        val player = session.player
+    private fun render(data: SurfData) {
+        val player = data.player
         val world = player.world
         val feet = player.location.clone()
 
@@ -128,7 +122,7 @@ internal object EarthSurf : AbilityInterface {
 
         val spokes = 10
         for (i in 0 until spokes) {
-            val angle = session.ticks * 0.35 + i * (2.0 * Math.PI / spokes)
+            val angle = data.ticks * 0.35 + i * (2.0 * Math.PI / spokes)
             val x = kotlin.math.cos(angle) * BERM_RADIUS
             val z = kotlin.math.sin(angle) * BERM_RADIUS
             val point = feet.clone().add(x, 0.15, z)
@@ -157,19 +151,14 @@ internal object EarthSurf : AbilityInterface {
     }
 
     /** Plays rolling earth sounds periodically while riding. */
-    private fun playSound(session: Session) {
+    private fun playSound(data: SurfData) {
         if (Math.random() < 1.0 / 8.0) {
-            session.player.world.playSound(
-                session.player.location,
+            data.player.world.playSound(
+                data.player.location,
                 Sound.BLOCK_GRAVEL_STEP,
                 0.7f,
                 0.9f,
             )
         }
-    }
-
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.task?.cancel()
     }
 }

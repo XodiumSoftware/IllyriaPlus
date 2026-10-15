@@ -8,6 +8,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -23,6 +24,7 @@ import kotlin.math.sin
  */
 internal object EarthSmash : AbilityInterface {
     override val cooldownMs: Long = 11000
+    override val activationType = ActivationType.INSTANT
 
     /** Hit radius in blocks (before level scaling). */
     private const val RADIUS = 4.0
@@ -52,6 +54,8 @@ internal object EarthSmash : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val world = player.world
         val feet = player.location.clone()
 
@@ -92,6 +96,7 @@ internal object EarthSmash : AbilityInterface {
                         .add(away.multiply(knockback))
                         .add(Vector(0.0, KNOCKUP, 0.0))
             }
+        complete(player)
     }
 
     /**
