@@ -4,12 +4,11 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -24,6 +23,8 @@ import kotlin.math.sin
  */
 internal object Combustion : AbilityInterface {
     override val cooldownMs: Long = 7500
+    override val activationType: ActivationType = ActivationType.CHARGE
+    override val hasSession: Boolean = true
 
     /** Explosion radius in blocks (before charge factor). */
     private const val RADIUS = 2.5
@@ -46,28 +47,23 @@ internal object Combustion : AbilityInterface {
     /** Ticks to apply fire to hit entities. */
     private const val FIRE_TICKS = 100
 
-    /** Active sessions keyed by player UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Active Combustion states keyed by player UUID. */
+    private val states = mutableMapOf<UUID, CombustionState>()
 
     /** Holds a Combustion session: charging, then explosion. */
-    private class Session(
-        val player: Player,
+    private class CombustionState(
         val direction: Vector,
         var factor: Double = 1.0,
         var charging: Boolean = true,
         val startTime: Long = System.currentTimeMillis(),
-        var task: BukkitTask? = null,
-    ) {
-        fun cancel() {
-            task?.cancel()
-        }
-    }
+    )
 
     override fun activate(
         player: Player,
         level: Int,
     ) {
-        if (sessions.containsKey(player.uniqueId)) return
+        if (isOnCooldown(player)) return
+        if (SessionManager.has(this, player.uniqueId)) return
 
         val direction =
             player
@@ -76,46 +72,43 @@ internal object Combustion : AbilityInterface {
                 .clone()
                 .normalize()
 
-        val session = Session(player, direction)
-        sessions[player.uniqueId] = session
-
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(player.uniqueId) },
-                0L,
-                TICK_PERIOD,
-            )
+        states[player.uniqueId] = CombustionState(direction)
+        SessionManager.start(this, player.uniqueId, TICK_PERIOD)
     }
 
-    /** Advances a session by one tick. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
+    override fun tickSession(uuid: UUID) {
+        val session = SessionManager.get(this, uuid) ?: return
         val player = session.player
+        val state = states[uuid] ?: return
 
         if (!player.isOnline || player.isDead) {
-            remove(uuid)
+            states.remove(uuid)
+            SessionManager.remove(this, uuid)
+            complete(player)
             return
         }
 
-        if (session.charging) {
-            tickCharging(session)
+        if (state.charging) {
+            tickCharging(player, state)
         } else {
-            detonate(session)
-            remove(uuid)
+            detonate(player, state)
+            states.remove(uuid)
+            SessionManager.remove(this, uuid)
+            complete(player)
         }
     }
 
     /** Ticks while charging. */
-    private fun tickCharging(session: Session) {
-        val player = session.player
-
+    private fun tickCharging(
+        player: Player,
+        state: CombustionState,
+    ) {
         if (!player.isSneaking) {
-            launch(session)
+            launch(state)
             return
         }
 
-        val eyeLoc = player.eyeLocation.clone().add(session.direction)
+        val eyeLoc = player.eyeLocation.clone().add(state.direction)
 
         for (i in 0 until 16) {
             val angle = (2.0 * Math.PI * i) / 16
@@ -136,33 +129,35 @@ internal object Combustion : AbilityInterface {
     }
 
     /** Launches the explosion from a charging session. */
-    private fun launch(session: Session) {
-        val elapsed = System.currentTimeMillis() - session.startTime
-        session.factor =
+    private fun launch(state: CombustionState) {
+        val elapsed = System.currentTimeMillis() - state.startTime
+        state.factor =
             when {
                 elapsed >= MAX_CHARGE_TIME_MS -> CHARGE_FACTOR
                 else -> 1.0 + (CHARGE_FACTOR - 1.0) * elapsed.toDouble() / MAX_CHARGE_TIME_MS
             }
 
-        session.charging = false
+        state.charging = false
     }
 
     /** Triggers the explosion at a forward location. */
-    private fun detonate(session: Session) {
-        val player = session.player
+    private fun detonate(
+        player: Player,
+        state: CombustionState,
+    ) {
         val blastCenter =
             player
                 .eyeLocation
                 .clone()
-                .add(session.direction.clone().multiply(RANGE * 0.7))
+                .add(state.direction.clone().multiply(RANGE * 0.7))
         val world = blastCenter.world ?: return
 
-        world.createExplosion(blastCenter, (RADIUS * session.factor).toFloat(), true, true, player)
+        world.createExplosion(blastCenter, (RADIUS * state.factor).toFloat(), true, true, player)
 
         for (i in 0 until 24) {
             val angle = (2.0 * Math.PI * i) / 24
-            val x = (RADIUS * session.factor) * cos(angle)
-            val z = (RADIUS * session.factor) * sin(angle)
+            val x = (RADIUS * state.factor) * cos(angle)
+            val z = (RADIUS * state.factor) * sin(angle)
             world.spawnParticle(
                 Particle.EXPLOSION,
                 blastCenter.clone().add(x, 0.0, z),
@@ -175,19 +170,14 @@ internal object Combustion : AbilityInterface {
         }
 
         world
-            .getNearbyEntities(blastCenter, RADIUS * session.factor, RADIUS * session.factor, RADIUS * session.factor)
+            .getNearbyEntities(blastCenter, RADIUS * state.factor, RADIUS * state.factor, RADIUS * state.factor)
             .filterIsInstance<LivingEntity>()
             .filter { it != player }
             .forEach { entity ->
-                entity.damage(DAMAGE * session.factor, player)
+                entity.damage(DAMAGE * state.factor, player)
                 entity.fireTicks = FIRE_TICKS
             }
 
         world.playSound(blastCenter, Sound.ENTITY_GENERIC_EXPLODE, 1.5f, 0.8f)
-    }
-
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.cancel()
     }
 }

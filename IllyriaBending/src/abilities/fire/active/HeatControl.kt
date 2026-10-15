@@ -5,6 +5,7 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 
 /**
  * HeatControl: command heat itself by reshaping thermal blocks around the caster.
@@ -20,6 +21,7 @@ import org.xodium.illyriabending.abilities.AbilityInterface
  */
 internal object HeatControl : AbilityInterface {
     override val cooldownMs: Long = 4000
+    override val activationType: ActivationType = ActivationType.INSTANT
 
     /** Manipulation radius in blocks. */
     private const val RADIUS = 6
@@ -31,6 +33,8 @@ internal object HeatControl : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val world = player.world
         val center = player.location
         val radius = RADIUS + (level - 1) * RADIUS_PER_LEVEL
@@ -84,5 +88,7 @@ internal object HeatControl : AbilityInterface {
         if (transformed > 0) {
             world.playSound(center, Sound.BLOCK_LAVA_AMBIENT, 1.0f, 1.4f)
         }
+
+        complete(player)
     }
 }

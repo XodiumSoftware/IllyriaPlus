@@ -4,12 +4,11 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 
 /**
  * FlameRush: dash forward wreathed in flame, scorching anything in the way.
@@ -22,6 +21,8 @@ import java.util.concurrent.ConcurrentHashMap
  */
 internal object FlameRush : AbilityInterface {
     override val cooldownMs: Long = 5500
+    override val activationType: ActivationType = ActivationType.DURATION
+    override val hasSession: Boolean = true
 
     /** Dash distance in blocks (before level scaling). */
     private const val DISTANCE = 8.0
@@ -47,26 +48,25 @@ internal object FlameRush : AbilityInterface {
     /** Ticks between task updates. */
     private const val TICK_PERIOD = 1L
 
-    /** Active rush sessions keyed by player UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Active rush states keyed by player UUID. */
+    private val states = mutableMapOf<UUID, RushState>()
 
     /** Holds state for a FlameRush dash. */
-    private class Session(
-        val player: Player,
+    private class RushState(
         val level: Int,
         val direction: Vector,
         val distance: Double,
         var travelled: Double = 0.0,
         val hitEntities: MutableSet<LivingEntity> = mutableSetOf(),
-        var task: BukkitTask? = null,
     )
 
     override fun activate(
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
         val uuid = player.uniqueId
-        if (sessions.containsKey(uuid)) return
+        if (SessionManager.has(this, uuid)) return
 
         val dir =
             player
@@ -77,62 +77,59 @@ internal object FlameRush : AbilityInterface {
                 .normalize()
         val distance = DISTANCE + (level - 1) * DISTANCE_PER_LEVEL
 
-        val session = Session(player, level, dir, distance)
-        sessions[uuid] = session
+        states[uuid] = RushState(level, dir, distance)
+        SessionManager.start(this, uuid, TICK_PERIOD)
 
         player.world.playSound(player.location, Sound.ENTITY_BLAZE_SHOOT, 1.0f, 0.9f)
-
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(uuid) },
-                0L,
-                TICK_PERIOD,
-            )
     }
 
-    /** Advances a rush session by one tick. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
+    override fun tickSession(uuid: UUID) {
+        val session = SessionManager.get(this, uuid) ?: return
         val player = session.player
+        val state = states[uuid] ?: return
+
+        fun end() {
+            states.remove(uuid)
+            SessionManager.remove(this, uuid)
+            complete(player)
+        }
 
         if (!player.isOnline || player.isDead) {
-            remove(uuid)
+            end()
             return
         }
 
-        if (session.travelled >= session.distance) {
-            remove(uuid)
+        if (state.travelled >= state.distance) {
+            end()
             return
         }
 
-        val step = DASH_SPEED.coerceAtMost(session.distance - session.travelled)
+        val step = DASH_SPEED.coerceAtMost(state.distance - state.travelled)
 
         // Stop if the player runs into a wall.
         val nextBlock =
             player
                 .location
                 .clone()
-                .add(session.direction.clone().multiply(step + 0.5))
+                .add(state.direction.clone().multiply(step + 0.5))
                 .block
         if (!nextBlock.isPassable && !nextBlock.type.isAir) {
-            remove(uuid)
+            end()
             return
         }
 
-        player.velocity = session.direction.clone().multiply(step)
-        session.travelled += step
+        player.velocity = state.direction.clone().multiply(step)
+        state.travelled += step
 
-        render(session)
-        damage(session)
+        render(player)
+        damage(player, state)
     }
 
     /** Renders the trail of flame behind the rushing player. */
-    private fun render(session: Session) {
-        val world = session.player.world
+    private fun render(player: Player) {
+        val world = player.world
         val loc =
-            session
-                .player
+            player
                 .location
                 .clone()
                 .add(0.0, 0.5, 0.0)
@@ -146,29 +143,27 @@ internal object FlameRush : AbilityInterface {
     }
 
     /** Damages entities in the path. */
-    private fun damage(session: Session) {
-        val world = session.player.world
-        val damage = DAMAGE + (session.level - 1) * DAMAGE_PER_LEVEL
+    private fun damage(
+        player: Player,
+        state: RushState,
+    ) {
+        val world = player.world
+        val damage = DAMAGE + (state.level - 1) * DAMAGE_PER_LEVEL
 
         world
-            .getNearbyEntities(session.player.location, 1.8, 1.8, 1.8)
+            .getNearbyEntities(player.location, 1.8, 1.8, 1.8)
             .filterIsInstance<LivingEntity>()
-            .filter { it != session.player }
-            .filter { it !in session.hitEntities }
+            .filter { it != player }
+            .filter { it !in state.hitEntities }
             .forEach { entity ->
-                session.hitEntities.add(entity)
-                entity.damage(damage, session.player)
+                state.hitEntities.add(entity)
+                entity.damage(damage, player)
                 entity.fireTicks = maxOf(entity.fireTicks, FIRE_TICKS)
 
                 // Perpendicular shove off the rush line.
-                val perp = Vector(-session.direction.z, 0.2, session.direction.x)
+                val perp = Vector(-state.direction.z, 0.2, state.direction.x)
                 val side = if (Math.random() < 0.5) perp else perp.multiply(-1.0)
                 entity.velocity = entity.velocity.add(side.multiply(KNOCKBACK))
             }
-    }
-
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.task?.cancel()
     }
 }

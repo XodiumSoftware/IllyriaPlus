@@ -5,12 +5,11 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -27,6 +26,8 @@ import kotlin.math.sin
  */
 internal object Lightning : AbilityInterface {
     override val cooldownMs: Long = 9000
+    override val activationType: ActivationType = ActivationType.CHARGE
+    override val hasSession: Boolean = true
 
     /** Damage in hearts dealt at point of strike (before charge factor). */
     private const val DAMAGE = 4.0
@@ -61,58 +62,55 @@ internal object Lightning : AbilityInterface {
     /** Ticks between task updates. */
     private const val TICK_PERIOD = 1L
 
-    /** Active charging sessions keyed by player UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Active charging states keyed by player UUID. */
+    private val states = mutableMapOf<UUID, LightningState>()
 
     /** Holds state for a Lightning activation: charging, then fired. */
-    private class Session(
-        val player: Player,
+    private class LightningState(
         val level: Int,
         var charging: Boolean = true,
         val startTime: Long = System.currentTimeMillis(),
-        var task: BukkitTask? = null,
     )
 
     override fun activate(
         player: Player,
         level: Int,
     ) {
-        if (sessions.containsKey(player.uniqueId)) return
+        if (isOnCooldown(player)) return
+        if (SessionManager.has(this, player.uniqueId)) return
 
-        val session = Session(player, level)
-        sessions[player.uniqueId] = session
-
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(player.uniqueId) },
-                0L,
-                TICK_PERIOD,
-            )
+        states[player.uniqueId] = LightningState(level)
+        SessionManager.start(this, player.uniqueId, TICK_PERIOD)
     }
 
-    /** Advances a session by one tick. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
+    override fun tickSession(uuid: UUID) {
+        val session = SessionManager.get(this, uuid) ?: return
         val player = session.player
+        val state = states[uuid] ?: return
 
         if (!player.isOnline || player.isDead) {
-            remove(uuid)
+            states.remove(uuid)
+            SessionManager.remove(this, uuid)
+            complete(player)
             return
         }
 
-        if (session.charging) {
-            tickCharging(session)
+        if (state.charging) {
+            tickCharging(player, uuid, state)
         }
     }
 
     /** Ticks while charging. */
-    private fun tickCharging(session: Session) {
-        val player = session.player
-
+    private fun tickCharging(
+        player: Player,
+        uuid: UUID,
+        state: LightningState,
+    ) {
         if (!player.isSneaking) {
-            fire(session)
-            remove(session.player.uniqueId)
+            fire(player, state)
+            states.remove(uuid)
+            SessionManager.remove(this, uuid)
+            complete(player)
             return
         }
 
@@ -120,7 +118,7 @@ internal object Lightning : AbilityInterface {
         val world = eye.world ?: return
 
         // Swirling charge particles above the player's head.
-        val elapsed = System.currentTimeMillis() - session.startTime
+        val elapsed = System.currentTimeMillis() - state.startTime
         val intensity = (1 + (elapsed / 200)).coerceAtMost(8)
         for (i in 0 until intensity.toInt()) {
             val angle = (elapsed.toDouble() / 50.0) + i * (2.0 * Math.PI / intensity)
@@ -138,13 +136,15 @@ internal object Lightning : AbilityInterface {
     }
 
     /** Fires the lightning bolt from the charged session. */
-    private fun fire(session: Session) {
-        val player = session.player
-        val level = session.level
+    private fun fire(
+        player: Player,
+        state: LightningState,
+    ) {
+        val level = state.level
         val eye = player.eyeLocation
         val world = eye.world ?: return
 
-        val elapsed = System.currentTimeMillis() - session.startTime
+        val elapsed = System.currentTimeMillis() - state.startTime
         val factor =
             when {
                 elapsed >= MAX_CHARGE_TIME_MS -> {
@@ -278,10 +278,5 @@ internal object Lightning : AbilityInterface {
             }
             prev = target
         }
-    }
-
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.task?.cancel()
     }
 }

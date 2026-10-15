@@ -6,11 +6,10 @@ import org.bukkit.Sound
 import org.bukkit.block.Block
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 
 /**
  * FirePropagate: cause existing fire to surge outward in all directions.
@@ -23,6 +22,8 @@ import java.util.concurrent.ConcurrentHashMap
  */
 internal object FirePropagate : AbilityInterface {
     override val cooldownMs: Long = 7000
+    override val activationType: ActivationType = ActivationType.DURATION
+    override val hasSession: Boolean = true
 
     /** Radius in which existing fires are detected (before level scaling). */
     private const val DETECT_RADIUS = 8
@@ -48,28 +49,26 @@ internal object FirePropagate : AbilityInterface {
     /** Ticks between propagation pulses. */
     private const val TICK_PERIOD = 3L
 
-    /** Active propagation sessions keyed by player UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Active propagation states keyed by player UUID. */
+    private val states = mutableMapOf<UUID, PropagateState>()
 
     /** Holds state for an active propagation: tracks visited fire blocks and spread frontier. */
-    private class Session(
-        val player: Player,
+    private class PropagateState(
         val level: Int,
         var ticks: Long = 0L,
         val frontier: MutableSet<Block> = mutableSetOf(),
         val visited: MutableSet<Block> = mutableSetOf(),
-        var task: BukkitTask? = null,
     )
 
     override fun activate(
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
         val uuid = player.uniqueId
-        if (sessions.containsKey(uuid)) return
+        if (SessionManager.has(this, uuid)) return
 
-        val session = Session(player, level)
-        sessions[uuid] = session
+        val state = PropagateState(level)
 
         val center = player.location
         val r = DETECT_RADIUS + (level - 1)
@@ -79,50 +78,47 @@ internal object FirePropagate : AbilityInterface {
             for (dy in -r..r) {
                 for (dz in -r..r) {
                     val block = world.getBlockAt(center.blockX + dx, center.blockY + dy, center.blockZ + dz)
-                    if (block.type == Material.FIRE) session.frontier.add(block)
+                    if (block.type == Material.FIRE) state.frontier.add(block)
                 }
             }
         }
 
-        if (session.frontier.isEmpty()) {
-            sessions.remove(uuid)
+        if (state.frontier.isEmpty()) {
+            complete(player)
             return
         }
 
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(uuid) },
-                0L,
-                TICK_PERIOD,
-            )
+        states[uuid] = state
+        SessionManager.start(this, uuid, TICK_PERIOD)
     }
 
-    /** Advances a propagation session by one pulse. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
+    override fun tickSession(uuid: UUID) {
+        val session = SessionManager.get(this, uuid) ?: return
         val player = session.player
+        val state = states[uuid] ?: return
 
-        session.ticks += TICK_PERIOD
+        state.ticks += TICK_PERIOD
 
-        val maxTicks = DURATION_TICKS + (session.level - 1) * DURATION_PER_LEVEL
-        if (!player.isOnline || player.isDead || session.ticks > maxTicks || session.frontier.isEmpty()) {
-            remove(uuid)
+        val maxTicks = DURATION_TICKS + (state.level - 1) * DURATION_PER_LEVEL
+        if (!player.isOnline || player.isDead || state.ticks > maxTicks || state.frontier.isEmpty()) {
+            states.remove(uuid)
+            SessionManager.remove(this, uuid)
+            complete(player)
             return
         }
 
-        spread(session)
-        damage(session)
+        spread(state)
+        damage(player, state)
     }
 
     /**
      * Advances the fire frontier outward, igniting adjacent flammable blocks.
      */
-    private fun spread(session: Session) {
+    private fun spread(state: PropagateState) {
         val newFrontier = mutableSetOf<Block>()
 
-        for (block in session.frontier) {
-            session.visited.add(block)
+        for (block in state.frontier) {
+            state.visited.add(block)
             val world = block.world
 
             val adjacent =
@@ -136,7 +132,7 @@ internal object FirePropagate : AbilityInterface {
                 )
 
             for (next in adjacent) {
-                if (next in session.visited) continue
+                if (next in state.visited) continue
                 if (next in newFrontier) continue
 
                 if (next.type == Material.FIRE) {
@@ -156,39 +152,37 @@ internal object FirePropagate : AbilityInterface {
             }
         }
 
-        if (Math.random() < 0.5 && session.frontier.isNotEmpty()) {
-            session.frontier.first().world.playSound(
-                session.frontier.first().location,
+        if (Math.random() < 0.5 && state.frontier.isNotEmpty()) {
+            state.frontier.first().world.playSound(
+                state.frontier.first().location,
                 Sound.BLOCK_FIRE_AMBIENT,
                 0.7f,
                 1.0f,
             )
         }
 
-        session.frontier.clear()
-        session.frontier.addAll(newFrontier.take(SPREAD_PER_TICK * 24 + (session.level - 1) * 8))
+        state.frontier.clear()
+        state.frontier.addAll(newFrontier.take(SPREAD_PER_TICK * 24 + (state.level - 1) * 8))
     }
 
     /**
      * Damages living entities adjacent to active flames.
      */
-    private fun damage(session: Session) {
-        val damage = DAMAGE + (session.level - 1) * DAMAGE_PER_LEVEL
-        for (block in session.frontier) {
+    private fun damage(
+        player: Player,
+        state: PropagateState,
+    ) {
+        val damage = DAMAGE + (state.level - 1) * DAMAGE_PER_LEVEL
+        for (block in state.frontier) {
             block
                 .world
                 .getNearbyEntities(block.location.clone().add(0.5, 0.5, 0.5), 1.5, 1.5, 1.5)
                 .filterIsInstance<LivingEntity>()
-                .filter { it != session.player }
+                .filter { it != player }
                 .forEach { entity ->
-                    entity.damage(damage, session.player)
+                    entity.damage(damage, player)
                     entity.fireTicks = maxOf(entity.fireTicks, FIRE_TICKS)
                 }
         }
-    }
-
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.task?.cancel()
     }
 }

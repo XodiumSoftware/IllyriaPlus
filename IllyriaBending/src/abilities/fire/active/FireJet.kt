@@ -3,11 +3,10 @@ package org.xodium.illyriabending.abilities.fire.active
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 
 /**
  * FireJet: propel yourself through the air on a roaring jet of flame.
@@ -20,6 +19,8 @@ import java.util.concurrent.ConcurrentHashMap
  */
 internal object FireJet : AbilityInterface {
     override val cooldownMs: Long = 6000
+    override val activationType: ActivationType = ActivationType.TOGGLE
+    override val hasSession: Boolean = true
 
     /** Sustained jet speed in blocks per tick (before level scaling). */
     private const val SPEED = 0.65
@@ -36,15 +37,13 @@ internal object FireJet : AbilityInterface {
     /** Ticks between task updates. */
     private const val TICK_PERIOD = 1L
 
-    /** Active jet sessions keyed by player UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Per-player jet flight state keyed by player UUID. */
+    private val states = mutableMapOf<UUID, JetState>()
 
-    /** Holds state for a FireJet flight. */
-    private class Session(
-        val player: Player,
+    /** Holds per-session state for an active FireJet flight. */
+    private class JetState(
         val level: Int,
         var ticks: Long = 0L,
-        var task: BukkitTask? = null,
     )
 
     override fun activate(
@@ -52,58 +51,57 @@ internal object FireJet : AbilityInterface {
         level: Int,
     ) {
         val uuid = player.uniqueId
-        if (sessions.containsKey(uuid)) {
-            remove(uuid)
+        if (SessionManager.has(this, uuid)) {
+            states.remove(uuid)
+            SessionManager.remove(this, uuid)
+            complete(player)
             return
         }
 
-        val session = Session(player, level)
-        sessions[uuid] = session
+        if (isOnCooldown(player)) return
 
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(uuid) },
-                0L,
-                TICK_PERIOD,
-            )
+        states[uuid] = JetState(level)
+        SessionManager.start(this, uuid, TICK_PERIOD)
     }
 
-    /** Advances a jet session by one tick. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
+    override fun tickSession(uuid: UUID) {
+        val session = SessionManager.get(this, uuid) ?: return
         val player = session.player
+        val state = states[uuid] ?: return
 
-        session.ticks += TICK_PERIOD
+        state.ticks += TICK_PERIOD
 
-        val maxTicks = MAX_DURATION_TICKS + (session.level - 1) * DURATION_PER_LEVEL
-        if (!player.isOnline || player.isDead || session.ticks > maxTicks || !player.isSneaking) {
-            remove(uuid)
+        val maxTicks = MAX_DURATION_TICKS + (state.level - 1) * DURATION_PER_LEVEL
+        if (!player.isOnline || player.isDead || state.ticks > maxTicks || !player.isSneaking) {
+            states.remove(uuid)
+            SessionManager.remove(this, uuid)
+            complete(player)
             return
         }
 
-        propel(session)
-        render(session)
-        playSound(session)
+        propel(player, state)
+        render(player)
+        playSound(player)
     }
 
     /** Pushes the player along their look direction each tick. */
-    private fun propel(session: Session) {
-        val player = session.player
+    private fun propel(
+        player: Player,
+        state: JetState,
+    ) {
         val dir =
             player
                 .location
                 .direction
                 .clone()
                 .normalize()
-        val speed = SPEED + (session.level - 1) * SPEED_PER_LEVEL
+        val speed = SPEED + (state.level - 1) * SPEED_PER_LEVEL
 
         player.velocity = dir.multiply(speed)
     }
 
     /** Renders the flame trail behind the player. */
-    private fun render(session: Session) {
-        val player = session.player
+    private fun render(player: Player) {
         val world = player.world
         val dir =
             player
@@ -125,19 +123,14 @@ internal object FireJet : AbilityInterface {
     }
 
     /** Plays the periodic roar of the jets. */
-    private fun playSound(session: Session) {
+    private fun playSound(player: Player) {
         if (Math.random() < 1.0 / 6.0) {
-            session.player.world.playSound(
-                session.player.location,
+            player.world.playSound(
+                player.location,
                 Sound.ENTITY_BLAZE_SHOOT,
                 0.5f,
                 0.7f,
             )
         }
-    }
-
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.task?.cancel()
     }
 }

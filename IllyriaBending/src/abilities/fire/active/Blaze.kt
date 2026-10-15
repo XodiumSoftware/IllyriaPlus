@@ -6,12 +6,11 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
-import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.PI
 import kotlin.math.ceil
 import kotlin.math.cos
@@ -28,6 +27,8 @@ import kotlin.math.sin
  */
 internal object Blaze : AbilityInterface {
     override val cooldownMs: Long = 4500
+    override val activationType: ActivationType = ActivationType.CHARGE
+    override val hasSession: Boolean = true
 
     /** Projectile hit radius in blocks (before charge factor). */
     private const val RADIUS = 1.0
@@ -53,24 +54,18 @@ internal object Blaze : AbilityInterface {
     /** Ticks between updates. */
     private const val TICK_PERIOD = 1L
 
-    /** Active sessions keyed by player UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Active Blaze states keyed by player UUID. */
+    private val states = mutableMapOf<UUID, BlazeState>()
 
     /** Holds state for a single Blaze activation: charging then projectile. */
-    private class Session(
-        val player: Player,
+    private class BlazeState(
         val direction: Vector,
         val origin: Location,
         var factor: Double = 1.0,
         var charging: Boolean = true,
         val startTime: Long = System.currentTimeMillis(),
         var projectile: Projectile? = null,
-        var task: BukkitTask? = null,
-    ) {
-        fun cancel() {
-            task?.cancel()
-        }
-    }
+    )
 
     /** The launched fireball: travels forward, rendering particles and damaging on contact. */
     private class Projectile(
@@ -161,7 +156,8 @@ internal object Blaze : AbilityInterface {
         player: Player,
         level: Int,
     ) {
-        if (sessions.containsKey(player.uniqueId)) return
+        if (isOnCooldown(player)) return
+        if (SessionManager.has(this, player.uniqueId)) return
 
         val direction =
             player
@@ -175,45 +171,40 @@ internal object Blaze : AbilityInterface {
                 .clone()
                 .add(direction.clone())
 
-        val session = Session(player, direction, origin)
-        sessions[player.uniqueId] = session
-
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(player.uniqueId) },
-                0L,
-                TICK_PERIOD,
-            )
+        states[player.uniqueId] = BlazeState(direction, origin)
+        SessionManager.start(this, player.uniqueId, TICK_PERIOD)
     }
 
-    /** Advances a session by one tick. Called every [TICK_PERIOD] ticks. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
+    override fun tickSession(uuid: UUID) {
+        val session = SessionManager.get(this, uuid) ?: return
         val player = session.player
+        val state = states[uuid] ?: return
 
         if (!player.isOnline || player.isDead) {
-            remove(uuid)
+            states.remove(uuid)
+            SessionManager.remove(this, uuid)
+            complete(player)
             return
         }
 
-        if (session.charging) {
-            tickCharging(session)
+        if (state.charging) {
+            tickCharging(player, state)
         } else {
-            tickProjectile(session)
+            tickProjectile(player, uuid, state)
         }
     }
 
     /** Ticks while charging. */
-    private fun tickCharging(session: Session) {
-        val player = session.player
-
+    private fun tickCharging(
+        player: Player,
+        state: BlazeState,
+    ) {
         if (!player.isSneaking) {
-            launch(session)
+            launch(player, state)
             return
         }
 
-        val elapsed = System.currentTimeMillis() - session.startTime
+        val elapsed = System.currentTimeMillis() - state.startTime
         val timeFactor = minOf(1.0, elapsed.toDouble() / MAX_CHARGE_TIME_MS)
         val r = RADIUS * (1.0 + timeFactor)
 
@@ -221,9 +212,9 @@ internal object Blaze : AbilityInterface {
             val angle = (2.0 * PI * i) / (12 * r)
             val x = r * cos(angle)
             val z = r * sin(angle)
-            session.origin.world?.spawnParticle(
+            state.origin.world?.spawnParticle(
                 Particle.FLAME,
-                session.origin.clone().add(x, 0.0, z),
+                state.origin.clone().add(x, 0.0, z),
                 1,
                 0.0,
                 0.0,
@@ -232,26 +223,37 @@ internal object Blaze : AbilityInterface {
             )
         }
 
-        session.origin.world?.playSound(session.origin, Sound.BLOCK_FIRE_AMBIENT, 0.5f, 1.0f)
+        state.origin.world?.playSound(state.origin, Sound.BLOCK_FIRE_AMBIENT, 0.5f, 1.0f)
     }
 
     /** Ticks while the projectile is in flight. */
-    private fun tickProjectile(session: Session) {
+    private fun tickProjectile(
+        player: Player,
+        uuid: UUID,
+        state: BlazeState,
+    ) {
         val projectile =
-            session.projectile ?: run {
-                remove(session.player.uniqueId)
+            state.projectile ?: run {
+                states.remove(uuid)
+                SessionManager.remove(this, uuid)
+                complete(player)
                 return
             }
 
         if (!projectile.update()) {
-            remove(session.player.uniqueId)
+            states.remove(uuid)
+            SessionManager.remove(this, uuid)
+            complete(player)
         }
     }
 
     /** Launches the fireball from a charging session. */
-    private fun launch(session: Session) {
-        val elapsed = System.currentTimeMillis() - session.startTime
-        session.factor =
+    private fun launch(
+        player: Player,
+        state: BlazeState,
+    ) {
+        val elapsed = System.currentTimeMillis() - state.startTime
+        state.factor =
             when {
                 elapsed >= MAX_CHARGE_TIME_MS -> {
                     CHARGE_FACTOR
@@ -269,20 +271,15 @@ internal object Blaze : AbilityInterface {
                 }
             }
 
-        session.charging = false
-        session.projectile =
+        state.charging = false
+        state.projectile =
             Projectile(
-                session.player,
-                session.origin,
-                session.direction,
-                RADIUS * session.factor * 0.5,
-                SPEED * session.factor * 0.5,
-                session.factor,
+                player,
+                state.origin,
+                state.direction,
+                RADIUS * state.factor * 0.5,
+                SPEED * state.factor * 0.5,
+                state.factor,
             )
-    }
-
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.cancel()
     }
 }

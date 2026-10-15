@@ -9,6 +9,7 @@ import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -24,6 +25,7 @@ import kotlin.math.sin
  */
 internal object FireWall : AbilityInterface {
     override val cooldownMs: Long = 8000
+    override val activationType: ActivationType = ActivationType.INSTANT
 
     /** Horizontal distance ahead of the caster where the wall is raised. */
     private const val SPAWN_DISTANCE = 3.0
@@ -59,6 +61,8 @@ internal object FireWall : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val world = player.world
         val forward =
             player
@@ -115,6 +119,8 @@ internal object FireWall : AbilityInterface {
 
         burnTouchers(player, placed, duration)
         scheduleExtinguish(placed, duration)
+
+        complete(player)
     }
 
     /**

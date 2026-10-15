@@ -1,11 +1,13 @@
 package org.xodium.illyriabending.abilities.fire.sequence
 
+import org.bukkit.Location
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -21,6 +23,7 @@ import kotlin.math.sin
  */
 internal object FireKick : AbilityInterface {
     override val cooldownMs: Long = 1500
+    override val activationType: ActivationType = ActivationType.INSTANT
 
     /** Cone reach in blocks. */
     private const val RANGE = 3.5
@@ -50,6 +53,8 @@ internal object FireKick : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val origin = player.eyeLocation.clone().add(0.0, -0.5, 0.0)
         val direction = origin.direction.clone().normalize()
         val world = origin.world ?: return
@@ -62,13 +67,15 @@ internal object FireKick : AbilityInterface {
         damage(player, origin, direction, angleRad, range, damage)
 
         world.playSound(origin, Sound.ITEM_FIRECHARGE_USE, 0.8f, 1.4f)
+
+        complete(player)
     }
 
     /**
      * Renders a quick cone of flame particles.
      */
     private fun render(
-        origin: org.bukkit.Location,
+        origin: Location,
         direction: Vector,
         angleRad: Double,
         range: Double,
@@ -110,7 +117,7 @@ internal object FireKick : AbilityInterface {
      */
     private fun damage(
         player: Player,
-        origin: org.bukkit.Location,
+        origin: Location,
         direction: Vector,
         angleRad: Double,
         range: Double,

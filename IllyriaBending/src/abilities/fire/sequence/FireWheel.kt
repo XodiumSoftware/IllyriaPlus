@@ -4,15 +4,14 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.IllyriaBending.Companion.instance
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.AbilityInterface.Companion.rotate
+import org.xodium.illyriabending.abilities.ActivationType
+import org.xodium.illyriabending.managers.SessionManager
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
 
 /**
  * FireWheel: summon a blazing wheel of flame beneath the caster and ride it.
@@ -26,6 +25,8 @@ import kotlin.math.sin
  */
 internal object FireWheel : AbilityInterface {
     override val cooldownMs: Long = 8000
+    override val activationType: ActivationType = ActivationType.TOGGLE
+    override val hasSession: Boolean = true
 
     /** Wheel ring radius in blocks (before level scaling). */
     private const val RADIUS = 1.0
@@ -60,16 +61,14 @@ internal object FireWheel : AbilityInterface {
     /** Height the wheel rides above the ground. */
     private const val RIDE_HEIGHT = 0.1
 
-    /** Active wheel sessions keyed by player UUID. */
-    private val sessions = ConcurrentHashMap<UUID, Session>()
+    /** Per-player ride state keyed by player UUID. */
+    private val rideStates = mutableMapOf<UUID, RideState>()
 
     /** Holds state for an active FireWheel ride. */
-    private class Session(
-        val player: Player,
+    private class RideState(
         val level: Int,
         var ticks: Long = 0L,
         var angle: Double = 0.0,
-        var task: BukkitTask? = null,
     )
 
     override fun activate(
@@ -77,48 +76,45 @@ internal object FireWheel : AbilityInterface {
         level: Int,
     ) {
         val uuid = player.uniqueId
-        if (sessions.containsKey(uuid)) {
-            remove(uuid)
+
+        if (SessionManager.has(this, uuid)) {
+            dismount(uuid)
             return
         }
 
-        val session = Session(player, level)
-        sessions[uuid] = session
+        if (isOnCooldown(player)) return
+
+        rideStates[uuid] = RideState(level)
+        SessionManager.start(this, uuid, TICK_PERIOD)
 
         player.world.playSound(player.location, Sound.ENTITY_BLAZE_SHOOT, 0.9f, 0.8f)
-
-        session.task =
-            instance.server.scheduler.runTaskTimer(
-                instance,
-                Runnable { tick(uuid) },
-                0L,
-                TICK_PERIOD,
-            )
     }
 
-    /** Advances a wheel session by one tick. */
-    private fun tick(uuid: UUID) {
-        val session = sessions[uuid] ?: return
+    override fun tickSession(uuid: UUID) {
+        val session = SessionManager.get(this, uuid) ?: return
         val player = session.player
+        val state = rideStates[uuid] ?: return
 
-        session.ticks += TICK_PERIOD
-        session.angle += ROTATION_STEP
+        state.ticks += TICK_PERIOD
+        state.angle += ROTATION_STEP
 
-        val maxTicks = MAX_DURATION_TICKS + (session.level - 1) * DURATION_PER_LEVEL
-        if (!player.isOnline || player.isDead || session.ticks > maxTicks) {
-            remove(uuid)
+        val maxTicks = MAX_DURATION_TICKS + (state.level - 1) * DURATION_PER_LEVEL
+        if (!player.isOnline || player.isDead || state.ticks > maxTicks) {
+            dismount(uuid)
             return
         }
 
-        propel(session)
-        render(session)
-        burn(session)
-        playSound(session)
+        propel(player, state)
+        render(player, state)
+        burn(player)
+        playSound(player)
     }
 
     /** Pushes the player horizontally along their facing direction each tick. */
-    private fun propel(session: Session) {
-        val player = session.player
+    private fun propel(
+        player: Player,
+        state: RideState,
+    ) {
         val dir =
             player
                 .location
@@ -126,7 +122,7 @@ internal object FireWheel : AbilityInterface {
                 .clone()
                 .setY(0)
                 .normalize()
-        val speed = SPEED + (session.level - 1) * SPEED_PER_LEVEL
+        val speed = SPEED + (state.level - 1) * SPEED_PER_LEVEL
 
         val velocity = dir.multiply(speed)
         val current = player.velocity
@@ -135,10 +131,12 @@ internal object FireWheel : AbilityInterface {
     }
 
     /** Renders the spinning vertical wheel of flame around the player's feet. */
-    private fun render(session: Session) {
-        val player = session.player
+    private fun render(
+        player: Player,
+        state: RideState,
+    ) {
         val world = player.world
-        val radius = RADIUS + (session.level - 1) / 2 * RADIUS_PER_TWO_LEVELS
+        val radius = RADIUS + (state.level - 1) / 2 * RADIUS_PER_TWO_LEVELS
 
         val dir =
             player
@@ -153,14 +151,14 @@ internal object FireWheel : AbilityInterface {
         val up = Vector(0.0, 1.0, 0.0)
         val spokes = 16
         for (i in 0 until spokes) {
-            val angle = session.angle + i * (2.0 * PI / spokes)
+            val angle = state.angle + i * (2.0 * PI / spokes)
             val offset = rotate(up.clone().multiply(radius), rotAxis, angle)
             world.spawnParticle(Particle.FLAME, origin.clone().add(offset), 1, 0.0, 0.0, 0.0, 0.0)
         }
 
         val rimRays = 4
         for (i in 0 until rimRays) {
-            val angle = session.angle + i * (2.0 * PI / rimRays)
+            val angle = state.angle + i * (2.0 * PI / rimRays)
             var d = 0.2
             while (d < radius) {
                 val offset = rotate(up.clone().multiply(d), rotAxis, angle)
@@ -176,9 +174,7 @@ internal object FireWheel : AbilityInterface {
     }
 
     /** Burns entities the wheel runs over. */
-    private fun burn(session: Session) {
-        val player = session.player
-
+    private fun burn(player: Player) {
         player
             .world
             .getNearbyEntities(player.location, 1.4, 1.4, 1.4)
@@ -191,10 +187,10 @@ internal object FireWheel : AbilityInterface {
     }
 
     /** Plays periodic rolling fire sound. */
-    private fun playSound(session: Session) {
+    private fun playSound(player: Player) {
         if (Math.random() < 1.0 / 10.0) {
-            session.player.world.playSound(
-                session.player.location,
+            player.world.playSound(
+                player.location,
                 Sound.BLOCK_FIRE_AMBIENT,
                 0.5f,
                 0.9f,
@@ -202,30 +198,13 @@ internal object FireWheel : AbilityInterface {
         }
     }
 
-    /** Cancels and removes a session. */
-    private fun remove(uuid: UUID) {
-        sessions.remove(uuid)?.task?.cancel()
-    }
+    /** Dismounts the player and cleans up. */
+    private fun dismount(uuid: UUID) {
+        SessionManager.remove(this, uuid)
+        rideStates.remove(uuid)
 
-    /**
-     * Rotates [vec] around [axis] by [angle] radians using Rodrigues' rotation formula.
-     *
-     * @param vec The vector to rotate.
-     * @param axis The rotation axis; will be normalized before use.
-     * @param angle The rotation angle in radians.
-     * @return The rotated vector.
-     */
-    private fun rotate(
-        vec: Vector,
-        axis: Vector,
-        angle: Double,
-    ): Vector {
-        val k = axis.clone().normalize()
-        val cosA = cos(angle)
-        val sinA = sin(angle)
-        val term1 = vec.clone().multiply(cosA)
-        val term2 = k.clone().crossProduct(vec).multiply(sinA)
-        val term3 = k.clone().multiply(k.dot(vec) * (1.0 - cosA))
-        return term1.add(term2).add(term3)
+        instance.server.getPlayer(uuid)?.let { player ->
+            complete(player)
+        }
     }
 }

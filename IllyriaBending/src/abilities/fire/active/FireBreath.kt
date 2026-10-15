@@ -8,6 +8,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -24,6 +25,7 @@ import kotlin.math.tan
  */
 internal object FireBreath : AbilityInterface {
     override val cooldownMs: Long = 4500
+    override val activationType: ActivationType = ActivationType.INSTANT
 
     /** Cone reach in blocks. */
     private const val RANGE = 7.0
@@ -56,6 +58,8 @@ internal object FireBreath : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val origin = player.eyeLocation.clone()
         val direction = origin.direction.clone().normalize()
         val world = origin.world ?: return
@@ -69,6 +73,8 @@ internal object FireBreath : AbilityInterface {
 
         scorch(origin, direction, angleRad)
         damageAndIgnite(player, origin, direction, angleRad, damage)
+
+        complete(player)
     }
 
     /**

@@ -1,10 +1,13 @@
 package org.xodium.illyriabending.abilities.fire.active
 
+import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -19,6 +22,7 @@ import kotlin.math.sin
  */
 internal object FireBurst : AbilityInterface {
     override val cooldownMs: Long = 5000
+    override val activationType: ActivationType = ActivationType.INSTANT
 
     /** Burst radius in blocks. */
     private const val RADIUS = 6.0
@@ -48,6 +52,8 @@ internal object FireBurst : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val center = player.location.clone()
         val world = center.world ?: return
         val radius = RADIUS + (level - 1) * RADIUS_PER_LEVEL
@@ -59,13 +65,15 @@ internal object FireBurst : AbilityInterface {
 
         world.playSound(center, Sound.ENTITY_BLAZE_SHOOT, 1.2f, 0.7f)
         world.playSound(center, Sound.ITEM_FIRECHARGE_USE, 1.0f, 1.2f)
+
+        complete(player)
     }
 
     /**
      * Renders the expanding ring of flame particles.
      */
     private fun render(
-        center: org.bukkit.Location,
+        center: Location,
         radius: Double,
     ) {
         val world = center.world ?: return
@@ -76,7 +84,7 @@ internal object FireBurst : AbilityInterface {
             for (d in 1..radius.toInt()) {
                 val x = center.x + cos(angle) * d
                 val z = center.z + sin(angle) * d
-                val point = org.bukkit.Location(world, x, center.y + 0.5, z)
+                val point = Location(world, x, center.y + 0.5, z)
                 world.spawnParticle(Particle.FLAME, point, 1, 0.0, 0.1, 0.0, 0.0)
             }
         }
@@ -86,7 +94,7 @@ internal object FireBurst : AbilityInterface {
      * Ignites flammable blocks at ground level within the burst radius.
      */
     private fun igniteGround(
-        center: org.bukkit.Location,
+        center: Location,
         radius: Double,
     ) {
         val world = center.world ?: return
@@ -101,7 +109,7 @@ internal object FireBurst : AbilityInterface {
                     world
                         .getBlockAt(center.blockX + x, center.blockY, center.blockZ + z)
                 if (above.type.isAir && ground.type.isFlammable && Math.random() < IGNITE_CHANCE) {
-                    above.type = org.bukkit.Material.FIRE
+                    above.type = Material.FIRE
                 }
             }
         }
@@ -112,7 +120,7 @@ internal object FireBurst : AbilityInterface {
      */
     private fun damageNearby(
         player: Player,
-        center: org.bukkit.Location,
+        center: Location,
         radius: Double,
         damage: Double,
     ) {

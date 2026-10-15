@@ -1,11 +1,14 @@
 package org.xodium.illyriabending.abilities.fire.active
 
+import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import org.xodium.illyriabending.abilities.AbilityInterface
+import org.xodium.illyriabending.abilities.ActivationType
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.tan
@@ -21,6 +24,7 @@ import kotlin.math.tan
  */
 internal object FireBlast : AbilityInterface {
     override val cooldownMs: Long = 3200
+    override val activationType: ActivationType = ActivationType.INSTANT
 
     /** Cone reach in blocks. */
     private const val RANGE = 9.0
@@ -47,6 +51,8 @@ internal object FireBlast : AbilityInterface {
         player: Player,
         level: Int,
     ) {
+        if (isOnCooldown(player)) return
+
         val origin = player.eyeLocation.clone()
         val direction = origin.direction.clone().normalize()
         val world = origin.world ?: return
@@ -57,6 +63,8 @@ internal object FireBlast : AbilityInterface {
         world.playSound(origin, Sound.ITEM_FIRECHARGE_USE, 1.0f, 1.0f)
 
         burn(player, origin, direction, angleRad)
+
+        complete(player)
     }
 
     /**
@@ -67,7 +75,7 @@ internal object FireBlast : AbilityInterface {
      * @param angleRad The cone half-angle in radians.
      */
     private fun render(
-        origin: org.bukkit.Location,
+        origin: Location,
         direction: Vector,
         angleRad: Double,
     ) {
@@ -113,7 +121,7 @@ internal object FireBlast : AbilityInterface {
      */
     private fun burn(
         player: Player,
-        origin: org.bukkit.Location,
+        origin: Location,
         direction: Vector,
         angleRad: Double,
     ) {
@@ -127,7 +135,7 @@ internal object FireBlast : AbilityInterface {
                     for (z in -radius.toInt()..radius.toInt()) {
                         val block = world.getBlockAt(center.blockX + x, center.blockY + y, center.blockZ + z)
                         if (block.type.isFlammable && Math.random() < 0.1) {
-                            block.type = org.bukkit.Material.FIRE
+                            block.type = Material.FIRE
                         }
                     }
                 }
