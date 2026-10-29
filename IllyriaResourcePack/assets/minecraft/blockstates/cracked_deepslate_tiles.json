@@ -1,7 +1,0 @@
-{
-    "variants": {
-        "": [
-			{ "model": "block/deepslate/deepslate_tiles/cracked_deepslate_tiles" }
-		]
-    }
-}

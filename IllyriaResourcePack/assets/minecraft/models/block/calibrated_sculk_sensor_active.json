@@ -1,6 +1,0 @@
-{
-    "parent": "block/calibrated_sculk_sensor",
-    "textures": {
-        "crystal": "block/calibrated_sculk_sensor_palantir_active"
-    }
-}

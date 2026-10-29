@@ -1,6 +1,0 @@
-{
-    "parent": "block/cross2",
-    "textures": {
-        "cross": "block/allium"
-    }
-}

@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/misc/cake/bread_candle",
-  "textures": {
-    "candle": "minecraft:block/blue_candle"
-  }
-}

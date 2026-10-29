@@ -24,10 +24,10 @@ Ask the user to clarify:
 ## Resource-pack banner pattern
 
 1. Place the pattern texture in the appropriate resource pack path:
-    - `IllyriaResourcePack/assets/minecraft/textures/entity/banner/{pattern}.png`
-    - If namespaced: `IllyriaResourcePack/assets/illyriacore/textures/entity/banner/{pattern}.png`
-2. Add the pattern definition to `IllyriaResourcePack/assets/minecraft/banner_pattern/{pattern}.json` if the project uses custom pattern registry entries.
-3. Update language overrides in `IllyriaResourcePack/assets/minecraft/lang/en_us.json`:
+    - `../illyria-resourcepack/src/assets/minecraft/textures/entity/banner/{pattern}.png`
+    - If namespaced: `../illyria-resourcepack/src/assets/illyriacore/textures/entity/banner/{pattern}.png`
+2. Add the pattern definition to `../illyria-resourcepack/src/assets/minecraft/banner_pattern/{pattern}.json` if the project uses custom pattern registry entries.
+3. Update language overrides in `../illyria-resourcepack/src/assets/minecraft/lang/en_us.json`:
     - `"block.minecraft.banner.{pattern}.{color}": "<Display Name>"` if applicable
 
 ## Banner mechanic

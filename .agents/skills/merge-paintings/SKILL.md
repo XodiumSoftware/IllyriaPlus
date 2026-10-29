@@ -1,11 +1,11 @@
 ---
 name: merge-paintings
-description: Synchronize custom painting item cases into the vanilla painting.json after IllyriaResourcePack updates.
+description: Synchronize custom painting item cases into the vanilla painting.json after illyria-resourcepack updates.
 ---
 
 # merge-paintings
 
-Run this skill after making any manual changes under the project's custom painting models directory (e.g., `IllyriaResourcePack/assets/<namespace>/models/item/painting/`).
+Run this skill after making any manual changes under the project's custom painting models directory (e.g., `../illyria-resourcepack/src/assets/<namespace>/models/item/painting/`).
 
 ## What it does
 
@@ -45,8 +45,8 @@ from pathlib import Path
 
 # CONFIGURE THESE FOR THE PROJECT
 NAMESPACE = "example"
-VANILLA_FILE = Path("IllyriaResourcePack/assets/minecraft/items/painting.json")
-MODELS_DIR = Path(f"IllyriaResourcePack/assets/{NAMESPACE}/models/item/painting")
+VANILLA_FILE = Path("../illyria-resourcepack/src/assets/minecraft/items/painting.json")
+MODELS_DIR = Path(f"../illyria-resourcepack/src/assets/{NAMESPACE}/models/item/painting")
 
 
 def collect_variants(models_dir: Path) -> list[str]:
@@ -153,7 +153,7 @@ if __name__ == "__main__":
 ## When to use
 
 - After adding, removing, or renaming painting models in the project's custom models directory.
-- Before committing IllyriaResourcePack changes.
+- Before committing illyria-resourcepack changes.
 
 ## Conventions
 
