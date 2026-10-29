@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "minecraft:item/cit/armor/leather/hide_leggings",
-    "layer1": "minecraft:item/cit/armor/leather/hide_leggings_overlay"
-  }
-}

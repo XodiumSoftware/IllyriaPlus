@@ -66,7 +66,6 @@ just dev
 IllyriaPlus/                    # Repo root (Gradle aggregator, no code)
 ├── build.gradle.kts          # Aggregator only
 ├── settings.gradle.kts         # Includes IllyriaLib, IllyriaCore + IllyriaBridge
-├── IllyriaResourcePack/      # Custom resource pack (released via ci_resourcepack.yml, served by ResourcePackMechanic)
 ├── IllyriaLib/                # Shared library module (org.xodium.illyrialib), shaded into both plugins
 │   ├── build.gradle.kts        # Module build configuration
 │   └── src/                    # Source directory

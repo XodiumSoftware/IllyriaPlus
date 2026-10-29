@@ -1,8 +1,0 @@
-{
-    "variants": {
-        "": [
-			{ "model": "block/cracked_stone_bricks", "weight": 10 },
-			{ "model": "block/stone/stonebrick/cracked1", "weight": 5 }
-		]
-    }
-}

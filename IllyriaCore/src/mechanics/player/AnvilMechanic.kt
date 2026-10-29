@@ -221,7 +221,7 @@ internal object AnvilMechanic : MechanicInterface {
         PacketEvents.getAPI().playerManager.sendPacket(
             player,
             WrapperPlayServerPlayerAbilities(
-                player.isInvulnerable,
+                player.isMarkedInvulnerable,
                 player.isFlying,
                 player.allowFlight,
                 creativeMode,

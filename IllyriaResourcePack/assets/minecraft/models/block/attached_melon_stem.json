@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/stem_fruit",
-  "textures": {
-    "particle": "minecraft:block/melon_stem",
-    "stem": "minecraft:block/melon_stem_stage7_attached",
-    "bottom": "minecraft:block/melon_stem_bottom"	
-  }
-}

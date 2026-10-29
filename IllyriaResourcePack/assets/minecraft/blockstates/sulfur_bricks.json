@@ -1,9 +1,0 @@
-{
-    "variants": {
-        "": [
-			{ "model": "block/sulfur_bricks", "weight": 10 },
-			{ "model": "block/stone/sulfur_bricks/1", "weight": 10 },
-			{ "model": "block/stone/sulfur_bricks/2", "weight": 10 }		
-		]
-    }
-}
