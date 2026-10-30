@@ -43,6 +43,14 @@ internal object DraconicSpearItem : ItemsInterface {
                             AttributeModifier.Operation.ADD_NUMBER,
                             EquipmentSlotGroup.MAINHAND,
                         ),
+                    ).addModifier(
+                        Attribute.ATTACK_KNOCKBACK,
+                        AttributeModifier(
+                            NamespacedKey(IllyriaCore.ID, "draconic_spear_knockback"),
+                            0.4,
+                            AttributeModifier.Operation.ADD_NUMBER,
+                            EquipmentSlotGroup.MAINHAND,
+                        ),
                     ).build(),
             )
         }

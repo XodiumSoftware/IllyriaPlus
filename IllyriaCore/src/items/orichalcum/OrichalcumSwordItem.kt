@@ -43,6 +43,14 @@ internal object OrichalcumSwordItem : ItemsInterface {
                             AttributeModifier.Operation.ADD_NUMBER,
                             EquipmentSlotGroup.MAINHAND,
                         ),
+                    ).addModifier(
+                        Attribute.ATTACK_KNOCKBACK,
+                        AttributeModifier(
+                            NamespacedKey(IllyriaCore.ID, "orichalcum_sword_knockback"),
+                            0.1,
+                            AttributeModifier.Operation.ADD_NUMBER,
+                            EquipmentSlotGroup.MAINHAND,
+                        ),
                     ).build(),
             )
         }

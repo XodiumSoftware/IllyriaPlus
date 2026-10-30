@@ -43,6 +43,14 @@ internal object AdamantiteSwordItem : ItemsInterface {
                             AttributeModifier.Operation.ADD_NUMBER,
                             EquipmentSlotGroup.MAINHAND,
                         ),
+                    ).addModifier(
+                        Attribute.ATTACK_KNOCKBACK,
+                        AttributeModifier(
+                            NamespacedKey(IllyriaCore.ID, "adamantite_sword_knockback"),
+                            0.2,
+                            AttributeModifier.Operation.ADD_NUMBER,
+                            EquipmentSlotGroup.MAINHAND,
+                        ),
                     ).build(),
             )
         }
