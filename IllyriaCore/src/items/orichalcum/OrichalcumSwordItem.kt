@@ -10,7 +10,7 @@ import org.xodium.illyrialib.Utils.MM
 /** A blazing sword forged from the legendary orichalcum alloy. */
 internal object OrichalcumSwordItem : ItemsInterface {
     override fun invoke(): ItemStack =
-        ItemStack.of(Material.GOLDEN_SWORD).apply {
+        ItemStack.of(Material.NETHERITE_SWORD).apply {
             setData(DataComponentTypes.CUSTOM_NAME, MM.deserialize("<gradient:#FFD700:#FF4500>$name</gradient>"))
             setData(
                 DataComponentTypes.LORE,
