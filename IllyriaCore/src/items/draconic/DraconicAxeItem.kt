@@ -53,6 +53,30 @@ internal object DraconicAxeItem : ItemsInterface {
                             AttributeModifier.Operation.ADD_NUMBER,
                             EquipmentSlotGroup.MAINHAND,
                         ),
+                    ).addModifier(
+                        Attribute.BLOCK_BREAK_SPEED,
+                        AttributeModifier(
+                            NamespacedKey(IllyriaCore.ID, "draconic_axe_block_break_speed"),
+                            0.20,
+                            AttributeModifier.Operation.ADD_NUMBER,
+                            EquipmentSlotGroup.MAINHAND,
+                        ),
+                    ).addModifier(
+                        Attribute.MINING_EFFICIENCY,
+                        AttributeModifier(
+                            NamespacedKey(IllyriaCore.ID, "draconic_axe_mining_efficiency"),
+                            4.0,
+                            AttributeModifier.Operation.ADD_NUMBER,
+                            EquipmentSlotGroup.MAINHAND,
+                        ),
+                    ).addModifier(
+                        Attribute.SUBMERGED_MINING_SPEED,
+                        AttributeModifier(
+                            NamespacedKey(IllyriaCore.ID, "draconic_axe_submerged_mining_speed"),
+                            0.40,
+                            AttributeModifier.Operation.ADD_NUMBER,
+                            EquipmentSlotGroup.MAINHAND,
+                        ),
                     ).build(),
             )
         }

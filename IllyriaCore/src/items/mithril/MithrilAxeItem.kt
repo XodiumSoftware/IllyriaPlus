@@ -43,6 +43,30 @@ internal object MithrilAxeItem : ItemsInterface {
                             AttributeModifier.Operation.ADD_NUMBER,
                             EquipmentSlotGroup.MAINHAND,
                         ),
+                    ).addModifier(
+                        Attribute.BLOCK_BREAK_SPEED,
+                        AttributeModifier(
+                            NamespacedKey(IllyriaCore.ID, "mithril_axe_block_break_speed"),
+                            0.05,
+                            AttributeModifier.Operation.ADD_NUMBER,
+                            EquipmentSlotGroup.MAINHAND,
+                        ),
+                    ).addModifier(
+                        Attribute.MINING_EFFICIENCY,
+                        AttributeModifier(
+                            NamespacedKey(IllyriaCore.ID, "mithril_axe_mining_efficiency"),
+                            1.0,
+                            AttributeModifier.Operation.ADD_NUMBER,
+                            EquipmentSlotGroup.MAINHAND,
+                        ),
+                    ).addModifier(
+                        Attribute.SUBMERGED_MINING_SPEED,
+                        AttributeModifier(
+                            NamespacedKey(IllyriaCore.ID, "mithril_axe_submerged_mining_speed"),
+                            0.10,
+                            AttributeModifier.Operation.ADD_NUMBER,
+                            EquipmentSlotGroup.MAINHAND,
+                        ),
                     ).build(),
             )
         }
