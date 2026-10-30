@@ -54,7 +54,6 @@ internal class IllyriaCore : JavaPlugin() {
             listOf(
                 ChainmailRecipe,
                 CustomItemRecipe,
-                DiamondRecycleRecipe,
                 IceBreakdownRecipe,
                 NetherWartBlockRecipe,
                 PaintingRecipe,
