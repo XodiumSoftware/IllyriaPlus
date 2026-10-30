@@ -1,5 +1,6 @@
 package org.xodium.illyriacore.items
 
+import net.kyori.adventure.key.Key
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.xodium.illyriacore.IllyriaCore
@@ -24,6 +25,14 @@ internal interface ItemsInterface {
     /** The display name derived from [id], converted to proper case. */
     val name: String
         get() = id.snakeToProperCase()
+
+    /** The model folder derived from this item's source package (e.g., `mithril`). */
+    val modelPath: String
+        get() = javaClass.packageName.substringAfterLast(".")
+
+    /** The full [Key] used for the `ITEM_MODEL` data component. */
+    val itemModelKey: Key
+        get() = Key.key(IllyriaCore.ID, "$modelPath/$id")
 
     /**
      * Builds the custom [ItemStack].
