@@ -28,8 +28,7 @@ internal interface ItemsInterface {
     /**
      * Builds the custom [ItemStack].
      *
-     * @param amount The stack size. Defaults to 1.
      * @return A fresh custom [ItemStack].
      */
-    fun item(amount: Int = 1): ItemStack
+    operator fun invoke(): ItemStack
 }
