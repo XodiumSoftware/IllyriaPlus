@@ -37,6 +37,14 @@ internal object DraconicAxeItem : ItemsInterface {
                             AttributeModifier.Operation.ADD_NUMBER,
                             EquipmentSlotGroup.MAINHAND,
                         ),
+                    ).addModifier(
+                        Attribute.ATTACK_SPEED,
+                        AttributeModifier(
+                            NamespacedKey(IllyriaCore.ID, "draconic_axe_speed"),
+                            -0.1,
+                            AttributeModifier.Operation.ADD_NUMBER,
+                            EquipmentSlotGroup.MAINHAND,
+                        ),
                     ).build(),
             )
         }

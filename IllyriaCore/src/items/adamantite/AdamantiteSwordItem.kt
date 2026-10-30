@@ -35,6 +35,14 @@ internal object AdamantiteSwordItem : ItemsInterface {
                             AttributeModifier.Operation.ADD_NUMBER,
                             EquipmentSlotGroup.MAINHAND,
                         ),
+                    ).addModifier(
+                        Attribute.ATTACK_SPEED,
+                        AttributeModifier(
+                            NamespacedKey(IllyriaCore.ID, "adamantite_sword_speed"),
+                            -0.2,
+                            AttributeModifier.Operation.ADD_NUMBER,
+                            EquipmentSlotGroup.MAINHAND,
+                        ),
                     ).build(),
             )
         }

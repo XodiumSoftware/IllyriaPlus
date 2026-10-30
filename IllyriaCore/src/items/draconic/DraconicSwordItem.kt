@@ -35,6 +35,14 @@ internal object DraconicSwordItem : ItemsInterface {
                             AttributeModifier.Operation.ADD_NUMBER,
                             EquipmentSlotGroup.MAINHAND,
                         ),
+                    ).addModifier(
+                        Attribute.ATTACK_SPEED,
+                        AttributeModifier(
+                            NamespacedKey(IllyriaCore.ID, "draconic_sword_speed"),
+                            -0.1,
+                            AttributeModifier.Operation.ADD_NUMBER,
+                            EquipmentSlotGroup.MAINHAND,
+                        ),
                     ).build(),
             )
         }
