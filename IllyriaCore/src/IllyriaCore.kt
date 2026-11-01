@@ -53,6 +53,7 @@ internal class IllyriaCore : JavaPlugin() {
         recipes =
             listOf(
                 ChainmailRecipe,
+                FlaskRecipe,
                 IceBreakdownRecipe,
                 NetherWartBlockRecipe,
                 PaintingRecipe,
@@ -68,6 +69,8 @@ internal class IllyriaCore : JavaPlugin() {
 
         mechanics =
             listOf(
+                AnvilMechanic,
+                BonfireMechanic,
                 ChatMechanic,
                 CondenseMechanic,
                 DeathStainMechanic,

@@ -10,6 +10,9 @@ import kotlin.math.roundToInt
 /** Provides access to [Player]-specific persistent data including nicknames and souls. */
 @Suppress("Unused")
 internal object PlayerPDC {
+    /** Default starting flask charges for new players. */
+    private const val FLASK_DEFAULT_CHARGES: Int = 5
+
     /** The [NamespacedKey] used for storing nickname data. */
     private val NICKNAME_KEY = NamespacedKey(instance, "nickname")
 
@@ -21,6 +24,15 @@ internal object PlayerPDC {
 
     /** The [NamespacedKey] used for storing the world UID of the death stain. */
     private val STAIN_WORLD_KEY = NamespacedKey(instance, "stain_world")
+
+    /** The [NamespacedKey] used for storing the number of remaining flask charges. */
+    private val FLASK_CHARGES_KEY = NamespacedKey(instance, "flask_charges")
+
+    /** The [NamespacedKey] used for storing the flask's maximum charges (upgraded over time). */
+    private val FLASK_MAX_CHARGES_KEY = NamespacedKey(instance, "flask_max_charges")
+
+    /** The [NamespacedKey] used for storing the flask's heal potency tier (upgraded over time). */
+    private val FLASK_POTENCY_KEY = NamespacedKey(instance, "flask_potency")
 
     /**
      * Gets or sets a [Player]'s nickname in their persistent data container.
@@ -83,6 +95,47 @@ internal object PlayerPDC {
                 persistentDataContainer.set(STAIN_WORLD_KEY, PersistentDataType.STRING, value.world.uid.toString())
             }
         }
+
+    /** The current number of remaining flask charges for this [Player]. */
+    var Player.flaskCharges: Int
+        get() =
+            persistentDataContainer.getOrDefault(
+                FLASK_CHARGES_KEY,
+                PersistentDataType.INTEGER,
+                FLASK_DEFAULT_CHARGES,
+            )
+        set(value) {
+            persistentDataContainer.set(
+                FLASK_CHARGES_KEY,
+                PersistentDataType.INTEGER,
+                value.coerceIn(0, flaskMaxCharges),
+            )
+        }
+
+    /** The maximum flask charges for this [Player] (upgradeable). */
+    var Player.flaskMaxCharges: Int
+        get() =
+            persistentDataContainer.getOrDefault(
+                FLASK_MAX_CHARGES_KEY,
+                PersistentDataType.INTEGER,
+                FLASK_DEFAULT_CHARGES,
+            )
+        set(value) {
+            persistentDataContainer.set(FLASK_MAX_CHARGES_KEY, PersistentDataType.INTEGER, value.coerceAtLeast(1))
+            flaskCharges = flaskCharges.coerceAtMost(value)
+        }
+
+    /** The flask heal potency tier for this [Player] (upgradeable). */
+    var Player.flaskPotency: Int
+        get() = persistentDataContainer.getOrDefault(FLASK_POTENCY_KEY, PersistentDataType.INTEGER, 0)
+        set(value) {
+            persistentDataContainer.set(FLASK_POTENCY_KEY, PersistentDataType.INTEGER, value.coerceAtLeast(0))
+        }
+
+    /** Refills the player's flask to its maximum charges. */
+    fun Player.refillFlask() {
+        flaskCharges = flaskMaxCharges
+    }
 
     /** Clears all death-stain data for this [Player]. */
     fun Player.clearStain() {

@@ -25,13 +25,13 @@ All changes follow the existing architecture: Kotlin `object`s implementing
 
 ## Phase 2 — Estus-like Flask System
 
-- [ ] Add `FlaskItem` (`items/flask/FlaskItem.kt`)
+- [x] Add `FlaskItem` (`items/flask/FlaskItem.kt`)
   - Charges-based healing potion with custom model.
-- [ ] Add `BonfireMechanic` (`mechanics/world/BonfireMechanic.kt`)
+- [x] Add `BonfireMechanic` (`mechanics/world/BonfireMechanic.kt`)
   - Right-clicking a lit campfire sets respawn, heals, and refills flask charges.
   - Respawns hostile mobs in a radius when resting.
-- [ ] Add flask upgrade recipes
-  - Increase max charges and healing potency via smithing or special crafting.
+- [x] Add flask upgrade recipes
+  - Increase max charges and healing potency via crafting recipes.
 
 ---
 
@@ -102,4 +102,5 @@ _None._
 - Removed old linear-tier custom gear (Adamantite/Draconic/Mithril/Orichalcum).
 - Cleaned up resource pack `items/` and `models/item/` definitions for the removed tiers.
 - Phase 1 — Death Stain / Souls system implemented.
+- Phase 2 — Estus Flask / Bonfire system implemented.
 - `GUIDE.md` and `illyria-wiki` pages **not yet updated**.
