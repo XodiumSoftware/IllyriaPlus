@@ -65,11 +65,6 @@ All changes follow the existing architecture: Kotlin `object`s implementing
 
 ## Phase 5 — Gear Rebalance (Trade-offs, Not Linear Upgrades)
 
-- [ ] Rebalance existing tier themes:
-  - **Mithril:** fast, light, lower armor/damage, faster stamina regen.
-  - **Adamantite:** heavy tank, high armor/toughness, slow swing, high stamina cost.
-  - **Orichalcum:** balanced/holy, slight lifesteal vs undead.
-  - **Draconic:** glass-cannon high damage, lower armor, fire theme.
 - [ ] Add set bonuses when wearing 2–4 matching armor pieces.
 - [ ] Add weapon skills / charged attacks on right-click for custom weapons.
 
