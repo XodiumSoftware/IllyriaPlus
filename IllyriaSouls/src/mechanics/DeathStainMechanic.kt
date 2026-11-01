@@ -1,4 +1,4 @@
-package org.xodium.illyriacore.mechanics.player
+package org.xodium.illyriasouls
 
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -21,13 +21,10 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitTask
-import org.xodium.illyriacore.IllyriaCore.Companion.instance
-import org.xodium.illyriacore.items.soul.SoulFragmentItem
-import org.xodium.illyriacore.mechanics.MechanicInterface
-import org.xodium.illyriacore.pdcs.PlayerPDC.clearStain
-import org.xodium.illyriacore.pdcs.PlayerPDC.stainLocation
-import org.xodium.illyriacore.pdcs.PlayerPDC.stainedSouls
 import org.xodium.illyrialib.Utils.MM
+import org.xodium.illyriasouls.PlayerPDC.clearStain
+import org.xodium.illyriasouls.PlayerPDC.stainLocation
+import org.xodium.illyriasouls.PlayerPDC.stainedSouls
 import java.util.UUID
 import kotlin.time.measureTime
 
@@ -50,7 +47,7 @@ internal object DeathStainMechanic : MechanicInterface {
     private const val HOLLOWED_HEALTH_PENALTY: Double = 4.0
 
     /** Internal PDC tag storing the UUID of the player who owns a stain entity. */
-    private val STAIN_OWNER_KEY = NamespacedKey(instance, "stain_owner")
+    private val STAIN_OWNER_KEY = NamespacedKey(IllyriaSouls.instance, "stain_owner")
 
     private val activeStains = mutableMapOf<UUID, ArmorStand>()
     private var cleanupTask: BukkitTask? = null
@@ -80,9 +77,13 @@ internal object DeathStainMechanic : MechanicInterface {
     fun on(event: ChunkUnloadEvent) = removeLostStains(event.chunk.entities.toList())
 
     override fun register(): Long {
-        cleanupTask = Bukkit.getScheduler().runTaskTimer(instance, ::cleanupDisconnectedOwners, 0L, 200L)
+        cleanupTask = Bukkit.getScheduler().runTaskTimer(IllyriaSouls.instance, ::cleanupDisconnectedOwners, 0L, 200L)
         return measureTime {
-            instance.server.pluginManager.registerEvents(this, instance)
+            IllyriaSouls
+                .instance
+                .server
+                .pluginManager
+                .registerEvents(this, IllyriaSouls.instance)
         }.inWholeMilliseconds
     }
 
@@ -227,7 +228,7 @@ internal object DeathStainMechanic : MechanicInterface {
         val healthAttr = player.getAttribute(Attribute.MAX_HEALTH) ?: return
         val modifier =
             AttributeModifier(
-                NamespacedKey(instance, "hollowed_health"),
+                NamespacedKey(IllyriaSouls.instance, "hollowed_health"),
                 -HOLLOWED_HEALTH_PENALTY,
                 AttributeModifier.Operation.ADD_NUMBER,
             )
@@ -254,7 +255,8 @@ internal object DeathStainMechanic : MechanicInterface {
     /** Cleans up any stains whose owners are no longer online. */
     private fun cleanupDisconnectedOwners() {
         val online =
-            instance
+            IllyriaSouls
+                .instance
                 .server
                 .onlinePlayers
                 .map { it.uniqueId }
@@ -269,7 +271,8 @@ internal object DeathStainMechanic : MechanicInterface {
     /** Removes stain markers found in an unloaded chunk if their owners are offline. */
     private fun removeLostStains(entities: List<Entity>) {
         val online =
-            instance
+            IllyriaSouls
+                .instance
                 .server
                 .onlinePlayers
                 .map { it.uniqueId }

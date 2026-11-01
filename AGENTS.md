@@ -4,7 +4,7 @@
 
 - **Name:** IllyriaPlus
 - **Type:** Multi-module Minecraft Paper plugin monorepo (server-side only)
-- **Modules:** `IllyriaCore` (core plugin, published as `IllyriaPlus`), `IllyriaBridge` (server↔client bridging plugin)
+- **Modules:** `IllyriaCore` (core plugin, published as `IllyriaPlus`), `IllyriaBridge` (server↔client bridging plugin), `IllyriaSouls` (optional Soulslike gameplay plugin)
 - **MC Version:** 26.3
 - **Language:** Kotlin (JVM 25)
 - **Build Tool:** Gradle with Kotlin DSL
@@ -43,12 +43,10 @@
 Uses [just](https://github.com/casey/just) as the command runner. Run `just` to list all recipes.
 
 ```bash
-# Build all plugin JARs (outputs in <module>/build/libs/)
-just build
-
 # Run a module's local test server (auto-downloads Paper 26.3)
 just run
 just run-bridge
+just run-souls
 
 # Run linting
 just lint
@@ -65,8 +63,8 @@ just dev
 ```
 IllyriaPlus/                    # Repo root (Gradle aggregator, no code)
 ├── build.gradle.kts          # Aggregator only
-├── settings.gradle.kts         # Includes IllyriaLib, IllyriaCore + IllyriaBridge
-├── IllyriaLib/                # Shared library module (org.xodium.illyrialib), shaded into both plugins
+├── settings.gradle.kts         # Includes IllyriaLib, IllyriaCore, IllyriaBridge + IllyriaSouls
+├── IllyriaLib/                # Shared library module (org.xodium.illyrialib), shaded into all plugins
 │   ├── build.gradle.kts        # Module build configuration
 │   └── src/                    # Source directory
 │       └── Utils.kt                # Shared utilities (MiniMessage instance `Utils.MM`)
@@ -83,9 +81,9 @@ IllyriaPlus/                    # Repo root (Gradle aggregator, no code)
 │   │   ├── recipes/                # Recipe implementations
 │   │   │   └── vanilla/            # Vanilla-style custom recipes
 │   │   ├── data/                   # Data classes
-│   │   └── pdcs/                   # PlayerPDC
+│   │   └── pdcs/                   # PlayerPDC (nickname only)
 │   └── resources/              # Bundled resources (structures)
-└── IllyriaBridge/              # Server↔client bridging module
+├── IllyriaBridge/              # Server↔client bridging module
     ├── build.gradle.kts        # Module build configuration (uses paperweight userdev for NMS)
     └── src/                    # Source directory
         ├── IllyriaBridge.kt        # Main plugin class
@@ -95,6 +93,18 @@ IllyriaPlus/                    # Repo root (Gradle aggregator, no code)
         │   └── XaeroMapBridge.kt       # Xaero map sync handler
         └── payloads/               # Plugin message payloads
             └── FabricRecipeSyncPayload.kt
+└── IllyriaSouls/               # Optional Soulslike gameplay module
+    ├── build.gradle.kts        # Module build configuration
+    └── src/                    # Source directory
+        ├── IllyriaSouls.kt         # Main plugin class
+        ├── items/                  # Soulslike custom items
+        │   ├── flask/                  # FlaskItem
+        │   └── soul/                   # SoulFragmentItem
+        ├── mechanics/              # Soulslike mechanics
+        │   ├── player/                 # DeathStainMechanic, NaturalRegenMechanic
+        │   └── world/                  # BonfireMechanic
+        ├── recipes/              # Soulslike recipes
+        └── pdcs/                 # Soulslike PlayerPDC
 ```
 
 ## Architecture
@@ -123,6 +133,17 @@ Custom enchantments implement `EnchantmentInterface` with:
 - Event handling via `@EventHandler fun on(event: <EventType>)` methods
 
 Only utility enchantments in `IllyriaCore/src/enchantments/utility/` are registered in `IllyriaCoreBootstrap`. Enchantments in `IllyriaCore/src/enchantments/vanilla/` listen to events and check for vanilla enchantments on items instead.
+
+### IllyriaSouls
+
+The `IllyriaSouls` module (`org.xodium.illyriasouls`) is an **optional** standalone plugin that adds a Dark Souls-like gameplay layer:
+
+- **Mechanics:** `DeathStainMechanic`, `NaturalRegenMechanic`, `BonfireMechanic`
+- **Items:** `FlaskItem`, `SoulFragmentItem`
+- **Recipes:** Flask crafting and upgrade recipes
+- **PDC:** Local `PlayerPDC` for souls, stain location, and flask state
+
+It has its own local copies of `MechanicInterface`, `RecipeInterface`, `ItemsInterface`, and `PlayerPDC` so it can be developed independently from `IllyriaCore`.
 
 ### IllyriaBridge
 

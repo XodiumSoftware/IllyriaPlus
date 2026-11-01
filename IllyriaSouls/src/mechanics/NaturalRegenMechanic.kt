@@ -1,8 +1,7 @@
-package org.xodium.illyriacore.mechanics.player
+package org.xodium.illyriasouls
 
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityRegainHealthEvent
-import org.xodium.illyriacore.mechanics.MechanicInterface
 
 /**
  * Disables vanilla hunger-based health regeneration so that healing must come from

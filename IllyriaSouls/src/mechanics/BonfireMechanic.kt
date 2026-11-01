@@ -1,4 +1,4 @@
-package org.xodium.illyriacore.mechanics.world
+package org.xodium.illyriasouls
 
 import org.bukkit.Location
 import org.bukkit.Material
@@ -17,21 +17,17 @@ import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.PrepareItemCraftEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerRespawnEvent
-import org.bukkit.inventory.CraftingInventory
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.xodium.illyriacore.IllyriaCore.Companion.instance
-import org.xodium.illyriacore.items.flask.FlaskItem
-import org.xodium.illyriacore.items.flask.FlaskItem.flaskItemMaxCharges
-import org.xodium.illyriacore.items.flask.FlaskItem.flaskItemPotency
-import org.xodium.illyriacore.items.flask.FlaskItem.isFlask
-import org.xodium.illyriacore.mechanics.MechanicInterface
-import org.xodium.illyriacore.pdcs.PlayerPDC.flaskCharges
-import org.xodium.illyriacore.pdcs.PlayerPDC.flaskMaxCharges
-import org.xodium.illyriacore.pdcs.PlayerPDC.flaskPotency
-import org.xodium.illyriacore.pdcs.PlayerPDC.refillFlask
 import org.xodium.illyrialib.Utils.MM
+import org.xodium.illyriasouls.FlaskItem.flaskItemMaxCharges
+import org.xodium.illyriasouls.FlaskItem.flaskItemPotency
+import org.xodium.illyriasouls.FlaskItem.isFlask
+import org.xodium.illyriasouls.PlayerPDC.flaskCharges
+import org.xodium.illyriasouls.PlayerPDC.flaskMaxCharges
+import org.xodium.illyriasouls.PlayerPDC.flaskPotency
+import org.xodium.illyriasouls.PlayerPDC.refillFlask
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
@@ -54,7 +50,7 @@ internal object BonfireMechanic : MechanicInterface {
     private const val REST_REGEN_SECONDS: Int = 3
 
     /** PDC key marking a campfire block as a registered bonfire for quick lookup. */
-    private val BONFIRE_KEY = NamespacedKey(instance, "bonfire_location")
+    private val BONFIRE_KEY = NamespacedKey(IllyriaSouls.instance, "bonfire_location")
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PlayerInteractEvent) = handleInteract(event)
@@ -74,7 +70,11 @@ internal object BonfireMechanic : MechanicInterface {
 
     override fun register(): Long =
         measureTime {
-            instance.server.pluginManager.registerEvents(this, instance)
+            IllyriaSouls
+                .instance
+                .server
+                .pluginManager
+                .registerEvents(this, IllyriaSouls.instance)
         }.inWholeMilliseconds
 
     /** Handles player right-click interactions for bonfire rest and flask drinking. */

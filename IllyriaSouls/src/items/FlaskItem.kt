@@ -1,12 +1,10 @@
-package org.xodium.illyriacore.items.flask
+package org.xodium.illyriasouls
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
-import org.xodium.illyriacore.IllyriaCore.Companion.instance
-import org.xodium.illyriacore.items.ItemsInterface
 import org.xodium.illyrialib.Utils.MM
 
 /**
@@ -18,13 +16,13 @@ internal object FlaskItem : ItemsInterface {
     internal const val DEFAULT_CHARGES: Int = 5
 
     /** Internal PDC tag used to identify an actual flask item. */
-    internal val FLASK_TAG_KEY = NamespacedKey(instance, "is_flask")
+    internal val FLASK_TAG_KEY = NamespacedKey(IllyriaSouls.instance, "is_flask")
 
     /** PDC tag storing the flask's maximum charges on the item itself. */
-    private val FLASK_MAX_CHARGES_TAG_KEY = NamespacedKey(instance, "flask_item_max_charges")
+    private val FLASK_MAX_CHARGES_TAG_KEY = NamespacedKey(IllyriaSouls.instance, "flask_item_max_charges")
 
     /** PDC tag storing the flask's heal potency on the item itself. */
-    private val FLASK_POTENCY_TAG_KEY = NamespacedKey(instance, "flask_item_potency")
+    private val FLASK_POTENCY_TAG_KEY = NamespacedKey(IllyriaSouls.instance, "flask_item_potency")
 
     /** Base healing per charge at potency 0 (3 hearts). */
     private const val BASE_HEAL: Double = 6.0
