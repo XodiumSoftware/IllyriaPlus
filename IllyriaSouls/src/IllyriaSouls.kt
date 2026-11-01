@@ -3,6 +3,12 @@ package org.xodium.illyriasouls
 import org.bukkit.plugin.java.JavaPlugin
 import org.xodium.illyrialib.UpdateChecker
 import org.xodium.illyrialib.Utils.validateVersion
+import org.xodium.illyriasouls.mechanics.BonfireMechanic
+import org.xodium.illyriasouls.mechanics.DeathStainMechanic
+import org.xodium.illyriasouls.mechanics.MechanicInterface
+import org.xodium.illyriasouls.mechanics.NaturalRegenMechanic
+import org.xodium.illyriasouls.recipes.FlaskRecipe
+import org.xodium.illyriasouls.recipes.RecipeInterface
 
 /** Main class of the IllyriaSouls plugin. */
 internal class IllyriaSouls : JavaPlugin() {

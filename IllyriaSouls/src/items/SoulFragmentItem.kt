@@ -1,4 +1,4 @@
-package org.xodium.illyriasouls
+package org.xodium.illyriasouls.items
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import org.bukkit.Material
@@ -7,6 +7,8 @@ import org.xodium.illyrialib.Utils.MM
 
 /** The physical currency of lost souls. Dropped by affixed mobs and recovered from death stains. */
 internal object SoulFragmentItem : ItemsInterface {
+    override val modelPath: String = "soul"
+
     override fun invoke(): ItemStack =
         ItemStack.of(Material.ECHO_SHARD).apply {
             setData(DataComponentTypes.ITEM_NAME, MM.deserialize("<red>Soul Fragment</red>"))

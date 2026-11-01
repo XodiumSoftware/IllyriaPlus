@@ -1,6 +1,7 @@
-package org.xodium.illyriasouls
+package org.xodium.illyriasouls.recipes
 
 import org.bukkit.inventory.Recipe
+import org.xodium.illyriasouls.IllyriaSouls
 import kotlin.time.measureTime
 
 /** Represents a contract for recipes within IllyriaSouls. */

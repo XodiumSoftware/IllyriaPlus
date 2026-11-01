@@ -1,9 +1,10 @@
-package org.xodium.illyriasouls
+package org.xodium.illyriasouls.mechanics
 
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import org.bukkit.event.Listener
 import org.bukkit.permissions.Permission
 import org.xodium.illyrialib.data.CommandData
+import org.xodium.illyriasouls.IllyriaSouls
 import kotlin.time.measureTime
 
 /** Represents a contract for a mechanic within IllyriaSouls. */

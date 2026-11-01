@@ -1,4 +1,4 @@
-package org.xodium.illyriasouls
+package org.xodium.illyriasouls.mechanics
 
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -22,9 +22,11 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitTask
 import org.xodium.illyrialib.Utils.MM
+import org.xodium.illyriasouls.IllyriaSouls
 import org.xodium.illyriasouls.PlayerPDC.clearStain
 import org.xodium.illyriasouls.PlayerPDC.stainLocation
 import org.xodium.illyriasouls.PlayerPDC.stainedSouls
+import org.xodium.illyriasouls.items.SoulFragmentItem
 import java.util.UUID
 import kotlin.time.measureTime
 

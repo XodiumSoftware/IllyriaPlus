@@ -1,9 +1,11 @@
-package org.xodium.illyriasouls
+package org.xodium.illyriasouls.recipes
 
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.RecipeChoice
 import org.bukkit.inventory.ShapedRecipe
+import org.xodium.illyriasouls.IllyriaSouls
+import org.xodium.illyriasouls.items.FlaskItem
 
 /** Recipes for the Illyria Flask and its upgrades. */
 internal object FlaskRecipe : RecipeInterface {

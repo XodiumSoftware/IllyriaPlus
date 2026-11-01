@@ -1,9 +1,10 @@
-package org.xodium.illyriasouls
+package org.xodium.illyriasouls.items
 
 import net.kyori.adventure.key.Key
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.xodium.illyrialib.Utils.snakeToProperCase
+import org.xodium.illyriasouls.IllyriaSouls
 
 /** Represents a contract for custom items within IllyriaSouls. */
 internal interface ItemsInterface {
@@ -25,9 +26,8 @@ internal interface ItemsInterface {
     val name: String
         get() = id.snakeToProperCase()
 
-    /** The model folder derived from this item's source package (e.g., `soul`). */
+    /** The model folder for this item (e.g., `flask`, `soul`). */
     val modelPath: String
-        get() = javaClass.packageName.substringAfterLast(".")
 
     /** The full [Key] used for the `ITEM_MODEL` data component. */
     val itemModelKey: Key

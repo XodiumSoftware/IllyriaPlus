@@ -1,4 +1,4 @@
-package org.xodium.illyriasouls
+package org.xodium.illyriasouls.mechanics
 
 import org.bukkit.Location
 import org.bukkit.Material
@@ -21,13 +21,15 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.xodium.illyrialib.Utils.MM
-import org.xodium.illyriasouls.FlaskItem.flaskItemMaxCharges
-import org.xodium.illyriasouls.FlaskItem.flaskItemPotency
-import org.xodium.illyriasouls.FlaskItem.isFlask
+import org.xodium.illyriasouls.IllyriaSouls
 import org.xodium.illyriasouls.PlayerPDC.flaskCharges
 import org.xodium.illyriasouls.PlayerPDC.flaskMaxCharges
 import org.xodium.illyriasouls.PlayerPDC.flaskPotency
 import org.xodium.illyriasouls.PlayerPDC.refillFlask
+import org.xodium.illyriasouls.items.FlaskItem
+import org.xodium.illyriasouls.items.FlaskItem.flaskItemMaxCharges
+import org.xodium.illyriasouls.items.FlaskItem.flaskItemPotency
+import org.xodium.illyriasouls.items.FlaskItem.isFlask
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt

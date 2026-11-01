@@ -97,14 +97,20 @@ IllyriaPlus/                    # Repo root (Gradle aggregator, no code)
     ├── build.gradle.kts        # Module build configuration
     └── src/                    # Source directory
         ├── IllyriaSouls.kt         # Main plugin class
+        ├── PlayerPDC.kt            # Soulslike player persistent data
         ├── items/                  # Soulslike custom items
-        │   ├── flask/                  # FlaskItem
-        │   └── soul/                   # SoulFragmentItem
+        │   ├── FlaskItem.kt          # Estus-like healing flask
+        │   ├── ItemsInterface.kt     # Item contract
+        │   └── SoulFragmentItem.kt     # Souls currency
         ├── mechanics/              # Soulslike mechanics
-        │   ├── player/                 # DeathStainMechanic, NaturalRegenMechanic
-        │   └── world/                  # BonfireMechanic
-        ├── recipes/              # Soulslike recipes
-        └── pdcs/                 # Soulslike PlayerPDC
+        │   ├── BonfireMechanic.kt    # Bonfire rest/respawn/heal
+        │   ├── DeathStainMechanic.kt # Death stain / soul recovery
+        │   ├── MechanicInterface.kt  # Mechanic contract
+        │   └── NaturalRegenMechanic.kt # Disables passive hunger regen
+        └── recipes/              # Soulslike recipes
+            ├── FlaskRecipe.kt        # Flask crafting + upgrades
+            └── RecipeInterface.kt    # Recipe contract
+```
 ```
 
 ## Architecture

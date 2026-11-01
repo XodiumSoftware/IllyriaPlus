@@ -1,4 +1,4 @@
-package org.xodium.illyriasouls
+package org.xodium.illyriasouls.mechanics
 
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityRegainHealthEvent

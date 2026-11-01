@@ -1,4 +1,4 @@
-package org.xodium.illyriasouls
+package org.xodium.illyriasouls.items
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import org.bukkit.Material
@@ -6,6 +6,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.xodium.illyrialib.Utils.MM
+import org.xodium.illyriasouls.IllyriaSouls
 
 /**
  * The player's Estus-like healing flask. Charges are stored on the item and in the player's PDC,
@@ -14,6 +15,8 @@ import org.xodium.illyrialib.Utils.MM
 internal object FlaskItem : ItemsInterface {
     /** Default starting flask charges for new players. */
     internal const val DEFAULT_CHARGES: Int = 5
+
+    override val modelPath: String = "flask"
 
     /** Internal PDC tag used to identify an actual flask item. */
     internal val FLASK_TAG_KEY = NamespacedKey(IllyriaSouls.instance, "is_flask")
