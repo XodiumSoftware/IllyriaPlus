@@ -9,17 +9,17 @@ All changes follow the existing architecture: Kotlin `object`s implementing
 
 ## Phase 1 — Death, Souls, and Stain System
 
-- [ ] Add `SoulFragmentItem` (`items/soul/SoulFragmentItem.kt`)
+- [x] Add `SoulFragmentItem` (`items/soul/SoulFragmentItem.kt`)
   - Custom item used as the Souls currency.
-- [ ] Add `DeathStainMechanic` (`mechanics/player/DeathStainMechanic.kt`)
+- [x] Add `DeathStainMechanic` (`mechanics/player/DeathStainMechanic.kt`)
   - Store XP and last death location in PDC on death.
   - Spawn a retrievable stain marker at the death location.
   - Recover lost XP/souls by interacting with the stain.
   - Overwrite old stain and lose a portion of souls on subsequent death.
-- [ ] Add Hollowed/Frail state on respawn
+- [x] Add Hollowed/Frail state on respawn
   - Apply weakness and reduced max health until stain is recovered or timer ends.
-- [ ] Disable natural regeneration in the wild
-  - Enforce via gamerule or mechanic so healing must come from flasks/bonfires.
+- [x] Disable natural regeneration in the wild
+  - Enforce via `NaturalRegenMechanic` so healing must come from flasks/bonfires.
 
 ---
 
@@ -99,4 +99,7 @@ _None._
 
 ## Done
 
-_None._
+- Removed old linear-tier custom gear (Adamantite/Draconic/Mithril/Orichalcum).
+- Cleaned up resource pack `items/` and `models/item/` definitions for the removed tiers.
+- Phase 1 — Death Stain / Souls system implemented.
+- `GUIDE.md` and `illyria-wiki` pages **not yet updated**.
