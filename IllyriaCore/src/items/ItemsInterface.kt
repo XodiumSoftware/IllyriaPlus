@@ -1,6 +1,5 @@
 package org.xodium.illyriacore.items
 
-import net.kyori.adventure.key.Key
 import org.bukkit.NamespacedKey
 import org.bukkit.event.Listener
 import org.bukkit.inventory.ItemStack
