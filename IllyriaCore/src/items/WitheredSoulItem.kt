@@ -4,7 +4,6 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.Consumable
 import io.papermc.paper.datacomponent.item.ItemLore
 import io.papermc.paper.datacomponent.item.consumable.ItemUseAnimation
-import net.kyori.adventure.key.Key
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.entity.Wither
@@ -15,7 +14,6 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.xodium.illyriacore.IllyriaCore
 import org.xodium.illyriacore.scoreboards.SoulboundScoreboard
 import org.xodium.illyrialib.Utils.MM
 
@@ -72,7 +70,7 @@ internal object WitheredSoulItem : ItemsInterface {
                     ),
                 ),
             )
-            setData(DataComponentTypes.ITEM_MODEL, Key.key(IllyriaCore.ID, "item/$id"))
+            setData(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true)
             setData(
                 DataComponentTypes.CONSUMABLE,
                 Consumable.consumable()
