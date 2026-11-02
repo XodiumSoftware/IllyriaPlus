@@ -3,13 +3,13 @@ package org.xodium.illyriacore.items
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.Consumable
 import io.papermc.paper.datacomponent.item.ItemLore
+import io.papermc.paper.datacomponent.item.consumable.ConsumeEffect
 import io.papermc.paper.datacomponent.item.consumable.ItemUseAnimation
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.entity.Wither
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
-import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
@@ -36,16 +36,6 @@ internal object WitheredSoulItem : ItemsInterface {
         event.drops.add(invoke().apply { this.amount = amount })
     }
 
-    @EventHandler
-    fun on(event: PlayerItemConsumeEvent) {
-        val item = event.item
-        if (!item.persistentDataContainer.has(key, PersistentDataType.BOOLEAN)) return
-
-        val player = event.player
-
-        player.addPotionEffect(PotionEffect(PotionEffectType.REGENERATION, 200, 1))
-    }
-
     override fun invoke(): ItemStack =
         ItemStack.of(Material.WITHER_ROSE).apply {
             setData(
@@ -69,6 +59,18 @@ internal object WitheredSoulItem : ItemsInterface {
                 Consumable.consumable()
                     .consumeSeconds(1.0f)
                     .animation(ItemUseAnimation.EAT)
+                    .addEffect(
+                        ConsumeEffect.applyStatusEffects(
+                            listOf(
+                                PotionEffect(
+                                    PotionEffectType.REGENERATION,
+                                    200,
+                                    1,
+                                ),
+                            ),
+                            1.0f,
+                        ),
+                    )
                     .build(),
             )
             editPersistentDataContainer { it.set(key, PersistentDataType.BOOLEAN, true) }
