@@ -11,6 +11,8 @@ import org.xodium.illyriacore.enchantments.utility.VinemineEnchantment
 import org.xodium.illyriacore.enchantments.vanilla.FeatherFallingEnchantment
 import org.xodium.illyriacore.enchantments.vanilla.FortuneEnchantment
 import org.xodium.illyriacore.enchantments.vanilla.SilkTouchEnchantment
+import org.xodium.illyriacore.items.ItemsInterface
+import org.xodium.illyriacore.items.WitheredSoulItem
 import org.xodium.illyriacore.mechanics.MechanicInterface
 import org.xodium.illyriacore.mechanics.entity.*
 import org.xodium.illyriacore.mechanics.player.*
@@ -35,6 +37,8 @@ internal class IllyriaCore : JavaPlugin() {
     lateinit var mechanics: List<MechanicInterface>
         private set
     lateinit var enchantments: List<EnchantmentInterface>
+        private set
+    lateinit var items: List<ItemsInterface>
         private set
 
     override fun onLoad() {
@@ -108,10 +112,17 @@ internal class IllyriaCore : JavaPlugin() {
 
         logger.info(
             "Registered: ${enchantments.size} enchantment event(s) | Took ${
-                enchantments.sumOf {
-                    it.register()
-                }
+                enchantments.sumOf { it.register() }
             }ms",
+        )
+
+        items =
+            listOf(
+                WitheredSoulItem,
+            )
+
+        logger.info(
+            "Registered: ${items.size} item(s) | Took ${items.sumOf { it.register() }}ms",
         )
 
         UpdateChecker.register(this)

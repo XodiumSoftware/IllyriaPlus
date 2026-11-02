@@ -4,6 +4,10 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemLore
 import net.kyori.adventure.key.Key
 import org.bukkit.Material
+import org.bukkit.entity.Player
+import org.bukkit.entity.Wither
+import org.bukkit.event.EventHandler
+import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.xodium.illyriacore.IllyriaCore
@@ -11,6 +15,12 @@ import org.xodium.illyrialib.Utils.MM
 
 /** Stub item implementation for the Withered Soul custom item. */
 internal object WitheredSoulItem : ItemsInterface {
+    @EventHandler
+    fun on(event: EntityDamageByEntityEvent) {
+        if (event.entity !is Wither) return
+        if (event.damager !is Player) return
+    }
+
     override fun invoke(): ItemStack =
         ItemStack.of(Material.PAPER).apply {
             setData(
