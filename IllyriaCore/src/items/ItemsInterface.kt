@@ -1,16 +1,16 @@
-package org.xodium.illyriasouls.items
+package org.xodium.illyriacore.items
 
 import net.kyori.adventure.key.Key
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
+import org.xodium.illyriacore.IllyriaCore
 import org.xodium.illyrialib.Utils.snakeToProperCase
-import org.xodium.illyriasouls.IllyriaSouls
 
-/** Represents a contract for custom items within IllyriaSouls. */
+/** Represents a contract for custom items within the plugin. */
 internal interface ItemsInterface {
     /** The unique [NamespacedKey] identifying this custom item. */
     val key: NamespacedKey
-        get() = NamespacedKey(IllyriaSouls.instance, id)
+        get() = NamespacedKey(IllyriaCore.instance, id)
 
     /** The registry key fragment (snake_case) identifying this custom item. */
     val id: String
@@ -26,12 +26,12 @@ internal interface ItemsInterface {
     val name: String
         get() = id.snakeToProperCase()
 
-    /** The model folder for this item (e.g., `flask`, `soul`). */
+    /** The model folder for this item. */
     val modelPath: String
 
     /** The full [Key] used for the `ITEM_MODEL` data component. */
     val itemModelKey: Key
-        get() = Key.key(IllyriaSouls.ID, "$modelPath/$id")
+        get() = Key.key(IllyriaCore.ID, "$modelPath/$id")
 
     /**
      * Builds the custom [ItemStack].

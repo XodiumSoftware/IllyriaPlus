@@ -4,4 +4,4 @@ plugins {
 
 rootProject.name = "IllyriaPlus"
 
-include("IllyriaLib", "IllyriaCore", "IllyriaBridge", "IllyriaSouls")
+include("IllyriaLib", "IllyriaCore", "IllyriaBridge")
