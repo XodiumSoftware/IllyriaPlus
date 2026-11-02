@@ -1,19 +1,20 @@
 package org.xodium.illyriacore.items
 
 import io.papermc.paper.datacomponent.DataComponentTypes
-import io.papermc.paper.datacomponent.item.Consumable
+import io.papermc.paper.datacomponent.item.ItemAttributeModifiers
 import io.papermc.paper.datacomponent.item.ItemLore
-import io.papermc.paper.datacomponent.item.consumable.ConsumeEffect
-import io.papermc.paper.datacomponent.item.consumable.ItemUseAnimation
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
 import org.bukkit.entity.Wither
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.attribute.Attribute
+import org.bukkit.attribute.AttributeModifier
+import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.persistence.PersistentDataType
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
+import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyrialib.Utils.MM
 
 /** Custom item handling the Withered Soul drop from the Wither boss. */
@@ -55,21 +56,25 @@ internal object WitheredSoulItem : ItemsInterface {
             )
             setData(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true)
             setData(
-                DataComponentTypes.CONSUMABLE,
-                Consumable.consumable()
-                    .consumeSeconds(1.0f)
-                    .animation(ItemUseAnimation.EAT)
-                    .addEffect(
-                        ConsumeEffect.applyStatusEffects(
-                            listOf(
-                                PotionEffect(
-                                    PotionEffectType.REGENERATION,
-                                    200,
-                                    1,
-                                ),
-                            ),
-                            1.0f,
+                DataComponentTypes.ATTRIBUTE_MODIFIERS,
+                ItemAttributeModifiers.itemAttributes()
+                    .addModifier(
+                        Attribute.ARMOR,
+                        AttributeModifier(
+                            NamespacedKey(instance, "withered_soul_armor"),
+                            4.0,
+                            AttributeModifier.Operation.ADD_NUMBER,
                         ),
+                        EquipmentSlotGroup.HAND,
+                    )
+                    .addModifier(
+                        Attribute.MAX_HEALTH,
+                        AttributeModifier(
+                            NamespacedKey(instance, "withered_soul_health"),
+                            4.0,
+                            AttributeModifier.Operation.ADD_NUMBER,
+                        ),
+                        EquipmentSlotGroup.HAND,
                     )
                     .build(),
             )
