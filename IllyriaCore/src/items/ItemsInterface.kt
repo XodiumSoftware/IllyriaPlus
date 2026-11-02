@@ -26,13 +26,6 @@ internal interface ItemsInterface {
     val name: String
         get() = id.snakeToProperCase()
 
-    /** The model folder for this item. */
-    val modelPath: String
-
-    /** The full [Key] used for the `ITEM_MODEL` data component. */
-    val itemModelKey: Key
-        get() = Key.key(IllyriaCore.ID, "$modelPath/$id")
-
     /**
      * Builds the custom [ItemStack].
      *
