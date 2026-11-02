@@ -14,7 +14,6 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.xodium.illyriacore.scoreboards.SoulboundScoreboard
 import org.xodium.illyrialib.Utils.MM
 
 /** Custom item handling the Withered Soul drop from the Wither boss. */
@@ -22,8 +21,6 @@ internal object WitheredSoulItem : ItemsInterface {
     private const val DROP_CHANCE: Double = 0.25
     private const val MIN_DROPS: Int = 0
     private const val MAX_DROPS: Int = 1
-
-    private val activeEffects = mutableMapOf<String, MutableList<String>>()
 
     @EventHandler
     fun on(event: EntityDeathEvent) {
@@ -45,10 +42,6 @@ internal object WitheredSoulItem : ItemsInterface {
         if (!item.persistentDataContainer.has(key, PersistentDataType.BOOLEAN)) return
 
         val player = event.player
-        val effectName = "Withered Soul"
-
-        activeEffects.getOrPut(player.name) { mutableListOf() }.add(effectName)
-        SoulboundScoreboard.update(player.name, activeEffects[player.name].orEmpty())
 
         player.addPotionEffect(PotionEffect(PotionEffectType.REGENERATION, 200, 1))
     }

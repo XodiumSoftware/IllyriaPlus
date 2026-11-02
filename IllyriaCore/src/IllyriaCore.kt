@@ -19,8 +19,6 @@ import org.xodium.illyriacore.mechanics.player.*
 import org.xodium.illyriacore.mechanics.server.*
 import org.xodium.illyriacore.mechanics.world.*
 import org.xodium.illyriacore.recipes.*
-import org.xodium.illyriacore.scoreboards.ScoreboardInterface
-import org.xodium.illyriacore.scoreboards.SoulboundScoreboard
 import org.xodium.illyrialib.UpdateChecker
 import org.xodium.illyrialib.Utils.validateVersion
 
@@ -41,8 +39,6 @@ internal class IllyriaCore : JavaPlugin() {
     lateinit var enchantments: List<EnchantmentInterface>
         private set
     lateinit var items: List<ItemsInterface>
-        private set
-    lateinit var scoreboards: List<ScoreboardInterface>
         private set
 
     override fun onLoad() {
@@ -127,15 +123,6 @@ internal class IllyriaCore : JavaPlugin() {
 
         logger.info(
             "Registered: ${items.size} item(s) | Took ${items.sumOf { it.register() }}ms",
-        )
-
-        scoreboards =
-            listOf(
-                SoulboundScoreboard,
-            )
-
-        logger.info(
-            "Registered: ${scoreboards.size} scoreboard(s) | Took ${scoreboards.sumOf { it.register() }}ms",
         )
 
         UpdateChecker.register(this)
