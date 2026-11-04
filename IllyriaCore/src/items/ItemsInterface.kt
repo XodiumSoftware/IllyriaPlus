@@ -3,6 +3,7 @@ package org.xodium.illyriacore.items
 import org.bukkit.NamespacedKey
 import org.bukkit.event.Listener
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
 import org.xodium.illyriacore.recipes.RecipeInterface
 import org.xodium.illyrialib.Utils.snakeToProperCase
@@ -29,6 +30,15 @@ internal interface ItemsInterface :
     /** The display name derived from [id], converted to proper case. */
     val name: String
         get() = id.snakeToProperCase()
+
+    /**
+     * Checks whether the given [item] was created by this custom item.
+     *
+     * @param item The item stack to check.
+     * @return `true` if the item carries this custom item's PDC marker.
+     */
+    fun isItem(item: ItemStack): Boolean =
+        item.persistentDataContainer.getOrDefault(key, PersistentDataType.BOOLEAN, false)
 
     /**
      * Builds the custom [ItemStack].
