@@ -12,6 +12,7 @@ import org.xodium.illyriacore.enchantments.vanilla.FeatherFallingEnchantment
 import org.xodium.illyriacore.enchantments.vanilla.FortuneEnchantment
 import org.xodium.illyriacore.enchantments.vanilla.SilkTouchEnchantment
 import org.xodium.illyriacore.items.ArcaneStaffItem
+import org.xodium.illyriacore.items.ArcaneStaffTemplateItem
 import org.xodium.illyriacore.items.BluntswordItem
 import org.xodium.illyriacore.items.BluntswordTemplateItem
 import org.xodium.illyriacore.items.GreatswordItem
@@ -125,6 +126,7 @@ internal class IllyriaCore : JavaPlugin() {
         items =
             listOf(
                 ArcaneStaffItem,
+                ArcaneStaffTemplateItem,
                 BluntswordItem,
                 BluntswordTemplateItem,
                 GreatswordItem,
