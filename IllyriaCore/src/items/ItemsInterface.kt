@@ -4,11 +4,14 @@ import org.bukkit.NamespacedKey
 import org.bukkit.event.Listener
 import org.bukkit.inventory.ItemStack
 import org.xodium.illyriacore.IllyriaCore.Companion.instance
+import org.xodium.illyriacore.recipes.RecipeInterface
 import org.xodium.illyrialib.Utils.snakeToProperCase
 import kotlin.time.measureTime
 
 /** Represents a contract for custom items within the plugin. */
-internal interface ItemsInterface : Listener {
+internal interface ItemsInterface :
+    Listener,
+    RecipeInterface {
     /** The unique [NamespacedKey] identifying this custom item. */
     val key: NamespacedKey
         get() = NamespacedKey(instance, id)
@@ -35,12 +38,13 @@ internal interface ItemsInterface : Listener {
     operator fun invoke(): ItemStack
 
     /**
-     * Registers this feature with the server.
+     * Registers this feature with the server, including any event listeners and recipes.
      *
      * @return The time taken to register the feature in milliseconds.
      */
-    fun register(): Long =
+    override fun register(): Long =
         measureTime {
             instance.server.pluginManager.registerEvents(this, instance)
+            recipes.forEach { instance.server.addRecipe(it) }
         }.inWholeMilliseconds
 }
