@@ -48,7 +48,7 @@ internal object GreatswordItem : ItemsInterface {
                         Attribute.ATTACK_DAMAGE,
                         AttributeModifier(
                             NamespacedKey(IllyriaCore.instance, "${id}_attack_damage"),
-                            9.0,
+                            12.0,
                             AttributeModifier.Operation.ADD_NUMBER,
                         ),
                         EquipmentSlotGroup.MAINHAND,
