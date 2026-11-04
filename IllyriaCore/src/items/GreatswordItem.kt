@@ -68,6 +68,14 @@ internal object GreatswordItem : ItemsInterface {
                             AttributeModifier.Operation.ADD_SCALAR,
                         ),
                         EquipmentSlotGroup.MAINHAND,
+                    ).addModifier(
+                        Attribute.ATTACK_KNOCKBACK,
+                        AttributeModifier(
+                            NamespacedKey(IllyriaCore.instance, "${id}_attack_knockback"),
+                            1.0,
+                            AttributeModifier.Operation.ADD_NUMBER,
+                        ),
+                        EquipmentSlotGroup.MAINHAND,
                     ).build(),
             )
             editPersistentDataContainer { it.set(key, PersistentDataType.BOOLEAN, true) }

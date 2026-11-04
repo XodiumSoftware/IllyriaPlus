@@ -60,6 +60,14 @@ internal object HalberdItem : ItemsInterface {
                             AttributeModifier.Operation.ADD_NUMBER,
                         ),
                         EquipmentSlotGroup.MAINHAND,
+                    ).addModifier(
+                        Attribute.ATTACK_KNOCKBACK,
+                        AttributeModifier(
+                            NamespacedKey(IllyriaCore.instance, "${id}_attack_knockback"),
+                            2.0,
+                            AttributeModifier.Operation.ADD_NUMBER,
+                        ),
+                        EquipmentSlotGroup.MAINHAND,
                     ).build(),
             )
             editPersistentDataContainer { it.set(key, PersistentDataType.BOOLEAN, true) }
