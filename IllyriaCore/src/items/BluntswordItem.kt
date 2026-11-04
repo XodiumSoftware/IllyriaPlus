@@ -24,7 +24,7 @@ internal object BluntswordItem : ItemsInterface {
                 NamespacedKey(IllyriaCore.instance, "${id}_smithing_transform"),
                 invoke(),
                 RecipeChoice.exactChoice(BluntswordTemplateItem.invoke()),
-                RecipeChoice.MaterialChoice(Material.NETHERITE_AXE),
+                RecipeChoice.MaterialChoice(Material.NETHERITE_SWORD),
                 RecipeChoice.MaterialChoice(Material.NETHERITE_BLOCK),
             ),
         )
