@@ -11,8 +11,11 @@ import org.xodium.illyriacore.enchantments.utility.VinemineEnchantment
 import org.xodium.illyriacore.enchantments.vanilla.FeatherFallingEnchantment
 import org.xodium.illyriacore.enchantments.vanilla.FortuneEnchantment
 import org.xodium.illyriacore.enchantments.vanilla.SilkTouchEnchantment
+import org.xodium.illyriacore.items.ArcaneStaffItem
+import org.xodium.illyriacore.items.BluntswordItem
+import org.xodium.illyriacore.items.GreatswordItem
+import org.xodium.illyriacore.items.HalberdItem
 import org.xodium.illyriacore.items.ItemsInterface
-import org.xodium.illyriacore.items.WitheredSoulItem
 import org.xodium.illyriacore.mechanics.MechanicInterface
 import org.xodium.illyriacore.mechanics.entity.*
 import org.xodium.illyriacore.mechanics.player.*
@@ -118,7 +121,10 @@ internal class IllyriaCore : JavaPlugin() {
 
         items =
             listOf(
-                WitheredSoulItem,
+                ArcaneStaffItem,
+                BluntswordItem,
+                GreatswordItem,
+                HalberdItem,
             )
 
         logger.info(
