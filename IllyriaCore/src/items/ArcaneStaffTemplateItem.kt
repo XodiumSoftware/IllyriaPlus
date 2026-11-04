@@ -3,6 +3,7 @@ package org.xodium.illyriacore.items
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemLore
 import org.bukkit.Material
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Blaze
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -13,22 +14,20 @@ import org.xodium.illyrialib.Utils.MM
 
 /** Smithing template used to forge an Arcane Staff. */
 internal object ArcaneStaffTemplateItem : ItemsInterface {
-    private const val DROP_CHANCE: Double = 0.025
-    private const val MIN_DROPS: Int = 0
-    private const val MAX_DROPS: Int = 1
+    private const val DROP_CHANCE = 0.025
+    private const val LOOTING_BONUS = 0.005
 
     @EventHandler
     fun on(event: EntityDeathEvent) {
         val blaze = event.entity as? Blaze ?: return
-        event.entity.killer ?: return
+        val killer = event.entity.killer ?: return
         if (blaze.lastDamageCause?.entity !is Player) return
 
-        if (Math.random() > DROP_CHANCE) return
+        val chance =
+            DROP_CHANCE + (LOOTING_BONUS * killer.inventory.itemInMainHand.getEnchantmentLevel(Enchantment.LOOTING))
+        if (Math.random() >= chance) return
 
-        val amount = (MIN_DROPS..MAX_DROPS).random()
-        if (amount <= 0) return
-
-        event.drops.add(invoke().apply { this.amount = amount })
+        event.drops.add(invoke())
     }
 
     override fun invoke(): ItemStack =
