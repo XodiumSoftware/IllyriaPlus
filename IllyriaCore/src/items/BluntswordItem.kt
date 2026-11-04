@@ -8,6 +8,7 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
+import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.xodium.illyriacore.IllyriaCore
@@ -33,11 +34,20 @@ internal object BluntswordItem : ItemsInterface {
                     .addModifier(
                         Attribute.ATTACK_DAMAGE,
                         AttributeModifier(
-                            NamespacedKey(IllyriaCore.instance, ""),
-                            0.0,
+                            NamespacedKey(IllyriaCore.instance, "${id}_attack_damage"),
+                            10.0,
                             AttributeModifier.Operation.ADD_NUMBER,
                         ),
-                    ),
+                        EquipmentSlotGroup.MAINHAND,
+                    ).addModifier(
+                        Attribute.ATTACK_SPEED,
+                        AttributeModifier(
+                            NamespacedKey(IllyriaCore.instance, "${id}_attack_speed"),
+                            -3.0,
+                            AttributeModifier.Operation.ADD_NUMBER,
+                        ),
+                        EquipmentSlotGroup.MAINHAND,
+                    ).build(),
             )
             editPersistentDataContainer { it.set(key, PersistentDataType.BOOLEAN, true) }
         }
