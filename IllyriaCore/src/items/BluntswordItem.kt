@@ -10,12 +10,25 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.RecipeChoice
+import org.bukkit.inventory.SmithingTransformRecipe
 import org.bukkit.persistence.PersistentDataType
 import org.xodium.illyriacore.IllyriaCore
 import org.xodium.illyrialib.Utils.MM
 
 /** Custom Bluntsword item. */
 internal object BluntswordItem : ItemsInterface {
+    override val recipes =
+        setOf(
+            SmithingTransformRecipe(
+                NamespacedKey(IllyriaCore.instance, "${id}_smithing_transform"),
+                invoke(),
+                RecipeChoice.exactChoice(BluntswordTemplateItem.invoke()),
+                RecipeChoice.MaterialChoice(Material.NETHERITE_AXE),
+                RecipeChoice.MaterialChoice(Material.NETHERITE_BLOCK),
+            ),
+        )
+
     override fun invoke(): ItemStack =
         ItemStack.of(Material.NETHERITE_SWORD).apply {
             setData(

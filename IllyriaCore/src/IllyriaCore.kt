@@ -13,8 +13,11 @@ import org.xodium.illyriacore.enchantments.vanilla.FortuneEnchantment
 import org.xodium.illyriacore.enchantments.vanilla.SilkTouchEnchantment
 import org.xodium.illyriacore.items.ArcaneStaffItem
 import org.xodium.illyriacore.items.BluntswordItem
+import org.xodium.illyriacore.items.BluntswordTemplateItem
 import org.xodium.illyriacore.items.GreatswordItem
+import org.xodium.illyriacore.items.GreatswordTemplateItem
 import org.xodium.illyriacore.items.HalberdItem
+import org.xodium.illyriacore.items.HalberdTemplateItem
 import org.xodium.illyriacore.items.ItemsInterface
 import org.xodium.illyriacore.mechanics.MechanicInterface
 import org.xodium.illyriacore.mechanics.entity.*
@@ -123,8 +126,11 @@ internal class IllyriaCore : JavaPlugin() {
             listOf(
                 ArcaneStaffItem,
                 BluntswordItem,
+                BluntswordTemplateItem,
                 GreatswordItem,
+                GreatswordTemplateItem,
                 HalberdItem,
+                HalberdTemplateItem,
             )
 
         logger.info(
