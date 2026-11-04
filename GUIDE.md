@@ -95,8 +95,20 @@ IllyriaPlus uses **compile-time configuration** — there are no config files to
 To customize behavior, you must:
 
 1. Fork the repository
-2. Edit the constants in the relevant mechanic, enchantment, or recipe object
+2. Edit the constants in the relevant item, mechanic, enchantment, or recipe object
 3. Rebuild the plugin
+
+### Item Configuration Location
+
+Each custom item stores its settings as `private const val` or `private val` properties directly in its `object`, for example:
+
+```kotlin
+// In IllyriaCore/src/items/ArcaneStaffItem.kt
+internal object ArcaneStaffItem : ItemsInterface {
+    private const val COOLDOWN_TICKS: Long = 10
+    // ...
+}
+```
 
 ### Mechanic Configuration Location
 
@@ -112,9 +124,22 @@ internal object MessagesMechanic : MechanicInterface {
 
 ## Features
 
-Enhances base gameplay with custom enchantments and mechanics. The optional `IllyriaSouls` plugin adds a Dark Souls-like layer on top: death stains, Estus-style flasks, bonfire resting, and disabled natural regeneration.
+Enhances base gameplay with custom enchantments, mechanics, and weapons. The optional `IllyriaSouls` plugin adds a Dark Souls-like layer on top: death stains, Estus-style flasks, bonfire resting, and disabled natural regeneration.
 
 For detailed player guides and documentation, see the **[Illyria Wiki](https://github.com/XodiumSoftware/illyria-wiki)**.
+
+### Custom Weapons
+
+IllyriaPlus adds craftable custom weapons, each forged at a smithing table with a unique upgrade template:
+
+| Weapon       | Damage | Speed | Notes                                        |
+| ------------ | ------ | ----- | -------------------------------------------- |
+| Halberd      | 10     | 1.2   | +2 knockback; polearm reach feel             |
+| Bluntsword   | 11     | 1.0   | 0 knockback; crushing heavy blade            |
+| Greatsword   | 12     | 1.1   | +1 knockback, -5% movement speed             |
+| Arcane Staff | —      | —     | Blaze-rod base; right-click shoots fireballs |
+
+Templates drop from specific mobs (e.g., Halberd from Piglin Brutes, Arcane Staff from Blazes) and are consumed during smithing.
 
 ### Soulslike Features (IllyriaSouls)
 
@@ -133,32 +158,31 @@ Custom enchantments are divided into two groups:
 
 **Custom utility enchantments** (registered in Paper's registry):
 
-| Enchantment | Slot      | Description                     |
-| ----------- | --------- | ------------------------------- |
-| Vinemine    | Main Hand | Pickaxe special ability         |
-| Tether      | Main Hand | Applies to tools and weapons    |
-| Nimbus      | Saddle    | Happy Ghast harness enhancement |
-| Embertread  | Feet      | Foot armor enhancement          |
+| Enchantment | Slot      | Description                          |
+| ----------- | --------- | ------------------------------------ |
+| Vinemine    | Main Hand | Breaks connected ore veins           |
+| Tether      | Main Hand | Auto-collects drops and XP           |
+| Nimbus      | Saddle    | Faster Happy Ghast flight            |
+| Embertread  | Feet      | Immunity to lava/fire contact damage |
 
 **Vanilla behavior overrides** (event listeners, not registered as custom enchantments):
 
-| Enchantment     | Slot      | Description                                 |
-| --------------- | --------- | ------------------------------------------- |
-| Silk Touch      | Main Hand | Allows mining spawners and budding amethyst |
-| Feather Falling | Feet      | Prevents farmland from being trampled       |
-| Fortune         | Main Hand | Hoes with Fortune II+ auto-replant crops    |
+| Enchantment     | Slot      | Description                                     |
+| --------------- | --------- | ----------------------------------------------- |
+| Silk Touch      | Main Hand | Pickaxes can mine spawners and budding amethyst |
+| Feather Falling | Feet      | Prevents farmland from being trampled           |
+| Fortune         | Main Hand | Hoes with Fortune II+ auto-replant crops        |
 
 #### Recipes
 
 Custom crafting, smelting, stonecutting, and shapeless recipes:
 
-- Chainmail armor crafting
-- Diamond recycle (blasting)
+- Chainmail armor crafting (Iron Bars)
 - Blue/packed ice breakdown
 - Nether wart block breakdown
 - Custom paintings via stonecutter
-- Rotten flesh to leather
-- Log/wood crafting improvements
+- Rotten flesh to leather (furnace, smoker, campfire)
+- Wood to log conversion
 - Wool to string
 
 ### Client Bridging (IllyriaBridge)
@@ -174,7 +198,7 @@ Vanilla clients are unaffected.
 
 ### "Plugin disabled itself"
 
-- Verify server version is Paper 26.1.2
+- Verify server version is Paper 26.3
 - Check console for version mismatch errors
 - Update your server or use a compatible plugin version
 

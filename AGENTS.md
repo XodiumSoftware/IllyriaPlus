@@ -78,6 +78,7 @@ IllyriaPlus/                    # Repo root (Gradle aggregator, no code)
 │   │   ├── enchantments/           # Enchantment implementations
 │   │   │   ├── utility/            # Custom utility enchantments (registered in bootstrap)
 │   │   │   └── vanilla/            # Vanilla enchantment behavior overrides
+│   │   ├── items/                  # Custom item implementations
 │   │   ├── recipes/                # Recipe implementations
 │   │   │   └── vanilla/            # Vanilla-style custom recipes
 │   │   ├── data/                   # Data classes
@@ -111,6 +112,7 @@ IllyriaPlus/                    # Repo root (Gradle aggregator, no code)
             ├── FlaskRecipe.kt        # Flask crafting + upgrades
             └── RecipeInterface.kt    # Recipe contract
 ```
+
 ```
 
 ## Architecture
@@ -118,14 +120,15 @@ IllyriaPlus/                    # Repo root (Gradle aggregator, no code)
 ### Entry Points
 
 1. **IllyriaCoreBootstrap** (`PluginBootstrap`) — Runs before plugin enable. Creates item tags (`illyriacore:tools`, `illyriacore:weapons`, `illyriacore:tether_items`), registers custom enchantments into Paper's registry, and tags them as tradeable/non-treasure/in-enchanting-table.
-2. **IllyriaCore** (`JavaPlugin`) — Main class. Validates server version, registers recipes, mechanics, and enchantment event listeners.
+2. **IllyriaCore** (`JavaPlugin`) — Main class. Validates server version, registers items, recipes, mechanics, and enchantment event listeners.
 
 ### Module System
 
 - All mechanics are Kotlin `object` singletons implementing `MechanicInterface` (extends Bukkit `Listener`)
 - All enchantments are Kotlin `object` singletons implementing `EnchantmentInterface` (extends Bukkit `Listener`)
 - All recipes are Kotlin `object` singletons implementing `RecipeInterface`
-- Modules self-register in `IllyriaCore.onEnable()` via their `register()` function
+- All custom items are Kotlin `object` singletons implementing `ItemsInterface` (extends Bukkit `Listener` and `RecipeInterface`)
+- Modules self-register in `IllyriaCore.onEnable()` via their inherited `register()` function
 - **There is no file-based configuration and no nested `Config` object** — all settings are compile-time constants declared directly in each module object
 - To disable a module, remove it from the corresponding list in `IllyriaCore.onEnable()`
 
@@ -278,6 +281,17 @@ GitHub Actions workflows in `.github/workflows/`:
 5. In `IllyriaCore.kt`, add `YourRecipe` to the `recipes` list in `onEnable()`
 6. Add KDoc comments describing the recipe
 
+### Adding an Item
+
+1. Create new file in `IllyriaCore/src/items/YourItem.kt`
+2. Implement `ItemsInterface` as an `object`
+3. Use `ItemStack.of(Material.<BASE>)` and set `ITEM_MODEL`, `LORE`, and optional `CUSTOM_NAME`
+4. Add `ATTRIBUTE_MODIFIERS` if the item needs custom combat stats
+5. Override `val recipes` if the item has a smithing/crafting recipe
+6. Add `@EventHandler fun on(event: <EventType>)` methods for special abilities (e.g., right-click actions, drop handlers)
+7. In `IllyriaCore.kt`, add `YourItem` to the `items` list in `onEnable()`
+8. Add KDoc comments explaining the item's purpose and behavior
+
 ### Adding a PDC (Persistent Data Container)
 
 1. For player data: edit `IllyriaCore/src/pdcs/PlayerPDC.kt`
@@ -304,3 +318,4 @@ GitHub Actions workflows in `.github/workflows/`:
 ## Memory System
 
 This project uses Claude Code's persistent memory in `.claude/memory/`. These files persist across sessions and different PCs. Review `MEMORY.md` for existing context about the user and project.
+```
