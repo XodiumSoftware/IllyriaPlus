@@ -5,6 +5,7 @@ import io.papermc.paper.datacomponent.item.ItemLore
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.EntityType
+import org.bukkit.entity.WitherSkeleton
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
@@ -18,12 +19,13 @@ internal object BluntswordTemplateItem : ItemsInterface {
 
     @EventHandler
     fun on(event: EntityDeathEvent) {
-        if (event.entityType != EntityType.WITHER_SKELETON) return
-        val killer = event.entity.killer ?: return
+        val witherSkeleton = event.entity as? WitherSkeleton ?: return
+        val killer = witherSkeleton.killer ?: return
+
         val chance =
-            DROP_CHANCE +
-                (LOOTING_BONUS * killer.inventory.itemInMainHand.getEnchantmentLevel(Enchantment.LOOTING))
+            DROP_CHANCE + (LOOTING_BONUS * killer.inventory.itemInMainHand.getEnchantmentLevel(Enchantment.LOOTING))
         if (Math.random() >= chance) return
+
         event.drops.add(invoke())
     }
 

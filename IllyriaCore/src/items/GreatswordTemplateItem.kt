@@ -5,6 +5,7 @@ import io.papermc.paper.datacomponent.item.ItemLore
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.EntityType
+import org.bukkit.entity.Evoker
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
@@ -18,11 +19,13 @@ internal object GreatswordTemplateItem : ItemsInterface {
 
     @EventHandler
     fun on(event: EntityDeathEvent) {
-        if (event.entityType != EntityType.EVOKER) return
-        val killer = event.entity.killer ?: return
+        val evoker = event.entity as? Evoker ?: return
+        val killer = evoker.killer ?: return
+
         val chance =
             DROP_CHANCE + (LOOTING_BONUS * killer.inventory.itemInMainHand.getEnchantmentLevel(Enchantment.LOOTING))
         if (Math.random() >= chance) return
+
         event.drops.add(invoke())
     }
 

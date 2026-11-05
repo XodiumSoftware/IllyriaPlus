@@ -5,7 +5,6 @@ import io.papermc.paper.datacomponent.item.ItemLore
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Blaze
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
@@ -20,8 +19,7 @@ internal object ArcaneStaffTemplateItem : ItemsInterface {
     @EventHandler
     fun on(event: EntityDeathEvent) {
         val blaze = event.entity as? Blaze ?: return
-        val killer = event.entity.killer ?: return
-        if (blaze.lastDamageCause?.entity !is Player) return
+        val killer = blaze.killer ?: return
 
         val chance =
             DROP_CHANCE + (LOOTING_BONUS * killer.inventory.itemInMainHand.getEnchantmentLevel(Enchantment.LOOTING))
