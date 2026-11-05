@@ -4,18 +4,34 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemLore
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.EntityType
 import org.bukkit.entity.Evoker
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
+import org.bukkit.event.inventory.PrepareSmithingEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.xodium.illyrialib.Utils.MM
 
-/** Smithing template used to forge a Greatsword. */
+/**
+ * Smithing template used to forge a Greatsword.
+ *
+ * Shares the vanilla netherite upgrade material, so smithing results other than a Greatsword
+ * are cleared to stop the vanilla recipe from consuming this template.
+ */
 internal object GreatswordTemplateItem : ItemsInterface {
     private const val DROP_CHANCE = 0.020
     private const val LOOTING_BONUS = 0.005
+
+    @EventHandler
+    fun on(event: PrepareSmithingEvent) {
+        val template = event.inventory.inputTemplate ?: return
+        if (!isItem(template)) return
+
+        val result = event.result ?: return
+        if (result.persistentDataContainer.getOrDefault(GreatswordItem.key, PersistentDataType.BOOLEAN, false)) return
+
+        event.result = null
+    }
 
     @EventHandler
     fun on(event: EntityDeathEvent) {
