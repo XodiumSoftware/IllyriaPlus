@@ -20,6 +20,7 @@ import org.xodium.illyriacore.items.GreatswordTemplateItem
 import org.xodium.illyriacore.items.HalberdItem
 import org.xodium.illyriacore.items.HalberdTemplateItem
 import org.xodium.illyriacore.items.ItemsInterface
+import org.xodium.illyriacore.items.NullspireItem
 import org.xodium.illyriacore.mechanics.MechanicInterface
 import org.xodium.illyriacore.mechanics.entity.*
 import org.xodium.illyriacore.mechanics.player.*
@@ -133,6 +134,7 @@ internal class IllyriaCore : JavaPlugin() {
                 GreatswordTemplateItem,
                 HalberdItem,
                 HalberdTemplateItem,
+                NullspireItem,
             )
 
         logger.info(
