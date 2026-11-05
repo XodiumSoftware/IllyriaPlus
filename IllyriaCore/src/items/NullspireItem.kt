@@ -8,9 +8,17 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
+import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.RecipeChoice
+import org.bukkit.inventory.SmithingTransformRecipe
 import org.bukkit.persistence.PersistentDataType
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import org.xodium.illyriacore.IllyriaCore
 import org.xodium.illyrialib.Utils.MM
 
@@ -22,14 +30,32 @@ import org.xodium.illyrialib.Utils.MM
  * its wielder's arm.
  */
 internal object NullspireItem : ItemsInterface {
-    // TODO: Give Nullspire an acquisition path before release. It currently has no `recipes`
-    //  override and no smithing template item, so it cannot be obtained in-game. Follow the
-    //  sibling weapons: add a `NullspireTemplateItem` (netherite upgrade template + mob drop
-    //  handler for PrepareSmithingEvent) and a `SmithingTransformRecipe` using it. Then update
-    //  the Nullspire card in illyria-wiki/src/weapons/index.md to match.
+    private const val BLINDNESS_DURATION_TICKS: Int = 60
+    private const val BLINDNESS_AMPLIFIER: Int = 0
+
     // TODO: The texture illyriacore:item/weapons/nullspire does not exist yet. Add it at
     //  illyria-resourcepack/src/assets/illyriacore/textures/item/weapons/nullspire.png and copy
     //  it to illyria-wiki/src/img/item/nullspire.png for the wiki card icon.
+    override val recipes =
+        setOf(
+            SmithingTransformRecipe(
+                NamespacedKey(IllyriaCore.instance, "${id}_smithing_transform"),
+                invoke(),
+                RecipeChoice.MaterialChoice(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
+                RecipeChoice.MaterialChoice(Material.NETHERITE_SWORD),
+                RecipeChoice.MaterialChoice(Material.DRAGON_EGG),
+            ),
+        )
+
+    @EventHandler
+    fun on(event: EntityDamageByEntityEvent) {
+        val damager = event.damager as? Player ?: return
+        if (!isItem(damager.inventory.itemInMainHand)) return
+
+        val victim = event.entity as? LivingEntity ?: return
+        victim.addPotionEffect(PotionEffect(PotionEffectType.BLINDNESS, BLINDNESS_DURATION_TICKS, BLINDNESS_AMPLIFIER))
+    }
+
     override fun invoke(): ItemStack =
         ItemStack.of(Material.NETHERITE_SWORD).apply {
             setData(
@@ -37,6 +63,7 @@ internal object NullspireItem : ItemsInterface {
                 ItemLore.lore(
                     listOf(
                         MM.deserialize("A needle of collapsed void, its violet core humming with nothingness."),
+                        MM.deserialize("Striking a foe blinds them for 3 seconds."),
                     ),
                 ),
             )
