@@ -22,6 +22,14 @@ import org.xodium.illyrialib.Utils.MM
  * its wielder's arm.
  */
 internal object NullspireItem : ItemsInterface {
+    // TODO: Give Nullspire an acquisition path before release. It currently has no `recipes`
+    //  override and no smithing template item, so it cannot be obtained in-game. Follow the
+    //  sibling weapons: add a `NullspireTemplateItem` (netherite upgrade template + mob drop
+    //  handler for PrepareSmithingEvent) and a `SmithingTransformRecipe` using it. Then update
+    //  the Nullspire card in illyria-wiki/src/weapons/index.md to match.
+    // TODO: The texture illyriacore:item/weapons/nullspire does not exist yet. Add it at
+    //  illyria-resourcepack/src/assets/illyriacore/textures/item/weapons/nullspire.png and copy
+    //  it to illyria-wiki/src/img/item/nullspire.png for the wiki card icon.
     override fun invoke(): ItemStack =
         ItemStack.of(Material.NETHERITE_SWORD).apply {
             setData(
