@@ -23,7 +23,7 @@ internal object HalberdItem : ItemsInterface {
             SmithingTransformRecipe(
                 NamespacedKey(IllyriaCore.instance, "${id}_smithing_transform"),
                 invoke(),
-                RecipeChoice.exactChoice(HalberdTemplateItem.invoke()),
+                RecipeChoice.MaterialChoice(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
                 RecipeChoice.MaterialChoice(Material.NETHERITE_SPEAR),
                 RecipeChoice.MaterialChoice(Material.NETHERITE_BLOCK),
             ),

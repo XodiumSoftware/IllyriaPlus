@@ -23,7 +23,7 @@ internal object GreatswordItem : ItemsInterface {
             SmithingTransformRecipe(
                 NamespacedKey(IllyriaCore.instance, "${id}_smithing_transform"),
                 invoke(),
-                RecipeChoice.exactChoice(GreatswordTemplateItem.invoke()),
+                RecipeChoice.MaterialChoice(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
                 RecipeChoice.MaterialChoice(Material.NETHERITE_SWORD),
                 RecipeChoice.MaterialChoice(Material.NETHERITE_BLOCK),
             ),

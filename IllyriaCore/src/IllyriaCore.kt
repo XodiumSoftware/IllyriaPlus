@@ -15,9 +15,7 @@ import org.xodium.illyriacore.items.ArcaneStaffItem
 import org.xodium.illyriacore.items.BluntswordItem
 import org.xodium.illyriacore.items.BluntswordTemplateItem
 import org.xodium.illyriacore.items.GreatswordItem
-import org.xodium.illyriacore.items.GreatswordTemplateItem
 import org.xodium.illyriacore.items.HalberdItem
-import org.xodium.illyriacore.items.HalberdTemplateItem
 import org.xodium.illyriacore.items.ItemsInterface
 import org.xodium.illyriacore.items.NullspireItem
 import org.xodium.illyriacore.mechanics.MechanicInterface
@@ -129,9 +127,7 @@ internal class IllyriaCore : JavaPlugin() {
                 BluntswordItem,
                 BluntswordTemplateItem,
                 GreatswordItem,
-                GreatswordTemplateItem,
                 HalberdItem,
-                HalberdTemplateItem,
                 NullspireItem,
             )
 
