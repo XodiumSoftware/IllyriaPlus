@@ -35,7 +35,7 @@ internal object GreatswordItem : ItemsInterface {
                 DataComponentTypes.LORE,
                 ItemLore.lore(
                     listOf(
-                        MM.deserialize("<gray>Type: $id <dark_gray>[<yellow>Rare<dark_gray>]"),
+                        MM.deserialize("<gray>Type: $id <dark_gray>[<blue>Rare<dark_gray>]"),
                         MM.deserialize("<dark_gray>An oversized blade built for sweeping, devastating strikes."),
                     ),
                 ),

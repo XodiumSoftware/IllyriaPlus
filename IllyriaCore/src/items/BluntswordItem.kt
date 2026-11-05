@@ -35,7 +35,7 @@ internal object BluntswordItem : ItemsInterface {
                 DataComponentTypes.LORE,
                 ItemLore.lore(
                     listOf(
-                        MM.deserialize("<gray>Type: $id <dark_gray>[<yellow>Rare<dark_gray>]"),
+                        MM.deserialize("<gray>Type: $id <dark_gray>[<blue>Rare<dark_gray>]"),
                         MM.deserialize("<dark_gray>A heavy, unsharpened blade that crushes armor and bone alike."),
                     ),
                 ),
