@@ -2,12 +2,10 @@
 
 ## Combat
 
-- **Focus switching mechanic.** Groups currently focus-fire a single target chosen by the threat
-  table, with automatic switching only when a challenger beats the current focus by a large
-  margin. Add a player-facing mechanic to override it manually, e.g. right-clicking a hostile
-  entity with a stick (or a new item) makes the nearest group focus it. Design should keep
-  `CombatGroup.focus` as the single source of truth so the manual override just writes to the
-  threat table.
+- **Focus on hostile players.** Threat scoring and focus switching are effectively `Monster`-only:
+  `nearestMonster` drives ambient threat, and `isAlly` only excludes the owner. Extending this to
+  hostile players needs a decision on PvP consent and on what counts as a threat, since another
+  player is indistinguishable from an ally by type alone.
 - **Distribute monster aggro.** `MannequinHostility` currently assigns every monster within range
   to the nearest mannequin, so all monsters pile onto the same one. Round-robin the monsters across
   the group's members so a horde is spread out.

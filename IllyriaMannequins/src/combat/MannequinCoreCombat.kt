@@ -53,8 +53,11 @@ internal object MannequinCoreCombat : Listener {
     /** The threat score granted per block of proximity to a group member. */
     private const val PROXIMITY_THREAT_WEIGHT = 1.0
 
-    /** The threat score granted when a hostile entity damages a group member. */
+    /** The threat score granted when a hostile entity damages a group member or their owner. */
     private const val AGGRO_THREAT_BONUS = 40.0
+
+    /** The threat score granted when the owner attacks an entity, making the squad focus it. */
+    private const val PLAYER_INTENT_THREAT = 40.0
 
     /** The multiplier applied to every threat score each scan. */
     private const val THREAT_DECAY = 0.85
@@ -120,11 +123,28 @@ internal object MannequinCoreCombat : Listener {
             retaliate(event, victim, damager)
         }
         if (damager is Player) {
-            engageGroup(damager.uniqueId, victim, damager.location)
+            attackTarget(damager, victim)
         }
         if (victim is Player) {
             defendOwner(victim, damager)
         }
+    }
+
+    /**
+     * Makes the player's group focus the entity the player attacked.
+     *
+     * The threat bonus outranks proximity scoring so that a deliberately chosen target is not
+     * silently replaced by an unrelated nearby monster on the next scan.
+     *
+     * @param owner The player who dealt the attack.
+     * @param victim The entity the player attacked.
+     */
+    private fun attackTarget(
+        owner: Player,
+        victim: LivingEntity,
+    ) {
+        groups[owner.uniqueId]?.addThreat(victim, PLAYER_INTENT_THREAT)
+        engageGroup(owner.uniqueId, victim, owner.location)
     }
 
     /**
