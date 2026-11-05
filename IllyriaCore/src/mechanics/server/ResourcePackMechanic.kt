@@ -1,7 +1,7 @@
 package org.xodium.illyriacore.mechanics.server
 
 import io.papermc.paper.command.brigadier.Commands
-import io.papermc.paper.event.connection.configuration.AsyncPlayerConnectionConfigureEvent
+import io.papermc.paper.event.connection.configuration.PlayerConnectionInitialConfigureEvent
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.resource.ResourcePackInfo
 import net.kyori.adventure.resource.ResourcePackRequest
@@ -64,7 +64,7 @@ internal object ResourcePackMechanic : MechanicInterface {
     override fun register(): Long = super.register().also { request }
 
     @EventHandler(priority = EventPriority.NORMAL)
-    fun on(event: AsyncPlayerConnectionConfigureEvent) {
+    fun on(event: PlayerConnectionInitialConfigureEvent) {
         val connection = event.connection as? Audience ?: return
 
         connection.sendResourcePacks(request)
