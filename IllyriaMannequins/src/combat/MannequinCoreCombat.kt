@@ -18,6 +18,7 @@ import org.xodium.illyriamannequins.MannequinPDC.combatMode
 import org.xodium.illyriamannequins.MannequinPDC.owner
 import org.xodium.illyriamannequins.Utils.stepToward
 import java.util.UUID
+import kotlin.math.sqrt
 
 /** Makes mannequins defend against nearby monsters and retaliate when attacked. */
 @Suppress("UnstableApiUsage")
@@ -374,7 +375,7 @@ internal object MannequinCoreCombat : Listener {
         mannequin: Mannequin,
         monster: Monster,
     ): Double {
-        val distance = Math.sqrt(mannequin.location.distanceSquared(monster.location))
+        val distance = sqrt(mannequin.location.distanceSquared(monster.location))
         return (SCAN_RADIUS - distance).coerceAtLeast(0.0) * PROXIMITY_THREAT_WEIGHT
     }
 

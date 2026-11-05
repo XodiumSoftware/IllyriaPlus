@@ -4,6 +4,9 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Mannequin
 import org.xodium.illyriamannequins.IllyriaMannequins.Companion.instance
 import java.util.UUID
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
 
 /**
  * The mannequins owned by a single player that fight together.
@@ -49,8 +52,8 @@ internal class CombatGroup(
     ): SlotOffset? {
         val index = members.indexOfFirst { it.uniqueId == mannequin.uniqueId }
         if (index < 0) return null
-        val angle = 2.0 * Math.PI * index / members.size
-        return SlotOffset(Math.cos(angle) * radius, Math.sin(angle) * radius)
+        val angle = 2.0 * PI * index / members.size
+        return SlotOffset(cos(angle) * radius, sin(angle) * radius)
     }
 
     /**
