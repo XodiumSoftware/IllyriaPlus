@@ -82,7 +82,7 @@ jobs:
       - id: setup_java
         name: Setup Java
         if: needs.changes.outputs.core == 'true' || needs.changes.outputs.bridge == 'true' || needs.changes.outputs.all == 'true'
-        uses: actions/setup-java@v6.1.0
+        uses: actions/setup-java@v6.2.0
         with:
           java-version: 25.0.5+8.0.LTS
           distribution: temurin
@@ -113,7 +113,7 @@ jobs:
 
       - id: setup_java
         name: Setup Java
-        uses: actions/setup-java@v6.1.0
+        uses: actions/setup-java@v6.2.0
         with:
           java-version: 25.0.5+8.0.LTS
           distribution: temurin
@@ -203,7 +203,7 @@ jobs:
 
       - id: setup_java
         name: Setup Java
-        uses: actions/setup-java@v6.1.0
+        uses: actions/setup-java@v6.2.0
         with:
           java-version: 25.0.5+8.0.LTS
           distribution: temurin
