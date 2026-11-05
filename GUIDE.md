@@ -60,14 +60,12 @@ Build the plugins using Gradle.
     ```bash
     ./gradlew :IllyriaCore:shadowJar
     ./gradlew :IllyriaBridge:shadowJar
-    ./gradlew :IllyriaSouls:shadowJar
     ```
 
 3. The output JARs are at:
     ```
     IllyriaCore/build/libs/IllyriaPlus-*.jar
     IllyriaBridge/build/libs/IllyriaBridge-*.jar
-    IllyriaSouls/build/libs/IllyriaSouls-*.jar
     ```
 
 ### Run a Test Server
@@ -77,7 +75,6 @@ To quickly test a plugin:
 ```bash
 ./gradlew :IllyriaCore:runServer
 ./gradlew :IllyriaBridge:runServer
-./gradlew :IllyriaSouls:runServer
 ```
 
 This automatically downloads Paper 26.3 and starts a local test server with the plugin.
@@ -124,7 +121,7 @@ internal object MessagesMechanic : MechanicInterface {
 
 ## Features
 
-Enhances base gameplay with custom enchantments, mechanics, and weapons. The optional `IllyriaSouls` plugin adds a Dark Souls-like layer on top: death stains, Estus-style flasks, bonfire resting, and disabled natural regeneration.
+Enhances base gameplay with custom enchantments, mechanics, and weapons.
 
 For detailed player guides and documentation, see the **[Illyria Wiki](https://github.com/XodiumSoftware/illyria-wiki)**.
 
@@ -140,17 +137,6 @@ IllyriaPlus adds craftable custom weapons, each forged at a smithing table with 
 | Arcane Staff | —      | —     | Blaze-rod base; right-click shoots fireballs |
 
 Templates drop from specific mobs (e.g., Halberd from Piglin Brutes, Arcane Staff from Blazes) and are consumed during smithing.
-
-### Soulslike Features (IllyriaSouls)
-
-The `IllyriaSouls` plugin is a separate, optional JAR that provides punishing-but-fair survival mechanics:
-
-- **Death Stain** — On death, all XP is dropped at a retrievable stain. Die again before reclaiming it and a portion is lost.
-- **Hollowed State** — After respawning with an active stain, you suffer weakness and reduced max health until you recover your souls.
-- **Natural Regeneration Disabled** — Hunger no longer passively heals you; all healing must come from flasks or bonfires.
-- **Illyria Flask** — A charge-based healing vessel. Right-click to drink, rest at a bonfire to refill.
-- **Bonfires** — Right-click a lit campfire to set your spawn, restore health, refill your flask, and respawn hostile mobs nearby.
-- **Flask Upgrades** — Craft a flask with an Echo Shard to increase max charges, or with a Nether Star to increase healing potency.
 
 ### Enchantments
 

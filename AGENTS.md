@@ -4,7 +4,7 @@
 
 - **Name:** IllyriaPlus
 - **Type:** Multi-module Minecraft Paper plugin monorepo (server-side only)
-- **Modules:** `IllyriaCore` (core plugin, published as `IllyriaPlus`), `IllyriaBridge` (server↔client bridging plugin), `IllyriaSouls` (optional Soulslike gameplay plugin)
+- **Modules:** `IllyriaCore` (core plugin, published as `IllyriaPlus`), `IllyriaBridge` (server↔client bridging plugin)
 - **MC Version:** 26.3
 - **Language:** Kotlin (JVM 25)
 - **Build Tool:** Gradle with Kotlin DSL
@@ -62,7 +62,7 @@ just dev
 ```
 IllyriaPlus/                    # Repo root (Gradle aggregator, no code)
 ├── build.gradle.kts          # Aggregator only
-├── settings.gradle.kts         # Includes IllyriaLib, IllyriaCore, IllyriaBridge + IllyriaSouls
+├── settings.gradle.kts         # Includes IllyriaLib, IllyriaCore, IllyriaBridge
 ├── IllyriaLib/                # Shared library module (org.xodium.illyrialib), shaded into all plugins
 │   ├── build.gradle.kts        # Module build configuration
 │   └── src/                    # Source directory
@@ -93,23 +93,6 @@ IllyriaPlus/                    # Repo root (Gradle aggregator, no code)
         │   └── XaeroMapBridge.kt       # Xaero map sync handler
         └── payloads/               # Plugin message payloads
             └── FabricRecipeSyncPayload.kt
-└── IllyriaSouls/               # Optional Soulslike gameplay module
-    ├── build.gradle.kts        # Module build configuration
-    └── src/                    # Source directory
-        ├── IllyriaSouls.kt         # Main plugin class
-        ├── PlayerPDC.kt            # Soulslike player persistent data
-        ├── items/                  # Soulslike custom items
-        │   ├── FlaskItem.kt          # Estus-like healing flask
-        │   ├── ItemsInterface.kt     # Item contract
-        │   └── SoulFragmentItem.kt     # Souls currency
-        ├── mechanics/              # Soulslike mechanics
-        │   ├── BonfireMechanic.kt    # Bonfire rest/respawn/heal
-        │   ├── DeathStainMechanic.kt # Death stain / soul recovery
-        │   ├── MechanicInterface.kt  # Mechanic contract
-        │   └── NaturalRegenMechanic.kt # Disables passive hunger regen
-        └── recipes/              # Soulslike recipes
-            ├── FlaskRecipe.kt        # Flask crafting + upgrades
-            └── RecipeInterface.kt    # Recipe contract
 ```
 
 ```
@@ -141,17 +124,6 @@ Custom enchantments implement `EnchantmentInterface` with:
 - Event handling via `@EventHandler fun on(event: <EventType>)` methods
 
 Only utility enchantments in `IllyriaCore/src/enchantments/utility/` are registered in `IllyriaCoreBootstrap`. Enchantments in `IllyriaCore/src/enchantments/vanilla/` listen to events and check for vanilla enchantments on items instead.
-
-### IllyriaSouls
-
-The `IllyriaSouls` module (`org.xodium.illyriasouls`) is an **optional** standalone plugin that adds a Dark Souls-like gameplay layer:
-
-- **Mechanics:** `DeathStainMechanic`, `NaturalRegenMechanic`, `BonfireMechanic`
-- **Items:** `FlaskItem`, `SoulFragmentItem`
-- **Recipes:** Flask crafting and upgrade recipes
-- **PDC:** Local `PlayerPDC` for souls, stain location, and flask state
-
-It has its own local copies of `MechanicInterface`, `RecipeInterface`, `ItemsInterface`, and `PlayerPDC` so it can be developed independently from `IllyriaCore`.
 
 ### IllyriaBridge
 
