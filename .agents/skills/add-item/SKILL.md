@@ -26,7 +26,12 @@ Ask the user:
 3. Use the inherited `id` and `key` properties for naming and PDC markers.
 4. Set the `CUSTOM_NAME` (optional but recommended), `LORE`, and `ITEM_MODEL` data components.
 5. Use `ItemStack.of(Material.<BASE>)` as the base material.
-6. If the item needs attribute modifiers, set `ATTRIBUTE_MODIFIERS` with proper `NamespacedKey` names and `EquipmentSlotGroup.MAINHAND`.
+6. If the item needs attribute modifiers, set `ATTRIBUTE_MODIFIERS` with proper `NamespacedKey` names and the `EquipmentSlotGroup` matching the slot the item is actually equipped in:
+   - Hand-held items (swords, tools, maces, rods) → `EquipmentSlotGroup.MAINHAND`
+   - Helmets → `EquipmentSlotGroup.HEAD`, chestplates → `CHEST`, leggings → `LEGS`, boots → `FEET`
+
+   Using `MAINHAND` for armor makes the modifiers apply only while the armor is held instead of worn.
+
 7. If the item needs a recipe, override `val recipes` and return a set of recipes. Use the inherited `register()` from `ItemsInterface` to auto-register listeners + recipes.
 8. Add `@EventHandler fun on(event: <EventType>)` methods following the project's naming convention.
 9. Keep settings as `private const val` / `private val` directly in the object — no nested `Config` object.
@@ -83,6 +88,7 @@ import org.xodium.illyriacore.IllyriaCore
 import org.xodium.illyrialib.Utils.MM
 
 /** Custom <Name> item. */
+// Replace <SLOT_GROUP> with MAINHAND for hand-held items, or HEAD/CHEST/LEGS/FEET for armor.
 internal object <Name>Item : ItemsInterface {
     override fun invoke(): ItemStack =
         ItemStack.of(Material.<BASE>).apply {
@@ -106,7 +112,7 @@ internal object <Name>Item : ItemsInterface {
                             <damage>,
                             AttributeModifier.Operation.ADD_NUMBER,
                         ),
-                        EquipmentSlotGroup.MAINHAND,
+                        EquipmentSlotGroup.<SLOT_GROUP>,
                     )
                     .build(),
             )
