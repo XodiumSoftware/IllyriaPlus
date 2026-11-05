@@ -1,2 +1,1 @@
 - Group combat.
-- way to get mannequin in survival.
