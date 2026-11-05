@@ -1,5 +1,6 @@
 package org.xodium.illyriamannequins.combat
 
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
@@ -36,11 +37,32 @@ internal object MannequinCoreCombat : Listener {
     /** The radius in blocks within which mannequins detect nearby monsters. */
     private const val SCAN_RADIUS = 12.0
 
+    /** The radius in blocks within which a mannequin joins its owner's combat group. */
+    private const val GROUP_RADIUS = 24.0
+
     /** The interval in ticks between a mannequin's attacks. */
     private const val ATTACK_COOLDOWN_TICKS = 10
 
     /** The interval in ticks a mannequin backs away from its target after striking. */
     private const val RETREAT_TICKS = 6
+
+    /** The radius in blocks of the circle members occupy around their focus target. */
+    private const val SLOT_RADIUS = 1.6
+
+    /** The threat score granted per block of proximity to a group member. */
+    private const val PROXIMITY_THREAT_WEIGHT = 1.0
+
+    /** The threat score granted when a hostile entity damages a group member. */
+    private const val AGGRO_THREAT_BONUS = 40.0
+
+    /** The multiplier applied to every threat score each scan. */
+    private const val THREAT_DECAY = 0.85
+
+    /** The factor by which a challenger's score must beat the current focus to take over. */
+    private const val FOCUS_SWITCH_FACTOR = 1.5
+
+    /** The combat groups active on the server, keyed by owner UUID. */
+    private val groups = mutableMapOf<UUID, CombatGroup>()
 
     /** The current retaliation target for each mannequin, keyed by entity UUID. */
     private val targets = mutableMapOf<UUID, LivingEntity>()
@@ -94,26 +116,52 @@ internal object MannequinCoreCombat : Listener {
         val damager = event.damager as? LivingEntity ?: return
         val victim = event.entity as? LivingEntity ?: return
         if (victim is Mannequin) {
-            if (damager.uniqueId == victim.owner) return
-            if (victim.combatMode == CombatMode.FLEEING) return
-            if (damager is Mannequin && damager.owner == victim.owner) return
-            if ((isEngaged(victim) || isDefensive(victim)) && hasShield(victim)) {
-                event.isCancelled = true
-                damageShield(victim)
-            } else {
-                damageArmor(victim)
-            }
-            defending.remove(victim.uniqueId)
-            engage(victim, damager)
-            return
+            retaliate(event, victim, damager)
         }
         if (damager is Player) {
-            engageOwnerMannequins(damager, victim)
+            engageGroup(damager.uniqueId, victim, damager.location)
         }
         if (victim is Player) {
             defendOwner(victim, damager)
         }
     }
+
+    /**
+     * Rebuilds the server's combat groups from the current mannequins.
+     *
+     * Each owner forms a single group containing their mannequins that are within
+     * [GROUP_RADIUS] of one another. Groups are rebuilt rather than mutated so mannequins
+     * that were removed while a chunk was unloaded are dropped automatically.
+     *
+     * @param mannequins All mannequins across all worlds.
+     */
+    fun refreshGroups(mannequins: Collection<Mannequin>) {
+        val previous = groups.toMap()
+        groups.clear()
+        mannequins
+            .mapNotNull { mannequin -> mannequin.owner?.let { mannequin to it } }
+            .groupBy({ it.second }) { it.first }
+            .forEach { (owner, owned) ->
+                val group = CombatGroup(owner)
+                val seed = owned.first()
+                group.members += owned.filter { it.world == seed.world && it.isNear(seed) }
+                group.members.sortBy { it.uniqueId }
+                previous[owner]?.also { old ->
+                    group.focus = old.focus
+                    group.threats.putAll(old.threats)
+                }
+                groups[owner] = group
+            }
+    }
+
+    /**
+     * Checks if a mannequin is within [GROUP_RADIUS] of another mannequin.
+     *
+     * @param other The mannequin to measure against.
+     * @return `true` if both are in the same world and within the group radius.
+     */
+    private fun Mannequin.isNear(other: Mannequin): Boolean =
+        world == other.world && location.distanceSquared(other.location) <= GROUP_RADIUS * GROUP_RADIUS
 
     /**
      * Puts passive mannequins near monsters into combat or a defensive state, and clears it when safe.
@@ -122,14 +170,112 @@ internal object MannequinCoreCombat : Listener {
      */
     fun scanThreats(mannequins: Collection<Mannequin>) {
         defending.removeAll { uuid -> (instance.server.getEntity(uuid) as? Mannequin)?.isValid != true }
+        groups.values.forEach { group ->
+            group.decayThreats(THREAT_DECAY)
+            group.members.forEach { mannequin ->
+                if (mannequin.combatMode == CombatMode.AGGRESSIVE) {
+                    nearestMonster(mannequin)?.let { group.addThreat(it, proximityThreat(mannequin, it)) }
+                }
+            }
+            selectFocus(group)
+        }
         mannequins
             .filterNot { isEngaged(it) }
             .forEach { mannequin ->
                 when (mannequin.combatMode) {
                     CombatMode.AGGRESSIVE -> engageNearestMonster(mannequin)
                     CombatMode.DEFENSIVE -> updateDefensiveState(mannequin)
-                    CombatMode.FLEEING -> defending.remove(mannequin.uniqueId)
+                    CombatMode.FLEEING -> disengage(mannequin)
                 }
+            }
+    }
+
+    /**
+     * Handles a mannequin taking damage: shield or armor wear, then retaliation.
+     *
+     * @param event The damage event.
+     * @param mannequin The mannequin that was damaged.
+     * @param damager The entity that dealt the damage.
+     */
+    private fun retaliate(
+        event: EntityDamageByEntityEvent,
+        mannequin: Mannequin,
+        damager: LivingEntity,
+    ) {
+        if (damager.uniqueId == mannequin.owner) return
+        if (mannequin.combatMode == CombatMode.FLEEING) return
+        if (damager is Mannequin && damager.owner == mannequin.owner) return
+        if ((isEngaged(mannequin) || isDefensive(mannequin)) && hasShield(mannequin)) {
+            event.isCancelled = true
+            damageShield(mannequin)
+        } else {
+            damageArmor(mannequin)
+        }
+        defending.remove(mannequin.uniqueId)
+        mannequin.owner?.let { owner ->
+            groups[owner]?.addThreat(damager, AGGRO_THREAT_BONUS)
+            engageGroup(owner, damager, mannequin.location)
+        } ?: engage(mannequin, damager)
+    }
+
+    /**
+     * Commits a group to a new focus target and makes its members attack it.
+     *
+     * @param owner The UUID of the group's owner.
+     * @param victim The entity the group should attack.
+     * @param origin The location to measure member eligibility from.
+     */
+    private fun engageGroup(
+        owner: UUID,
+        victim: LivingEntity,
+        origin: Location,
+    ) {
+        val group = groups[owner] ?: return
+        if (victim is Mannequin && victim.owner == owner) return
+        group.focus = victim
+        group
+            .members
+            .filterNot { it.combatMode == CombatMode.FLEEING }
+            .filterNot { it.uniqueId == victim.uniqueId }
+            .filter { it.location.distanceSquared(origin) <= GROUP_RADIUS * GROUP_RADIUS }
+            .forEach { engage(it, victim) }
+    }
+
+    /**
+     * Makes all mannequins owned by a player attack the player's attacker.
+     *
+     * @param owner The player whose mannequins to engage.
+     * @param attacker The entity attacking the player.
+     */
+    private fun defendOwner(
+        owner: Player,
+        attacker: LivingEntity,
+    ) {
+        if (attacker is Mannequin && attacker.owner == owner.uniqueId) return
+        groups[owner.uniqueId]?.addThreat(attacker, AGGRO_THREAT_BONUS)
+        engageGroup(owner.uniqueId, attacker, owner.location)
+    }
+
+    /**
+     * Picks the group's focus target from its threat table, keeping the current focus unless
+     * a challenger beats it by [FOCUS_SWITCH_FACTOR].
+     *
+     * @param group The group to select a focus for.
+     */
+    private fun selectFocus(group: CombatGroup) {
+        val challenger =
+            group.topThreat() ?: run {
+                group.focus = null
+                return
+            }
+        val current = group.focus?.takeIf { it.isValid }
+        val currentScore = current?.let { group.threats[it.uniqueId] ?: 0.0 } ?: 0.0
+        val challengerScore = group.threats[challenger.uniqueId] ?: 0.0
+        group.focus =
+            if (current == null || challengerScore >= currentScore * FOCUS_SWITCH_FACTOR) {
+                challenger
+            } else {
+                current
             }
     }
 
@@ -151,9 +297,7 @@ internal object MannequinCoreCombat : Listener {
         if (nearestMonster(mannequin) != null) {
             defending.add(mannequin.uniqueId)
             mannequin.velocity = mannequin.velocity.setX(0.0).setZ(0.0)
-            if (hasShield(mannequin)) {
-                mannequin.startUsingItem(EquipmentSlot.OFF_HAND)
-            }
+            setShield(mannequin, true)
         } else {
             disengage(mannequin)
         }
@@ -165,23 +309,74 @@ internal object MannequinCoreCombat : Listener {
      * @param mannequin The mannequin to disengage from defense.
      */
     private fun disengage(mannequin: Mannequin) {
-        if (defending.remove(mannequin.uniqueId) && mannequin.isHandRaised) {
+        if (defending.remove(mannequin.uniqueId)) {
+            setShield(mannequin, false)
+        }
+    }
+
+    /**
+     * Raises or lowers a mannequin's shield, if it has one.
+     *
+     * @param mannequin The mannequin whose shield to change.
+     * @param raised Whether the shield should be raised.
+     */
+    fun setShield(
+        mannequin: Mannequin,
+        raised: Boolean,
+    ) {
+        if (!hasShield(mannequin)) return
+        if (raised) {
+            mannequin.startUsingItem(EquipmentSlot.OFF_HAND)
+        } else if (mannequin.isHandRaised) {
             mannequin.clearActiveItem()
         }
     }
 
     /**
-     * Finds the nearest monster within scan range of a mannequin.
+     * Finds the nearest hostile monster within scan range of a mannequin.
      *
      * @param mannequin The mannequin to scan around.
-     * @return The nearest [Monster], or `null`.
+     * @return The nearest attackable [Monster], or `null`.
      */
     private fun nearestMonster(mannequin: Mannequin): Monster? =
         mannequin
             .getNearbyEntities(SCAN_RADIUS, SCAN_RADIUS, SCAN_RADIUS)
             .filterIsInstance<Monster>()
             .filterNot { it.isDead || it.isInvisible }
+            .filterNot { isAlly(mannequin, it) }
             .minByOrNull { it.location.distanceSquared(mannequin.location) }
+
+    /**
+     * Checks if an entity must never be attacked by a mannequin.
+     *
+     * @param mannequin The mannequin considering the attack.
+     * @param target The potential target.
+     * @return `true` if the target is the mannequin itself or owned by the same player.
+     */
+    private fun isAlly(
+        mannequin: Mannequin,
+        target: LivingEntity,
+    ): Boolean =
+        when (target) {
+            is Mannequin -> target.owner == mannequin.owner || target.uniqueId == mannequin.uniqueId
+            is Player -> target.uniqueId == mannequin.owner
+            else -> false
+        }
+
+    /**
+     * Computes the threat a hostile entity represents because of its proximity to a mannequin.
+     *
+     * @param mannequin The mannequin the entity is near.
+     * @param monster The hostile entity.
+     * @return The threat score contribution.
+     */
+    private fun proximityThreat(
+        mannequin: Mannequin,
+        monster: Monster,
+    ): Double {
+        val distance = Math.sqrt(mannequin.location.distanceSquared(monster.location))
+        return (SCAN_RADIUS - distance).coerceAtLeast(0.0) * PROXIMITY_THREAT_WEIGHT
+    }
 
     /**
      * Blocks a hit with a mannequin's shield, chipping its durability.
@@ -207,47 +402,6 @@ internal object MannequinCoreCombat : Listener {
     }
 
     /**
-     * Makes all mannequins owned by a player attack the player's victim.
-     *
-     * @param owner The player whose mannequins to engage.
-     * @param victim The entity the player attacked.
-     */
-    private fun engageOwnerMannequins(
-        owner: Player,
-        victim: LivingEntity,
-    ) {
-        if (victim.uniqueId == owner.uniqueId) return
-        if (victim is Mannequin && victim.owner == owner.uniqueId) return
-        owner
-            .world
-            .entities
-            .filterIsInstance<Mannequin>()
-            .filterNot { it.combatMode == CombatMode.FLEEING }
-            .filter { it.owner == owner.uniqueId && it.uniqueId != victim.uniqueId }
-            .forEach { engage(it, victim) }
-    }
-
-    /**
-     * Makes all mannequins owned by a player attack the player's attacker.
-     *
-     * @param owner The player whose mannequins to engage.
-     * @param attacker The entity attacking the player.
-     */
-    private fun defendOwner(
-        owner: Player,
-        attacker: LivingEntity,
-    ) {
-        if (attacker is Mannequin && attacker.owner == owner.uniqueId) return
-        owner
-            .world
-            .entities
-            .filterIsInstance<Mannequin>()
-            .filterNot { it.combatMode == CombatMode.FLEEING }
-            .filter { it.owner == owner.uniqueId && it.uniqueId != attacker.uniqueId }
-            .forEach { engage(it, attacker) }
-    }
-
-    /**
      * Removes a mannequin from combat state and lowers its shield if raised.
      *
      * @param iterator The iterator over [targets] to remove the entry with.
@@ -262,9 +416,7 @@ internal object MannequinCoreCombat : Listener {
         cooldowns.remove(uuid)
         retreats.remove(uuid)
         iterator.remove()
-        if (mannequin != null && mannequin.isHandRaised) {
-            mannequin.clearActiveItem()
-        }
+        if (mannequin != null) setShield(mannequin, false)
     }
 
     /**
@@ -278,7 +430,25 @@ internal object MannequinCoreCombat : Listener {
         target: LivingEntity,
     ) {
         targets[mannequin.uniqueId] = target
-        cooldowns[mannequin.uniqueId] = ATTACK_COOLDOWN_TICKS
+        if (mannequin.uniqueId !in cooldowns) {
+            cooldowns[mannequin.uniqueId] = staggerCooldown(mannequin)
+        }
+    }
+
+    /**
+     * Staggers a mannequin's initial attack cooldown by its slot in the group so a firing line
+     * does not volley in perfect sync.
+     *
+     * @param mannequin The mannequin being engaged.
+     * @return The initial cooldown in ticks.
+     */
+    private fun staggerCooldown(mannequin: Mannequin): Int {
+        val index =
+            mannequin
+                .owner
+                ?.let { groups[it]?.members?.indexOfFirst { member -> member.uniqueId == mannequin.uniqueId } }
+                ?: -1
+        return ATTACK_COOLDOWN_TICKS + (if (index < 0) 0 else index * 2)
     }
 
     /**
@@ -317,6 +487,28 @@ internal object MannequinCoreCombat : Listener {
             cooldowns[uuid] = MannequinRangedCombat.cooldownTicks(mannequin)
         }
         return true
+    }
+
+    /**
+     * Computes the point a mannequin should move to around its target.
+     *
+     * Members of a group are spread around the target so they surround it instead of stacking
+     * on the same block. Ungrouped mannequins move straight at the target.
+     *
+     * @param mannequin The mannequin moving.
+     * @param target The current target.
+     * @return The destination location.
+     */
+    private fun destinationFor(
+        mannequin: Mannequin,
+        target: LivingEntity,
+    ): Location {
+        val offset =
+            mannequin
+                .owner
+                ?.let { groups[it]?.slotOffset(mannequin, SLOT_RADIUS) }
+                ?: return target.location
+        return target.location.clone().add(offset.x, 0.0, offset.z)
     }
 
     /** Makes all retaliating mannequins chase and attack their target. */
@@ -385,7 +577,8 @@ internal object MannequinCoreCombat : Listener {
                 }
                 continue
             }
-            val step = target.location.stepToward(mannequin.location, CHASE_SPEED) ?: continue
+            val destination = destinationFor(mannequin, target)
+            val step = destination.stepToward(mannequin.location, CHASE_SPEED) ?: continue
             mannequin.velocity = step.apply { y = mannequin.velocity.y }
         }
     }

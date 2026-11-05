@@ -38,7 +38,10 @@ internal object MannequinTicker {
         MannequinFollowing.tick(mannequins)
         MannequinHeadTracking.tick(mannequins)
         if (tick % HOSTILITY_EVERY == 0) MannequinHostility.tick(mannequins)
-        if (tick % THREAT_SCAN_EVERY == 0) MannequinCoreCombat.scanThreats(mannequins)
+        if (tick % THREAT_SCAN_EVERY == 0) {
+            MannequinCoreCombat.refreshGroups(mannequins)
+            MannequinCoreCombat.scanThreats(mannequins)
+        }
         tick++
     }
 }
