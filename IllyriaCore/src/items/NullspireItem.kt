@@ -62,8 +62,11 @@ internal object NullspireItem : ItemsInterface {
                 DataComponentTypes.LORE,
                 ItemLore.lore(
                     listOf(
-                        MM.deserialize("A needle of collapsed void, its violet core humming with nothingness."),
-                        MM.deserialize("Striking a foe blinds them for 3 seconds."),
+                        MM.deserialize("<gray>Type: $id <dark_gray>[<gold>Mythic<dark_gray>]"),
+                        MM.deserialize(
+                            "<dark_gray>A needle of collapsed void, its violet core humming with nothingness.",
+                        ),
+                        MM.deserialize("<aqua>Striking a foe blinds them for 3 seconds."),
                     ),
                 ),
             )

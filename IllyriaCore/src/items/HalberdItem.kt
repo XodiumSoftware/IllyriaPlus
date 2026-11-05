@@ -35,7 +35,8 @@ internal object HalberdItem : ItemsInterface {
                 DataComponentTypes.LORE,
                 ItemLore.lore(
                     listOf(
-                        MM.deserialize("A long polearm designed to keep foes at a distance."),
+                        MM.deserialize("<gray>Type: $id <dark_gray>[<yellow>Rare<dark_gray>]"),
+                        MM.deserialize("<dark_gray>A long polearm designed to keep foes at a distance."),
                     ),
                 ),
             )

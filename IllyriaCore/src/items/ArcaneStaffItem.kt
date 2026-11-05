@@ -62,8 +62,9 @@ internal object ArcaneStaffItem : ItemsInterface {
                 DataComponentTypes.LORE,
                 ItemLore.lore(
                     listOf(
-                        MM.deserialize("A staff humming with raw arcane energy, waiting to be unleashed."),
-                        MM.deserialize("Right-click to launch a fireball."),
+                        MM.deserialize("<gray>Type: $id <dark_gray>[<light_purple>Legendary<dark_gray>]"),
+                        MM.deserialize("<dark_gray>A staff humming with raw arcane energy, waiting to be unleashed."),
+                        MM.deserialize("<aqua>Right-click to launch a fireball."),
                     ),
                 ),
             )
