@@ -11,6 +11,15 @@ import org.xodium.illyriacore.enchantments.utility.VinemineEnchantment
 import org.xodium.illyriacore.enchantments.vanilla.FeatherFallingEnchantment
 import org.xodium.illyriacore.enchantments.vanilla.FortuneEnchantment
 import org.xodium.illyriacore.enchantments.vanilla.SilkTouchEnchantment
+import org.xodium.illyriacore.items.ArcaneStaffItem
+import org.xodium.illyriacore.items.ArcaneStaffTemplateItem
+import org.xodium.illyriacore.items.BluntswordItem
+import org.xodium.illyriacore.items.BluntswordTemplateItem
+import org.xodium.illyriacore.items.GreatswordItem
+import org.xodium.illyriacore.items.GreatswordTemplateItem
+import org.xodium.illyriacore.items.HalberdItem
+import org.xodium.illyriacore.items.HalberdTemplateItem
+import org.xodium.illyriacore.items.ItemsInterface
 import org.xodium.illyriacore.mechanics.MechanicInterface
 import org.xodium.illyriacore.mechanics.entity.*
 import org.xodium.illyriacore.mechanics.player.*
@@ -36,6 +45,8 @@ internal class IllyriaCore : JavaPlugin() {
         private set
     lateinit var enchantments: List<EnchantmentInterface>
         private set
+    lateinit var items: List<ItemsInterface>
+        private set
 
     override fun onLoad() {
         PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this))
@@ -53,7 +64,6 @@ internal class IllyriaCore : JavaPlugin() {
         recipes =
             listOf(
                 ChainmailRecipe,
-                DiamondRecycleRecipe,
                 IceBreakdownRecipe,
                 NetherWartBlockRecipe,
                 PaintingRecipe,
@@ -69,27 +79,27 @@ internal class IllyriaCore : JavaPlugin() {
 
         mechanics =
             listOf(
-                NicknameMechanic,
-                LocatorMechanic,
-                OpenableMechanic,
-                TameableMechanic,
-                EnderchestMechanic,
-                XpMechanic,
                 AnvilMechanic,
-                SilenceMechanic,
-                HeadMechanic,
                 ChatMechanic,
-                InventoryMechanic,
-                SpawnEggMechanic,
-                GriefingMechanic,
                 CondenseMechanic,
-                MotdMechanic,
+                EnderchestMechanic,
+                GriefingMechanic,
+                HeadMechanic,
+                InventoryMechanic,
+                LocatorMechanic,
                 MessagesMechanic,
-                TabListMechanic,
-                TreeMechanic,
-                RulesMechanic,
+                MotdMechanic,
+                NicknameMechanic,
+                OpenableMechanic,
                 ResourcePackMechanic,
+                RulesMechanic,
+                SilenceMechanic,
+                SpawnEggMechanic,
                 SpawnProtectionMechanic,
+                TabListMechanic,
+                TameableMechanic,
+                TreeMechanic,
+                XpMechanic,
             )
 
         logger.info(
@@ -109,10 +119,24 @@ internal class IllyriaCore : JavaPlugin() {
 
         logger.info(
             "Registered: ${enchantments.size} enchantment event(s) | Took ${
-                enchantments.sumOf {
-                    it.register()
-                }
+                enchantments.sumOf { it.register() }
             }ms",
+        )
+
+        items =
+            listOf(
+                ArcaneStaffItem,
+                ArcaneStaffTemplateItem,
+                BluntswordItem,
+                BluntswordTemplateItem,
+                GreatswordItem,
+                GreatswordTemplateItem,
+                HalberdItem,
+                HalberdTemplateItem,
+            )
+
+        logger.info(
+            "Registered: ${items.size} item(s) | Took ${items.sumOf { it.register() }}ms",
         )
 
         UpdateChecker.register(this)
