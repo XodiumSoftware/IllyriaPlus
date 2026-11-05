@@ -23,7 +23,7 @@ internal object GreatswordItem : ItemsInterface {
             SmithingTransformRecipe(
                 NamespacedKey(IllyriaCore.instance, "${id}_smithing_transform"),
                 invoke(),
-                RecipeChoice.exactChoice(GreatswordTemplateItem.invoke()),
+                RecipeChoice.MaterialChoice(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
                 RecipeChoice.MaterialChoice(Material.NETHERITE_SWORD),
                 RecipeChoice.MaterialChoice(Material.NETHERITE_BLOCK),
             ),
@@ -35,7 +35,8 @@ internal object GreatswordItem : ItemsInterface {
                 DataComponentTypes.LORE,
                 ItemLore.lore(
                     listOf(
-                        MM.deserialize("An oversized blade built for sweeping, devastating strikes."),
+                        MM.deserialize("<gray>Type: $id <dark_gray>[<blue>Rare<dark_gray>]"),
+                        MM.deserialize("<dark_gray>An oversized blade built for sweeping, devastating strikes."),
                     ),
                 ),
             )

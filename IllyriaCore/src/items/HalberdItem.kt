@@ -23,7 +23,7 @@ internal object HalberdItem : ItemsInterface {
             SmithingTransformRecipe(
                 NamespacedKey(IllyriaCore.instance, "${id}_smithing_transform"),
                 invoke(),
-                RecipeChoice.exactChoice(HalberdTemplateItem.invoke()),
+                RecipeChoice.MaterialChoice(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
                 RecipeChoice.MaterialChoice(Material.NETHERITE_SPEAR),
                 RecipeChoice.MaterialChoice(Material.NETHERITE_BLOCK),
             ),
@@ -35,7 +35,8 @@ internal object HalberdItem : ItemsInterface {
                 DataComponentTypes.LORE,
                 ItemLore.lore(
                     listOf(
-                        MM.deserialize("A long polearm designed to keep foes at a distance."),
+                        MM.deserialize("<gray>Type: $id <dark_gray>[<blue>Rare<dark_gray>]"),
+                        MM.deserialize("<dark_gray>A long polearm designed to keep foes at a distance."),
                     ),
                 ),
             )

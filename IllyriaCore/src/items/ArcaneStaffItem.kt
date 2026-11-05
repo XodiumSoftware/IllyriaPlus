@@ -1,14 +1,18 @@
 package org.xodium.illyriacore.items
 
 import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.datacomponent.item.ItemAttributeModifiers
 import io.papermc.paper.datacomponent.item.ItemLore
 import net.kyori.adventure.key.Key
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
+import org.bukkit.attribute.Attribute
+import org.bukkit.attribute.AttributeModifier
 import org.bukkit.entity.SmallFireball
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.RecipeChoice
 import org.bukkit.inventory.SmithingTransformRecipe
@@ -25,7 +29,7 @@ internal object ArcaneStaffItem : ItemsInterface {
             SmithingTransformRecipe(
                 NamespacedKey(IllyriaCore.instance, "${id}_smithing_transform"),
                 invoke(),
-                RecipeChoice.exactChoice(ArcaneStaffTemplateItem.invoke()),
+                RecipeChoice.MaterialChoice(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
                 RecipeChoice.MaterialChoice(Material.BLAZE_ROD),
                 RecipeChoice.MaterialChoice(Material.AMETHYST_SHARD),
             ),
@@ -58,12 +62,35 @@ internal object ArcaneStaffItem : ItemsInterface {
                 DataComponentTypes.LORE,
                 ItemLore.lore(
                     listOf(
-                        MM.deserialize("A staff humming with raw arcane energy, waiting to be unleashed."),
-                        MM.deserialize("Right-click to launch a fireball."),
+                        MM.deserialize("<gray>Type: $id <dark_gray>[<light_purple>Legendary<dark_gray>]"),
+                        MM.deserialize("<dark_gray>A staff humming with raw arcane energy, waiting to be unleashed."),
+                        MM.deserialize("<aqua>Right-click to launch a fireball."),
                     ),
                 ),
             )
             setData(DataComponentTypes.ITEM_MODEL, Key.key(IllyriaCore.ID, id))
+            setData(
+                DataComponentTypes.ATTRIBUTE_MODIFIERS,
+                ItemAttributeModifiers
+                    .itemAttributes()
+                    .addModifier(
+                        Attribute.ARMOR_TOUGHNESS,
+                        AttributeModifier(
+                            NamespacedKey(IllyriaCore.instance, "${id}_armor_toughness"),
+                            4.0,
+                            AttributeModifier.Operation.ADD_NUMBER,
+                        ),
+                        EquipmentSlotGroup.MAINHAND,
+                    ).addModifier(
+                        Attribute.KNOCKBACK_RESISTANCE,
+                        AttributeModifier(
+                            NamespacedKey(IllyriaCore.instance, "${id}_knockback_resistance"),
+                            0.4,
+                            AttributeModifier.Operation.ADD_NUMBER,
+                        ),
+                        EquipmentSlotGroup.MAINHAND,
+                    ).build(),
+            )
             editPersistentDataContainer { it.set(key, PersistentDataType.BOOLEAN, true) }
         }
 }
