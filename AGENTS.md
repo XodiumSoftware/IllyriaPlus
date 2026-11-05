@@ -46,7 +46,6 @@ Uses [just](https://github.com/casey/just) as the command runner. Run `just` to 
 # Run a module's local test server (auto-downloads Paper 26.3)
 just run
 just run-bridge
-just run-souls
 
 # Run linting
 just lint
