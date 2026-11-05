@@ -127,16 +127,16 @@ For detailed player guides and documentation, see the **[Illyria Wiki](https://g
 
 ### Custom Weapons
 
-IllyriaPlus adds craftable custom weapons, each forged at a smithing table with a unique upgrade template:
+IllyriaPlus adds craftable custom weapons, each forged at a smithing table with the vanilla netherite upgrade template:
 
 | Weapon       | Damage | Speed | Notes                                        |
 | ------------ | ------ | ----- | -------------------------------------------- |
-| Halberd      | 10     | 1.2   | +2 knockback; polearm reach feel             |
-| Bluntsword   | 11     | 1.0   | 0 knockback; crushing heavy blade            |
-| Greatsword   | 12     | 1.1   | +1 knockback, -5% movement speed             |
+| Halberd      | 9      | 1.8   | +2 knockback; polearm reach feel             |
+| Greatsword   | 12     | 1.3   | +1 knockback, -5% movement speed             |
 | Arcane Staff | —      | —     | Blaze-rod base; right-click shoots fireballs |
+| Nullspire    | 20     | 3.0   | +2 reach, +20% speed; blinds on hit          |
 
-Templates drop from specific mobs (e.g., Halberd from Piglin Brutes, Arcane Staff from Blazes) and are consumed during smithing.
+The template is consumed during smithing, as are the two catalyst items.
 
 ### Enchantments
 
