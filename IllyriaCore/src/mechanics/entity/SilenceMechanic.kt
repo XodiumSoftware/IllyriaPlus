@@ -11,13 +11,13 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.xodium.illyriacore.mechanics.MechanicInterface
 
-/** Represents a mechanic that allows silencing mobs using an amethyst shard. */
+/** Represents a mechanic that allows silencing mobs using an echo shard. */
 internal object SilenceMechanic : MechanicInterface {
     @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerInteractEntityEvent) = silenceMob(event)
 
     /**
-     * Toggles a mob's silent state when a player interacts with it using an amethyst shard.
+     * Toggles a mob's silent state when a player interacts with it using an echo shard.
      *
      * @param event The PlayerInteractEntityEvent triggered when a player interacts with an entity.
      */
@@ -25,7 +25,7 @@ internal object SilenceMechanic : MechanicInterface {
         val player = event.player
         val item = event.hand.let { player.inventory.getItem(it) }
 
-        if (item.type == Material.AIR || item.type != Material.AMETHYST_SHARD) return
+        if (item.type != Material.ECHO_SHARD) return
 
         val entity = event.rightClicked as? LivingEntity ?: return
 
